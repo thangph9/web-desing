@@ -235,7 +235,7 @@ class HomeLayout extends React.PureComponent {
     const isTop = PropsLayout === 'topmenu';
     const routerConfig = this.matchParamsPath(pathname);
     const layout = (
-      <Layout>
+      <div>
           <Header
             menuData={menuData}
             handleMenuCollapse={this.handleMenuCollapse}
@@ -252,7 +252,7 @@ class HomeLayout extends React.PureComponent {
             </Authorized>
           </Content>
           <Footer />
-      </Layout>
+      </div>
     );
     return (
       <React.Fragment>
