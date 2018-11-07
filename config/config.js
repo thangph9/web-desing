@@ -1,5 +1,6 @@
 // https://umijs.org/config/
 import os from 'os';
+import path from 'path';
 import pageRoutes from './router.config';
 import webpackPlugin from './plugin.config';
 import defaultSettings from '../src/defaultSettings';
@@ -62,6 +63,7 @@ export default {
   theme: {
     'primary-color': defaultSettings.primaryColor,
   },
+  publicPath: path.join(__dirname, 'public'),
   externals: {
     '@antv/data-set': 'DataSet',
   },

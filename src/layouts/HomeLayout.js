@@ -9,6 +9,7 @@ import classNames from 'classnames';
 import pathToRegexp from 'path-to-regexp';
 import { enquireScreen, unenquireScreen } from 'enquire-js';
 import { formatMessage } from 'umi/locale';
+// eslint-disable-next-line no-unused-vars
 import SiderMenu from '@/components/SiderMenu';
 import Authorized from '@/utils/Authorized';
 import SettingDrawer from '@/components/SettingDrawer';
@@ -226,33 +227,32 @@ class HomeLayout extends React.PureComponent {
 
   render() {
     const {
+      // eslint-disable-next-line no-unused-vars
       navTheme,
       layout: PropsLayout,
       children,
       location: { pathname },
     } = this.props;
     const { isMobile, menuData } = this.state;
+    // eslint-disable-next-line no-unused-vars
     const isTop = PropsLayout === 'topmenu';
     const routerConfig = this.matchParamsPath(pathname);
     const layout = (
-      <div>
-          <Header
-            menuData={menuData}
-            handleMenuCollapse={this.handleMenuCollapse}
-            logo={logo}
-            isMobile={isMobile}
-            {...this.props}
-          />
-          <Content style={this.getContentStyle()}>
-            <Authorized
-              authority={routerConfig && routerConfig.authority}
-              noMatch={<Exception403 />}
-            >
-              {children}
-            </Authorized>
-          </Content>
-          <Footer />
-      </div>
+      <Layout>
+        <Header
+          menuData={menuData}
+          handleMenuCollapse={this.handleMenuCollapse}
+          logo={logo}
+          isMobile={isMobile}
+          {...this.props}
+        />
+        <Content style={this.getContentStyle()}>
+          <Authorized authority={routerConfig && routerConfig.authority} noMatch={<Exception403 />}>
+            {children}
+          </Authorized>
+        </Content>
+        <Footer />
+      </Layout>
     );
     return (
       <React.Fragment>

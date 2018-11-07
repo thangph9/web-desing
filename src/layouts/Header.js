@@ -9,6 +9,7 @@ import TopNavHeader from '@/components/TopNavHeader';
 import styles from './Header.less';
 import Authorized from '@/utils/Authorized';
 
+// eslint-disable-next-line no-unused-vars
 const { Header } = Layout;
 
 class HeaderView extends PureComponent {
@@ -84,6 +85,7 @@ class HeaderView extends PureComponent {
       });
     }
   };
+
   handScroll = () => {
     const { autoHideHeader } = this.props;
     const { visible } = this.state;
