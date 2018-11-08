@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import Link from 'umi/link';
 import Debounce from 'lodash-decorators/debounce';
-import styles from './index.less';
+import styles from '@/global.less';
 
 export default class GlobalHeader extends PureComponent {
   componentWillUnmount() {

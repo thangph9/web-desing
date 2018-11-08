@@ -10,20 +10,32 @@ export default [
       { path: '/user/register-result', component: './User/RegisterResult' },
     ],
   },
-   {
-    path: '/home',
+  {
+    path: '/',
     component: '../layouts/HomeLayout',
-    Routes: ['src/pages/Authorized'],   
+    Routes: ['src/pages/Authorized'],
     routes: [
-      { path: '/home',
+      {
+        path: '/',
+        redirect: '/home',
+      },
+      {
+        path: '/home',
         name: 'home',
-        component: './Home/'
+        component: './Home/',
+        routes: [
+          {
+            path: '/home/monitor',
+            name: 'monitor',
+            component: './Dashboard/Monitor',
+          },
+        ],
       },
     ],
-  }, 
-    
+  },
+
   // app
-    
+  /*
   {
     path: '/',
     component: '../layouts/BasicLayout',
@@ -273,4 +285,5 @@ export default [
       },
     ],
   },
+*/
 ];

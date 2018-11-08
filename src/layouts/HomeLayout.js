@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { Layout } from 'antd';
 import DocumentTitle from 'react-document-title';
@@ -18,6 +19,7 @@ import Footer from './Footer';
 import Header from './Header';
 import Context from './MenuContext';
 import Exception403 from '../pages/Exception/403';
+import styles from './HomeLayout.less';
 
 const { Content } = Layout;
 
@@ -237,8 +239,13 @@ class HomeLayout extends React.PureComponent {
     // eslint-disable-next-line no-unused-vars
     const isTop = PropsLayout === 'topmenu';
     const routerConfig = this.matchParamsPath(pathname);
+
     const layout = (
-      <Layout>
+      <div
+        className={
+          (styles['default-layout__container___13v1V'], styles.home__defaultLayout___Q6Udu)
+        }
+      >
         <Header
           menuData={menuData}
           handleMenuCollapse={this.handleMenuCollapse}
@@ -246,13 +253,9 @@ class HomeLayout extends React.PureComponent {
           isMobile={isMobile}
           {...this.props}
         />
-        <Content style={this.getContentStyle()}>
-          <Authorized authority={routerConfig && routerConfig.authority} noMatch={<Exception403 />}>
-            {children}
-          </Authorized>
-        </Content>
+        {children}
         <Footer />
-      </Layout>
+      </div>
     );
     return (
       <React.Fragment>

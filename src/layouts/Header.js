@@ -123,6 +123,7 @@ class HeaderView extends PureComponent {
     const { visible } = this.state;
     const isTop = layout === 'topmenu';
     const width = this.getHeadWidth();
+    // eslint-disable-next-line no-unused-vars
     const HeaderDom = visible ? (
       <div style={{ padding: 0, width }} className={fixedHeader ? styles.fixedHeader : ''}>
         {isTop && !isMobile ? (
@@ -149,7 +150,13 @@ class HeaderView extends PureComponent {
     ) : null;
     return (
       <Animate component="" transitionName="fade">
-        {HeaderDom}
+        <GlobalHeader
+          onCollapse={handleMenuCollapse}
+          onNoticeClear={this.handleNoticeClear}
+          onMenuClick={this.handleMenuClick}
+          onNoticeVisibleChange={this.handleNoticeVisibleChange}
+          {...this.props}
+        />
       </Animate>
     );
   }
