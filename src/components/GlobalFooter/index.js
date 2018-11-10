@@ -2,9 +2,8 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react/jsx-indent */
 import React from 'react';
-import styles from '@/global.less';
+import styles from './index.less';
 
-console.log(styles['footer__footerSection___1-2XO']);
 const GlobalFooter = () => (
   <div className={`${styles['footer__footerSection___1-2XO']}`} id="footer">
     <div className={`${styles['container__container___1fvX0']}`}>

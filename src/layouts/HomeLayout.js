@@ -242,9 +242,9 @@ class HomeLayout extends React.PureComponent {
 
     const layout = (
       <div
-        className={
-          (styles['default-layout__container___13v1V'], styles.home__defaultLayout___Q6Udu)
-        }
+        className={`${styles['default-layout__container___13v1V']} ${
+          styles.home__defaultLayout___Q6Udu
+        }`}
       >
         <Header
           menuData={menuData}

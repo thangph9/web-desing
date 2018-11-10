@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import Link from 'umi/link';
 import Debounce from 'lodash-decorators/debounce';
-import styles from '@/global.less';
+import styles from './styles.less';
 
 export default class GlobalHeader extends PureComponent {
   componentWillUnmount() {
@@ -93,8 +93,9 @@ export default class GlobalHeader extends PureComponent {
                     } undefined`}
                   >
                     <a
+                      style={{ color: 'inherit' }}
                       className={`${styles['text-uppercase']} ${
-                        styles[' language-dropdown__nav-link___2sOBe']
+                        styles['language-dropdown__nav-link___2sOBe']
                       } ${styles['language-dropdown__dropdown-toggle___3DM4H']}`}
                       href="#"
                     >

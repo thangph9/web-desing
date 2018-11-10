@@ -1,6 +1,7 @@
 // Change theme plugin
 
 import MergeLessPlugin from 'antd-pro-merge-less';
+// eslint-disable-next-line no-unused-vars
 import AntDesignThemePlugin from 'antd-theme-webpack-plugin';
 import path from 'path';
 
@@ -8,15 +9,13 @@ export default config => {
   // 将所有 less 合并为一个供 themePlugin使用
   const outFile = path.join(__dirname, '../.temp/ant-design-pro.less');
   const stylesDir = path.join(__dirname, '../src/');
-  const staticPath = path.join(__dirname, '../public/');
   config.plugin('merge-less').use(MergeLessPlugin, [
     {
       stylesDir,
       outFile,
-      staticPath,
     },
   ]);
-
+  /*
   config.plugin('ant-design-theme').use(AntDesignThemePlugin, [
     {
       antDir: path.join(__dirname, '../node_modules/antd'),
@@ -25,5 +24,5 @@ export default config => {
       mainLessFile: outFile, //     themeVariables: ['@primary-color'],
       indexFileName: 'index.html',
     },
-  ]);
+  ]); */
 };
