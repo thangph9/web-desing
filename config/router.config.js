@@ -32,6 +32,7 @@ export default [
         ],
       },
       {
+<<<<<<< HEAD
         path: '/sale',
         name: 'sale',
         component: './Home/sale',
@@ -69,6 +70,31 @@ export default [
       },
       {
         component: '404',
+=======
+        path: '/detail',
+        name: 'detail',
+        component: './Detail/',
+      },
+      {
+        path: '/ebay',
+        name: 'ebay',
+        component: './Ebay/',
+      },
+      {
+        path: '/adidas',
+        name: 'adidas',
+        component: './Adidas/',
+      },
+      {
+        path: '/nike',
+        name: 'nike',
+        component: './Nike/',
+      },
+      {
+        path: '/amazon',
+        name: 'amazon',
+        component: './Amazon/',
+>>>>>>> 7d82d92a01c3bec861df78f1a13f7c1fa12aa388
       },
     ],
   },
