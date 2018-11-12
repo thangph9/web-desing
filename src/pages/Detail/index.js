@@ -306,7 +306,10 @@ class Detail extends PureComponent {
                       styles['product__product-info___3onGQ']
                     }`}
                   >
-                    <h4 className={`${styles['product-info__brand___3akKm']}`}>
+                    <h4
+                      style={{ fontSize: '18px' }}
+                      className={`${styles['product-info__brand___3akKm']}`}
+                    >
                       J Natural Stones®
                     </h4>
                     <h4 className={`${styles['product-info__title___2J672']}`}>
