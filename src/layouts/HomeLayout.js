@@ -96,7 +96,7 @@ class HomeLayout extends React.PureComponent {
     isMobile: false,
     menuData: this.getMenuData(),
   };
-
+ 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -128,6 +128,9 @@ class HomeLayout extends React.PureComponent {
     const { collapsed } = this.props;
     if (isMobile && !preProps.isMobile && !collapsed) {
       this.handleMenuCollapse(false);
+    }
+    if (this.props.location.pathname !== preProps.location.pathname) {
+      window.scrollTo(0, 0)
     }
   }
 

@@ -14,6 +14,8 @@
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
+import { Link } from 'react-router-dom';
+import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import {
   Form,
@@ -35,12 +37,167 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-@connect(({ loading }) => ({
+
+class ProductItem extends PureComponent{
+    state={
+        
+    }
+    
+    render(){
+        const { data } =this.props;
+        let productid=(data.productid) ? data.productid.replace(/\-/g,'') : 'null';
+        let seoTitle=data.seo_link+"-"+productid;
+        let thumbnail=(data.thumbnail) ? data.thumbnail.replace(/\-/g,'') : 'false';
+        let timeline='';
+        let start,end;
+        let isDeath=false;
+        if(data.death_clock){
+             isDeath=true;
+             start=new Date().getTime();
+             end=new Date(data.death_clock.end).getTime();
+            let tmpTime=(end-start)/1000;
+            
+            let day='';
+            let hours='';
+            let munite='';
+            if(tmpTime > 2629743 ){
+                timeline=Math.round(tmpTime/2629743) +" Tháng";
+            }
+            if(tmpTime > 604800 && tmpTime < 2629743){
+                timeline=Math.round(tmpTime/604800) +" Tuần";
+            }
+            if(tmpTime > 86400 && tmpTime < 604800) {
+                timeline=Math.round(tmpTime/86400) + " Ngày ";
+            }
+            if(tmpTime > 3600 && tmpTime < 86400) {
+                timeline=Math.round(tmpTime/3600)+" Giờ ";
+            }
+            if(tmpTime > 60 && tmpTime <  3600 ) {
+                timeline=Math.round(tmpTime/60)+" Phút ";
+            }
+        }
+    
+        return (
+            <Link className={`${styles[ 'home__col-md-6___2zJjj']} ${ styles[ 'home__paddingRemove___3EmRr'] }`} to={`/sales/${seoTitle}`} data= { data } >
+                <div className={`${styles[ 'sale-card__currentSale___cC1H3']}`}>
+                    <div className={`${styles[ 'sale-card__image-wrapper___EfOla']}`}>
+                        <img className={`${styles[ 'sale-card__currentSaleImg___3wFRM']}`} src={`/images/320w/${thumbnail}`} alt={`Giảm Đến ${data.sale}% - ${data.title} `} />
+                    </div>
+                    <div className={`${styles[ 'sale-card__currentSaleInfo___2LkMa']}`}>
+                        <div className={`${styles[ 'sale-card__currentSaleTitle___1eVtM']}`}>
+                        { `Giảm Đến ${data.sale}% - ${data.title}` }
+                        </div>
+                    {isDeath &&
+                        <div className={`${styles[ 'sale-card__endTimeWrap___3q0l3']}`}>
+                            <span className={`${styles[ 'sale-card__endTimeContent___3z5se']}`}>
+                      <i
+                        className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`}
+                      />
+                        <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>
+                            <span className={`${styles[ 'end-time__timer___LMsIT']}`}>{timeline}</span>
+                        </span>
+                      
+                        </div>
+                    }
+                    </div>
+                </div>
+            </Link>
+        )
+    }
+}
+
+@connect(({ loading,product }) => ({
   submitting: loading.effects['form/submitRegularForm'],
+  product
 }))
 @Form.create()
 class Home extends PureComponent {
+  state={
+      
+  }
+  componentDidMount(){
+      const {dispatch } = this.props;
+      dispatch({
+          type:'product/home',
+          payload:{},
+      });
+      
+  }
+  renderNews(){
+    const { product :{ list : { news } } } = this.props;
+    let data= (news) ? news : [];
+    
+    return (data.length > 0) ? (<div>
+            
+            <div className={`${styles[ 'section-title__title-wrap___9DwpB']} ${ styles[ 'home__currentSaleSectionTitle___XcRpN'] }`}>
+                <h2 className={`${styles[ 'section-title__title___2Dw2G']}`}>Ưu đãi mới Nhất</h2>
+            </div>
+            <div className={`${styles[ 'row__row___2roCA']}`}>
+            {data.map((e,i)=>{
+                  return (<ProductItem data={e} key={i} />)
+                })
+            }
+            </div>
+            
+            
+    </div>) : ('')     
+  }
+  renderDays(){
+        const { product :{ list : { days } } } = this.props;
+        let data= (days) ? days : [];
+      if(data.length > 0){    
+      return (<div className={`${styles[ 'potd-container']} ${styles[ 'potd-new__potd-container___1mO4T']}`}>
+        <div className={`${styles[ 'section-title__title-wrap___9DwpB']} ${ styles[ 'potd-new__title-container___1o6iD'] }`}>
+            <h2 className={`${styles[ 'section-title__title___2Dw2G']}`}>
+                 Đặc biệt nhất trong Ngày
+            </h2>
+            <div className={`${styles[ 'section-title__sub-title___333O9']}`}>
+                  (Kết thúc vào hôm nay)
+            </div>
+        </div>
+        <div className={`${styles[ 'row__row___2roCA']}`}>
+            {data.map((e,i)=>{
+                  return (<ProductItem data={e} key={i} />)
+                })
+            }
+        </div>
+      </div>)  
+     }else{
+    return '';
+    }
+  }
+  renderBestSeller(){
+        const { product :{ list : { bestSeller } } } = this.props;  
+        let data= (bestSeller) ? bestSeller : [];
+        return (bestSeller) ? (<div>
+            <div className={`${styles[ 'section-title__title-wrap___9DwpB']} ${ styles[ 'home__stillOnSaleWrap____52sJ'] }`}>
+            <h2 className={`${styles[ 'section-title__title___2Dw2G']}`}>Vẫn đang diễn Ra</h2>
+            <div className={`${styles[ 'section-title__sub-title___333O9']}`}>
+                (Nhưng sẽ kết thúc sớm)
+            </div>
+            </div>
+            <div className={`${styles[ 'row__row___2roCA']}`}>
+                {data.map((e,i)=>{
+                      return (<ProductItem data={e} key={i} />)
+                    })
+                }
+            </div>
+        </div>) : ('')
+    }
+  renderHotNew(){
+        const { product :{ list : { hotday } } } = this.props;  
+        return (<div id={`${styles[ 'best-sellers']}`} className={`${styles[ 'home__best-sellers___3Yh-1']}`}>
+            <div className={`${styles[ 'section-title__title-wrap___9DwpB']} ${ styles[ 'best-sellers__title-container___3YMp3'] }`}>
+                <h2 className={`${styles[ 'section-title__title___2Dw2G']}`}>
+                    Bán chạy nhất trong Ngày
+                </h2>
+            </div>
+            
+        </div>)    
+  }            
   render() {
+    const { product :{ list : { news,days,hotday } } } = this.props;
+      
     return (
       <div>
         <div
@@ -51,18 +208,15 @@ class Home extends PureComponent {
           <a href="#">
             <img
               className={`${styles['hidden-md-up']}`}
-              src="https://images.leflair.vn/w640/q85/5bd7ea622dd83a6bfb16913e.jpg"
-              srcSet="https://images.leflair.vn/w640/q85/5bd7ea622dd83a6bfb16913e.jpg 640w, https://images.leflair.vn/w1080/q85/5bd7ea622dd83a6bfb16913e.jpg 1080w, https://images.leflair.vn/w1440/q85/5bd7ea622dd83a6bfb16913e.jpg 1440w"
-              sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, 100vw"
+              src="/images/e18562e9c9244b75a8239629b6d56cf6.jpg"
               alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
             />
             <img
               className={`${styles['hidden-sm-down']}`}
-              src="https://images.leflair.vn/w850/q85/5bd7ea602dd83a3fcc16913d.jpg"
-              srcSet="https://images.leflair.vn/w850/q85/5bd7ea602dd83a3fcc16913d.jpg 850w, https://images.leflair.vn/w1440/q85/5bd7ea602dd83a3fcc16913d.jpg 1440w, https://images.leflair.vn/w2560/q85/5bd7ea602dd83a3fcc16913d.jpg 2560w"
-              sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, 100vw"
+              src="/images/e18562e9c9244b75a8239629b6d56cf6.jpg"
               alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
             />
+            
             <div
               className={`${styles['hidden-md-up']} ${styles['home__badge___2w2Lc']} ${
                 styles['home__featured-badge___2hhaD']
@@ -90,79 +244,7 @@ class Home extends PureComponent {
           }`}
         >
           <div className={`${styles['home__topShadow___3wy_J']}`} />
-          <div
-            className={`${styles['section-title__title-wrap___9DwpB']} ${
-              styles['home__currentSaleSectionTitle___XcRpN']
-            }`}
-          >
-            <h2 className={`${styles['section-title__title___2Dw2G']}`}>Ưu đãi mới Nhất</h2>
-          </div>
-          <div className={`${styles['row__row___2roCA']}`}>
-            <a
-              className={`${styles['home__col-md-6___2zJjj']} ${
-                styles['home__paddingRemove___3EmRr']
-              }`}
-              href="/sales/giam-den-81-nike-giay-the-thao-nu-5bc9af39775b1800018986c4"
-            >
-              <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
-                <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-                  <img
-                    className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-                    src="https://images.leflair.vn/w640/q85/5bd801be2dd83a3139169387.jpg"
-                    srcSet="https://images.leflair.vn/w640/q85/5bd801be2dd83a3139169387.jpg 640w, https://images.leflair.vn/w1080/q85/5bd801be2dd83a3139169387.jpg 1080w, https://images.leflair.vn/w1440/q85/5bd801be2dd83a3139169387.jpg 1440w"
-                    sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, (max-width: 991px) 336px, (min-width: 992px) 456px, (min-width: 1200px) 546px, 100vw"
-                    alt="Giảm Đến 81% - Nike Giày Thể Thao Nữ"
-                  />
-                </div>
-                <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
-                  <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
-                    Giảm Đến 81% - Nike Giày Thể Thao Nữ
-                  </div>
-                  <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
-                    <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
-                      <i
-                        className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`}
-                      />{' '}
-                      <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>
-                      <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </a>
-            <a
-              className={`${styles['home__col-md-6___2zJjj']} ${
-                styles['home__paddingRemove___3EmRr']
-              }`}
-              href="/sales/giam-den-62-jeanswest-thoi-trang-nu-and-nam-5bd692183bc933437599b7a0"
-            >
-              <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
-                <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-                  <img
-                    className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-                    src="https://images.leflair.vn/w640/q85/5bd957262054d4d8d1f3de7e.jpg"
-                    srcSet="https://images.leflair.vn/w640/q85/5bd957262054d4d8d1f3de7e.jpg 640w, https://images.leflair.vn/w1080/q85/5bd957262054d4d8d1f3de7e.jpg 1080w, https://images.leflair.vn/w1440/q85/5bd957262054d4d8d1f3de7e.jpg 1440w"
-                    sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, (max-width: 991px) 336px, (min-width: 992px) 456px, (min-width: 1200px) 546px, 100vw"
-                    alt="Giảm Đến 62% - Jeanswest Thời Trang Nữ & Nam"
-                  />
-                </div>
-                <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
-                  <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
-                    Giảm Đến 62% - Jeanswest Thời Trang Nữ &amp; Nam
-                  </div>
-                  <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
-                    <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
-                      <i
-                        className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`}
-                      />{' '}
-                      <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>
-                      <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
+          {this.renderNews()}
           <div
             id={`${styles['home-banner']}`}
             className={`${styles['banner__bannerContainer___3Inm6']} ${
@@ -195,185 +277,10 @@ class Home extends PureComponent {
               <div className={`${styles['banner__navigation___1KLgF']}`} />
             </div>
           </div>
-          <div
-            className={`${styles['potd-container']} ${styles['potd-new__potd-container___1mO4T']}`}
-          >
-            <div
-              className={`${styles['section-title__title-wrap___9DwpB']} ${
-                styles['potd-new__title-container___1o6iD']
-              }`}
-            >
-              <h2 className={`${styles['section-title__title___2Dw2G']}`}>
-                Đặc biệt nhất trong Ngày
-              </h2>
-              <div className={`${styles['section-title__sub-title___333O9']}`}>
-                (Kết thúc vào hôm nay)
-              </div>
-            </div>
-            <div className={`${styles['row__row___2roCA']}`}>
-              <a
-                className={`${styles['potd-new__col-md-6___13LY0']} ${
-                  styles['potd-new__paddingRemove___3DF6t']
-                }`}
-                href="/products/tinh-chat-vitamin-c-20-30ml-5aaf9b76a4dc0a001936d430"
-              >
-                <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
-                  <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-                    <img
-                      className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-                      src="https://images.leflair.vn/w640/q85/5bd9202e2054d433e0f3d3a0.jpg"
-                      srcSet="https://images.leflair.vn/w640/q85/5bd9202e2054d433e0f3d3a0.jpg 640w, https://images.leflair.vn/w1080/q85/5bd9202e2054d433e0f3d3a0.jpg 1080w, https://images.leflair.vn/w1440/q85/5bd9202e2054d433e0f3d3a0.jpg 1440w"
-                      sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, (max-width: 991px) 336px, (min-width: 992px) 456px, (min-width: 1200px) 546px, 100vw"
-                      alt="Oz Naturals Tinh Chất Vitamin C"
-                    />
-                  </div>
-                  <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
-                    <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
-                      Oz Naturals Tinh Chất Vitamin C
-                    </div>
-                    <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
-                      <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
-                        <i
-                          className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`}
-                        />{' '}
-                        <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>
-                        <span className={`${styles['end-time__timer___LMsIT']}`}>16 giờ</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </a>
-              <a
-                className={`${styles['potd-new__col-md-6___13LY0']} ${
-                  styles['potd-new__paddingRemove___3DF6t']
-                }`}
-                href="/products/bo-4-noi-gom-thuy-tinh-blooming-1l-2l-3l-5l-5ab37eb3452b6900191edbc0"
-              >
-                <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
-                  <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-                    <img
-                      className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-                      src="https://images.leflair.vn/w640/q85/5bd82ac4b8cecbea299d9878.jpg"
-                      srcSet="https://images.leflair.vn/w640/q85/5bd82ac4b8cecbea299d9878.jpg 640w, https://images.leflair.vn/w1080/q85/5bd82ac4b8cecbea299d9878.jpg 1080w, https://images.leflair.vn/w1440/q85/5bd82ac4b8cecbea299d9878.jpg 1440w"
-                      sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, (max-width: 991px) 336px, (min-width: 992px) 456px, (min-width: 1200px) 546px, 100vw"
-                      alt="Giảm Đến 50% - Luminarc Bộ Nồi Gốm Thủy Tinh"
-                    />
-                  </div>
-                  <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
-                    <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
-                      Giảm Đến 50% - Luminarc Bộ Nồi Gốm Thủy Tinh
-                    </div>
-                    <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
-                      <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
-                        <i
-                          className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`}
-                        />{' '}
-                        <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>
-                        <span className={`${styles['end-time__timer___LMsIT']}`}>16 giờ</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
-          </div>
-          <div
-            id={`${styles['best-sellers']}`}
-            className={`${styles['home__best-sellers___3Yh-1']}`}
-          >
-            <div
-              className={`${styles['section-title__title-wrap___9DwpB']} ${
-                styles['best-sellers__title-container___3YMp3']
-              }`}
-            >
-              <h2 className={`${styles['section-title__title___2Dw2G']}`}>
-                Bán chạy nhất trong Ngày
-              </h2>
-            </div>
-            <img
-              className={`${styles['product-card__image___QEKAk']}`}
-              src="https://images.leflair.vn/w300/q85/5aec505e1069e2001a19f659.jpg"
-              srcSet="https://images.leflair.vn/w300/q85/5aec505e1069e2001a19f659.jpg 300w"
-              sizes="140px, (min-width: 768px) 205px"
-              alt="Bộ Drap Bọc & Vỏ Chăn Cotton 180x200 (5 Món)"
-            />
-          </div>
-          <div
-            className={`${styles['section-title__title-wrap___9DwpB']} ${
-              styles['home__stillOnSaleWrap____52sJ']
-            }`}
-          >
-            <h2 className={`${styles['section-title__title___2Dw2G']}`}>Vẫn đang diễn Ra</h2>
-            <div className={`${styles['section-title__sub-title___333O9']}`}>
-              (Nhưng sẽ kết thúc sớm)
-            </div>
-          </div>
-          <div className={`${styles['row__row___2roCA']}`}>
-            <a
-              className={`${styles['home__col-md-6___2zJjj']} ${
-                styles['home__paddingRemove___3EmRr']
-              }`}
-              href="/sales/giam-den-53-fila-thoi-trang-and-giay-the-thao-nam-nu-5bcdb1c7a9afb70001033f82"
-            >
-              <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
-                <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-                  <img
-                    className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-                    src="https://images.leflair.vn/w640/q85/5bd8408e0563016328a86211.jpg"
-                    srcSet="https://images.leflair.vn/w640/q85/5bd8408e0563016328a86211.jpg 640w, https://images.leflair.vn/w1080/q85/5bd8408e0563016328a86211.jpg 1080w, https://images.leflair.vn/w1440/q85/5bd8408e0563016328a86211.jpg 1440w"
-                    sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, (max-width: 991px) 336px, (min-width: 992px) 456px, (min-width: 1200px) 546px, 100vw"
-                    alt="Giảm Đến 53% - Fila Thời Trang & Giày Thể Thao Nam, Nữ"
-                  />
-                </div>
-                <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
-                  <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
-                    Giảm Đến 53% - Fila Thời Trang &amp; Giày Thể Thao Nam, Nữ
-                  </div>
-                  <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
-                    <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
-                      <i
-                        className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`}
-                      />{' '}
-                      <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>
-                      <span className={`${styles['end-time__timer___LMsIT']}`}>6 ngày</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </a>
-            <a
-              className={`${styles['home__col-md-6___2zJjj']} ${
-                styles['home__paddingRemove___3EmRr']
-              }`}
-              href="/sales/calvin-klein-dkny-tommy-hilfiger...-5bd67b7273d283d157e0aacc"
-            >
-              <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
-                <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-                  <img
-                    className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-                    src="https://images.leflair.vn/w640/q85/5bd84328efbad42946382656.jpg"
-                    srcSet="https://images.leflair.vn/w640/q85/5bd84328efbad42946382656.jpg 640w, https://images.leflair.vn/w1080/q85/5bd84328efbad42946382656.jpg 1080w, https://images.leflair.vn/w1440/q85/5bd84328efbad42946382656.jpg 1440w"
-                    sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, (max-width: 991px) 336px, (min-width: 992px) 456px, (min-width: 1200px) 546px, 100vw"
-                    alt="Calvin Klein, Dkny, Tommy Hilfiger..."
-                  />
-                </div>
-                <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
-                  <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
-                    Calvin Klein, Dkny, Tommy Hilfiger...
-                  </div>
-                  <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
-                    <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
-                      <i
-                        className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`}
-                      />{' '}
-                      <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>
-                      <span className={`${styles['end-time__timer___LMsIT']}`}>6 ngày</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
+          {this.renderDays()}
+          {this.renderBestSeller()}
+          {this.renderHotNew() }
+          
         </div>
         <div className={`${styles['home__subscription-container___17uZO']}`}>
           <div className={`${styles['container__container___1fvX0']}`}>

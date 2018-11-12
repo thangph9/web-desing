@@ -18,7 +18,7 @@ const plugins = [
       },
       locale: {
         enable: true, // default false
-        default: 'zh-CN', // default zh-CN
+        default: 'vi-VN', // default zh-CN
         baseNavigator: true, // default true, when it is true, will use `navigator.language` overwrite default
       },
       dynamicImport: {
@@ -63,7 +63,6 @@ export default {
   theme: {
     'primary-color': defaultSettings.primaryColor,
   },
-  publicPath: path.join(__dirname, 'public'),
   externals: {
     '@antv/data-set': 'DataSet',
   },
