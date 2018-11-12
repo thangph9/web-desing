@@ -30,13 +30,7 @@ export default [
             component: './Dashboard/Monitor',
           },
         ],
-      },
-      {
-<<<<<<< HEAD
-        path: '/sale',
-        name: 'sale',
-        component: './Home/sale',
-      },    
+      },  
      {
         path: '/exception',
         name: 'exception',
@@ -69,9 +63,7 @@ export default [
         ],
       },
       {
-        component: '404',
-=======
-        path: '/detail',
+        path: '/product/:seo_link-:productid',
         name: 'detail',
         component: './Detail/',
       },
@@ -94,11 +86,15 @@ export default [
         path: '/amazon',
         name: 'amazon',
         component: './Amazon/',
->>>>>>> 7d82d92a01c3bec861df78f1a13f7c1fa12aa388
       },
+      {
+          component: '404',
+      }
     ],
   },
-
+  {
+    component: '404',
+  }
   // app
   /*
   {

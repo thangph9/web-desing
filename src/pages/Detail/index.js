@@ -30,6 +30,9 @@
 import React, { PureComponent } from 'react';
 import Slider from 'react-slick';
 import { connect } from 'dva';
+import DocumentTitle from 'react-document-title';
+import DocumentMeta from 'react-document-meta';
+import CountDown from '@/components/CountDown';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import {
   Form,
@@ -45,17 +48,26 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './index.less';
+var currencyFormatter = require('currency-formatter');
+import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
-
-@connect(({ loading }) => ({
-  submitting: loading.effects['form/submitRegularForm'],
+function fixedZero(val) {
+  return val * 1 < 10 ? `0${val}` : val;
+}
+@connect(({ loading, product }) => ({
+    submitting: loading.effects['form/submitRegularForm'],
+    product,
 }))
 @Form.create()
 class Detail extends PureComponent {
+  state={
+      x:0,
+      y:0
+  }
   handleClickDesciption(idDetail) {
     var body = document.getElementById('app__body___3NlTJ');
     var width = body.offsetWidth;
@@ -79,27 +91,69 @@ class Detail extends PureComponent {
       }
     }
   }
-
-  render() {
-    var settings = {
-      dots: false,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      autoplay: false,
-      arrows: true,
-      dots: true,
-    };
+  
+  componentDidMount(){
+      const {dispatch ,match} = this.props;
+      let productid='';
+      try{
+          productid=match.params.productid;
+      }catch(e){
+      }
+      dispatch({
+          type: 'product/detail',
+          payload: {productid}
+      })
+  }
+handleChangeImage=(e)=>{
+    
+     this.setState({
+        imageChoose: e.replace(/\-/g,'')
+    })
+}
+onHover =(e)=>{
+   
+}
+onMouseMove=(e)=>{
+    this.setState({ x: (e.screenX-1000)/2, y: (e.screenY-1378)/2 });
+}
+formatCountDown=(time)=>{
+    const hours = 60 * 60 * 1000;
+    const minutes = 60 * 1000;
+    const days  =hours*24
+    const d = Math.floor(time/days);
+    
+    const h = Math.floor((time - d * days) / hours);
+    const m = Math.floor((time - d * days - h * hours ) / minutes);
+    const s = Math.floor((time - d * days - h * hours - m * minutes) / 1000);
+    //console.log(time - d * days);
+    
     return (
-      <div id="app__body___3NlTJ">
-        <div className={`${styles['container__container___1fvX0']}`}>
-          <div className={`${styles['product__product___2plEK']}`}>
-            <div
-              className={`${styles['clearfix']} ${styles['product__product-header___2yYGL']}
-                `}
-            >
-              <ol
+            <div className={`${styles['row__row___2roCA']} ${
+                        styles['sale-timer__timer-row___1JwVa']
+                      } ${styles['product__flex-center___1bEVZ']}`}
+            >  
+            <div>    
+                <div>{fixedZero(d)}</div>
+                <div>Ngày</div>
+            </div>
+            <div>
+                <div>{fixedZero(h)}</div>
+                <div>Giờ</div>
+            </div>
+            <div>
+                <div>{fixedZero(m)}</div>
+                <div>Phút</div>
+            </div>
+            <div>
+                <div>{fixedZero(s)}</div>
+                <div>Giây</div>
+            </div>
+        </div>
+    );
+}
+renderBreadcrumb(){
+    const { product: {detail} } = this.props;
+    return (<ol
                 className={`${styles['undefined']} ${styles['breadcrumb__breadcrumb___3F6K8']}
 
                   `}
@@ -127,7 +181,126 @@ class Detail extends PureComponent {
                     Mai
                   </h1>
                 </li>
-              </ol>
+              </ol>)
+}
+renderSlider(){
+    const { product: {detail} } = this.props;
+    const { imageChoose } =this.state;
+    const settings={
+          dots: false,
+          infinite: true,
+          speed: 500,
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          autoplay: false,
+          arrows: true,
+          dots: true,
+    }
+    let data = (detail) ? detail : {};
+    let image_huge=data.image_huge;
+    let SmallImageUI=[];
+    let HugeImageUI=[];
+    let LargeImageUI=[];
+    let huge_image='';
+    let zoom_image='';
+    if(image_huge && image_huge.length > 0){
+        image_huge.map((e,i)=>{
+        var image=e.replace(/\-/g,'')
+            SmallImageUI.push(
+                <li key={i} onClick={()=>{this.handleChangeImage(e)}} onMouseOver={this.onHover(e)} className={ styles[ 'images-slider__image-border___2hkRy']}>
+                    <img className={styles[ 'images-slider__image___wW9Yw']} src={`/images/w90/${image}`} sizes="80px" />
+                </li>
+            );
+            HugeImageUI.push(
+                <img key={i} className={ styles[ 'slick-slide'] +" "+ styles[ 'images-slider__image___wW9Yw'] } src={`/images/${image}`}  style={{ outline: 'none', width: 447 }} />
+            )
+        });
+        huge_image= <img key={(imageChoose) ? 'huge'+imageChoose : 'huge'+image_huge[0].replace(/\-/g,'')} className={`${styles[ 'images-slider__image___wW9Yw']}`} src={`/images/${(imageChoose) ? imageChoose : image_huge[0].replace(/\-/g,'') }`} />
+        
+        zoom_image=<img key={(imageChoose) ? 'zoom'+imageChoose : 'zoom'+image_huge[0].replace(/\-/g,'')}  id="zoom-image" className={`${styles[ 'images-slider__zoom-image___3jo-j']}`} src={`/images/${(imageChoose) ? imageChoose : image_huge[0].replace(/\-/g,'')  }`}  style={{ top: this.state.x, left: this.state.y }} />;
+
+    }
+    
+   
+    
+    return (
+                     <div className={styles[ 'row__row___2roCA']}>
+                            <div className={styles[ 'images-slider__col-lg-2___1yd0l'] +" "+ styles[ 'images-slider__slider-container___2AcvT'] }>
+                                <div className={ styles[ 'hidden-md-down'] +" "+ styles[ 'images-slider__slider___2EiI8']}>
+                                    <div className={ styles[ 'ic-ic-arrow-up'] +" "+ styles[ 'images-slider__images-navigation___KCIEC'] +" "+ styles[ 'images-slider__navigation-up___yqRaw']} />
+                                    <ul className={ styles[ 'list-unstyled'] +" "+styles[ 'images-slider__list-thumbnail-inner___2vzS2'] } id="images-container">
+                    
+                                    {SmallImageUI}
+
+                                    </ul>
+                                    <div className={styles[ 'ic-ic-arrow-down'] +" "+styles[ 'images-slider__images-navigation___KCIEC'] +" "+styles[ 'images-slider__navigation-down___2GHVX']} />
+                                </div>
+                                <div className={styles[ 'hidden-lg-up'] +" "+ styles[ 'images-slider__slider-wrapper___1hmGf'] }>
+                                    <Slider {...settings}>
+                                        {HugeImageUI}
+                                    </Slider>
+                                    <div className={`${styles[ 'images-slider__sold-out-overlay___2Avrv']}`}>
+                                        Hết hàng
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={`${styles[ 'hidden-md-down']} ${ styles[ 'images-slider__col-lg-10___3uZXv'] }`}>
+                                <div className={`${styles[ 'images-slider__main-image___1MFAY']}`}>
+                                    {huge_image}
+                                    <div className={`${styles[ 'images-slider__sold-out-overlay___2Avrv']}`}>
+                                        Hết hàng
+                                    </div>
+                                     {zoom_image}
+                                    <div className={`${styles[ 'images-slider__overlay___CJo-l']}`}  onMouseMove={this.onMouseMove.bind(this)}/>
+                                </div>
+                            </div>
+                        </div>
+                    )    
+}
+                
+  render() {
+      const { product: {detail} } = this.props;
+     let data= (detail) ? detail : {};
+     let title=(detail.title) ? detail.title : 'Chi tiết sản phẩm';
+     let meta_description= (detail.meta_description) ? detail.meta_description : '123order ';
+     let meta_data= (detail.meta) ? detail.meta : '123order,order';
+     let endTime=(detail.death_clock) ? new Date(detail.death_clock.end).getTime() : 0;
+     let price =currencyFormatter.format(data.price, { locale: 'vi-VN' });
+     let sale_price =currencyFormatter.format(data.sale_price, { locale: 'vi-VN' });
+      const meta = {
+      title: title,
+      description: meta_description,
+      canonical: 'http://example.com/path/to/page',
+      meta: {
+        charset: 'utf-8',
+        name: {
+          keywords: meta_data
+        }
+      }
+    };  
+    let infomation=[];
+    let info=(detail.infomation) ? detail.infomation : {}
+    if(info instanceof Object){
+        if(info.dimensions){
+            let dimensions=<li key={new Date().getTime()+"dimensions"}><div>Kích cỡ: {info.dimensions}</div></li>;
+            infomation.push(dimensions);
+        }
+        if(info.item_weight){
+            let item_weight=<li key={new Date().getTime()+"item_weight"}><div>Cân nặng: {info.item_weight}</div></li>;
+            infomation.push(item_weight);
+        }
+    }
+    
+    let delivery=''; 
+    return (
+    <DocumentMeta {...meta}>     
+      <div id="app__body___3NlTJ">
+        <div className={styles['container__container___1fvX0']}>
+          <div className={styles['product__product___2plEK']}>
+            <div
+              className={styles['product__product-header___2yYGL']}
+            >
+        {this.renderBreadcrumb()}
               <div
                 className={`${styles['product__data-layer-category___1lWBV']}
                   `}
@@ -145,140 +318,7 @@ class Detail extends PureComponent {
                     styles['product__slider-section___2raV3']
                   }`}
                 >
-                  <div className={`${styles['row__row___2roCA']}`}>
-                    <div
-                      className={`${styles['images-slider__col-lg-2___1yd0l']} ${
-                        styles['images-slider__slider-container___2AcvT']
-                      }`}
-                    >
-                      <div
-                        className={`${styles['hidden-md-down']} ${
-                          styles['images-slider__slider___2EiI8']
-                        }`}
-                      >
-                        <div
-                          className={`${styles['ic-ic-arrow-up']} ${
-                            styles['images-slider__images-navigation___KCIEC']
-                          } ${styles['images-slider__navigation-up___yqRaw']}`}
-                        />
-                        <ul
-                          className={`${styles['list-unstyled']} ${
-                            styles['images-slider__list-thumbnail-inner___2vzS2']
-                          }`}
-                          id="images-container"
-                        >
-                          <li className={`${styles['images-slider__image-border___2hkRy']}`}>
-                            <img
-                              className={`${styles['images-slider__image___wW9Yw']}`}
-                              src="https://images.leflair.vn/w90/q85/5bda7a8502c08e863b71bb2b.jpg"
-                              srcSet="https://images.leflair.vn/w90/q85/5bda7a8502c08e863b71bb2b.jpg 90w, https://images.leflair.vn/w144/q85/5bda7a8502c08e863b71bb2b.jpg 144w"
-                              sizes="80px"
-                            />
-                          </li>
-                          <li className={`${styles['images-slider__image-border___2hkRy']}`}>
-                            <img
-                              className={`${styles['images-slider__image___wW9Yw']}`}
-                              src="https://images.leflair.vn/w90/q85/5bda7a852b25c2eab5b33bc9.jpg"
-                              srcSet="https://images.leflair.vn/w90/q85/5bda7a852b25c2eab5b33bc9.jpg 90w, https://images.leflair.vn/w144/q85/5bda7a852b25c2eab5b33bc9.jpg 144w"
-                              sizes="80px"
-                            />
-                          </li>
-                          <li className={`${styles['images-slider__image-border___2hkRy']}`}>
-                            <img
-                              className={`${styles['images-slider__image___wW9Yw']}`}
-                              src="https://images.leflair.vn/w90/q85/5bda7a9793073444b0761dc1.jpg"
-                              srcSet="https://images.leflair.vn/w90/q85/5bda7a9793073444b0761dc1.jpg 90w, https://images.leflair.vn/w144/q85/5bda7a9793073444b0761dc1.jpg 144w"
-                              sizes="80px"
-                            />
-                          </li>
-                          <li
-                            className={`${styles['images-slider__image-border___2hkRy']} ${
-                              styles['images-slider__image-selected___3ftth']
-                            }`}
-                          >
-                            <img
-                              className={`${styles['images-slider__image___wW9Yw']}`}
-                              src="https://images.leflair.vn/w90/q85/5bda7a922b25c20d05b33bca.jpg"
-                              srcSet="https://images.leflair.vn/w90/q85/5bda7a922b25c20d05b33bca.jpg 90w, https://images.leflair.vn/w144/q85/5bda7a922b25c20d05b33bca.jpg 144w"
-                              sizes="80px"
-                            />
-                          </li>
-                        </ul>
-                        <div
-                          className={`${styles['ic-ic-arrow-down']} ${
-                            styles['images-slider__images-navigation___KCIEC']
-                          } ${styles['images-slider__navigation-down___2GHVX']}`}
-                        />
-                      </div>
-                      <div
-                        className={`${styles['hidden-lg-up']} ${
-                          styles['images-slider__slider-wrapper___1hmGf']
-                        }`}
-                      >
-                        <Slider {...settings}>
-                          <img
-                            className={`${styles['slick-slide']} ${styles['slick-active']} ${
-                              styles['images-slider__image___wW9Yw']
-                            }`}
-                            src="https://images.leflair.vn/w380/q85/5bda7a8502c08e863b71bb2b.jpg"
-                            srcSet="https://images.leflair.vn/w380/q85/5bda7a8502c08e863b71bb2b.jpg 380w, https://images.leflair.vn/w640/q85/5bda7a8502c08e863b71bb2b.jpg 640w, https://images.leflair.vn/w850/q85/5bda7a8502c08e863b71bb2b.jpg 850w"
-                            style={{ outline: 'none', width: 447 }}
-                          />
-                          <img
-                            className={`${styles['slick-slide']} ${
-                              styles['images-slider__image___wW9Yw']
-                            }`}
-                            src="https://images.leflair.vn/w380/q85/5bda7a852b25c2eab5b33bc9.jpg"
-                            srcSet="https://images.leflair.vn/w380/q85/5bda7a852b25c2eab5b33bc9.jpg 380w, https://images.leflair.vn/w640/q85/5bda7a852b25c2eab5b33bc9.jpg 640w, https://images.leflair.vn/w850/q85/5bda7a852b25c2eab5b33bc9.jpg 850w"
-                            style={{ outline: 'none', width: 447 }}
-                          />
-                          <img
-                            className={`${styles['slick-slide']} ${
-                              styles['images-slider__image___wW9Yw']
-                            }`}
-                            src="https://images.leflair.vn/w380/q85/5bda7a9793073444b0761dc1.jpg"
-                            srcSet="https://images.leflair.vn/w380/q85/5bda7a9793073444b0761dc1.jpg 380w, https://images.leflair.vn/w640/q85/5bda7a9793073444b0761dc1.jpg 640w, https://images.leflair.vn/w850/q85/5bda7a9793073444b0761dc1.jpg 850w"
-                            style={{ outline: 'none', width: 447 }}
-                          />
-                          <img
-                            className={`${styles['slick-slide']} ${
-                              styles['images-slider__image___wW9Yw']
-                            }`}
-                            src="https://images.leflair.vn/w380/q85/5bda7a922b25c20d05b33bca.jpg"
-                            srcSet="https://images.leflair.vn/w380/q85/5bda7a922b25c20d05b33bca.jpg 380w, https://images.leflair.vn/w640/q85/5bda7a922b25c20d05b33bca.jpg 640w, https://images.leflair.vn/w850/q85/5bda7a922b25c20d05b33bca.jpg 850w"
-                            style={{ outline: 'none', width: 447 }}
-                          />
-                        </Slider>
-                        <div className={`${styles['images-slider__sold-out-overlay___2Avrv']}`}>
-                          Hết hàng
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className={`${styles['hidden-md-down']} ${
-                        styles['images-slider__col-lg-10___3uZXv']
-                      }`}
-                    >
-                      <div className={`${styles['images-slider__main-image___1MFAY']}`}>
-                        <img
-                          className={`${styles['images-slider__image___wW9Yw']}`}
-                          src="https://images.leflair.vn/w580/q85/5bda7a922b25c20d05b33bca.jpg"
-                          srcSet="https://images.leflair.vn/w580/q85/5bda7a922b25c20d05b33bca.jpg 580w, https://images.leflair.vn/w1030/q85/5bda7a922b25c20d05b33bca.jpg 1030w, https://images.leflair.vn/w1080/q85/5bda7a922b25c20d05b33bca.jpg 1080w"
-                        />
-                        <div className={`${styles['images-slider__sold-out-overlay___2Avrv']}`}>
-                          Hết hàng
-                        </div>
-                        <img
-                          id="zoom-image"
-                          className={`${styles['images-slider__zoom-image___3jo-j']}`}
-                          src="https://images.leflair.vn/w1350/q85/5bda7a922b25c20d05b33bca.jpg"
-                          srcSet="https://images.leflair.vn/w1350/q85/5bda7a922b25c20d05b33bca.jpg 1350w, https://images.leflair.vn/w1440/q85/5bda7a922b25c20d05b33bca.jpg 1440w"
-                          style={{ top: '-138.534px', left: '-300.779px' }}
-                        />
-                        <div className={`${styles['images-slider__overlay___CJo-l']}`} />
-                      </div>
-                    </div>
-                  </div>
+                    {this.renderSlider()}
                   <div
                     className={`${styles['hidden-sm-down']} ${
                       styles['product__brand-info___1s9-O']
@@ -310,23 +350,23 @@ class Detail extends PureComponent {
                       style={{ fontSize: '18px' }}
                       className={`${styles['product-info__brand___3akKm']}`}
                     >
-                      J Natural Stones®
+                      {data.seller}
                     </h4>
                     <h4 className={`${styles['product-info__title___2J672']}`}>
-                      Bộ Vòng Tay Mặt Trăng Charm Ngôi Sao &amp; Vòng Tay Thạch Anh Tóc Đen Charm
-                      Hoa Mai
+                      {data.title}
                     </h4>
                     <div id={`${styles['product-prices']}`}>
                       <span className={`${styles['product-info__retail-price___2eFS9']}`}>
-                        1.690.000₫
+                        {price}
                       </span>
                       <span className={`${styles['product-info__sale-price___1unp2']}`}>
-                        1.149.000₫
+                        {sale_price}
                       </span>
                     </div>
                   </div>
+
                   <p className={`${styles['product__few-items-notify___1Q8z3']}`}>
-                    Chỉ còn lại 2 sản phẩm
+                    { (detail.amount) ? (`Chỉ còn lại {detail.amount} sản phẩm`) :("Hết hàng")  }
                   </p>
                   <div className={`${styles['product__few-items-notify___1Q8z3']}`}>
                     <button
@@ -339,31 +379,14 @@ class Detail extends PureComponent {
                       Thêm vào giỏ hàng
                     </button>
                   </div>
+                {(endTime > 0) && 
                   <div className={`${styles['product__sale-timer___RypVA']}`}>
                     <p>Ưu đãi này sẽ kết thúc trong:</p>
-                    <div
-                      className={`${styles['row__row___2roCA']} ${
-                        styles['sale-timer__timer-row___1JwVa']
-                      } ${styles['product__flex-center___1bEVZ']}`}
-                    >
-                      <div>
-                        <div>06</div>
-                        <div>Ngày</div>
-                      </div>
-                      <div>
-                        <div>10</div>
-                        <div>Giờ</div>
-                      </div>
-                      <div>
-                        <div>01</div>
-                        <div>Phút</div>
-                      </div>
-                      <div>
-                        <div>36</div>
-                        <div>Giây</div>
-                      </div>
-                    </div>
+                    
+                    <CountDown style={{fontSize: 20}} target={endTime} format={this.formatCountDown} />
+                     
                   </div>
+                  }
                   <div className={`${styles['product__additional-info___34ReF']}`}>
                     <div>
                       <div className={`${styles['additional-info__item___38NHG']}`}>
@@ -442,32 +465,7 @@ class Detail extends PureComponent {
                           } collapselow`}
                         >
                           <div className={`${styles['product-description__product-info___nWbK5']}`}>
-                            <ul className={`${styles['product-description__desc-list___3qcUM']}`}>
-                              <li>
-                                <div>Gia công: Việt Nam</div>
-                              </li>
-                              <li>
-                                <div>
-                                  Ý nghĩa:
-                                  <ul>
-                                    <li>
-                                      Đá mặt trăng được coi như hấp thụ tinh hoa của mặt trăng, mang
-                                      đến sự êm đềm và khiến tâm trí không bị xao nhãng, xóa bỏ căng
-                                      thẳng, nguôi ngoai cơn giận. Ngoài ra, còn có tác động tới với
-                                      thận niệu đạo và bàng quang, điều trị phù thũng.
-                                    </li>
-                                    <li>
-                                      Thạch anh tóc đen được coi là viên đá của tình cảm, giúp cân
-                                      bằng cảm xúc, xóa bỏ trạng thái căng thẳng, trầm cảm kéo dài.{' '}
-                                    </li>
-                                    <li>
-                                      Xua đuổi hư khí, giúp người đeo tránh được điềm xui rủi, mang
-                                      đến vận may, cơ hội.
-                                    </li>
-                                  </ul>
-                                </div>
-                              </li>
-                            </ul>
+                            {ReactHtmlParser(data.description)}
                           </div>
                         </div>
                       </div>
@@ -552,19 +550,13 @@ class Detail extends PureComponent {
                           } collapselow`}
                         >
                           <div>
+                            
                             <div className={`${styles['product-description__size-fit___1p0wI']}`}>
                               <ul className={`${styles['product-description__desc-list___3qcUM']}`}>
-                                <li>
-                                  <div>Đường kính: 6cm</div>
-                                </li>
-                                <li>
-                                  <div>Hạt đá mặt trăng: 0.3cm</div>
-                                </li>
-                                <li>
-                                  <div>Hạt đá thạch anh tóc đen: 0.5cm</div>
-                                </li>
+                                {infomation}
                               </ul>
                             </div>
+                            
                           </div>
                         </div>
                       </div>
@@ -718,6 +710,7 @@ class Detail extends PureComponent {
           </div>
         </div>
       </div>
+    </DocumentMeta>
     );
   }
 }

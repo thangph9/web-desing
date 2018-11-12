@@ -78,10 +78,10 @@ class ProductItem extends PureComponent{
         }
     
         return (
-            <Link className={`${styles[ 'home__col-md-6___2zJjj']} ${ styles[ 'home__paddingRemove___3EmRr'] }`} to={`/sales/${seoTitle}`} data= { data } >
+            <Link className={`${styles[ 'home__col-md-6___2zJjj']} ${ styles[ 'home__paddingRemove___3EmRr'] }`} to={`/product/${seoTitle}`} data= { data } >
                 <div className={`${styles[ 'sale-card__currentSale___cC1H3']}`}>
                     <div className={`${styles[ 'sale-card__image-wrapper___EfOla']}`}>
-                        <img className={`${styles[ 'sale-card__currentSaleImg___3wFRM']}`} src={`/images/320w/${thumbnail}`} alt={`Giảm Đến ${data.sale}% - ${data.title} `} />
+                        <img className={`${styles[ 'sale-card__currentSaleImg___3wFRM']}`} src={`/images/w320/${thumbnail}`} alt={`Giảm Đến ${data.sale}% - ${data.title} `} />
                     </div>
                     <div className={`${styles[ 'sale-card__currentSaleInfo___2LkMa']}`}>
                         <div className={`${styles[ 'sale-card__currentSaleTitle___1eVtM']}`}>

@@ -127,3 +127,10 @@ export async function getFakeCaptcha(mobile) {
 export async function getProductByCategory(category){
     return request('/api/product/list');
 }
+
+export async function getProductDetail(params){
+    return request('/api/product/detail',{
+        method: 'POST',
+        body: params,
+    });
+}

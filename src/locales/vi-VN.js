@@ -75,6 +75,7 @@ export default {
   'menu.dashboard.monitor': 'Monitor',
   'menu.dashboard.workplace': 'Workplace',
   'menu.form': 'Form',
+  'menu.detail': 'Chi tiết',
   'menu.form.basicform': 'Basic Form',
   'menu.form.stepform': 'Step Form',
   'menu.form.stepform.info': 'Step Form(write transfer information)',
