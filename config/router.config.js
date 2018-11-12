@@ -31,6 +31,11 @@ export default [
           },
         ],
       },
+      {
+        path: '/detail',
+        name: 'detail',
+        component: './Detail/',
+      },
     ],
   },
 
