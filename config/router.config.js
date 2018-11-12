@@ -36,6 +36,26 @@ export default [
         name: 'detail',
         component: './Detail/',
       },
+      {
+        path: '/ebay',
+        name: 'ebay',
+        component: './Ebay/',
+      },
+      {
+        path: '/adidas',
+        name: 'adidas',
+        component: './Adidas/',
+      },
+      {
+        path: '/nike',
+        name: 'nike',
+        component: './Nike/',
+      },
+      {
+        path: '/amazon',
+        name: 'amazon',
+        component: './Amazon/',
+      },
     ],
   },
 
