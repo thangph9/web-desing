@@ -56,6 +56,11 @@ export default [
         name: 'amazon',
         component: './Amazon/',
       },
+      {
+        path: '/landing-page',
+        name: 'landingpage',
+        component: './LandingPage/',
+      },
     ],
   },
 
