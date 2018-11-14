@@ -14,8 +14,11 @@ module.exports={
         brand      : 'text',
         style      : 'text',
         star                 : 'text',
-        color                 : 'text',
+        color                : 'text',
         size                 : 'text',
+        currency    :'text',
+        amount      :'int',
+        materials_use       : 'text',
         node_name          : 'text',
         nodeid                 :{
             type: "set",

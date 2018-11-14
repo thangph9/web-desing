@@ -129,8 +129,11 @@ export async function getProductByCategory(category){
 }
 
 export async function getProductDetail(params){
-    return request('/api/product/detail',{
+    return request('/api/product/DT',{
         method: 'POST',
         body: params,
     });
+}
+export async function getRaito(){
+    return request('/api/raito');
 }

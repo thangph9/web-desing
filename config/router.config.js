@@ -63,7 +63,7 @@ export default [
         ],
       },
       {
-        path: '/product/:seo_link-:productid',
+        path: '/product/:seo_link/:productid',
         name: 'detail',
         component: './Detail/',
       },
@@ -88,15 +88,13 @@ export default [
         component: './Amazon/',
       },
       {
-<<<<<<< HEAD
           component: '404',
-      }
-=======
+      },
+        {
         path: '/landing-page',
         name: 'landingpage',
         component: './LandingPage/',
       },
->>>>>>> 37b1062fa741fbca6afe0c4a077d735b1a0d5cc7
     ],
   },
   {

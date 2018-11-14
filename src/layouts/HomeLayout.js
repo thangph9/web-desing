@@ -230,7 +230,7 @@ class HomeLayout extends React.PureComponent {
     return <SettingDrawer />;
   }
 
-  render() {
+  render() { 
     const {
       // eslint-disable-next-line no-unused-vars
       navTheme,

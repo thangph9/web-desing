@@ -1,11 +1,11 @@
-import { getProductByCategory,getProductDetail } from '@/services/api';
+import { getProductByCategory,getProductDetail,getRaito } from '@/services/api';
 
 export default {
   namespace: 'product',
 
   state: {
     list: [],
-    detail: [],  
+    detail: {},  
   },
 
   effects: {
@@ -29,8 +29,8 @@ export default {
             payload: (response.data) ? response.data : {},
           });
       }
-      
-    },
+     },
+     
   },
 
   reducers: {
@@ -46,5 +46,6 @@ export default {
         detail: action.payload,
       };
     },
+            
   },
 };

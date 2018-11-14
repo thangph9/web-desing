@@ -33,6 +33,8 @@ import { connect } from 'dva';
 import DocumentTitle from 'react-document-title';
 import DocumentMeta from 'react-document-meta';
 import CountDown from '@/components/CountDown';
+import Link from 'umi/link';
+import Exception from '@/components/Exception';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import {
   Form,
@@ -98,11 +100,13 @@ class Detail extends PureComponent {
       try{
           productid=match.params.productid;
       }catch(e){
+          
       }
       dispatch({
           type: 'product/detail',
           payload: {productid}
       })
+      
   }
 handleChangeImage=(e)=>{
     
@@ -259,14 +263,15 @@ renderSlider(){
 }
                 
   render() {
-      const { product: {detail} } = this.props;
+     const { product: {detail} ,loading} = this.props;
+        
      let data= (detail) ? detail : {};
      let title=(detail.title) ? detail.title : 'Chi tiết sản phẩm';
      let meta_description= (detail.meta_description) ? detail.meta_description : '123order ';
      let meta_data= (detail.meta) ? detail.meta : '123order,order';
      let endTime=(detail.death_clock) ? new Date(detail.death_clock.end).getTime() : 0;
-     let price =currencyFormatter.format(data.price, { locale: 'vi-VN' });
-     let sale_price =currencyFormatter.format(data.sale_price, { locale: 'vi-VN' });
+     let price =currencyFormatter.format(data['_price'], { locale: 'vi-VN' });
+     let sale_price =currencyFormatter.format(data['_sale_price'], { locale: 'vi-VN' });
       const meta = {
       title: title,
       description: meta_description,
@@ -318,23 +323,10 @@ renderSlider(){
                     styles['product__slider-section___2raV3']
                   }`}
                 >
-                    {this.renderSlider()}
-                  <div
-                    className={`${styles['hidden-sm-down']} ${
-                      styles['product__brand-info___1s9-O']
-                    }`}
-                  >
-                    <img src="https://leflair-assets.storage.googleapis.com/59ca0a3be1b357001a65d626.jpg" />
-                    <h4 className={`${styles['brand-info__heading___EhwGa']}`}>
-                      "Đem đến cho bạn nhiều điều bình an"
-                    </h4>
-                    <div className={`${styles['brand-info__desc___19Dk4']}`}>
-                      Trang sức đá tự nhiên không chỉ là nguồn thu hút những năng lượng tốt mà còn
-                      để làm"điệu". J Natural Stones® ra đời với giá cả cạnh tranh, chế tác tinh
-                      xảo, sản phẩm kiểm định nguồn gốc rõ ràng sẽ là phụ kiện tạo được điểm nhấn
-                      làm nổi bật cá tính riêng biệt trong mỗi người.
-                    </div>
-                  </div>
+                    {this.renderSlider()}   
+                <div className={`${styles[ 'hidden-sm-down']} ${ styles[ 'product__brand-info___1s9-O'] }`}>
+                    {ReactHtmlParser(data.desc_detail)}
+                </div>
                 </div>
                 <div
                   className={`${styles['product__right-pane___rYPsq']} ${
@@ -366,7 +358,7 @@ renderSlider(){
                   </div>
 
                   <p className={`${styles['product__few-items-notify___1Q8z3']}`}>
-                    { (detail.amount) ? (`Chỉ còn lại {detail.amount} sản phẩm`) :("Hết hàng")  }
+                    { (detail.amount) ? (`Chỉ còn lại ${detail.amount} sản phẩm`) :("Hết hàng")  }
                   </p>
                   <div className={`${styles['product__few-items-notify___1Q8z3']}`}>
                     <button
@@ -425,7 +417,7 @@ renderSlider(){
                             className={`${styles['additional-info__open-tab-icon___1aJYK']} ${
                               styles['ic-ic-open-new-tab']
                             }`}
-                          />{' '}
+                          /> 
                         </a>
                       </div>
                     </div>
@@ -464,7 +456,7 @@ renderSlider(){
                             styles['product-description__panel-collapse___3G-5Q']
                           } collapselow`}
                         >
-                          <div className={`${styles['product-description__product-info___nWbK5']}`}>
+                          <div className={`${styles['product-description__product-info___nWbK5']}`} >
                             {ReactHtmlParser(data.description)}
                           </div>
                         </div>
@@ -494,6 +486,7 @@ renderSlider(){
                                   }`}
                                 />
                               </span>
+                            
                             </div>
                           </a>
                         </h4>
@@ -507,10 +500,9 @@ renderSlider(){
                             className={`${styles['product-description__material-care___1szER']}`}
                           >
                             <ul className={`${styles['product-description__desc-list___3qcUM']}`}>
-                              <li>
-                                <div>Chất liệu: Đá mặt trăng, đá thạch anh tóc đen, bạc 925</div>
-                              </li>
+                                
                             </ul>
+                            {ReactHtmlParser(data.materials_use)}
                           </div>
                         </div>
                       </div>

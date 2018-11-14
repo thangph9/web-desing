@@ -46,7 +46,7 @@ class ProductItem extends PureComponent{
     render(){
         const { data } =this.props;
         let productid=(data.productid) ? data.productid.replace(/\-/g,'') : 'null';
-        let seoTitle=data.seo_link+"-"+productid;
+        let seoTitle=data.seo_link+"/"+productid;
         let thumbnail=(data.thumbnail) ? data.thumbnail.replace(/\-/g,'') : 'false';
         let timeline='';
         let start,end;
@@ -76,7 +76,6 @@ class ProductItem extends PureComponent{
                 timeline=Math.round(tmpTime/60)+" Phút ";
             }
         }
-    
         return (
             <Link className={`${styles[ 'home__col-md-6___2zJjj']} ${ styles[ 'home__paddingRemove___3EmRr'] }`} to={`/product/${seoTitle}`} data= { data } >
                 <div className={`${styles[ 'sale-card__currentSale___cC1H3']}`}>
@@ -85,7 +84,7 @@ class ProductItem extends PureComponent{
                     </div>
                     <div className={`${styles[ 'sale-card__currentSaleInfo___2LkMa']}`}>
                         <div className={`${styles[ 'sale-card__currentSaleTitle___1eVtM']}`}>
-                        { `Giảm Đến ${data.sale}% - ${data.title}` }
+                        { `${data.title}` }
                         </div>
                     {isDeath &&
                         <div className={`${styles[ 'sale-card__endTimeWrap___3q0l3']}`}>
@@ -169,7 +168,10 @@ class Home extends PureComponent {
   renderBestSeller(){
         const { product :{ list : { bestSeller } } } = this.props;  
         let data= (bestSeller) ? bestSeller : [];
-        return (bestSeller) ? (<div>
+        if(data.length > 0){
+
+        
+        return (<div>
             <div className={`${styles[ 'section-title__title-wrap___9DwpB']} ${ styles[ 'home__stillOnSaleWrap____52sJ'] }`}>
             <h2 className={`${styles[ 'section-title__title___2Dw2G']}`}>Vẫn đang diễn Ra</h2>
             <div className={`${styles[ 'section-title__sub-title___333O9']}`}>
@@ -182,21 +184,34 @@ class Home extends PureComponent {
                     })
                 }
             </div>
-        </div>) : ('')
+        </div>) 
+        }else{
+            return '';
+        }
     }
   renderHotNew(){
-        const { product :{ list : { hotday } } } = this.props;  
+        const { product :{ list : { hotnew } } } = this.props; 
+        let data= (hotnew) ? hotnew : [];
+        if(data.length > 0){        
         return (<div id={`${styles[ 'best-sellers']}`} className={`${styles[ 'home__best-sellers___3Yh-1']}`}>
             <div className={`${styles[ 'section-title__title-wrap___9DwpB']} ${ styles[ 'best-sellers__title-container___3YMp3'] }`}>
                 <h2 className={`${styles[ 'section-title__title___2Dw2G']}`}>
                     Bán chạy nhất trong Ngày
                 </h2>
             </div>
-            
-        </div>)    
+            <div className={`${styles[ 'row__row___2roCA']}`}>
+                {data.map((e,i)=>{
+                      return (<ProductItem data={e} key={i} />)
+                    })
+                }
+            </div>
+        </div>)  
+        }else{
+        return '';
+        }
   }            
   render() {
-    const { product :{ list : { news,days,hotday } } } = this.props;
+    const { product :{ list : { news,days,hotnew } } } = this.props;
       
     return (
       <div>
@@ -213,7 +228,7 @@ class Home extends PureComponent {
             />
             <img
               className={`${styles['hidden-sm-down']}`}
-              src="/images/e18562e9c9244b75a8239629b6d56cf6.jpg"
+              src="/images/6cfe167898634dd99b9abfe3ba7ea507.jpg"
               alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
             />
             
