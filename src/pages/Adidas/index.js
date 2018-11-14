@@ -43,6 +43,7 @@ import {
   Radio,
   Icon,
   Tooltip,
+  Skeleton,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './index.less';
@@ -54,10 +55,146 @@ const { TextArea } = Input;
 
 @connect(({ loading }) => ({
   submitting: loading.effects['form/submitRegularForm'],
+  loading,
 }))
 @Form.create()
 class Adidas extends PureComponent {
+  componentDidMount() {
+    var anhBanner = document.getElementsByClassName('anh-banner')[0];
+    if (anhBanner != null) {
+      anhBanner.style.height = '400px';
+      anhBanner.style['background'] = "url('/image/Reload-1s-100px.gif') no-repeat center";
+    }
+    var anhAo = document.getElementsByClassName('anh-ao');
+    for (var i = 0; i < anhAo.length; i++) {
+      if (anhAo != null) {
+        anhAo[i].style.height = '242px';
+        anhAo[i].style['background'] = "url('/image/Reload-1s-100px.gif') no-repeat center";
+      }
+    }
+  }
+  renderBanner() {
+    var {
+      loading: { global },
+    } = this.props;
+    return (
+      <div className={`${styles['row__row___2roCA']}`}>
+        <div
+          className={`${styles['first-sale-tile__col-lg-9___2uu-j']} ${
+            styles['first-sale-tile__image-container___VGe3q']
+          }`}
+        >
+          <Skeleton className="anh-banner" active loading={!global} paragraph={false} title={false}>
+            <img
+              src="https://images.leflair.vn/w640/q85/5bdad591afd2a6680da62d6e.jpg"
+              srcSet="https://images.leflair.vn/w640/q85/5bdad591afd2a6680da62d6e.jpg 640w, https://images.leflair.vn/w1080/q85/5bdad591afd2a6680da62d6e.jpg 1080w, https://images.leflair.vn/w1440/q85/5bdad591afd2a6680da62d6e.jpg 1440w"
+              sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, 100vw"
+              alt="Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc"
+            />
+          </Skeleton>
+        </div>
+        <div
+          className={`${styles['first-sale-tile__col-lg-3___2ZXJG']} ${
+            styles['first-sale-tile__text-container___3Kt7T']
+          }`}
+        >
+          <Skeleton active loading={!global} paragraph={{ rows: 5, width: '100%' }}>
+            <h2 className={`${styles['first-sale-tile__title___2Dutp']}`}>
+              Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc
+            </h2>
+            <span className={`${styles['first-sale-tile__time-wrap___3v0IL']}`}>
+              <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />{' '}
+              <span className={`${styles['end-time__text___1A-sx']}`}>Còn</span>{' '}
+              <span className={`${styles['end-time__timer___LMsIT']}`}>4 ngày</span>
+            </span>
+            <button
+              className={`${styles['first-sale-tile__btn___2kqdj']} ${
+                styles['first-sale-tile__btn-primary___2YFp4']
+              } ${styles['first-sale-tile__btnSeeMore___2a8MB']}`}
+            >
+              Xem chi tiết
+            </button>
+          </Skeleton>
+        </div>
+      </div>
+    );
+  }
+  renderBannerMoblie() {
+    var {
+      loading: { global },
+    } = this.props;
+    return (
+      <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
+        <div className={`${styles['sale-card__international-tile___3A645']}`}>Hàng nhập khẩu</div>
+        <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
+          <Skeleton className="anh-ao" active loading={!global} paragraph={false} title={false}>
+            <img
+              className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
+              src="https://images.leflair.vn/w640/q85/5bdad591afd2a6680da62d6e.jpg"
+              srcSet="https://images.leflair.vn/w640/q85/5bdad591afd2a6680da62d6e.jpg 640w, https://images.leflair.vn/w1080/q85/5bdad591afd2a6680da62d6e.jpg 1080w, https://images.leflair.vn/w1440/q85/5bdad591afd2a6680da62d6e.jpg 1440w"
+              sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, (max-width: 991px) 336px, (min-width: 992px) 456px, (min-width: 1200px) 546px, 100vw"
+              alt="Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc"
+            />
+          </Skeleton>
+        </div>
+        <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
+          <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
+            Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc
+          </div>
+          <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
+            <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
+              <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />{' '}
+              <span className={`${styles['end-time__text___1A-sx']}`}>Còn</span>{' '}
+              <span className={`${styles['end-time__timer___LMsIT']}`}>4 ngày</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  renderItems() {
+    var {
+      loading: { global },
+    } = this.props;
+    return (
+      <a
+        className={`${styles['default__col-md-6___9I2wX']} ${
+          styles['default__padding-remove___2T9LM']
+        }`}
+        href="/sales/nanas-wonderland-windmill-nutritionworks...-5bd98f1f6ada6d0bdd52fc2f"
+      >
+        <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
+          <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
+            <Skeleton className="anh-ao" active loading={!global} paragraph={false} title={false}>
+              <img
+                className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
+                src="https://images.leflair.vn/w640/q85/5bdadd62c6b3c5db940a2338.jpg"
+                srcSet="https://images.leflair.vn/w640/q85/5bdadd62c6b3c5db940a2338.jpg 640w, https://images.leflair.vn/w1080/q85/5bdadd62c6b3c5db940a2338.jpg 1080w, https://images.leflair.vn/w1440/q85/5bdadd62c6b3c5db940a2338.jpg 1440w"
+                sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, (max-width: 991px) 336px, (min-width: 992px) 456px, (min-width: 1200px) 546px, 100vw"
+                alt="Nana's Wonderland, Windmill, NutritionWorks..."
+              />
+            </Skeleton>
+          </div>
+          <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
+            <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
+              Nana's Wonderland, Windmill, NutritionWorks...
+            </div>
+            <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
+              <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
+                <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />{' '}
+                <span className={`${styles['end-time__text___1A-sx']}`}>Còn</span>{' '}
+                <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+    );
+  }
   render() {
+    var {
+      loading: { global },
+    } = this.props;
     return (
       <div
         className={`${styles['container__container___1fvX0']} ${
@@ -72,41 +209,7 @@ class Adidas extends PureComponent {
               }`}
               href="/sales/giam-den-50-blackmoresr-thuc-pham-chuc-nang-tu-uc-5bd6c3137cf0476b22488d23"
             >
-              <div className={`${styles['row__row___2roCA']}`}>
-                <div
-                  className={`${styles['first-sale-tile__col-lg-9___2uu-j']} ${
-                    styles['first-sale-tile__image-container___VGe3q']
-                  }`}
-                >
-                  <img
-                    src="https://images.leflair.vn/w640/q85/5bdad591afd2a6680da62d6e.jpg"
-                    srcSet="https://images.leflair.vn/w640/q85/5bdad591afd2a6680da62d6e.jpg 640w, https://images.leflair.vn/w1080/q85/5bdad591afd2a6680da62d6e.jpg 1080w, https://images.leflair.vn/w1440/q85/5bdad591afd2a6680da62d6e.jpg 1440w"
-                    sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, 100vw"
-                    alt="Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc"
-                  />
-                </div>
-                <div
-                  className={`${styles['first-sale-tile__col-lg-3___2ZXJG']} ${
-                    styles['first-sale-tile__text-container___3Kt7T']
-                  }`}
-                >
-                  <h2 className={`${styles['first-sale-tile__title___2Dutp']}`}>
-                    Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc
-                  </h2>
-                  <span className={`${styles['first-sale-tile__time-wrap___3v0IL']}`}>
-                    <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />{' '}
-                    <span className={`${styles['end-time__text___1A-sx']}`}>Còn</span>{' '}
-                    <span className={`${styles['end-time__timer___LMsIT']}`}>4 ngày</span>
-                  </span>
-                  <button
-                    className={`${styles['first-sale-tile__btn___2kqdj']} ${
-                      styles['first-sale-tile__btn-primary___2YFp4']
-                    } ${styles['first-sale-tile__btnSeeMore___2a8MB']}`}
-                  >
-                    Xem chi tiết
-                  </button>
-                </div>
-              </div>
+              {this.renderBanner()}
             </a>
             <a
               className={`${styles['hidden-lg-up']} ${styles['cate-first-sale']} ${
@@ -116,97 +219,12 @@ class Adidas extends PureComponent {
               }`}
               href="/sales/giam-den-50-blackmoresr-thuc-pham-chuc-nang-tu-uc-5bd6c3137cf0476b22488d23"
             >
-              <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
-                <div className={`${styles['sale-card__international-tile___3A645']}`}>
-                  Hàng nhập khẩu
-                </div>
-                <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-                  <img
-                    className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-                    src="https://images.leflair.vn/w640/q85/5bdad591afd2a6680da62d6e.jpg"
-                    srcSet="https://images.leflair.vn/w640/q85/5bdad591afd2a6680da62d6e.jpg 640w, https://images.leflair.vn/w1080/q85/5bdad591afd2a6680da62d6e.jpg 1080w, https://images.leflair.vn/w1440/q85/5bdad591afd2a6680da62d6e.jpg 1440w"
-                    sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, (max-width: 991px) 336px, (min-width: 992px) 456px, (min-width: 1200px) 546px, 100vw"
-                    alt="Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc"
-                  />
-                </div>
-                <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
-                  <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
-                    Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc
-                  </div>
-                  <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
-                    <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
-                      <i
-                        className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`}
-                      />{' '}
-                      <span className={`${styles['end-time__text___1A-sx']}`}>Còn</span>{' '}
-                      <span className={`${styles['end-time__timer___LMsIT']}`}>4 ngày</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
+              {this.renderBannerMoblie()}
             </a>
           </div>
 
-          <a
-            className={`${styles['default__col-md-6___9I2wX']} ${
-              styles['default__padding-remove___2T9LM']
-            }`}
-            href="/sales/nanas-wonderland-windmill-nutritionworks...-5bd98f1f6ada6d0bdd52fc2f"
-          >
-            <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
-              <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-                <img
-                  className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-                  src="https://images.leflair.vn/w640/q85/5bdadd62c6b3c5db940a2338.jpg"
-                  srcSet="https://images.leflair.vn/w640/q85/5bdadd62c6b3c5db940a2338.jpg 640w, https://images.leflair.vn/w1080/q85/5bdadd62c6b3c5db940a2338.jpg 1080w, https://images.leflair.vn/w1440/q85/5bdadd62c6b3c5db940a2338.jpg 1440w"
-                  sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, (max-width: 991px) 336px, (min-width: 992px) 456px, (min-width: 1200px) 546px, 100vw"
-                  alt="Nana's Wonderland, Windmill, NutritionWorks..."
-                />
-              </div>
-              <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
-                <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
-                  Nana's Wonderland, Windmill, NutritionWorks...
-                </div>
-                <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
-                  <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
-                    <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />{' '}
-                    <span className={`${styles['end-time__text___1A-sx']}`}>Còn</span>{' '}
-                    <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a
-            className={`${styles['default__col-md-6___9I2wX']} ${
-              styles['default__padding-remove___2T9LM']
-            }`}
-            href="/sales/j-natural-stonesr-trang-suc-phong-thuy-5bd6c4d93bc9335db599c3b6"
-          >
-            <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
-              <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-                <img
-                  className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-                  src="https://images.leflair.vn/w640/q85/5bda9a0a02c08ed3c471bbbb.jpg"
-                  srcSet="https://images.leflair.vn/w640/q85/5bda9a0a02c08ed3c471bbbb.jpg 640w, https://images.leflair.vn/w1080/q85/5bda9a0a02c08ed3c471bbbb.jpg 1080w, https://images.leflair.vn/w1440/q85/5bda9a0a02c08ed3c471bbbb.jpg 1440w"
-                  sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, (max-width: 991px) 336px, (min-width: 992px) 456px, (min-width: 1200px) 546px, 100vw"
-                  alt="J Natural Stones® Trang Sức Phong Thủy"
-                />
-              </div>
-              <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
-                <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
-                  J Natural Stones® Trang Sức Phong Thủy
-                </div>
-                <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
-                  <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
-                    <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />{' '}
-                    <span className={`${styles['end-time__text___1A-sx']}`}>Còn</span>{' '}
-                    <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </a>
+          {this.renderItems()}
+          {this.renderItems()}
         </div>
       </div>
     );

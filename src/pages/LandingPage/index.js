@@ -44,6 +44,7 @@ import {
   Radio,
   Icon,
   Tooltip,
+  Skeleton,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './index.less';
@@ -56,10 +57,28 @@ const { TextArea } = Input;
 
 @connect(({ loading }) => ({
   submitting: loading.effects['form/submitRegularForm'],
+  loading,
 }))
 @Form.create()
 class LandingPage extends PureComponent {
+  componentDidMount() {
+    var anhBanner = document.getElementsByClassName('anh-banner')[0];
+    if (anhBanner != null) {
+      anhBanner.style.height = '400px';
+      anhBanner.style['background'] = "url('/image/Reload-1s-100px.gif') no-repeat center";
+    }
+    var anhAo = document.getElementsByClassName('anh-ao');
+    for (var i = 0; i < anhAo.length; i++) {
+      if (anhAo != null) {
+        anhAo[i].style.height = '220px';
+        anhAo[i].style['background'] = "url('/image/Reload-1s-100px.gif') no-repeat center";
+      }
+    }
+  }
   render() {
+    var {
+      loading: { global },
+    } = this.props;
     return (
       <div>
         <div
@@ -68,20 +87,28 @@ class LandingPage extends PureComponent {
           }
         >
           <a href="/sales/giam-den-60-lotus-bo-chan-and-drap-boc-5bd7cf7f77f2254353d8c2ff">
-            <img
-              className={`${styles['hidden-md-up']}`}
-              src="https://images.leflair.vn/w640/q85/5bdc00a4c6b3c5a18f0a3296.jpg"
-              srcSet="https://images.leflair.vn/w640/q85/5bdc00a4c6b3c5a18f0a3296.jpg 640w, https://images.leflair.vn/w1080/q85/5bdc00a4c6b3c5a18f0a3296.jpg 1080w, https://images.leflair.vn/w1440/q85/5bdc00a4c6b3c5a18f0a3296.jpg 1440w"
-              sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, 100vw"
-              alt="Giảm Đến 60% - Lotus Bộ Chăn & Drap Bọc"
-            />
-            <img
-              className={styles['hidden-sm-down']}
-              src="https://images.leflair.vn/w850/q85/5bdc21d10946306c20111702.jpg"
-              srcSet="https://images.leflair.vn/w850/q85/5bdc21d10946306c20111702.jpg 850w, https://images.leflair.vn/w1440/q85/5bdc21d10946306c20111702.jpg 1440w, https://images.leflair.vn/w2560/q85/5bdc21d10946306c20111702.jpg 2560w"
-              sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, 100vw"
-              alt="Giảm Đến 60% - Lotus Bộ Chăn & Drap Bọc"
-            />
+            <Skeleton
+              className="anh-banner"
+              active
+              loading={!global}
+              paragraph={false}
+              title={false}
+            >
+              <img
+                className={`${styles['hidden-md-up']}`}
+                src="https://images.leflair.vn/w640/q85/5bdc00a4c6b3c5a18f0a3296.jpg"
+                srcSet="https://images.leflair.vn/w640/q85/5bdc00a4c6b3c5a18f0a3296.jpg 640w, https://images.leflair.vn/w1080/q85/5bdc00a4c6b3c5a18f0a3296.jpg 1080w, https://images.leflair.vn/w1440/q85/5bdc00a4c6b3c5a18f0a3296.jpg 1440w"
+                sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, 100vw"
+                alt="Giảm Đến 60% - Lotus Bộ Chăn & Drap Bọc"
+              />
+              <img
+                className={styles['hidden-sm-down']}
+                src="https://images.leflair.vn/w850/q85/5bdc21d10946306c20111702.jpg"
+                srcSet="https://images.leflair.vn/w850/q85/5bdc21d10946306c20111702.jpg 850w, https://images.leflair.vn/w1440/q85/5bdc21d10946306c20111702.jpg 1440w, https://images.leflair.vn/w2560/q85/5bdc21d10946306c20111702.jpg 2560w"
+                sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, 100vw"
+                alt="Giảm Đến 60% - Lotus Bộ Chăn & Drap Bọc"
+              />
+            </Skeleton>
             <div
               className={
                 styles['hidden-md-up'] +
@@ -214,30 +241,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -247,30 +290,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -280,30 +339,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -313,30 +388,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -346,30 +437,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -379,30 +486,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -412,30 +535,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -445,30 +584,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -478,30 +633,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -511,30 +682,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -544,30 +731,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -577,30 +780,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -610,30 +829,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -643,30 +878,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -676,30 +927,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -709,30 +976,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -742,30 +1025,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -775,30 +1074,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -808,30 +1123,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -841,30 +1172,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -874,30 +1221,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -907,30 +1270,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -940,30 +1319,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -973,30 +1368,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                     <li>
@@ -1006,30 +1417,46 @@ class LandingPage extends PureComponent {
                             href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html"
                             className={`${styles1['lmkt-link-img']}`}
                           >
-                            <img
-                              className={`${styles1['lazy']}`}
-                              data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
-                              src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
-                              style={{ display: 'inline' }}
-                            />
+                            <Skeleton
+                              className="anh-ao"
+                              active
+                              loading={!global}
+                              paragraph={false}
+                              title={false}
+                            >
+                              <img
+                                className={`${styles1['lazy']}`}
+                                data-original="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                alt="Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816"
+                                src="https://static-v3.weshop.com.vn/upload/z/d/k/p/h/o/4/r/s/z/tommy-hilfiger-women-s-claud-28360.jpg"
+                                style={{ display: 'inline' }}
+                              />
+                            </Skeleton>
                           </a>
                           <span className={`${styles1['lmkt-sale']}`}>-32 %</span>
                           <div className={`${styles1['lmkt-cart']}`}>
                             <a href="#">detail</a>
                           </div>
                         </div>
-                        <div className={`${styles1['lmkt-prod-tit']}`}>
-                          <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
-                            Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
-                          </a>
-                        </div>
-                        <div className={`${styles1['lmkt-prod-pri']}`}>
-                          <p>
-                            2.913.000 VNĐ
-                            <span>4.055.000 VNĐ</span>
-                          </p>
-                        </div>
+                        <Skeleton
+                          className="detail-product"
+                          active
+                          loading={!global}
+                          paragraph={{ rows: 4 }}
+                          title={false}
+                        >
+                          <div className={`${styles1['lmkt-prod-tit']}`}>
+                            <a href="/ebay/item/tommy-hilfiger-women-s-claudia-30m-leather-watch-1781816-202351543337.html">
+                              Tommy Hilfiger Women's Claudia 30m Leather Watch 1781816
+                            </a>
+                          </div>
+                          <div className={`${styles1['lmkt-prod-pri']}`}>
+                            <p>
+                              2.913.000 VNĐ
+                              <span>4.055.000 VNĐ</span>
+                            </p>
+                          </div>
+                        </Skeleton>
                       </div>
                     </li>
                   </ul>

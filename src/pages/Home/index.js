@@ -1,3 +1,14 @@
+/* eslint-disable no-var */
+/* eslint-disable no-useless-escape */
+/* eslint-disable one-var */
+/* eslint-disable prefer-template */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable arrow-body-style */
+/* eslint-disable no-unneeded-ternary */
+/* eslint-disable no-else-return */
+/* eslint-disable prefer-const */
+/* eslint-disable lines-between-class-members */
+/* eslint-disable react/no-multi-comp */
 /* eslint-disable react/jsx-max-props-per-line */
 /* eslint-disable react/jsx-indent-props */
 /* eslint-disable react/jsx-closing-bracket-location */
@@ -28,6 +39,7 @@ import {
   Radio,
   Icon,
   Tooltip,
+  Skeleton,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './index.less';
@@ -37,207 +49,254 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
+class ProductItem extends PureComponent {
+  state = {};
 
-class ProductItem extends PureComponent{
-    state={
-        
+  render() {
+    const { data } = this.props;
+    let productid = data.productid ? data.productid.replace(/\-/g, '') : 'null';
+    let seoTitle = data.seo_link + '-' + productid;
+    let thumbnail = data.thumbnail ? data.thumbnail.replace(/\-/g, '') : 'false';
+    let timeline = '';
+    let start, end;
+    let isDeath = false;
+    if (data.death_clock) {
+      isDeath = true;
+      start = new Date().getTime();
+      end = new Date(data.death_clock.end).getTime();
+      let tmpTime = (end - start) / 1000;
+
+      let day = '';
+      let hours = '';
+      let munite = '';
+      if (tmpTime > 2629743) {
+        timeline = Math.round(tmpTime / 2629743) + ' Tháng';
+      }
+      if (tmpTime > 604800 && tmpTime < 2629743) {
+        timeline = Math.round(tmpTime / 604800) + ' Tuần';
+      }
+      if (tmpTime > 86400 && tmpTime < 604800) {
+        timeline = Math.round(tmpTime / 86400) + ' Ngày ';
+      }
+      if (tmpTime > 3600 && tmpTime < 86400) {
+        timeline = Math.round(tmpTime / 3600) + ' Giờ ';
+      }
+      if (tmpTime > 60 && tmpTime < 3600) {
+        timeline = Math.round(tmpTime / 60) + ' Phút ';
+      }
     }
-    
-    render(){
-        const { data } =this.props;
-        let productid=(data.productid) ? data.productid.replace(/\-/g,'') : 'null';
-        let seoTitle=data.seo_link+"-"+productid;
-        let thumbnail=(data.thumbnail) ? data.thumbnail.replace(/\-/g,'') : 'false';
-        let timeline='';
-        let start,end;
-        let isDeath=false;
-        if(data.death_clock){
-             isDeath=true;
-             start=new Date().getTime();
-             end=new Date(data.death_clock.end).getTime();
-            let tmpTime=(end-start)/1000;
-            
-            let day='';
-            let hours='';
-            let munite='';
-            if(tmpTime > 2629743 ){
-                timeline=Math.round(tmpTime/2629743) +" Tháng";
-            }
-            if(tmpTime > 604800 && tmpTime < 2629743){
-                timeline=Math.round(tmpTime/604800) +" Tuần";
-            }
-            if(tmpTime > 86400 && tmpTime < 604800) {
-                timeline=Math.round(tmpTime/86400) + " Ngày ";
-            }
-            if(tmpTime > 3600 && tmpTime < 86400) {
-                timeline=Math.round(tmpTime/3600)+" Giờ ";
-            }
-            if(tmpTime > 60 && tmpTime <  3600 ) {
-                timeline=Math.round(tmpTime/60)+" Phút ";
-            }
-        }
-    
-        return (
-            <Link className={`${styles[ 'home__col-md-6___2zJjj']} ${ styles[ 'home__paddingRemove___3EmRr'] }`} to={`/product/${seoTitle}`} data= { data } >
-                <div className={`${styles[ 'sale-card__currentSale___cC1H3']}`}>
-                    <div className={`${styles[ 'sale-card__image-wrapper___EfOla']}`}>
-                        <img className={`${styles[ 'sale-card__currentSaleImg___3wFRM']}`} src={`/images/w320/${thumbnail}`} alt={`Giảm Đến ${data.sale}% - ${data.title} `} />
-                    </div>
-                    <div className={`${styles[ 'sale-card__currentSaleInfo___2LkMa']}`}>
-                        <div className={`${styles[ 'sale-card__currentSaleTitle___1eVtM']}`}>
-                        { `Giảm Đến ${data.sale}% - ${data.title}` }
-                        </div>
-                    {isDeath &&
-                        <div className={`${styles[ 'sale-card__endTimeWrap___3q0l3']}`}>
-                            <span className={`${styles[ 'sale-card__endTimeContent___3z5se']}`}>
-                      <i
-                        className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`}
-                      />
-                        <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>
-                            <span className={`${styles[ 'end-time__timer___LMsIT']}`}>{timeline}</span>
-                        </span>
-                      
-                        </div>
-                    }
-                    </div>
-                </div>
-            </Link>
-        )
-    }
+
+    return (
+      <Link
+        className={`${styles['home__col-md-6___2zJjj']} ${styles['home__paddingRemove___3EmRr']}`}
+        to={`/product/${seoTitle}`}
+        data={data}
+      >
+        <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
+          <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
+            <img
+              className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
+              src={`/images/w320/${thumbnail}`}
+              alt={`Giảm Đến ${data.sale}% - ${data.title} `}
+            />
+          </div>
+          <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
+            <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
+              {`Giảm Đến ${data.sale}% - ${data.title}`}
+            </div>
+            {isDeath && (
+              <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
+                <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
+                  <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
+                  <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>
+                  <span className={`${styles['end-time__timer___LMsIT']}`}>{timeline}</span>
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      </Link>
+    );
+  }
 }
 
-@connect(({ loading,product }) => ({
+@connect(({ loading, product }) => ({
   submitting: loading.effects['form/submitRegularForm'],
-  product
+  product,
+  loading,
 }))
 @Form.create()
 class Home extends PureComponent {
-  state={
-      
+  state = {};
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'product/home',
+      payload: {},
+    });
   }
-  componentDidMount(){
-      const {dispatch } = this.props;
-      dispatch({
-          type:'product/home',
-          payload:{},
-      });
-      
-  }
-  renderNews(){
-    const { product :{ list : { news } } } = this.props;
-    let data= (news) ? news : [];
-    
-    return (data.length > 0) ? (<div>
-            
-            <div className={`${styles[ 'section-title__title-wrap___9DwpB']} ${ styles[ 'home__currentSaleSectionTitle___XcRpN'] }`}>
-                <h2 className={`${styles[ 'section-title__title___2Dw2G']}`}>Ưu đãi mới Nhất</h2>
-            </div>
-            <div className={`${styles[ 'row__row___2roCA']}`}>
-            {data.map((e,i)=>{
-                  return (<ProductItem data={e} key={i} />)
-                })
-            }
-            </div>
-            
-            
-    </div>) : ('')     
-  }
-  renderDays(){
-        const { product :{ list : { days } } } = this.props;
-        let data= (days) ? days : [];
-      if(data.length > 0){    
-      return (<div className={`${styles[ 'potd-container']} ${styles[ 'potd-new__potd-container___1mO4T']}`}>
-        <div className={`${styles[ 'section-title__title-wrap___9DwpB']} ${ styles[ 'potd-new__title-container___1o6iD'] }`}>
-            <h2 className={`${styles[ 'section-title__title___2Dw2G']}`}>
-                 Đặc biệt nhất trong Ngày
-            </h2>
-            <div className={`${styles[ 'section-title__sub-title___333O9']}`}>
-                  (Kết thúc vào hôm nay)
-            </div>
-        </div>
-        <div className={`${styles[ 'row__row___2roCA']}`}>
-            {data.map((e,i)=>{
-                  return (<ProductItem data={e} key={i} />)
-                })
-            }
-        </div>
-      </div>)  
-     }else{
-    return '';
-    }
-  }
-  renderBestSeller(){
-        const { product :{ list : { bestSeller } } } = this.props;  
-        let data= (bestSeller) ? bestSeller : [];
-        return (bestSeller) ? (<div>
-            <div className={`${styles[ 'section-title__title-wrap___9DwpB']} ${ styles[ 'home__stillOnSaleWrap____52sJ'] }`}>
-            <h2 className={`${styles[ 'section-title__title___2Dw2G']}`}>Vẫn đang diễn Ra</h2>
-            <div className={`${styles[ 'section-title__sub-title___333O9']}`}>
-                (Nhưng sẽ kết thúc sớm)
-            </div>
-            </div>
-            <div className={`${styles[ 'row__row___2roCA']}`}>
-                {data.map((e,i)=>{
-                      return (<ProductItem data={e} key={i} />)
-                    })
-                }
-            </div>
-        </div>) : ('')
-    }
-  renderHotNew(){
-        const { product :{ list : { hotday } } } = this.props;  
-        return (<div id={`${styles[ 'best-sellers']}`} className={`${styles[ 'home__best-sellers___3Yh-1']}`}>
-            <div className={`${styles[ 'section-title__title-wrap___9DwpB']} ${ styles[ 'best-sellers__title-container___3YMp3'] }`}>
-                <h2 className={`${styles[ 'section-title__title___2Dw2G']}`}>
-                    Bán chạy nhất trong Ngày
-                </h2>
-            </div>
-            
-        </div>)    
-  }            
-  render() {
-    const { product :{ list : { news,days,hotday } } } = this.props;
-      
-    return (
+  renderNews() {
+    const {
+      product: {
+        list: { news },
+      },
+    } = this.props;
+    let data = news ? news : [];
+
+    return data.length > 0 ? (
       <div>
         <div
-          className={`${styles['container__container___1fvX0']} ${
-            styles['home__featuredContainer___1YAQy']
+          className={`${styles['section-title__title-wrap___9DwpB']} ${
+            styles['home__currentSaleSectionTitle___XcRpN']
           }`}
         >
-          <a href="#">
-            <img
-              className={`${styles['hidden-md-up']}`}
-              src="/images/e18562e9c9244b75a8239629b6d56cf6.jpg"
-              alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
-            />
-            <img
-              className={`${styles['hidden-sm-down']}`}
-              src="/images/e18562e9c9244b75a8239629b6d56cf6.jpg"
-              alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
-            />
-            
-            <div
-              className={`${styles['hidden-md-up']} ${styles['home__badge___2w2Lc']} ${
-                styles['home__featured-badge___2hhaD']
-              }`}
-            >
-              Ưu đãi nổi bật
-            </div>
-            <div className={`${styles['hidden-md-up']} ${styles['home__currentSaleInfo___2Fj0C']}`}>
-              <div className={`${styles['home__currentSaleTitle___1jXFQ']}`}>
-                Giảm Đến 82% - Nike Giày Thể Thao Nam
-              </div>
-              <div className={`${styles['home__endTimeWrap___25O4u']}`}>
-                <span className={`${styles['home__endTimeContent___2G8rq']}`}>
-                  <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
-                  <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>{' '}
-                  <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
-                </span>
-              </div>
-            </div>
-          </a>
+          <h2 className={`${styles['section-title__title___2Dw2G']}`}>Ưu đãi mới Nhất</h2>
         </div>
+        <div className={`${styles['row__row___2roCA']}`}>
+          {data.map((e, i) => {
+            return <ProductItem data={e} key={i} />;
+          })}
+        </div>
+      </div>
+    ) : (
+      ''
+    );
+  }
+  renderDays() {
+    const {
+      product: {
+        list: { days },
+      },
+    } = this.props;
+    let data = days ? days : [];
+    if (data.length > 0) {
+      return (
+        <div
+          className={`${styles['potd-container']} ${styles['potd-new__potd-container___1mO4T']}`}
+        >
+          <div
+            className={`${styles['section-title__title-wrap___9DwpB']} ${
+              styles['potd-new__title-container___1o6iD']
+            }`}
+          >
+            <h2 className={`${styles['section-title__title___2Dw2G']}`}>
+              Đặc biệt nhất trong Ngày
+            </h2>
+            <div className={`${styles['section-title__sub-title___333O9']}`}>
+              (Kết thúc vào hôm nay)
+            </div>
+          </div>
+          <div className={`${styles['row__row___2roCA']}`}>
+            {data.map((e, i) => {
+              return <ProductItem data={e} key={i} />;
+            })}
+          </div>
+        </div>
+      );
+    } else {
+      return '';
+    }
+  }
+  renderBestSeller() {
+    const {
+      product: {
+        list: { bestSeller },
+      },
+    } = this.props;
+    let data = bestSeller ? bestSeller : [];
+    return bestSeller ? (
+      <div>
+        <div
+          className={`${styles['section-title__title-wrap___9DwpB']} ${
+            styles['home__stillOnSaleWrap____52sJ']
+          }`}
+        >
+          <h2 className={`${styles['section-title__title___2Dw2G']}`}>Vẫn đang diễn Ra</h2>
+          <div className={`${styles['section-title__sub-title___333O9']}`}>
+            (Nhưng sẽ kết thúc sớm)
+          </div>
+        </div>
+        <div className={`${styles['row__row___2roCA']}`}>
+          {data.map((e, i) => {
+            return <ProductItem data={e} key={i} />;
+          })}
+        </div>
+      </div>
+    ) : (
+      ''
+    );
+  }
+  renderHotNew() {
+    const {
+      product: {
+        list: { hotday },
+      },
+    } = this.props;
+    return (
+      <div id={`${styles['best-sellers']}`} className={`${styles['home__best-sellers___3Yh-1']}`}>
+        <div
+          className={`${styles['section-title__title-wrap___9DwpB']} ${
+            styles['best-sellers__title-container___3YMp3']
+          }`}
+        >
+          <h2 className={`${styles['section-title__title___2Dw2G']}`}>Bán chạy nhất trong Ngày</h2>
+        </div>
+      </div>
+    );
+  }
+  render() {
+    const {
+      product: {
+        list: { news, days, hotday },
+      },
+    } = this.props;
+    var {
+      loading: { global },
+    } = this.props;
+    return (
+      <div>
+        <Skeleton active loading={!global}>
+          <div
+            className={`${styles['container__container___1fvX0']} ${
+              styles['home__featuredContainer___1YAQy']
+            }`}
+          >
+            <a href="#">
+              <img
+                className={`${styles['hidden-md-up']}`}
+                src="/images/e18562e9c9244b75a8239629b6d56cf6.jpg"
+                alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
+              />
+              <img
+                className={`${styles['hidden-sm-down']}`}
+                src="/images/e18562e9c9244b75a8239629b6d56cf6.jpg"
+                alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
+              />
+
+              <div
+                className={`${styles['hidden-md-up']} ${styles['home__badge___2w2Lc']} ${
+                  styles['home__featured-badge___2hhaD']
+                }`}
+              >
+                Ưu đãi nổi bật
+              </div>
+              <div
+                className={`${styles['hidden-md-up']} ${styles['home__currentSaleInfo___2Fj0C']}`}
+              >
+                <div className={`${styles['home__currentSaleTitle___1jXFQ']}`}>
+                  Giảm Đến 82% - Nike Giày Thể Thao Nam
+                </div>
+                <div className={`${styles['home__endTimeWrap___25O4u']}`}>
+                  <span className={`${styles['home__endTimeContent___2G8rq']}`}>
+                    <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
+                    <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>{' '}
+                    <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
+                  </span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </Skeleton>
         <div
           className={`${styles['container__container___1fvX0']} ${
             styles['home__homeContainer___1VKcQ']
@@ -279,8 +338,7 @@ class Home extends PureComponent {
           </div>
           {this.renderDays()}
           {this.renderBestSeller()}
-          {this.renderHotNew() }
-          
+          {this.renderHotNew()}
         </div>
         <div className={`${styles['home__subscription-container___17uZO']}`}>
           <div className={`${styles['container__container___1fvX0']}`}>

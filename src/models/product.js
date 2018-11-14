@@ -1,35 +1,32 @@
-import { getProductByCategory,getProductDetail } from '@/services/api';
+import { getProductByCategory, getProductDetail } from '@/services/api';
 
 export default {
   namespace: 'product',
 
   state: {
     list: [],
-    detail: [],  
+    detail: [],
   },
 
   effects: {
     *home({ payload }, { call, put }) {
       const response = yield call(getProductByCategory, payload);
-      if(response.status=='ok'){
-          
-          yield put({
-            type: 'queryList',
-            payload: (response.data) ? response.data : {},
-          });
+      if (response.status === 'ok') {
+        yield put({
+          type: 'queryList',
+          payload: response.data ? response.data : {},
+        });
       }
-      
     },
     *detail({ payload }, { call, put }) {
       const response = yield call(getProductDetail, payload);
-      
-      if(response.status=='ok'){
-          yield put({
-            type: 'productDetail',
-            payload: (response.data) ? response.data : {},
-          });
+
+      if (response.status === 'ok') {
+        yield put({
+          type: 'productDetail',
+          payload: response.data ? response.data : {},
+        });
       }
-      
     },
   },
 

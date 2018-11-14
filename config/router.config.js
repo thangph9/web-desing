@@ -30,8 +30,8 @@ export default [
             component: './Dashboard/Monitor',
           },
         ],
-      },  
-     {
+      },
+      {
         path: '/exception',
         name: 'exception',
         routes: [
@@ -88,20 +88,20 @@ export default [
         component: './Amazon/',
       },
       {
-<<<<<<< HEAD
-          component: '404',
-      }
-=======
         path: '/landing-page',
         name: 'landingpage',
         component: './LandingPage/',
       },
->>>>>>> 37b1062fa741fbca6afe0c4a077d735b1a0d5cc7
+      {
+        path: '/list-category',
+        name: 'listcategory',
+        component: './ListCategory/',
+      },
     ],
   },
   {
     component: '404',
-  }
+  },
   // app
   /*
   {
@@ -262,7 +262,7 @@ export default [
           { path: '/result/fail', name: 'fail', component: './Result/Error' },
         ],
       },
-      
+
       {
         name: 'exception',
         icon: 'warning',
@@ -292,7 +292,7 @@ export default [
           },
         ],
       },
-    
+
       {
         name: 'account',
         icon: 'user',
