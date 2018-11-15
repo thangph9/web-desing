@@ -156,13 +156,13 @@ function productCategory(req, res) {
       function(callback) {
         let rawImage = params.nodeid;
         let uuid =
-          rawImage.substring(0, 7) +
+          rawImage.substring(0, 8) +
           '-' +
-          rawImage.substring(7, 11) +
+          rawImage.substring(8, 12) +
           '-' +
-          rawImage.substring(11, 15) +
+          rawImage.substring(12, 16) +
           '-' +
-          rawImage.substring(15, 20) +
+          rawImage.substring(16, 20) +
           '-' +
           rawImage.substring(20, 32);
         PARAMS_IS_VALID['nodeid'] = uuid;
