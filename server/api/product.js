@@ -171,7 +171,7 @@ function productCategory(req, res) {
       function(callback) {
         models.instance.product_detail.find(
           { $solr_query: '{"q": "nodeid: *' + PARAMS_IS_VALID['nodeid'] + '*"}' },
-          { select: ['title', 'thumbnail','seo_link','nodeid','productid','sale','price','seller','brand'] },
+          { select: ['title', 'thumbnail','seo_link','nodeid','productid','sale','price','seller','brand','sale_price'] },
           function(err, res) {
             if (res) {
               results = res;
