@@ -88,15 +88,12 @@ export default [
         component: './Amazon/',
       },
       {
-          component: '404',
-      },
-        {
         path: '/landing-page',
         name: 'landingpage',
         component: './LandingPage/',
       },
       {
-        path: '/list-category',
+        path: '/category/:title/:nodeid',
         name: 'listcategory',
         component: './ListCategory/',
       },

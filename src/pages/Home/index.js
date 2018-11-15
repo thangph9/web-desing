@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-var */
 /* eslint-disable no-useless-escape */
 /* eslint-disable one-var */
@@ -49,15 +50,13 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-class ProductItem extends PureComponent{
-    state={
-        
-    }
-    
+class ProductItem extends PureComponent {
+  state = {};
+
   render() {
     const { data } = this.props;
-    let productid = data.productid ? data.productid.replace(/\-/g, '') : 'null';
-    let seoTitle = data.seo_link + '-' + productid;
+    let nodeid = data.nodeid ? data.nodeid.replace(/\-/g, '') : 'null';
+    let seoTitle = data.seo_link + '/' + nodeid;
     let thumbnail = data.thumbnail ? data.thumbnail.replace(/\-/g, '') : 'false';
     let timeline = '';
     let start, end;
@@ -91,7 +90,7 @@ class ProductItem extends PureComponent{
     return (
       <Link
         className={`${styles['home__col-md-6___2zJjj']} ${styles['home__paddingRemove___3EmRr']}`}
-        to={`/product/${seoTitle}`}
+        to={`/category/${seoTitle}`}
         data={data}
       >
         <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
@@ -199,51 +198,67 @@ class Home extends PureComponent {
       return '';
     }
   }
-  renderBestSeller(){
-        const { product :{ list : { bestSeller } } } = this.props;  
-        let data= (bestSeller) ? bestSeller : [];
-        if(data.length > 0){
-
-        
-        return (<div>
-            <div className={`${styles[ 'section-title__title-wrap___9DwpB']} ${ styles[ 'home__stillOnSaleWrap____52sJ'] }`}>
-            <h2 className={`${styles[ 'section-title__title___2Dw2G']}`}>Vẫn đang diễn Ra</h2>
-            <div className={`${styles[ 'section-title__sub-title___333O9']}`}>
-                (Nhưng sẽ kết thúc sớm)
+  renderBestSeller() {
+    const {
+      product: {
+        list: { bestSeller },
+      },
+    } = this.props;
+    let data = bestSeller ? bestSeller : [];
+    if (data.length > 0) {
+      return (
+        <div>
+          <div
+            className={`${styles['section-title__title-wrap___9DwpB']} ${
+              styles['home__stillOnSaleWrap____52sJ']
+            }`}
+          >
+            <h2 className={`${styles['section-title__title___2Dw2G']}`}>Vẫn đang diễn Ra</h2>
+            <div className={`${styles['section-title__sub-title___333O9']}`}>
+              (Nhưng sẽ kết thúc sớm)
             </div>
-            </div>
-            <div className={`${styles[ 'row__row___2roCA']}`}>
-                {data.map((e,i)=>{
-                      return (<ProductItem data={e} key={i} />)
-                    })
-                }
-            </div>
-        </div>) 
-        }else{
-            return '';
-        }
+          </div>
+          <div className={`${styles['row__row___2roCA']}`}>
+            {data.map((e, i) => {
+              return <ProductItem data={e} key={i} />;
+            })}
+          </div>
+        </div>
+      );
+    } else {
+      return '';
     }
-  renderHotNew(){
-        const { product :{ list : { hotnew } } } = this.props; 
-        let data= (hotnew) ? hotnew : [];
-        if(data.length > 0){        
-        return (<div id={`${styles[ 'best-sellers']}`} className={`${styles[ 'home__best-sellers___3Yh-1']}`}>
-            <div className={`${styles[ 'section-title__title-wrap___9DwpB']} ${ styles[ 'best-sellers__title-container___3YMp3'] }`}>
-                <h2 className={`${styles[ 'section-title__title___2Dw2G']}`}>
-                    Bán chạy nhất trong Ngày
-                </h2>
-            </div>
-            <div className={`${styles[ 'row__row___2roCA']}`}>
-                {data.map((e,i)=>{
-                      return (<ProductItem data={e} key={i} />)
-                    })
-                }
-            </div>
-        </div>)  
-        }else{
-        return '';
-        }
-  }         
+  }
+  renderHotNew() {
+    const {
+      product: {
+        list: { hotnew },
+      },
+    } = this.props;
+    let data = hotnew ? hotnew : [];
+    if (data.length > 0) {
+      return (
+        <div id={`${styles['best-sellers']}`} className={`${styles['home__best-sellers___3Yh-1']}`}>
+          <div
+            className={`${styles['section-title__title-wrap___9DwpB']} ${
+              styles['best-sellers__title-container___3YMp3']
+            }`}
+          >
+            <h2 className={`${styles['section-title__title___2Dw2G']}`}>
+              Bán chạy nhất trong Ngày
+            </h2>
+          </div>
+          <div className={`${styles['row__row___2roCA']}`}>
+            {data.map((e, i) => {
+              return <ProductItem data={e} key={i} />;
+            })}
+          </div>
+        </div>
+      );
+    } else {
+      return '';
+    }
+  }
   render() {
     const {
       product: {

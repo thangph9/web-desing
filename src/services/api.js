@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { stringify } from 'qs';
 import request from '@/utils/request';
 
@@ -124,16 +125,24 @@ export async function queryNotices() {
 export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
 }
-export async function getProductByCategory(category){
-    return request('/api/product/list');
+export async function getProductByCategory(category) {
+  return request('/api/product/list');
 }
 
-export async function getProductDetail(params){
-    return request('/api/product/DT',{
-        method: 'POST',
-        body: params,
-    });
+export async function getProductDetail(params) {
+  return request('/api/product/DT', {
+    method: 'POST',
+    body: params,
+  });
 }
-export async function getRaito(){
-    return request('/api/raito');
+export async function getCategoryProduct(nodeid) {
+  return request('/api/category', {
+    method: 'POST',
+    body: {
+      nodeid,
+    },
+  });
+}
+export async function getRaito() {
+  return request('/api/raito');
 }
