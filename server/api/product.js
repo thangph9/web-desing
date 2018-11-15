@@ -174,12 +174,21 @@ function productCategory(req, res) {
           { select: ['title', 'thumbnail','seo_link','nodeid','productid','sale','price','seller','brand','sale_price'] },
           function(err, res) {
             if (res) {
-              results = res;
+              results['items'] = res;
             }
             callback(err, null);
           }
         );
       },
+      function(callback){
+          models.instance.category.find({$solr_query: '{"q": "nodeid: '+PARAMS_IS_VALID['nodeid']+'"}'},function(err,res){
+              if(res){
+                  results['breadcrumb']=res[0]
+              }
+              
+              callback(err,null);
+          })
+      }    
     ],
     function(err, result) {
       if (err) return res.send({ status: 'error' });
