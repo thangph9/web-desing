@@ -355,7 +355,8 @@ function image90w(req,res){
         }
     })
 }               
-export default {
+
+export default { 
     'GET /api/product/list' : productList,
     'POST /api/product/DT' : productDetail,
     'GET /api/product/CT' : productCategory,
