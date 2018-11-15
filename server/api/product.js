@@ -16,7 +16,7 @@ function productList(req,res){
             callback(null,null);    
         },
         function(callback){
-            models.instance.category.find({$solr_query:'{"q": "category: *ef4a584e-3497-4b55-8991-55146d5a4757*"}'},{select: ['title','thumbnail']},function(err,res){
+            models.instance.category.find({$solr_query:'{"q": "category: *ef4a584e-3497-4b55-8991-55146d5a4757*"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
                 if(res){
                     results['news']=res;
                 }
@@ -24,7 +24,7 @@ function productList(req,res){
             })
         },
         function(callback){
-            models.instance.category.find({$solr_query:'{"q": "category: *af739c5a-fa25-44bf-bc83-56fadcb1967f*"}'},{select: ['title','thumbnail']},function(err,res){
+            models.instance.category.find({$solr_query:'{"q": "category: *af739c5a-fa25-44bf-bc83-56fadcb1967f*"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
                 if(res){
                     results['days']=res;
                 }
@@ -32,7 +32,7 @@ function productList(req,res){
             })
         },
         function(callback){
-             models.instance.category.find({$solr_query:'{"q": "category: *08ecb1e-cabf-4328-9ddc-011ca55a156d*"}'},{select: ['title','thumbnail']},function(err,res){
+             models.instance.category.find({$solr_query:'{"q": "category: *08ecb1e-cabf-4328-9ddc-011ca55a156d*"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
                 if(res){
                     results['hotnew']=res;
                 }
@@ -40,7 +40,7 @@ function productList(req,res){
             })
         },
         function(callback){
-             models.instance.category.find({$solr_query:'{"q": "category: *07081437-d862-48d0-9987-4f656bd2de30*"}'},{select: ['title','thumbnail']},function(err,res){
+             models.instance.category.find({$solr_query:'{"q": "category: *07081437-d862-48d0-9987-4f656bd2de30*"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
                 if(res){
                     results['bestSeller']=res;
                 }
