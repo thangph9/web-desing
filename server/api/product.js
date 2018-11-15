@@ -150,7 +150,7 @@ function productDetail(req, res) {
 function productCategory(req, res) {
   let results = {};
   let PARAMS_IS_VALID = {};
-  const params = req.query;
+  const params = req.body;
   async.series(
     [
       function(callback) {
@@ -171,7 +171,7 @@ function productCategory(req, res) {
       function(callback) {
         models.instance.category.find(
           { $solr_query: '{"q": "category: *' + PARAMS_IS_VALID['nodeid'] + '*"}' },
-          { select: ['title', 'thumbnail'] },
+          { select: ['title', 'thumbnail','seo_link','meta_description','meta_title'] },
           function(err, res) {
             if (res) {
               results['news'] = res;
