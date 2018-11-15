@@ -30,8 +30,8 @@ export default [
             component: './Dashboard/Monitor',
           },
         ],
-      },  
-     {
+      },
+      {
         path: '/exception',
         name: 'exception',
         routes: [
@@ -95,11 +95,16 @@ export default [
         name: 'landingpage',
         component: './LandingPage/',
       },
+      {
+        path: '/list-category',
+        name: 'listcategory',
+        component: './ListCategory/',
+      },
     ],
   },
   {
     component: '404',
-  }
+  },
   // app
   /*
   {
@@ -260,7 +265,7 @@ export default [
           { path: '/result/fail', name: 'fail', component: './Result/Error' },
         ],
       },
-      
+
       {
         name: 'exception',
         icon: 'warning',
@@ -290,7 +295,7 @@ export default [
           },
         ],
       },
-    
+
       {
         name: 'account',
         icon: 'user',
