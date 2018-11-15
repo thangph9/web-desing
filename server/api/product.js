@@ -23,7 +23,6 @@ const models = require('../settings');
 var publicKEY = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
 var express = require('express');
 const sharp = require('sharp');
-<<<<<<< HEAD
 function productList(req,res){
     let results={};
     
@@ -67,70 +66,7 @@ function productList(req,res){
         if(err) return res.send({status: 'error'});
         res.send({status: 'ok',data: results})
     })
-=======
-function productList(req, res) {
-  let results = {};
 
-  async.series(
-    [
-      function(callback) {
-        callback(null, null);
-      },
-      function(callback) {
-        models.instance.category.find(
-          { $solr_query: '{"q": "category: *ef4a584e-3497-4b55-8991-55146d5a4757*"}' },
-          { select: ['title', 'thumbnail'] },
-          function(err, res) {
-            if (res) {
-              results['news'] = res;
-            }
-            callback(err, null);
-          }
-        );
-      },
-      function(callback) {
-        models.instance.category.find(
-          { $solr_query: '{"q": "category: *af739c5a-fa25-44bf-bc83-56fadcb1967f*"}' },
-          { select: ['title', 'thumbnail'] },
-          function(err, res) {
-            if (res) {
-              results['days'] = res;
-            }
-            callback(err, null);
-          }
-        );
-      },
-      function(callback) {
-        models.instance.category.find(
-          { $solr_query: '{"q": "category: *08ecb1e-cabf-4328-9ddc-011ca55a156d*"}' },
-          { select: ['title', 'thumbnail'] },
-          function(err, res) {
-            if (res) {
-              results['hotnew'] = res;
-            }
-            callback(err, null);
-          }
-        );
-      },
-      function(callback) {
-        models.instance.category.find(
-          { $solr_query: '{"q": "category: *07081437-d862-48d0-9987-4f656bd2de30*"}' },
-          { select: ['title', 'thumbnail'] },
-          function(err, res) {
-            if (res) {
-              results['bestSeller'] = res;
-            }
-            callback(err, null);
-          }
-        );
-      },
-    ],
-    function(err, result) {
-      if (err) return res.send({ status: 'error' });
-      res.send({ status: 'ok', data: results });
-    }
-  );
->>>>>>> 7a578e0500ef905a6978a58bc7901743abfd3b6f
 }
 function getRaito(req, res) {
   let raito = {};
@@ -259,4 +195,5 @@ var router = express.Router();
 router.get('/list', productList);
 router.post('/DT', productDetail);
 router.get('/CT', productCategory);
+router.post('/LC', productCategory);
 module.exports = router;
