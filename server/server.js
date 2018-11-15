@@ -58,7 +58,6 @@ if (!module.parent) {
 
 */
   http.createServer(function (req, res) {
-    res.writeHead(301, { "Location": "http://" + req.headers['host'] + req.url });
-    res.end();
+    console.log('server dev running port 8000')
   }).listen(8000);
 }
