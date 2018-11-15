@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/mouse-events-have-key-events */
+/* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable array-callback-return */
 /* eslint-disable no-useless-escape */
@@ -76,10 +78,7 @@ function fixedZero(val) {
 }))
 @Form.create()
 class Detail extends PureComponent {
-  state = {
-    x: 0,
-    y: 0,
-  };
+  state = {};
 
   // eslint-disable-next-line react/sort-comp
   handleClickDesciption(idDetail) {
@@ -124,8 +123,18 @@ class Detail extends PureComponent {
   };
   onHover = e => {};
   onMouseMove = e => {
-    this.setState({ x: (e.screenX - 1000) / 2, y: (e.screenY - 1378) / 2 });
+    var pos_x = e.offsetX ? e.offsetX : e.pageX - document.getElementById('pointer_div').offsetLeft;
+    var pos_y = e.offsetY ? e.offsetY : e.pageY - document.getElementById('pointer_div').offsetTop;
+    document.getElementById('zoom-image').style.position = 'absolute';
+    document.getElementById('zoom-image').style.left = `${-(pos_x - 342)}px`;
+    document.getElementById('zoom-image').style.top = `${-(pos_y - 132)}px`;
+    document.getElementById('zoom-image').style.display = 'block';
   };
+  handleMoveOut() {
+    document.getElementById('zoom-image').style.left = `0px`;
+    document.getElementById('zoom-image').style.top = `0px`;
+    document.getElementById('zoom-image').style.display = 'none';
+  }
   formatCountDown = time => {
     const hours = 60 * 60 * 1000;
     const minutes = 60 * 1000;
@@ -263,7 +272,6 @@ class Detail extends PureComponent {
           className={`${styles['images-slider__zoom-image___3jo-j']}`}
           src={`/images/f/${imageChoose || image_huge[0].replace(/\-/g, '')}`}
           // eslint-disable-next-line react/destructuring-assignment
-          style={{ top: this.state.x, left: this.state.y }}
         />
       );
     }
@@ -312,8 +320,10 @@ class Detail extends PureComponent {
             <div className={`${styles['images-slider__sold-out-overlay___2Avrv']}`}>Hết hàng</div>
             {zoom_image}
             <div
+              id="pointer_div"
               className={`${styles['images-slider__overlay___CJo-l']}`}
               onMouseMove={this.onMouseMove.bind(this)}
+              onMouseOut={() => this.handleMoveOut()}
             />
           </div>
         </div>

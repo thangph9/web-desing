@@ -5,6 +5,7 @@ export default {
 
   state: {
     list: [],
+    breadcrumb: {},
   },
 
   effects: {
@@ -12,20 +13,27 @@ export default {
       const response = yield call(getCategoryProduct, payload);
       try {
         if (response.status === 'ok') {
+          console.log(response);
           yield put({
             type: 'queryList',
-            payload: Array.isArray(response.data) ? response.data : [],
+            payload: Array.isArray(response.data.items) ? response.data.items : [],
+            breadcrumb:
+              typeof response.data.breadcrumb === 'object' && response.data.breadcrumb != null
+                ? response.data.breadcrumb
+                : {},
           });
         } else {
           yield put({
             type: 'queryList',
             payload: [],
+            breadcrumb: {},
           });
         }
       } catch (e) {
         yield put({
           type: 'queryList',
           payload: [],
+          breadcrumb: {},
         });
       }
     },
@@ -36,6 +44,7 @@ export default {
       return {
         ...state,
         list: action.payload,
+        breadcrumb: action.breadcrumb,
       };
     },
   },
