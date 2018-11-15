@@ -48,17 +48,17 @@ app.get('/*', function (req, res) {
 });
 
 // Here you can add any code.
-var server = https.createServer(credentials, app);
+//var server = https.createServer(credentials, app);
 
 if (!module.parent) {
-
+/*
   server.listen(443, function () {
     console.log("server running at https://123order.vn/")
   });
 
-
+*/
   http.createServer(function (req, res) {
     res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
     res.end();
-  }).listen(80);
+  }).listen(8000);
 }
