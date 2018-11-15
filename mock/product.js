@@ -15,7 +15,7 @@ function productList(req,res){
             callback(null,null);    
         },
         function(callback){
-            models.instance.category.find({$solr_query:'{"q": "category: *929a9341-4a98-43bf-8005-74feeaf30391*"}'},{select: ['title','thumbnail']},function(err,res){
+            models.instance.category.find({$solr_query:'{"q": "category: *ef4a584e-3497-4b55-8991-55146d5a4757*"}'},{select: ['title','thumbnail']},function(err,res){
                 if(res){
                     results['news']=res;
                 }
@@ -23,7 +23,7 @@ function productList(req,res){
             })
         },
         function(callback){
-            models.instance.category.find({$solr_query:'{"q": "category: *b355844-0263-4ab7-ab09-c9893e5d107f*"}'},{select: ['title','thumbnail']},function(err,res){
+            models.instance.category.find({$solr_query:'{"q": "category: *af739c5a-fa25-44bf-bc83-56fadcb1967f*"}'},{select: ['title','thumbnail']},function(err,res){
                 if(res){
                     results['days']=res;
                 }
@@ -31,7 +31,7 @@ function productList(req,res){
             })
         },
         function(callback){
-             models.instance.category.find({$solr_query:'{"q": "category: *71ad52b3-46e9-45b0-ad18-ba8ab6e411b3*"}'},{select: ['title','thumbnail']},function(err,res){
+             models.instance.category.find({$solr_query:'{"q": "category: *08ecb1e-cabf-4328-9ddc-011ca55a156d*"}'},{select: ['title','thumbnail']},function(err,res){
                 if(res){
                     results['hotnew']=res;
                 }
@@ -39,7 +39,7 @@ function productList(req,res){
             })
         },
         function(callback){
-             models.instance.category.find({$solr_query:'{"q": "category: *502c412f-8a85-4356-b892-90920caba630*"}'},{select: ['title','thumbnail']},function(err,res){
+             models.instance.category.find({$solr_query:'{"q": "category: *07081437-d862-48d0-9987-4f656bd2de30*"}'},{select: ['title','thumbnail']},function(err,res){
                 if(res){
                     results['bestSeller']=res;
                 }
@@ -118,7 +118,28 @@ function productDetail(req,res){
     })
 }
 function productCategory(req,res){
-    
+    let results={};
+    let PARAMS_IS_VALID={};
+    const params=req.query;
+    async.series([
+        function(callback){
+            let rawImage=params.nodeid;
+            let uuid=rawImage.substring(0,7)+'-'+rawImage.substring(7,11)+'-'+rawImage.substring(11,15)+'-'+rawImage.substring(15,20)+'-'+rawImage.substring(20,32)
+            PARAMS_IS_VALID['nodeid']=uuid;
+            callback(null,null);    
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: *'+PARAMS_IS_VALID['nodeid']+'*"}'},{select: ['title','thumbnail']},function(err,res){
+                if(res){
+                    results['news']=res;
+                }
+                callback(err,null);
+            })
+        },
+    ],function(err,result){
+        if(err) return res.send({status: 'error'});
+        res.send({status: 'ok',data: results})
+    })
 }
 function bestSeller(req,res){
     
@@ -337,6 +358,7 @@ function image90w(req,res){
 export default {
     'GET /api/product/list' : productList,
     'POST /api/product/DT' : productDetail,
+    'GET /api/product/CT' : productCategory,
     'GET /images/:imageid'           :image,
     'GET /images/w320/:imageid'      :image320w,
     'GET /images/w1178/:imageid'      :image1178w,
