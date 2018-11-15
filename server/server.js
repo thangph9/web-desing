@@ -1,9 +1,7 @@
 const fs              = require('fs');
-//const fr            = require('face-recognition');
-//const cv              = require('opencv4nodejs')
-//const fr              = require('face-recognition').withCv(cv)
 const express         = require('express');
 const https           = require('https');
+const http            = require('http');
 const bodyParser      = require('body-parser');
 const path            = require('path');
 const jsonParser	  = require('body-parser').json();
@@ -11,7 +9,15 @@ const app             = module.exports=express();
 
 
 var api = require('./api');
+var images=require('./api/images');
 var router = express.Router()
+
+
+var privateKey = fs.readFileSync('./ssl_cert/123order.key', 'utf8');
+var certificate = fs.readFileSync('./ssl_cert/123order.crt', 'utf8');
+var credentials = { key: privateKey, cert: certificate };
+
+
 // Use the default path '/' (Not recommended)
 // app.use(mockjs(path.join(__dirname, 'mocks')))
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -36,10 +42,23 @@ app.use(function(req,res,next){
     next();
 });
 app.use('/api',api);
+app.use(images);
 app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
 
 // Here you can add any code.
+var server = https.createServer(credentials, app);
 
-app.listen(3000,()=>{console.log("Server running port: 3000!")});
+if (!module.parent) {
+
+  server.listen(443, function () {
+    console.log("server running at https://123order.vn/")
+  });
+
+
+  http.createServer(function (req, res) {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+  }).listen(80);
+}

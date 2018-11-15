@@ -7,7 +7,6 @@ module.exports={
         sale    : 'float',
         sale_price: 'float',
         createat    : 'timestamp',
-        amount      : 'int',
         sale            : 'int',
         thumbnail      : 'text',
         reviews      : 'text',
@@ -15,10 +14,12 @@ module.exports={
         brand      : 'text',
         style      : 'text',
         star                 : 'text',
-        color                 : 'text',
+        color                : 'text',
         size                 : 'text',
+        currency    :'text',
+        amount      :'int',
+        materials_use       : 'text',
         node_name          : 'text',
-        manufacturer          : 'text',
         nodeid                 :{
             type: "set",
             typeDef:"<text>"
@@ -44,8 +45,9 @@ module.exports={
             type: "set",
             typeDef: "<text>"
         },
-        createby : 'text',
+        seo_link : 'text',
+        meta : 'text',
+        meta_description : 'text',
     },
-    key:["productid"] ,
+    key:[["productid"]] ,
 } 
-    
