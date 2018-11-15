@@ -151,10 +151,37 @@ function dealday(req,res){
 function hotnew(req,res){
     
 }             
-
+function productByCategory(req,res,next){
+    let result=[];
+    let nodeid='';
+    let params=req.body;
+    async.series([
+        function(callback){
+            try{
+                nodeid=params.nodeid
+            }catch(e){
+                return res.send({status: 'error'})
+            }
+            callback(null,null);    
+        },
+        function(callback){
+            models.instance.product_detail.find({$solr_query: '{"q": "nodeid: '+nodeid+'"}'},function(err,res){
+                
+                if(res){
+                    result=res;
+                }
+                callback(err,null);
+            })
+        },
+    ],function(err,results){
+        if(err) return res.send({status: 'error'});
+        res.send({status: 'ok',data: result})
+    })
+}
 
 var router = express.Router()
 router.get('/list',productList);
 router.post('/DT',productDetail);
 router.get('/CT',productCategory);
+router.post('/LC',productByCategory);
 module.exports = router

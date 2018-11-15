@@ -9,15 +9,16 @@ const models          = require("../settings");
 
 var publicKEY  = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');  
 var router = express.Router()
-router.get('/category',function(req,res,next){
+function list(req,res,next){
     let result=[];
-    
+    let nodeid='';
     async.series([
         function(callback){
+            
             callback(null,null);    
         },
         function(callback){
-            models.instance.product_detail({},function(err,res){
+            models.instance.product_detail.find({$solr_query: '{"q": "nodeid: '+nodeid+'"}'},function(err,res){
                 
                 if(res){
                     result=res;
@@ -25,9 +26,11 @@ router.get('/category',function(req,res,next){
                 callback(err,null);
             })
         },
-    ],function(err,result){
+    ],function(err,results){
         if(err) return res.send({status: 'error'});
-        res.send({status: 'oke',data: })
+        res.send({status: 'oke',data: result})
     })
-})
+}
+router.get('/',list);
+router.post('/',list);
 module.exports = router
