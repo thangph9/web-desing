@@ -8,8 +8,8 @@ _roadhog-api-doc
 
 # production
 /dist
-/server
 /mock
+/server
 /.vscode
 
 # misc

@@ -136,7 +136,7 @@ export async function getProductDetail(params) {
   });
 }
 export async function getCategoryProduct(nodeid) {
-  return request('/api/category', {
+  return request('/api/product/LC', {
     method: 'POST',
     body: {
       nodeid,
