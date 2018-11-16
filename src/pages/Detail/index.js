@@ -499,12 +499,12 @@ class Detail extends PureComponent {
                       <div>
                         <div className={`${styles['product-description__group___3Z2qF']}`}>
                           <h4 className={`${styles['product-description__panel-title___1aoFo']}`}>
-                            <a
+                            <Link
                               onClick={() => this.handleClickDesciption('info-product')}
                               className={`${
                                 styles['product-description__accordion-toggle___1kmrM']
                               }`}
-                              href=""
+                              to={`#info-product`}
                             >
                               <div className={`${styles['product-description__title___Xh_fg']}`}>
                                 Thông tin sản phẩm
@@ -525,7 +525,7 @@ class Detail extends PureComponent {
                                   />
                                 </span>
                               </div>
-                            </a>
+                            </Link>
                           </h4>
                           <div
                             id="info-product"
@@ -544,12 +544,12 @@ class Detail extends PureComponent {
                       <div>
                         <div className={`${styles['product-description__group___3Z2qF']}`}>
                           <h4 className={`${styles['product-description__panel-title___1aoFo']}`}>
-                            <a
+                            <Link
                               onClick={() => this.handleClickDesciption('material')}
                               className={`${
                                 styles['product-description__accordion-toggle___1kmrM']
                               }`}
-                              href=""
+                              to={`#material`}
                             >
                               <div className={`${styles['product-description__title___Xh_fg']}`}>
                                 Chất liệu &amp; Cách sử dụng
@@ -570,7 +570,7 @@ class Detail extends PureComponent {
                                   />
                                 </span>
                               </div>
-                            </a>
+                            </Link>
                           </h4>
                           <div
                             id="material"
@@ -592,13 +592,13 @@ class Detail extends PureComponent {
                       <div>
                         <div className={`${styles['product-description__group___3Z2qF']}`}>
                           <h4 className={`${styles['product-description__panel-title___1aoFo']}`}>
-                            <a
+                            <Link
                               onClick={() => this.handleClickDesciption('size-table')}
                               id="size-table-click"
                               className={`${
                                 styles['product-description__accordion-toggle___1kmrM']
                               }`}
-                              href=""
+                              to={`#size-table`}
                             >
                               <div className={`${styles['product-description__title___Xh_fg']}`}>
                                 Chi tiết kích cỡ
@@ -619,7 +619,7 @@ class Detail extends PureComponent {
                                   />
                                 </span>
                               </div>
-                            </a>
+                            </Link>
                           </h4>
                           <div
                             id="size-table"
@@ -646,12 +646,12 @@ class Detail extends PureComponent {
                           }`}
                         >
                           <h4 className={`${styles['product-description__panel-title___1aoFo']}`}>
-                            <a
+                            <Link
                               onClick={() => this.handleClickDesciption('info-brand')}
                               className={`${
                                 styles['product-description__accordion-toggle___1kmrM']
                               }`}
-                              href=""
+                              to={`#info-brand`}
                             >
                               <div className={`${styles['product-description__title___Xh_fg']}`}>
                                 <span>
@@ -686,7 +686,7 @@ class Detail extends PureComponent {
                                   />
                                 </span>
                               </div>
-                            </a>
+                            </Link>
                           </h4>
                           <div
                             id="info-brand"
