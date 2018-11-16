@@ -504,7 +504,7 @@ class Detail extends PureComponent {
                               className={`${
                                 styles['product-description__accordion-toggle___1kmrM']
                               }`}
-                              href="javascript:void(0)"
+                              href=""
                             >
                               <div className={`${styles['product-description__title___Xh_fg']}`}>
                                 Thông tin sản phẩm
@@ -549,7 +549,7 @@ class Detail extends PureComponent {
                               className={`${
                                 styles['product-description__accordion-toggle___1kmrM']
                               }`}
-                              href="javascript:void(0)"
+                              href=""
                             >
                               <div className={`${styles['product-description__title___Xh_fg']}`}>
                                 Chất liệu &amp; Cách sử dụng
@@ -598,7 +598,7 @@ class Detail extends PureComponent {
                               className={`${
                                 styles['product-description__accordion-toggle___1kmrM']
                               }`}
-                              href="javascript:void(0)"
+                              href=""
                             >
                               <div className={`${styles['product-description__title___Xh_fg']}`}>
                                 Chi tiết kích cỡ
@@ -651,7 +651,7 @@ class Detail extends PureComponent {
                               className={`${
                                 styles['product-description__accordion-toggle___1kmrM']
                               }`}
-                              href="javascript:void(0)"
+                              href=""
                             >
                               <div className={`${styles['product-description__title___Xh_fg']}`}>
                                 <span>
