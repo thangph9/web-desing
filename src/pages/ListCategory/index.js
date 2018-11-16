@@ -1,3 +1,16 @@
+/* eslint-disable prefer-const */
+/* eslint-disable no-useless-escape */
+/* eslint-disable react/jsx-tag-spacing */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable arrow-body-style */
+/* eslint-disable react/no-multi-comp */
+/* eslint-disable react/prefer-stateless-function */
+/* eslint-disable react/sort-comp */
+/* eslint-disable react/no-access-state-in-setstate */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/no-unused-state */
+/* eslint-disable no-else-return */
+/* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable prefer-template */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-unused-expressions */
@@ -30,6 +43,7 @@
 /* eslint-disable dot-notation */
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
+import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
@@ -54,12 +68,122 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-@connect(({ loading }) => ({
+class ProductItem extends PureComponent {
+  render() {
+    var { data } = this.props;
+    let productid = data.productid ? data.productid.replace(/\-/g, '') : 'null';
+    let seoTitle = data.seo_link + '/' + productid;
+    return (
+      <div
+        className={
+          styles['sale__col-6___1aN_i'] +
+          ' ' +
+          styles['sale__col-md-4___UhAyk'] +
+          ' ' +
+          styles['sale__col-lg-4___37sBv'] +
+          ' ' +
+          styles['product-items']
+        }
+      >
+        <Link className={styles['product-card__productCard___2lSYu']} to={`/product/${seoTitle}`}>
+          <div>
+            <div
+              className={
+                styles['product-card__imageContainer___1apY_'] +
+                ' ' +
+                styles['product-card__sale-product-card____fjbZ']
+              }
+            >
+              <img
+                className={styles['product-card__image___QEKAk']}
+                src={`/images/f/${data.thumbnail.replace(/\-/g, '')}`}
+                alt="Giày Oxford Daiki Đen"
+              />
+              <div className={styles['product-card__discount___2R4sK']}>{data.sale}% Off</div>
+            </div>
+            <div className={styles['product-card__titleContainer___1HE6o']}>
+              <h4 className={styles['product-card__brand___3np4R']}>{data.seller}</h4>
+              <h4 className={styles['product-card__title___3l79X']}>{data.title}</h4>
+              <div>
+                <span className={styles['product-card__retailPrice___2urqH']}>{data.price}₫</span>
+                <span className={styles['product-card__salePrice___3PSWy']}>
+                  {data.sale_price}₫
+                </span>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </div>
+    );
+  }
+}
+@connect(({ loading, category }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   loading,
+  category,
 }))
 @Form.create()
 class ListCategory extends PureComponent {
+  state = {
+    filter: false,
+  };
+  handleClickSort() {
+    var sort = document.getElementById('sort-items');
+    if (sort.style.display == 'block') {
+      sort.style.display = 'none';
+    } else sort.style.display = 'block';
+  }
+  componentDidMount() {
+    var { dispatch, match } = this.props;
+    dispatch({
+      type: 'category/list',
+      payload: match.params.nodeid,
+    });
+  }
+  handleClickButtonFilter() {
+    this.setState({
+      filter: !this.state.filter,
+    });
+    var defautLayout = document.getElementsByClassName(
+      'order\\layouts\\-home-layout-default-layout__container___13v1V'
+    )[0];
+    defautLayout.classList.toggle('order\\pages\\-list-category\\index-filters-expanded');
+    var buttonFilter = document.getElementById('button-filter');
+    buttonFilter.classList.toggle('order\\pages\\-list-category\\index-sale__filter-btn___30Ofp');
+    buttonFilter.classList.toggle('order\\pages\\-list-category\\index-sale__btn-block___O8koG');
+    var headerFilter = document.getElementById('header-filter');
+    headerFilter.classList.toggle('order\\pages\\-list-category\\index-sale__d-t___1Trp4');
+    var listProduct = document.getElementById('list-product');
+    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-md-8___34B6S');
+    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-lg-9___2qXAs');
+    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-12___82vEz');
+    var proudctItem = document.getElementsByClassName('product-items');
+    for (var i = 0; i < proudctItem.length; i++) {
+      proudctItem[i].classList.toggle('order\\pages\\-list-category\\index-sale__col-md-4___UhAyk');
+      proudctItem[i].classList.toggle('order\\pages\\-list-category\\index-sale__col-md-6___3wB0o');
+    }
+    var titleFilter = document.getElementById('title-filter');
+    if (titleFilter.textContent == 'Hiện bộ lọc') {
+      titleFilter.innerText = 'Đóng bộ lọc';
+      var i = document.createElement('i');
+      i.setAttribute('id', 'icon-filter');
+      i.setAttribute(
+        'class',
+        'order\\pages\\-list-category\\index-ic-ic-arrow-left order\\pages\\-list-category\\index-sale__icon-hide___3Iftv'
+      );
+      titleFilter.appendChild(i);
+      titleFilter.insertBefore(i, titleFilter.childNodes[0]);
+    } else {
+      titleFilter.innerText = 'Hiện bộ lọc';
+      var i = document.createElement('i');
+      i.setAttribute('id', 'icon-filter');
+      i.setAttribute(
+        'class',
+        'order\\pages\\-list-category\\index-ic-ic-arrow-right order\\pages\\-list-category\\index-sale__icon-show___3nTgw'
+      );
+      titleFilter.appendChild(i);
+    }
+  }
   renderBreadcrumb() {
     return (
       <div className={styles['sale__col-md-8___34B6S']}>
@@ -97,6 +221,387 @@ class ListCategory extends PureComponent {
       </div>
     );
   }
+  renderFilterList(filter) {
+    if (filter == true) {
+      return (
+        <div
+          className={
+            styles['sale__filters-container___32fTU'] +
+            ' ' +
+            styles['sale__col-md-4___UhAyk'] +
+            ' ' +
+            styles['sale__col-lg-3___2xbHl']
+          }
+        >
+          <div className={styles['hidden-md-up'] + ' ' + styles['sale__filters-header___1Q-j0']}>
+            <a
+              onClick={() => this.handleClickButtonFilter()}
+              className={styles['sale__btn-clearall___1YCDn']}
+            >
+              Xoá bộ lọc
+            </a>
+            <a className={styles['sale__btn-done___2Y14U']}>
+              <i className={styles['fa'] + ' ' + styles['fa-caret-left'] + ' ' + styles['fa-fw']} />
+              Xong
+            </a>
+            <div
+              className={
+                styles['sale__total-items___u7EoB'] + ' ' + styles['total-items__text___1TBmn']
+              }
+            >
+              21 Sản phẩm
+            </div>
+          </div>
+          <div className={styles['sale__fitlers-content-wrap___pU5ed']}>
+            <div className={styles['filter__filter-container___1hLIM']}>
+              <div className={styles['filter__filter-header___3I6RP']}>
+                <h5 className={styles['clearfix']}>
+                  <a
+                    className={styles['clearfix'] + ' ' + styles['d-block']}
+                    href="javascript:void(0)"
+                    id="category"
+                  >
+                    <span className={styles['float-left']}>Phân loại</span>
+                    <i
+                      className={
+                        styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                      }
+                    />
+                  </a>
+                </h5>
+              </div>
+              <div>
+                <div className={styles['row__row___2roCA']}>
+                  <div className={styles['grid__col-12___39hfZ']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        Derbys &amp; Oxfords
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles['grid__col-12___39hfZ']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        Slip-Ons
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles['grid__col-12___39hfZ']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        Giày tây
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles['grid__col-12___39hfZ']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        Thắt dây thể thao
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles['grid__col-12___39hfZ']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        Loafers
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={styles['filter__filter-container___1hLIM']}>
+              <div className={styles['filter__filter-header___3I6RP']}>
+                <h5 className={styles['clearfix']}>
+                  <a
+                    className={styles['clearfix'] + ' ' + styles['d-block']}
+                    href="javascript:void(0)"
+                    id="size"
+                  >
+                    <span className={styles['float-left']}>Kích cỡ</span>
+                    <i
+                      className={
+                        styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                      }
+                    />
+                  </a>
+                </h5>
+              </div>
+              <div>
+                <div className={styles['row__row___2roCA']}>
+                  <div className={styles['grid__col-6___211BX']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        24.5
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles['grid__col-6___211BX']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        25
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles['grid__col-6___211BX']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        25.5
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles['grid__col-6___211BX']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        26
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles['grid__col-6___211BX']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        26.5
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles['grid__col-6___211BX']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        27
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles['grid__col-6___211BX']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        27.5
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles['grid__col-6___211BX']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        28
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles['grid__col-6___211BX']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        29
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={styles['filter__filter-container___1hLIM']}>
+              <div className={styles['filter__filter-header___3I6RP']}>
+                <h5 className={styles['clearfix']}>
+                  <a
+                    className={styles['clearfix'] + ' ' + styles['d-block']}
+                    href="javascript:void(0)"
+                    id="brand"
+                  >
+                    <span className={styles['float-left']}>Thương hiệu</span>
+                    <i
+                      className={
+                        styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                      }
+                    />
+                  </a>
+                </h5>
+              </div>
+              <div>
+                <div className={styles['row__row___2roCA']}>
+                  <div className={styles['grid__col-12___39hfZ']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        JacQ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={styles['filter__filter-container___1hLIM']}>
+              <div className={styles['filter__filter-header___3I6RP']}>
+                <h5 className={styles['clearfix']}>
+                  <a
+                    className={styles['clearfix'] + ' ' + styles['d-block']}
+                    href="javascript:void(0)"
+                    id="type"
+                  >
+                    <span className={styles['float-left']}>TYPE</span>
+                    <i
+                      className={
+                        styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                      }
+                    />
+                  </a>
+                </h5>
+              </div>
+              <div>
+                <div className={styles['row__row___2roCA']}>
+                  <div className={styles['grid__col-6___211BX']}>
+                    <div className={styles['filter-option__filter-option___3Xmf0']}>
+                      <button
+                        type="button"
+                        className={
+                          styles['filter-option__btn___2u45i'] +
+                          ' ' +
+                          styles['filter-option__btn-secondary___1DPfK'] +
+                          ' ' +
+                          styles['filter-option__btn-block___1tZOy']
+                        }
+                      >
+                        Giày Nam
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    } else return '';
+  }
   renderTotalProduct() {
     return (
       <div
@@ -118,53 +623,11 @@ class ListCategory extends PureComponent {
       </div>
     );
   }
-  renderProductItem() {
-    return (
-      <div
-        className={
-          styles['sale__col-6___1aN_i'] +
-          ' ' +
-          styles['sale__col-md-4___UhAyk'] +
-          ' ' +
-          styles['sale__col-lg-4___37sBv']
-        }
-      >
-        <a
-          className={styles['product-card__productCard___2lSYu']}
-          href="/products/giay-oxford-daiki-den-598ab753e1bb47100032a19c?color=BL"
-        >
-          <div>
-            <div
-              className={
-                styles['product-card__imageContainer___1apY_'] +
-                ' ' +
-                styles['product-card__sale-product-card____fjbZ']
-              }
-            >
-              <img
-                id
-                className={styles['product-card__image___QEKAk']}
-                src="https://images.leflair.vn/w380/q85/599674320ecd82000f1c1044.jpg"
-                srcSet="https://images.leflair.vn/w380/q85/599674320ecd82000f1c1044.jpg 380w, https://images.leflair.vn/w510/q85/599674320ecd82000f1c1044.jpg 510w"
-                sizes="50vw, (min-width: 768px) 33.3vw"
-                alt="Giày Oxford Daiki Đen"
-              />
-              <div className={styles['product-card__discount___2R4sK']}>68% Off</div>
-            </div>
-            <div className={styles['product-card__titleContainer___1HE6o']}>
-              <h4 className={styles['product-card__brand___3np4R']}>JacQ</h4>
-              <h4 className={styles['product-card__title___3l79X']}>Giày Oxford Daiki Đen</h4>
-              <div>
-                <span className={styles['product-card__retailPrice___2urqH']}>4.990.000₫</span>
-                <span className={styles['product-card__salePrice___3PSWy']}>1.579.000₫</span>
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
-    );
-  }
   render() {
+    var { filter } = this.state;
+    var {
+      category: { list },
+    } = this.props;
     return (
       <div className={styles['container__container___1fvX0']}>
         <div className={styles['sale__sale___1auiY']}>
@@ -182,6 +645,7 @@ class ListCategory extends PureComponent {
               {this.renderEndTime()}
             </div>
             <div
+              id="header-filter"
               className={
                 styles['row__row___2roCA'] +
                 ' ' +
@@ -206,6 +670,8 @@ class ListCategory extends PureComponent {
                 }
               >
                 <button
+                  id="button-filter"
+                  onClick={() => this.handleClickButtonFilter()}
                   type="button"
                   className={
                     styles['sale__btn___3OqFl'] +
@@ -215,9 +681,10 @@ class ListCategory extends PureComponent {
                     styles['active']
                   }
                 >
-                  <span>
+                  <span id="title-filter">
                     Hiện bộ lọc
                     <i
+                      id="icon-filter"
                       className={
                         styles['ic-ic-arrow-right'] + ' ' + styles['sale__icon-show___3nTgw']
                       }
@@ -251,6 +718,7 @@ class ListCategory extends PureComponent {
                   >
                     <div className={styles['float-right'] + ' ' + styles['sort__dropdown___2bcri']}>
                       <button
+                        onClick={() => this.handleClickSort()}
                         type="button"
                         className={
                           styles['sort__btn___1Cu7A'] +
@@ -268,6 +736,7 @@ class ListCategory extends PureComponent {
                         />
                       </button>
                       <ul
+                        id="sort-items"
                         className={
                           styles['sort__dropdown-menu-right___1zFcq'] +
                           ' ' +
@@ -341,30 +810,17 @@ class ListCategory extends PureComponent {
           </div>
           <div className={styles['sale__sale-content___1M-Lr']}>
             <div className={styles['row__row___2roCA']}>
+              {this.renderFilterList(filter)}
               <div
+                id="list-product"
                 className={
                   styles['sale__products-list___2pc3u'] + ' ' + styles['sale__col-12___82vEz']
                 }
               >
                 <div className={styles['row__row___2roCA']}>
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
-                  {this.renderProductItem()}
+                  {list.map((value, index) => {
+                    return <ProductItem data={value} key={index} />;
+                  })}
                 </div>
               </div>
             </div>
