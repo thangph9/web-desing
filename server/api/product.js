@@ -23,68 +23,50 @@ const models = require('../settings');
 var publicKEY = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
 var express = require('express');
 const sharp = require('sharp');
-function productList(req, res) {
-  let results = {};
+function productList(req,res){
+    let results={};
+    
+    async.series([
+        function(callback){
+            callback(null,null);    
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: *ef4a584e-3497-4b55-8991-55146d5a4757*"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res){
+                    results['news']=res;
+                }
+                callback(err,null);
+            })
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: *af739c5a-fa25-44bf-bc83-56fadcb1967f*"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res){
+                    results['days']=res;
+                }
+                callback(err,null);
+            })
+        },
+        function(callback){
+             models.instance.category.find({$solr_query:'{"q": "category: *08ecb1e-cabf-4328-9ddc-011ca55a156d*"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res){
+                    results['hotnew']=res;
+                }
+                callback(err,null);
+            })
+        },
+        function(callback){
+             models.instance.category.find({$solr_query:'{"q": "category: *07081437-d862-48d0-9987-4f656bd2de30*"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res){
+                    results['bestSeller']=res;
+                }
+                callback(err,null);
+            })
+        }
+    ],function(err,result){
+        if(err) return res.send({status: 'error'});
+        res.send({status: 'ok',data: results})
+    })
 
-  async.series(
-    [
-      function(callback) {
-        callback(null, null);
-      },
-      function(callback) {
-        models.instance.category.find(
-          { $solr_query: '{"q": "category: *ef4a584e-3497-4b55-8991-55146d5a4757*"}' },
-          { select: ['title', 'thumbnail'] },
-          function(err, res) {
-            if (res) {
-              results['news'] = res;
-            }
-            callback(err, null);
-          }
-        );
-      },
-      function(callback) {
-        models.instance.category.find(
-          { $solr_query: '{"q": "category: *af739c5a-fa25-44bf-bc83-56fadcb1967f*"}' },
-          { select: ['title', 'thumbnail'] },
-          function(err, res) {
-            if (res) {
-              results['days'] = res;
-            }
-            callback(err, null);
-          }
-        );
-      },
-      function(callback) {
-        models.instance.category.find(
-          { $solr_query: '{"q": "category: *08ecb1e-cabf-4328-9ddc-011ca55a156d*"}' },
-          { select: ['title', 'thumbnail'] },
-          function(err, res) {
-            if (res) {
-              results['hotnew'] = res;
-            }
-            callback(err, null);
-          }
-        );
-      },
-      function(callback) {
-        models.instance.category.find(
-          { $solr_query: '{"q": "category: *07081437-d862-48d0-9987-4f656bd2de30*"}' },
-          { select: ['title', 'thumbnail'] },
-          function(err, res) {
-            if (res) {
-              results['bestSeller'] = res;
-            }
-            callback(err, null);
-          }
-        );
-      },
-    ],
-    function(err, result) {
-      if (err) return res.send({ status: 'error' });
-      res.send({ status: 'ok', data: results });
-    }
-  );
 }
 function getRaito(req, res) {
   let raito = {};
@@ -168,19 +150,19 @@ function productDetail(req, res) {
 function productCategory(req, res) {
   let results = {};
   let PARAMS_IS_VALID = {};
-  const params = req.query;
+  const params = req.body;
   async.series(
     [
       function(callback) {
         let rawImage = params.nodeid;
         let uuid =
-          rawImage.substring(0, 7) +
+          rawImage.substring(0, 8) +
           '-' +
-          rawImage.substring(7, 11) +
+          rawImage.substring(8, 12) +
           '-' +
-          rawImage.substring(11, 15) +
+          rawImage.substring(12, 16) +
           '-' +
-          rawImage.substring(15, 20) +
+          rawImage.substring(16, 20) +
           '-' +
           rawImage.substring(20, 32);
         PARAMS_IS_VALID['nodeid'] = uuid;
@@ -189,7 +171,7 @@ function productCategory(req, res) {
       function(callback) {
         models.instance.category.find(
           { $solr_query: '{"q": "category: *' + PARAMS_IS_VALID['nodeid'] + '*"}' },
-          { select: ['title', 'thumbnail'] },
+          { select: ['title', 'thumbnail','seo_link','meta_description','meta_title'] },
           function(err, res) {
             if (res) {
               results['news'] = res;
@@ -213,4 +195,5 @@ var router = express.Router();
 router.get('/list', productList);
 router.post('/DT', productDetail);
 router.get('/CT', productCategory);
+router.post('/LC', productCategory);
 module.exports = router;
