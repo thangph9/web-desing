@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-multi-spaces */
 /* eslint-disable camelcase */
 /* eslint-disable no-var */
 /* eslint-disable no-useless-escape */
@@ -103,7 +104,7 @@ class ProductItem extends PureComponent {
           </div>
           <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
             <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
-              {`Giảm Đến ${data.sale}% - ${data.title}`}
+              {`${data.title}`}
             </div>
             {isDeath && (
               <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
@@ -143,7 +144,6 @@ class Home extends PureComponent {
       },
     } = this.props;
     let data = news ? news : [];
-
     return data.length > 0 ? (
       <div>
         <div
@@ -260,58 +260,52 @@ class Home extends PureComponent {
     }
   }
   render() {
+    let seoTitle = '';
     const {
       product: {
         list: { news, days, hotday },
       },
     } = this.props;
-    var {
-      loading: { global },
-    } = this.props;
     return (
       <div>
-        <Skeleton active loading={!global}>
-          <div
-            className={`${styles['container__container___1fvX0']} ${
-              styles['home__featuredContainer___1YAQy']
-            }`}
-          >
-            <a href="#">
-              <img
-                className={`${styles['hidden-md-up']}`}
-                src="/images/e18562e9c9244b75a8239629b6d56cf6.jpg"
-                alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
-              />
-              <img
-                className={`${styles['hidden-sm-down']}`}
-                src="/images/e18562e9c9244b75a8239629b6d56cf6.jpg"
-                alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
-              />
+        <div
+          className={`${styles['container__container___1fvX0']} ${
+            styles['home__featuredContainer___1YAQy']
+          }`}
+        >
+          <Link to={`#`}>
+            <img
+              className={`${styles['hidden-md-up']}`}
+              src={`/images/f/061b4f6603934b6caf40d8571be0be35`}
+              alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
+            />
+            <img
+              className={`${styles['hidden-sm-down']}`}
+              src={`/images/f/061b4f6603934b6caf40d8571be0be35`}
+              alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
+            />
 
-              <div
-                className={`${styles['hidden-md-up']} ${styles['home__badge___2w2Lc']} ${
-                  styles['home__featured-badge___2hhaD']
-                }`}
-              >
-                Ưu đãi nổi bật
+            <div
+              className={`${styles['hidden-md-up']} ${styles['home__badge___2w2Lc']} ${
+                styles['home__featured-badge___2hhaD']
+              }`}
+            >
+              Ưu đãi nổi bật
+            </div>
+            <div className={`${styles['hidden-md-up']} ${styles['home__currentSaleInfo___2Fj0C']}`}>
+              <div className={`${styles['home__currentSaleTitle___1jXFQ']}`}>
+                Giảm Đến 82% - Nike Giày Thể Thao Nam
               </div>
-              <div
-                className={`${styles['hidden-md-up']} ${styles['home__currentSaleInfo___2Fj0C']}`}
-              >
-                <div className={`${styles['home__currentSaleTitle___1jXFQ']}`}>
-                  Giảm Đến 82% - Nike Giày Thể Thao Nam
-                </div>
-                <div className={`${styles['home__endTimeWrap___25O4u']}`}>
-                  <span className={`${styles['home__endTimeContent___2G8rq']}`}>
-                    <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
-                    <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>{' '}
-                    <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
-                  </span>
-                </div>
+              <div className={`${styles['home__endTimeWrap___25O4u']}`}>
+                <span className={`${styles['home__endTimeContent___2G8rq']}`}>
+                  <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
+                  <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>{' '}
+                  <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
+                </span>
               </div>
-            </a>
-          </div>
-        </Skeleton>
+            </div>
+          </Link>
+        </div>
         <div
           className={`${styles['container__container___1fvX0']} ${
             styles['home__homeContainer___1VKcQ']

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable prefer-const */
 /* eslint-disable no-useless-escape */
 /* eslint-disable react/jsx-tag-spacing */
@@ -67,12 +68,15 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
+var currencyFormatter = require('currency-formatter');
 
 class ProductItem extends PureComponent {
   render() {
     var { data } = this.props;
     let productid = data.productid ? data.productid.replace(/\-/g, '') : 'null';
     let seoTitle = data.seo_link + '/' + productid;
+    const price = currencyFormatter.format(data['price'], { locale: 'vi-VN' });
+    const sale_price = currencyFormatter.format(data['sale_price'], { locale: 'vi-VN' });
     return (
       <div
         className={
@@ -105,10 +109,8 @@ class ProductItem extends PureComponent {
               <h4 className={styles['product-card__brand___3np4R']}>{data.seller}</h4>
               <h4 className={styles['product-card__title___3l79X']}>{data.title}</h4>
               <div>
-                <span className={styles['product-card__retailPrice___2urqH']}>{data.price}₫</span>
-                <span className={styles['product-card__salePrice___3PSWy']}>
-                  {data.sale_price}₫
-                </span>
+                <span className={styles['product-card__retailPrice___2urqH']}>{price}</span>
+                <span className={styles['product-card__salePrice___3PSWy']}>{sale_price}</span>
               </div>
             </div>
           </div>
@@ -185,6 +187,10 @@ class ListCategory extends PureComponent {
     }
   }
   renderBreadcrumb() {
+    var {
+      category: { breadcrumb },
+    } = this.props;
+
     return (
       <div className={styles['sale__col-md-8___34B6S']}>
         <ol
@@ -196,7 +202,7 @@ class ListCategory extends PureComponent {
             <a href="/">Ưu đãi</a>
           </li>
           <li className={styles['breadcrumb__breadcrumb-item___3ytpk']}>
-            <h1>Giảm Đến 68% - JacQ Giày Thời Trang Nam</h1>
+            <h1>{breadcrumb.title}</h1>
           </li>
         </ol>
       </div>
@@ -222,6 +228,10 @@ class ListCategory extends PureComponent {
     );
   }
   renderFilterList(filter) {
+    var { filter } = this.state;
+    var {
+      category: { list },
+    } = this.props;
     if (filter == true) {
       return (
         <div
@@ -249,7 +259,7 @@ class ListCategory extends PureComponent {
                 styles['sale__total-items___u7EoB'] + ' ' + styles['total-items__text___1TBmn']
               }
             >
-              21 Sản phẩm
+              {list.length} Sản phẩm
             </div>
           </div>
           <div className={styles['sale__fitlers-content-wrap___pU5ed']}>
@@ -603,6 +613,11 @@ class ListCategory extends PureComponent {
     } else return '';
   }
   renderTotalProduct() {
+    var { filter } = this.state;
+    var {
+      category: { list },
+    } = this.props;
+
     return (
       <div
         className={
@@ -618,7 +633,7 @@ class ListCategory extends PureComponent {
             styles['sale__total-items___u7EoB'] + ' ' + styles['total-items__text___1TBmn']
           }
         >
-          21 Sản phẩm
+          {list.length} Sản phẩm
         </div>
       </div>
     );
@@ -628,6 +643,7 @@ class ListCategory extends PureComponent {
     var {
       category: { list },
     } = this.props;
+
     return (
       <div className={styles['container__container___1fvX0']}>
         <div className={styles['sale__sale___1auiY']}>
@@ -796,7 +812,7 @@ class ListCategory extends PureComponent {
                     styles['total-items__text___1TBmn']
                   }
                 >
-                  21 Sản phẩm
+                  {list.length} sản phẩm
                 </div>
                 <span
                   className={styles['sale__end-time___MKUlz'] + ' ' + styles['sale__col-6___1aN_i']}
