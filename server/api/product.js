@@ -169,12 +169,12 @@ function productCategory(req, res) {
         callback(null, null);
       },
       function(callback) {
-        models.instance.category.find(
-          { $solr_query: '{"q": "category: *' + PARAMS_IS_VALID['nodeid'] + '*"}' },
-          { select: ['title', 'thumbnail','seo_link','meta_description','meta_title'] },
+        models.instance.product_detail.find(
+          { $solr_query: '{"q": "nodeid: *' + PARAMS_IS_VALID['nodeid'] + '*"}' },
+          { select: ['title', 'thumbnail','seo_link','nodeid','productid','sale','price','seller','brand','sale_price'] },
           function(err, res) {
             if (res) {
-              results['news'] = res;
+              results = res;
             }
             callback(err, null);
           }
