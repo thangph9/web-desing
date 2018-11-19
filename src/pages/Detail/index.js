@@ -86,13 +86,13 @@ class Detail extends PureComponent {
     var width = body.offsetWidth;
     if (width < 767) {
       var element = document.getElementById(idDetail);
-      var collapselow = document.getElementsByClassName('collapselow');
-      for (var i = 0; i < collapselow.length; i++) {
-        collapselow[i].style.display = 'none';
-      }
       if (element.style.display == 'block') {
         element.style.display = 'none';
       } else {
+        var collapselow = document.getElementsByClassName('collapselow');
+        for (var i = 0; i < collapselow.length; i++) {
+          collapselow[i].style.display = 'none';
+        }
         element.style.display = 'block';
       }
     } else {
