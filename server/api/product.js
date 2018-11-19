@@ -90,28 +90,44 @@ function getRaito(req, res) {
     }
   );
 }
-
 function productDetail(req, res) {
   let results = {};
   let productid = '';
   let raito = {};
+  let nodeid='';
+  let breadcrumb=[];
   async.series(
     [
       function(callback) {
         try {
-          let rawImage = req.body.productid;
+          let rawProductid = req.body.productid;
           let uuid =
-            rawImage.substring(0, 7) +
+            rawProductid.substring(0, 7) +
             '-' +
-            rawImage.substring(7, 11) +
+            rawProductid.substring(7, 11) +
             '-' +
-            rawImage.substring(11, 15) +
+            rawProductid.substring(11, 15) +
             '-' +
-            rawImage.substring(15, 20) +
+            rawProductid.substring(15, 20) +
             '-' +
-            rawImage.substring(20, 32);
+            rawProductid.substring(20, 32);
+            productid = models.uuidFromString(uuid);
+            if(req.body.nodeid){
+                let rawNodeid=req.body.nodeid;
+                let id =
+                rawNodeid.substring(0, 7) +
+                '-' +
+                rawNodeid.substring(7, 11) +
+                '-' +
+                rawNodeid.substring(11, 15) +
+                '-' +
+                rawNodeid.substring(15, 20) +
+                '-' +
+                rawNodeid.substring(20, 32);
 
-          productid = models.uuidFromString(uuid);
+                nodeid = models.uuidFromString(id);
+            }
+            
         } catch (e) {
           return res.send({ status: 'error_invalid' });
         }
@@ -119,8 +135,11 @@ function productDetail(req, res) {
       },
       function(callback) {
         models.instance.product_detail.find({ productid: productid }, function(err, res) {
-          if (res) {
+          if (res && res.length >0) {
             results = res[0];
+            if(nodeid==''){
+                  nodeid=res[0].nodeid[0];
+            }  
           }
           callback(err, null);
         });
@@ -128,7 +147,8 @@ function productDetail(req, res) {
       function(callback) {
         if (results && results.currency) {
           models.instance.currency_raito.find({ currency: results.currency }, function(err, items) {
-            if (items) {
+            if (items && items.length > 0) {
+              raito=items[0].raito;
               let n = JSON.stringify(results);
               results = JSON.parse(n);
               results['_price'] = items[0].raito * results.price;
@@ -140,6 +160,29 @@ function productDetail(req, res) {
           callback(null, null);
         }
       },
+     function(callback){
+        if(nodeid !=''){
+            models.instance.category.find({},{select:['title','nodeid','category']},function(err,items){
+                if(items && items.length > 0){
+                    category=items
+                    
+                }
+                callback(err,null)
+            })
+        }else{
+            
+            callback(null,null);
+        }
+     },
+     function(callback){
+         treeMapBreadCumb(category,nodeid,function(err,treeMap){
+             breadcrumb=treeMap;
+             console.log(treeMap);
+             callback(err,null);
+         })
+         
+     }
+        
     ],
     function(err, result) {
       if (err) return res.send({ status: 'error' });
@@ -224,28 +267,28 @@ function productSearch(req,res){
                 if(tmpQuery.length > 0){
                     tmpQuery=tmpQuery+ ' AND style: *'+style+'*';
                 }else{
-                    tmpQuery='"style: *'+style+'*'"'
+                    tmpQuery='"style: *'+style+'*"'
                 }
             }
             if(size){
                 if(tmpQuery.length > 0){
                     tmpQuery=tmpQuery+ ' AND size: *'+size+'*';
                 }else{
-                    tmpQuery='"size: *'+size+'*'"'
+                    tmpQuery='"size: *'+size+'*"'
                 }
             }
             if(color){
                 if(tmpQuery.length > 0){
                     tmpQuery=tmpQuery+ ' AND color: *'+color+'*';
                 }else{
-                    tmpQuery='"color: *'+color+'*'"'
+                    tmpQuery='"color: *'+color+'*"'
                 }
             }
             if(type){
                 if(tmpQuery.length > 0){
                     tmpQuery=tmpQuery+ ' AND type: *'+type+'*';
                 }else{
-                    tmpQuery='"type: *'+type+'*'"'
+                    tmpQuery='"type: *'+type+'*"'
                 }
             }
             switch(sort){
@@ -306,11 +349,32 @@ function productSearch(req,res){
     }
   );
 }
+function getBreadcumb(category,nodeid){
+    return category.filter(node => {
+        return node.nodeid.toString()==nodeid;
+    });
+}
+function generateMap(category,nodeid){
+    return;
+}
+function treeMapBreadCumb(category,nodeid,callback){
+    let treeMap=[];
+    let parent={}
+    async.series([
+        function(callback){
+            //treeMap=generateMap(category,nodeid,parent);
+            callback(null,null)
+        }
+    ],function(err,result){
+        callback(err,treeMap);
+    })
+    
+}
 var router = express.Router();
 router.get('/list', productList);
 router.post('/DT', productDetail);
 router.get('/CT', productCategory);
 router.post('/LC', productCategory);
-router.POST('/SEARCH', productSearch);
+router.post('/SEARCH', productSearch);
 
 module.exports = router;
