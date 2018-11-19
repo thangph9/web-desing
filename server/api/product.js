@@ -199,10 +199,118 @@ function productCategory(req, res) {
 function bestSeller(req, res) {}
 function dealday(req, res) {}
 function hotnew(req, res) {}
-
+function productSearch(req,res){
+  let results = {};
+  let raito = {};
+  let query={};
+  let sort='{"q" : "*:*"}';
+  let brand='',style='',size='',color='';
+  let current=1;
+  async.series(
+    [
+      function(callback) {
+        try {
+            let sort=req.body.sort;
+            let brand=req.body.brand;
+            let style=req.body.style;
+            let size=req.body.size;
+            let color=req.body.color;
+            let type=req.body.type;
+            let tmpQuery='';
+            if(brand){
+                tmpQuery='brand: *'+brand+'*';
+            }
+            if(style){
+                if(tmpQuery.length > 0){
+                    tmpQuery=tmpQuery+ ' AND style: *'+style+'*';
+                }else{
+                    tmpQuery='"style: *'+style+'*'"'
+                }
+            }
+            if(size){
+                if(tmpQuery.length > 0){
+                    tmpQuery=tmpQuery+ ' AND size: *'+size+'*';
+                }else{
+                    tmpQuery='"size: *'+size+'*'"'
+                }
+            }
+            if(color){
+                if(tmpQuery.length > 0){
+                    tmpQuery=tmpQuery+ ' AND color: *'+color+'*';
+                }else{
+                    tmpQuery='"color: *'+color+'*'"'
+                }
+            }
+            if(type){
+                if(tmpQuery.length > 0){
+                    tmpQuery=tmpQuery+ ' AND type: *'+type+'*';
+                }else{
+                    tmpQuery='"type: *'+type+'*'"'
+                }
+            }
+            switch(sort){
+                case 'HIGH_PRICE':
+                    sort=' "sort": "sale_price desc "';
+                    break;
+                case 'LOW_PRICE':
+                    sort=' "sort": "sale_price asc "';
+                    break;
+                case 'RECOMMEND':
+                    break;
+                case 'HIGHEST_DISCOUNT':
+                    sort=' "sort": "sale desc "';
+                    break;
+                default:
+                    break;
+            }
+            let mergeQuery=brand+style+size+color;
+            if(mergeQuery.length > 0){
+                query='{"q": '+tmpQuery+','+sort+'}';
+            }else{
+                query='{"q": "*:*",'+sort+'}';
+            }
+            
+            
+        } catch (e) {
+          return res.send({ status: 'error_invalid' });
+        }
+        callback(null, null);
+      },
+      function(callback) {
+        models.instance.product_detail.find({$solr_query: query}, function(err, res) {
+          if (res) {
+            results = res[0];
+          }
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        if (results && results.currency) {
+          models.instance.currency_raito.find({ currency: results.currency }, function(err, items) {
+            if (items) {
+              let n = JSON.stringify(results);
+              results = JSON.parse(n);
+              results['_price'] = items[0].raito * results.price;
+              results['_sale_price'] = items[0].raito * results.sale_price;
+            }
+            callback(err, null);
+          });
+        } else {
+          callback(null, null);
+        }
+      },
+    ],
+    function(err, result) {
+      if (err) return res.send({ status: 'error' });
+      res.send({ status: 'ok', data:{list: results,pagination: {total : results.length,current: current}}});
+    }
+  );
+}
 var router = express.Router();
 router.get('/list', productList);
 router.post('/DT', productDetail);
 router.get('/CT', productCategory);
 router.post('/LC', productCategory);
+router.POST('/SEARCH', productSearch);
+
 module.exports = router;
