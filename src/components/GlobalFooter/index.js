@@ -78,7 +78,7 @@ const GlobalFooter = () => (
             <div className={`${styles['footer__body___2_pAR']}`}>
               <ul className={`${styles['list-unstyled']}`}>
                 <li>
-                  <a href="https://pages.leflair.vn/about-us">Về 123order</a>
+                  <a href="https://pages.leflair.vn/about-us">Về 123Order</a>
                 </li>
                 <li>
                   <a href="https://styleguide.leflair.vn/">Style Guide</a>
@@ -173,7 +173,7 @@ const GlobalFooter = () => (
                   />
                 </a>
                 <span className={`${styles['footer__text___1Ta7d']}`}>
-                  Copyright @ 2018 123order.vn
+                  Copyright @ 2018 123Order.vn
                 </span>
               </div>
               <div
@@ -181,7 +181,7 @@ const GlobalFooter = () => (
                   styles['footer__address___aiHX9']
                 }`}
               >
-                Công ty Cổ phần 123order - Tầng 18, Tháp A, Tòa nhà CT2E chung cư VOV, Đường Lương
+                Công ty Cổ phần 123Order - Tầng 18, Tháp A, Tòa nhà CT2E chung cư VOV, Đường Lương
                 Thế Vinh, Hà Nội
               </div>
             </div>
