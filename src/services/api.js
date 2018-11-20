@@ -143,6 +143,14 @@ export async function getCategoryProduct(nodeid) {
     },
   });
 }
+export async function getSearchSortProduct(params) {
+  return request('/api/category/SEARCH', {
+    method: 'POST',
+    body: {
+      params,
+    },
+  });
+}
 export async function getRaito() {
   return request('/api/raito');
 }

@@ -1,10 +1,10 @@
-import { getCategoryProduct } from '@/services/api';
+import { getCategoryProduct, getSearchSortProduct } from '@/services/api';
 
 export default {
   namespace: 'category',
-
   state: {
     list: [],
+    sort: [],
     breadcrumb: {},
   },
 
@@ -13,7 +13,6 @@ export default {
       const response = yield call(getCategoryProduct, payload);
       try {
         if (response.status === 'ok') {
-          console.log(response);
           yield put({
             type: 'queryList',
             payload: Array.isArray(response.data.items) ? response.data.items : [],
@@ -37,6 +36,35 @@ export default {
         });
       }
     },
+    *sort({ payload }, { call, put }) {
+      const response = yield call(getSearchSortProduct, payload);
+      try {
+        if (response.status === 'ok') {
+          console.log('sort');
+          console.log(response);
+          yield put({
+            type: 'querySort',
+            payload: Array.isArray(response.data.items) ? response.data.items : [],
+            breadcrumb:
+              typeof response.data.breadcrumb === 'object' && response.data.breadcrumb != null
+                ? response.data.breadcrumb
+                : {},
+          });
+        } else {
+          yield put({
+            type: 'querySort',
+            payload: [],
+            breadcrumb: {},
+          });
+        }
+      } catch (e) {
+        yield put({
+          type: 'querySort',
+          payload: [],
+          breadcrumb: {},
+        });
+      }
+    },
   },
 
   reducers: {
@@ -44,6 +72,13 @@ export default {
       return {
         ...state,
         list: action.payload,
+        breadcrumb: action.breadcrumb,
+      };
+    },
+    querySort(state, action) {
+      return {
+        ...state,
+        sort: action.payload,
         breadcrumb: action.breadcrumb,
       };
     },

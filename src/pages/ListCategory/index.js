@@ -126,14 +126,59 @@ class ProductItem extends PureComponent {
 }))
 @Form.create()
 class ListCategory extends PureComponent {
-  state = {
-    filter: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      filter: false,
+      divFilter: 0,
+      soft: '',
+    };
+  }
   handleClickSort() {
     var sort = document.getElementById('sort-items');
     if (sort.style.display == 'block') {
       sort.style.display = 'none';
     } else sort.style.display = 'block';
+  }
+  handleScroll() {
+    var scroll = document.documentElement.scrollTop;
+    var scrollHeight = window.document.body.scrollHeight;
+    var idFix = document.getElementById('filterFiexd');
+    var saleFilter = document.getElementById('sale-filter');
+    if (scroll >= 115 && idFix == null && saleFilter != null) {
+      saleFilter.classList.add('order\\pages\\-list-category\\index-sale__fixed-position___P7XwH');
+      var rowFilter = document.getElementById('row-filter');
+      var filterFixed = document.createElement('div');
+      filterFixed.setAttribute('id', 'filterFiexd');
+      filterFixed.setAttribute(
+        'class',
+        'order\\pages\\-list-category\\index-sale__filters-container___32fTU order\\pages\\-list-category\\index-sale__col-md-4___UhAyk order\\pages\\-list-category\\index-sale__col-lg-3___2xbHl order\\pages\\-list-category\\index-sale__dumb-container___lFg-z'
+      );
+      rowFilter.appendChild(filterFixed);
+      rowFilter.insertBefore(filterFixed, rowFilter.childNodes[1]);
+      var filterDiv = document.getElementById('transform-fixed');
+      if (
+        filterDiv.clientHeight + 115 >= window.innerHeight &&
+        filterDiv.clientHeight + 115 - window.innerHeight - (scroll - 115) > 0
+      ) {
+        this.setState({
+          divScroll: 115 - scroll,
+        });
+      } else {
+        this.setState({
+          divScroll: -(filterDiv.clientHeight + 115 - window.innerHeight),
+        });
+      }
+      filterDiv.style['transform'] = `translate3d(0px,${this.state.divScroll}px, 0px)`;
+    }
+    if ((scroll < 115 || scroll > scrollHeight - 380) && idFix != null && saleFilter != null) {
+      saleFilter.classList.remove(
+        'order\\pages\\-list-category\\index-sale__fixed-position___P7XwH'
+      );
+      var rowFilter = document.getElementById('row-filter');
+      var filterFixed = document.getElementById('filterFiexd');
+      rowFilter.removeChild(filterFixed);
+    }
   }
   componentDidMount() {
     var { dispatch, match } = this.props;
@@ -141,6 +186,10 @@ class ListCategory extends PureComponent {
       type: 'category/list',
       payload: match.params.nodeid,
     });
+    console.log(this.props);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
   }
   handleClickButtonFilter() {
     this.setState({
@@ -185,6 +234,38 @@ class ListCategory extends PureComponent {
       );
       titleFilter.appendChild(i);
     }
+  }
+  handleClickSoft(sort, id) {
+    this.setState(
+      {
+        sort,
+      },
+      () => {}
+    );
+    var liSort = document.getElementById(id);
+    var ulSort = document.getElementById('sort-items');
+    ulSort.style.display = 'none';
+    var btnSoft = document.getElementsByClassName(
+      'order\\pages\\-list-category\\index-sort__btn-text___1mPct'
+    )[0];
+    btnSoft.textContent = 'Sắp xếp: ' + liSort.textContent;
+    var activeSoft = document.getElementsByClassName(
+      'order\\pages\\-list-category\\index-sort__dropdown-item___XkHiS'
+    );
+    for (var i = 0; i < activeSoft.length; i++) {
+      activeSoft[i].classList.remove('order\\pages\\-list-category\\index-sort__active___3DNgx');
+    }
+    liSort.classList.add('order\\pages\\-list-category\\index-sort__active___3DNgx');
+    let pathname = this.props.location.pathname;
+    let search = this.props.location.search;
+    this.props.history.push({ pathname, search: '?sort=' + sort });
+    this.props.dispatch({
+      type: 'category/sort',
+      payload: {
+        nodeid: this.props.match.params.nodeid,
+        sort: this.props.location.query.sort,
+      },
+    });
   }
   renderBreadcrumb() {
     var {
@@ -235,6 +316,7 @@ class ListCategory extends PureComponent {
     if (filter == true) {
       return (
         <div
+          id="sale-filter"
           className={
             styles['sale__filters-container___32fTU'] +
             ' ' +
@@ -262,7 +344,7 @@ class ListCategory extends PureComponent {
               {list.length} Sản phẩm
             </div>
           </div>
-          <div className={styles['sale__fitlers-content-wrap___pU5ed']}>
+          <div id="transform-fixed" className={styles['sale__fitlers-content-wrap___pU5ed']}>
             <div className={styles['filter__filter-container___1hLIM']}>
               <div className={styles['filter__filter-header___3I6RP']}>
                 <h5 className={styles['clearfix']}>
@@ -643,7 +725,7 @@ class ListCategory extends PureComponent {
     var {
       category: { list },
     } = this.props;
-
+    window.addEventListener('scroll', this.handleScroll.bind(this));
     return (
       <div className={styles['container__container___1fvX0']}>
         <div className={styles['sale__sale___1auiY']}>
@@ -763,6 +845,8 @@ class ListCategory extends PureComponent {
                       >
                         <li role="menuitem">
                           <a
+                            id="recommend"
+                            onClick={() => this.handleClickSoft('RECOMMEND', 'recommend')}
                             href="javascript:void(0)"
                             className={
                               styles['sort__dropdown-item___XkHiS'] +
@@ -775,6 +859,10 @@ class ListCategory extends PureComponent {
                         </li>
                         <li role="menuitem">
                           <a
+                            id="highest-discount"
+                            onClick={() =>
+                              this.handleClickSoft('HIGHEST_DISCOUNT', 'highest-discount')
+                            }
                             href="javascript:void(0)"
                             className={styles['sort__dropdown-item___XkHiS']}
                           >
@@ -783,18 +871,22 @@ class ListCategory extends PureComponent {
                         </li>
                         <li role="menuitem">
                           <a
+                            id="low-price"
+                            onClick={() => this.handleClickSoft('LOW_PRICE', 'low-price')}
                             href="javascript:void(0)"
                             className={styles['sort__dropdown-item___XkHiS']}
                           >
-                            Giá, thấp đến cao
+                            Giá thấp đến cao
                           </a>
                         </li>
                         <li role="menuitem">
                           <a
+                            id="high-price"
+                            onClick={() => this.handleClickSoft('HIGH_PRICE', 'high-price')}
                             href="javascript:void(0)"
                             className={styles['sort__dropdown-item___XkHiS']}
                           >
-                            Giá, cao đến thấp
+                            Giá cao đến thấp
                           </a>
                         </li>
                       </ul>
@@ -825,7 +917,7 @@ class ListCategory extends PureComponent {
             </div>
           </div>
           <div className={styles['sale__sale-content___1M-Lr']}>
-            <div className={styles['row__row___2roCA']}>
+            <div id="row-filter" className={styles['row__row___2roCA']}>
               {this.renderFilterList(filter)}
               <div
                 id="list-product"
