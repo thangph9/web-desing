@@ -151,35 +151,20 @@ class ListCategory extends PureComponent {
     var idFix = document.getElementById('filterFiexd');
     var saleFilter = document.getElementById('sale-filter');
     if (scroll >= 115 && idFix == null && saleFilter != null) {
-      saleFilter.classList.add('order\\pages\\-list-category\\index-sale__fixed-position___P7XwH');
+      saleFilter.classList.add('order-pages-list-category-index-sale__fixed-position___P7XwH');
       var rowFilter = document.getElementById('row-filter');
       var filterFixed = document.createElement('div');
       filterFixed.setAttribute('id', 'filterFiexd');
       filterFixed.setAttribute(
         'class',
-        'order\\pages\\-list-category\\index-sale__filters-container___32fTU order\\pages\\-list-category\\index-sale__col-md-4___UhAyk order\\pages\\-list-category\\index-sale__col-lg-3___2xbHl order\\pages\\-list-category\\index-sale__dumb-container___lFg-z'
+        'order-pages-list-category-index-sale__filters-container___32fTU order-pages-list-category-index-sale__col-md-4___UhAyk order-pages-list-category-index-sale__col-lg-3___2xbHl order-pages-list-category-index-sale__dumb-container___lFg-z'
       );
       rowFilter.appendChild(filterFixed);
       rowFilter.insertBefore(filterFixed, rowFilter.childNodes[1]);
       var filterDiv = document.getElementById('transform-fixed');
-      if (
-        filterDiv.clientHeight + 115 >= window.innerHeight &&
-        filterDiv.clientHeight + 115 - window.innerHeight - (scroll - 115) > 0
-      ) {
-        this.setState({
-          divScroll: 115 - scroll,
-        });
-      } else {
-        this.setState({
-          divScroll: -(filterDiv.clientHeight + 115 - window.innerHeight),
-        });
-      }
-      filterDiv.style['transform'] = `translate3d(0px,${this.state.divScroll}px, 0px)`;
     }
     if ((scroll < 115 || scroll > scrollHeight - 380) && idFix != null && saleFilter != null) {
-      saleFilter.classList.remove(
-        'order\\pages\\-list-category\\index-sale__fixed-position___P7XwH'
-      );
+      saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
       var rowFilter = document.getElementById('row-filter');
       var filterFixed = document.getElementById('filterFiexd');
       rowFilter.removeChild(filterFixed);
@@ -191,7 +176,6 @@ class ListCategory extends PureComponent {
       type: 'category/list',
       payload: match.params.nodeid,
     });
-    console.log(this.props);
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
@@ -201,22 +185,22 @@ class ListCategory extends PureComponent {
       filter: !this.state.filter,
     });
     var defautLayout = document.getElementsByClassName(
-      'order\\layouts\\-home-layout-default-layout__container___13v1V'
+      'order-layouts-home-layout-default-layout__container___13v1V'
     )[0];
-    defautLayout.classList.toggle('order\\pages\\-list-category\\index-filters-expanded');
+    defautLayout.classList.toggle('order-pages-list-category-index-filters-expanded');
     var buttonFilter = document.getElementById('button-filter');
-    buttonFilter.classList.toggle('order\\pages\\-list-category\\index-sale__filter-btn___30Ofp');
-    buttonFilter.classList.toggle('order\\pages\\-list-category\\index-sale__btn-block___O8koG');
+    buttonFilter.classList.toggle('order-pages-list-category-index-sale__filter-btn___30Ofp');
+    buttonFilter.classList.toggle('order-pages-list-category-index-sale__btn-block___O8koG');
     var headerFilter = document.getElementById('header-filter');
-    headerFilter.classList.toggle('order\\pages\\-list-category\\index-sale__d-t___1Trp4');
+    headerFilter.classList.toggle('order-pages-list-category-index-sale__d-t___1Trp4');
     var listProduct = document.getElementById('list-product');
-    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-md-8___34B6S');
-    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-lg-9___2qXAs');
-    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-12___82vEz');
+    listProduct.classList.toggle('order-pages-list-category-index-sale__col-md-8___34B6S');
+    listProduct.classList.toggle('order-pages-list-category-index-sale__col-lg-9___2qXAs');
+    listProduct.classList.toggle('order-pages-list-category-index-sale__col-12___82vEz');
     var proudctItem = document.getElementsByClassName('product-items');
     for (var i = 0; i < proudctItem.length; i++) {
-      proudctItem[i].classList.toggle('order\\pages\\-list-category\\index-sale__col-md-4___UhAyk');
-      proudctItem[i].classList.toggle('order\\pages\\-list-category\\index-sale__col-md-6___3wB0o');
+      proudctItem[i].classList.toggle('order-pages-list-category-index-sale__col-md-4___UhAyk');
+      proudctItem[i].classList.toggle('order-pages-list-category-index-sale__col-md-6___3wB0o');
     }
     var titleFilter = document.getElementById('title-filter');
     if (titleFilter.textContent == 'Hiện bộ lọc') {
@@ -225,7 +209,7 @@ class ListCategory extends PureComponent {
       i.setAttribute('id', 'icon-filter');
       i.setAttribute(
         'class',
-        'order\\pages\\-list-category\\index-ic-ic-arrow-left order\\pages\\-list-category\\index-sale__icon-hide___3Iftv'
+        'order-pages-list-category-index-ic-ic-arrow-left order-pages-list-category-index-sale__icon-hide___3Iftv'
       );
       titleFilter.appendChild(i);
       titleFilter.insertBefore(i, titleFilter.childNodes[0]);
@@ -235,7 +219,7 @@ class ListCategory extends PureComponent {
       i.setAttribute('id', 'icon-filter');
       i.setAttribute(
         'class',
-        'order\\pages\\-list-category\\index-ic-ic-arrow-right order\\pages\\-list-category\\index-sale__icon-show___3nTgw'
+        'order-pages-list-category-index-ic-ic-arrow-right order-pages-list-category-index-sale__icon-show___3nTgw'
       );
       titleFilter.appendChild(i);
     }
@@ -251,16 +235,16 @@ class ListCategory extends PureComponent {
     var ulSort = document.getElementById('sort-items');
     ulSort.style.display = 'none';
     var btnSoft = document.getElementsByClassName(
-      'order\\pages\\-list-category\\index-sort__btn-text___1mPct'
+      'order-pages-list-category-index-sort__btn-text___1mPct'
     )[0];
     btnSoft.textContent = 'Sắp xếp: ' + liSort.textContent;
     var activeSoft = document.getElementsByClassName(
-      'order\\pages\\-list-category\\index-sort__dropdown-item___XkHiS'
+      'order-pages-list-category-index-sort__dropdown-item___XkHiS'
     );
     for (var i = 0; i < activeSoft.length; i++) {
-      activeSoft[i].classList.remove('order\\pages\\-list-category\\index-sort__active___3DNgx');
+      activeSoft[i].classList.remove('order-pages-list-category-index-sort__active___3DNgx');
     }
-    liSort.classList.add('order\\pages\\-list-category\\index-sort__active___3DNgx');
+    liSort.classList.add('order-pages-list-category-index-sort__active___3DNgx');
     let pathname = this.props.location.pathname;
     let search = this.props.location.search;
     this.props.history.push({ pathname, search: '?sort=' + sort });
@@ -704,7 +688,7 @@ class ListCategory extends PureComponent {
     var {
       category: { list },
     } = this.props;
-
+    window.addEventListener('scroll', this.handleScroll.bind(this));
     return (
       <div
         className={
@@ -726,12 +710,10 @@ class ListCategory extends PureComponent {
     );
   }
   render() {
-    var { filter } = this.state;
+    var { filter, test } = this.state;
     var {
       category: { list },
     } = this.props;
-    console.log(this.props.category);
-    window.addEventListener('scroll', this.handleScroll.bind(this));
     return (
       <div className={styles['container__container___1fvX0']}>
         <div className={styles['sale__sale___1auiY']}>
