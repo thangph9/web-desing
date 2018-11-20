@@ -146,13 +146,17 @@ class ListCategory extends PureComponent {
     } else sort.style.display = 'block';
   }
   handleScroll() {
+    var screen = document.getElementsByClassName('screen-xl')[0];
+    var number = screen.clientHeight - 1184;
     var scroll = document.documentElement.scrollTop;
     var scrollHeight = window.document.body.scrollHeight;
     var idFix = document.getElementById('filterFiexd');
+    var rowFilter = document.getElementById('row-filter');
     var saleFilter = document.getElementById('sale-filter');
-    if (scroll >= 115 && idFix == null && saleFilter != null) {
+    if (scroll >= 115 && scroll < number && idFix == null && saleFilter != null) {
+      var filterDiv = document.getElementById('transform-fixed');
       saleFilter.classList.add('order-pages-list-category-index-sale__fixed-position___P7XwH');
-      var rowFilter = document.getElementById('row-filter');
+      filterDiv.classList.remove('order-pages-list-category-index-sale__position-absolute___1tZOO');
       var filterFixed = document.createElement('div');
       filterFixed.setAttribute('id', 'filterFiexd');
       filterFixed.setAttribute(
@@ -162,13 +166,28 @@ class ListCategory extends PureComponent {
       rowFilter.appendChild(filterFixed);
       rowFilter.insertBefore(filterFixed, rowFilter.childNodes[1]);
       var filterDiv = document.getElementById('transform-fixed');
+      if (saleFilter.clientHeight + 115 > window.innerHeight) {
+        filterDiv.style.transform = `translateY(-35px)`;
+        filterDiv.style.transition = 'transform 0.5s ease';
+      }
     }
-    if ((scroll < 115 || scroll > scrollHeight - 380) && idFix != null && saleFilter != null) {
+    if (scroll < 115 && idFix != null && saleFilter != null) {
       saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
-      var rowFilter = document.getElementById('row-filter');
-      var filterFixed = document.getElementById('filterFiexd');
-      rowFilter.removeChild(filterFixed);
+      rowFilter.removeChild(idFix);
+      var filterDiv = document.getElementById('transform-fixed');
+      filterDiv.classList.remove('order-pages-list-category-index-sale__position-absolute___1tZOO');
+      filterDiv.style.transform = `translateY(0px)`;
+      filterDiv.style.transition = 'transform 0.5s ease';
     }
+    if (scroll >= number && idFix != null) {
+      saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
+      var filterDiv = document.getElementById('transform-fixed');
+      rowFilter.removeChild(idFix);
+      filterDiv.classList.add('order-pages-list-category-index-sale__position-absolute___1tZOO');
+    }
+    console.log(window.pageYOffset);
+
+    console.log(scroll);
   }
   componentDidMount() {
     var { dispatch, match } = this.props;
