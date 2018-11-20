@@ -70,6 +70,11 @@ const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 var currencyFormatter = require('currency-formatter');
 
+@connect(({ loading, category }) => ({
+  submitting: loading.effects['form/submitRegularForm'],
+  loading,
+  category,
+}))
 class ProductItem extends PureComponent {
   render() {
     var { data } = this.props;
@@ -725,6 +730,7 @@ class ListCategory extends PureComponent {
     var {
       category: { list },
     } = this.props;
+    console.log(this.props.category);
     window.addEventListener('scroll', this.handleScroll.bind(this));
     return (
       <div className={styles['container__container___1fvX0']}>

@@ -4,7 +4,6 @@ export default {
   namespace: 'category',
   state: {
     list: [],
-    sort: [],
     breadcrumb: {},
   },
 
@@ -40,11 +39,10 @@ export default {
       const response = yield call(getSearchSortProduct, payload);
       try {
         if (response.status === 'ok') {
-          console.log('sort');
           console.log(response);
           yield put({
             type: 'querySort',
-            payload: Array.isArray(response.data.items) ? response.data.items : [],
+            payload: Array.isArray(response.data.list.items) ? response.data.list.items : [],
             breadcrumb:
               typeof response.data.breadcrumb === 'object' && response.data.breadcrumb != null
                 ? response.data.breadcrumb
@@ -78,7 +76,7 @@ export default {
     querySort(state, action) {
       return {
         ...state,
-        sort: action.payload,
+        list: action.payload,
         breadcrumb: action.breadcrumb,
       };
     },
