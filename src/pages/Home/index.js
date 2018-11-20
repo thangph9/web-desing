@@ -98,7 +98,7 @@ class ProductItem extends PureComponent {
           <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
             <img
               className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-              src={`/images/w320/${thumbnail}`}
+              src={`/images/f/${thumbnail}`}
               alt={`${data.title} `}
             />
           </div>
@@ -324,7 +324,7 @@ class Home extends PureComponent {
               <div className={`${styles['banner__arrows___iX3cf']}`}>
                 <label htmlFor="slides_0" />
               </div>
-              <ul>
+              <ul style={{ display: 'none' }}>
                 <li>
                   <a
                     href="https://support.leflair.vn/hc/vi/articles/360009061113-Ch%C6%B0%C6%A1ng-tr%C3%ACnh-%C6%AFu-%C4%91%C3%A3i-Cashback-5-C%C3%A0-th%E1%BA%BB-li%E1%BB%81n-tay-S%C4%83n-ngay-%C6%B0u-%C4%91%C3%A3i"
