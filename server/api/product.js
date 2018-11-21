@@ -251,6 +251,7 @@ function productSearch(req,res){
     [
       function(callback) {
         try {
+<<<<<<< HEAD
             let sort=req.body.sort;
             let brand=req.body.brand;
             let style=req.body.style;
@@ -260,6 +261,23 @@ function productSearch(req,res){
             let tmpQuery='';
             if(brand){
                 tmpQuery='brand: *'+brand+'*';
+=======
+          let sortParams = req.body.params.sort;
+          let brand = req.body.brand;
+          let style = req.body.style;
+          let size = req.body.size;
+          let color = req.body.color;
+          let type = req.body.type;
+          let tmpQuery = '';
+          if (brand) {
+            tmpQuery = 'brand: *' + brand + '*';
+          }
+          if (style) {
+            if (tmpQuery.length > 0) {
+              tmpQuery = tmpQuery + ' AND style: *' + style + '*';
+            } else {
+              tmpQuery = `"style: *'+${style}+'*'"`;
+>>>>>>> 813b780517417c7a6d51f4284008892bcc865484
             }
             if(style){
                 if(tmpQuery.length > 0){
@@ -282,6 +300,7 @@ function productSearch(req,res){
                     tmpQuery='"color: *'+color+'*"'
                 }
             }
+<<<<<<< HEAD
             if(type){
                 if(tmpQuery.length > 0){
                     tmpQuery=tmpQuery+ ' AND type: *'+type+'*';
@@ -312,6 +331,30 @@ function productSearch(req,res){
             }
             
             
+=======
+          }
+          switch (sortParams) {
+            case 'HIGH_PRICE':
+              sort = '"sort": "sale_price asc"';
+              break;
+            case 'LOW_PRICE':
+              sort = '"sort": "sale_price desc"';
+              break;
+            case 'RECOMMEND':
+              break;
+            case 'HIGHEST_DISCOUNT':
+              sort = '"sort": "sale desc"';
+              break;
+            default:
+              break;
+          }
+          let mergeQuery = brand + style + size + color;
+          if (mergeQuery.length > 0) {
+            query = '{"q": ' + tmpQuery + ',' + sort + '}';
+          } else {
+            query = `{"q": "nodeid:*${nodeid}*",${sort}}`;
+          }
+>>>>>>> 813b780517417c7a6d51f4284008892bcc865484
         } catch (e) {
           return res.send({ status: 'error_invalid' });
         }
@@ -342,8 +385,17 @@ function productSearch(req,res){
       },
     ],
     function(err, result) {
+<<<<<<< HEAD
       if (err) return res.send({ status: 'error' });
       res.send({ status: 'ok', data:{list: results,pagination: {total : results.length,current: current}}});
+=======
+      if (err != null) return res.send({ status: 'error' });
+      console.log(err);
+      res.send({
+        status: 'ok',
+        data: { list: results, pagination: { total: results.length, current: current } },
+      });
+>>>>>>> 813b780517417c7a6d51f4284008892bcc865484
     }
   );
 }

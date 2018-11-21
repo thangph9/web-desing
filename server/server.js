@@ -48,10 +48,10 @@ app.get('/*', function (req, res) {
 });
 
 // Here you can add any code.
-var server = https.createServer(credentials, app);
+//var server = https.createServer(credentials, app);
 
 if (!module.parent) {
- 
+ /*
   server.listen(443, function () {
     console.log("server running at https://123order.vn/")
   });
@@ -62,9 +62,9 @@ if (!module.parent) {
     res.end();
   }).listen(80);
  
-    /*
-  app.listen(8000,function(){
+  */  
+  app.listen(80,function(){
       console.log("server dev running port 8000")
   })
-  */
+  
 }

@@ -16,6 +16,7 @@ module.exports={
         star                 : 'text',
         color                : 'text',
         size                 : 'text',
+        size_desc            : 'text',
         currency    :'text',
         amount      :'int',
         materials_use       : 'text',
