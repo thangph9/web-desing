@@ -25,7 +25,6 @@ var express = require('express');
 const sharp = require('sharp');
 function productList(req,res){
     let results={};
-    
     async.series([
         function(callback){
             callback(null,null);    
@@ -178,7 +177,6 @@ function productDetail(req, res) {
          breadcrumb=generateMap(category,nodeid);
          results.breadcrumb=breadcrumb;
          callback(null,null);
-         
      }
         
     ],
@@ -240,6 +238,95 @@ function productCategory(req, res) {
 function bestSeller(req, res) {}
 function dealday(req, res) {}
 function hotnew(req, res) {}
+function productAmazon(req,res){
+    let results=[];
+    async.series([
+        function(callback){
+            callback(null,null);
+        },
+        function(callback){
+            callback(null,null);
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: f4e2643d-3585-4bc9-a116-be9bd7c9b96f"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res){
+                    results=res;
+                }
+                callback(err,null);
+            })
+        },
+    ],function(err,result){
+        if(err) return res.send({status: 'error'});
+        res.send({status: 'ok',data: results});
+    })
+}
+function productEbay(req,res){
+    let results=[];
+    async.series([
+        function(callback){
+            callback(null,null);
+        },
+        function(callback){
+            callback(null,null);
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: ddb73d42-ac5b-4148-b4da-104010a766ce"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res){
+                    results=res;
+                }
+                callback(err,null);
+            })
+        },
+    ],function(err,result){
+        if(err) return res.send({status: 'error'});
+        res.send({status: 'ok',data: results});
+    })
+}
+function productNike(req,res){
+    let results=[];
+    async.series([
+        function(callback){
+            callback(null,null);
+        },
+        function(callback){
+            callback(null,null);
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: a1ff473a-37cb-4a1d-b8f1-8b7b24afd842"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res){
+                    results=res;
+                }
+                callback(err,null);
+            })
+        },
+    ],function(err,result){
+        if(err) return res.send({status: 'error'});
+        res.send({status: 'ok',data: results});
+    })
+}
+function productAdidas(req,res){
+    let results=[];
+    async.series([
+        function(callback){
+            callback(null,null);
+        },
+        function(callback){
+            callback(null,null);
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: eb86db6f-7d34-4efc-8594-210f0d7cb9c5"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res){
+                    results=res;
+                }
+                callback(err,null);
+            })
+        },
+    ],function(err,result){
+        if(err) return res.send({status: 'error'});
+        res.send({status: 'ok',data: results});
+    })
+}
+
 function productSearch(req,res){
   let results = {};
   let raito = {};
@@ -291,6 +378,7 @@ function productSearch(req,res){
                     tmpQuery='"type: *'+type+'*"'
                 }
             }
+            
             if(tempNode){
                 let cvNodeid =
                   tempNode.substring(0, 8) +
@@ -302,7 +390,7 @@ function productSearch(req,res){
                   tempNode.substring(16, 20) +
                   '-' +
                   tempNode.substring(20, 32);
-                if(tempNode.length > 0){
+                if(tmpQuery.length > 0){
                     tmpQuery=tmpQuery+ ' AND nodeid: *'+cvNodeid+'*';
                 }else{
                      tmpQuery='"nodeid: *'+cvNodeid+'*"';
@@ -326,20 +414,19 @@ function productSearch(req,res){
                     sort=' "sort": "createat desc "';
                     break;
             }
-            let mergeQuery=brand+style+size+color;
+            let mergeQuery=brand+style+size+color+nodeid;
             if(mergeQuery.length > 0){
                 query='{"q": '+tmpQuery+','+sort+'}';
             }else{
                 query='{"q": "*:*",'+sort+'}';
             }
-            
-            
         } catch (e) {
           return res.send({ status: 'error_invalid' });
         }
         callback(null, null);
       },
       function(callback) {
+          console.log(query);
         models.instance.product_detail.find({$solr_query: query}, function(err, res) {
           if (res) {
             results = res;
@@ -401,4 +488,8 @@ router.post('/DT', productDetail);
 router.get('/CT', productCategory);
 router.post('/LC', productCategory);
 router.post('/SEARCH', productSearch);
+router.get('/AM', productAmazon);
+router.get('/EB', productEbay);
+router.get('/NK', productNike);
+router.get('/AD', productAdidas);
 module.exports = router;

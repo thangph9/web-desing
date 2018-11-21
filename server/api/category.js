@@ -44,12 +44,17 @@ function category(req,res){
             callback(null, null);
           },     
           function(callback) {
-             models.instance.category.find({},function(err,items){
-                 if(items && items.length > 0){
-                     category=items; 
-                 }
-                callback(err,null);     
-             });
+              try{
+                  models.instance.category.find({},function(err,items){
+                     if(items && items.length > 0){
+                         category=items; 
+                     }
+                    callback(err,null);     
+                 });
+              }catch(e){
+                    return res.send({status: 'error'})
+              }
+             
           },
           function(callback){
               if(nodeid!='' && nodeid !=undefined){
