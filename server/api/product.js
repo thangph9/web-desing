@@ -244,20 +244,22 @@ function productSearch(req,res){
   let results = {};
   let raito = {};
   let query={};
-  let sort='{"q" : "*:*"}';
-  let brand='',style='',size='',color='';
+  let sort='';
+  let brand='',style='',size='',color='',nodeid='';
   let current=1;
   async.series(
     [
       function(callback) {
         try {
-            let sort=req.body.sort;
+            let tempNode=req.body.nodeid;
+            let sortTmp=req.body.sort;
             let brand=req.body.brand;
             let style=req.body.style;
             let size=req.body.size;
             let color=req.body.color;
             let type=req.body.type;
             let tmpQuery='';
+            
             if(brand){
                 tmpQuery='brand: *'+brand+'*';
             }
@@ -289,7 +291,25 @@ function productSearch(req,res){
                     tmpQuery='"type: *'+type+'*"'
                 }
             }
-            switch(sort){
+            if(tempNode){
+                let cvNodeid =
+                  tempNode.substring(0, 8) +
+                  '-' +
+                  tempNode.substring(8, 12) +
+                  '-' +
+                  tempNode.substring(12, 16) +
+                  '-' +
+                  tempNode.substring(16, 20) +
+                  '-' +
+                  tempNode.substring(20, 32);
+                if(tempNode.length > 0){
+                    tmpQuery=tmpQuery+ ' AND nodeid: *'+cvNodeid+'*';
+                }else{
+                     tmpQuery='"nodeid: *'+cvNodeid+'*"';
+                }
+            }
+            
+            switch(sortTmp){
                 case 'HIGH_PRICE':
                     sort=' "sort": "sale_price desc "';
                     break;
@@ -297,11 +317,13 @@ function productSearch(req,res){
                     sort=' "sort": "sale_price asc "';
                     break;
                 case 'RECOMMEND':
+                    sort=' "sort": "createat desc "';
                     break;
                 case 'HIGHEST_DISCOUNT':
                     sort=' "sort": "sale desc "';
                     break;
                 default:
+                    sort=' "sort": "createat desc "';
                     break;
             }
             let mergeQuery=brand+style+size+color;
@@ -310,6 +332,8 @@ function productSearch(req,res){
             }else{
                 query='{"q": "*:*",'+sort+'}';
             }
+            
+            
         } catch (e) {
           return res.send({ status: 'error_invalid' });
         }
@@ -318,25 +342,10 @@ function productSearch(req,res){
       function(callback) {
         models.instance.product_detail.find({$solr_query: query}, function(err, res) {
           if (res) {
-            results = res[0];
+            results = res;
           }
           callback(err, null);
         });
-      },
-      function(callback) {
-        if (results && results.currency) {
-          models.instance.currency_raito.find({ currency: results.currency }, function(err, items) {
-            if (items) {
-              let n = JSON.stringify(results);
-              results = JSON.parse(n);
-              results['_price'] = items[0].raito * results.price;
-              results['_sale_price'] = items[0].raito * results.sale_price;
-            }
-            callback(err, null);
-          });
-        } else {
-          callback(null, null);
-        }
       },
     ],
     function(err, result) {
@@ -372,6 +381,7 @@ function generateMap(category,nodeid){
     }
     return parent.reverse();
 }
+
 function treeMapBreadCumb(category,nodeid,callback){
     let treeMap=[];
     let parent={};
@@ -391,5 +401,4 @@ router.post('/DT', productDetail);
 router.get('/CT', productCategory);
 router.post('/LC', productCategory);
 router.post('/SEARCH', productSearch);
-
 module.exports = router;
