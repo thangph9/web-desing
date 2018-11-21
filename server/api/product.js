@@ -162,7 +162,7 @@ function productDetail(req, res) {
       },
      function(callback){
         if(nodeid !=''){
-            models.instance.category.find({},{select:['title','nodeid','category']},function(err,items){
+            models.instance.category.find({},{select:['title','nodeid','category','seo_link']},function(err,items){
                 if(items && items.length > 0){
                     category=items
                     
