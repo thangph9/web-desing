@@ -147,7 +147,7 @@ class ListCategory extends PureComponent {
     } else sort.style.display = 'block';
   }
   handleScroll() {
-    var screen = document.getElementsByClassName('screen-xl')[0];
+    var screen = document.getElementById('screen');
     var scroll = document.documentElement.scrollTop;
     var scrollHeight = window.document.body.scrollHeight;
     var idFix = document.getElementById('filterFiexd');

@@ -144,7 +144,7 @@ export async function getCategoryProduct(nodeid) {
   });
 }
 export async function getSearchSortProduct(params) {
-  return request('/api/category/SEARCH', {
+  return request('/api/product/SEARCH', {
     method: 'POST',
     body: {
       params,

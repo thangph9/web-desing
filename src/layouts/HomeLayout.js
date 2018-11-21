@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { Layout } from 'antd';
@@ -96,7 +97,7 @@ class HomeLayout extends React.PureComponent {
     isMobile: false,
     menuData: this.getMenuData(),
   };
- 
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -130,7 +131,7 @@ class HomeLayout extends React.PureComponent {
       this.handleMenuCollapse(false);
     }
     if (this.props.location.pathname !== preProps.location.pathname) {
-      window.scrollTo(0, 0)
+      window.scrollTo(0, 0);
     }
   }
 
@@ -230,7 +231,7 @@ class HomeLayout extends React.PureComponent {
     return <SettingDrawer />;
   }
 
-  render() { 
+  render() {
     const {
       // eslint-disable-next-line no-unused-vars
       navTheme,
@@ -266,7 +267,9 @@ class HomeLayout extends React.PureComponent {
           <ContainerQuery query={query}>
             {params => (
               <Context.Provider value={this.getContext()}>
-                <div className={classNames(params)}>{layout}</div>
+                <div id="screen" className={classNames(params)}>
+                  {layout}
+                </div>
               </Context.Provider>
             )}
           </ContainerQuery>
