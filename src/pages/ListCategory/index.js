@@ -153,15 +153,26 @@ class ListCategory extends PureComponent {
     var idFix = document.getElementById('filterFiexd');
     var rowFilter = document.getElementById('row-filter');
     var saleFilter = document.getElementById('sale-filter');
+    var rowProduct = document.getElementById('row-product');
+    if (
+      rowProduct != null &&
+      rowProduct.clientHeight <= rowFilter.clientHeight &&
+      idFix == null &&
+      saleFilter != null
+    ) {
+      return;
+    }
     if (scroll >= 115 && scroll < number && idFix == null && saleFilter != null) {
       var filterDiv = document.getElementById('transform-fixed');
-      saleFilter.classList.add('order-pages-list-category-index-sale__fixed-position___P7XwH');
-      filterDiv.classList.remove('order-pages-list-category-index-sale__position-absolute___1tZOO');
+      saleFilter.classList.add('order\\pages\\-list-category\\index-sale__fixed-position___P7XwH');
+      filterDiv.classList.remove(
+        'order\\pages\\-list-category\\index-sale__position-absolute___1tZOO'
+      );
       var filterFixed = document.createElement('div');
       filterFixed.setAttribute('id', 'filterFiexd');
       filterFixed.setAttribute(
         'class',
-        'order-pages-list-category-index-sale__filters-container___32fTU order-pages-list-category-index-sale__col-md-4___UhAyk order-pages-list-category-index-sale__col-lg-3___2xbHl order-pages-list-category-index-sale__dumb-container___lFg-z'
+        'order\\pages\\-list-category\\index-sale__filters-container___32fTU order\\pages\\-list-category\\index-sale__col-md-4___UhAyk order\\pages\\-list-category\\index-sale__col-lg-3___2xbHl order\\pages\\-list-category\\index-sale__dumb-container___lFg-z'
       );
       rowFilter.appendChild(filterFixed);
       rowFilter.insertBefore(filterFixed, rowFilter.childNodes[1]);
@@ -172,21 +183,27 @@ class ListCategory extends PureComponent {
       }
     }
     if (scroll < 115 && idFix != null && saleFilter != null) {
-      saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
+      saleFilter.classList.remove(
+        'order\\pages\\-list-category\\index-sale__fixed-position___P7XwH'
+      );
       rowFilter.removeChild(idFix);
       var filterDiv = document.getElementById('transform-fixed');
-      filterDiv.classList.remove('order-pages-list-category-index-sale__position-absolute___1tZOO');
+      filterDiv.classList.remove(
+        'order\\pages\\-list-category\\index-sale__position-absolute___1tZOO'
+      );
       filterDiv.style.transform = `translateY(0px)`;
       filterDiv.style.transition = 'transform 0.5s ease';
     }
     if (scroll >= number && idFix != null) {
-      saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
+      saleFilter.classList.remove(
+        'order\\pages\\-list-category\\index-sale__fixed-position___P7XwH'
+      );
       var filterDiv = document.getElementById('transform-fixed');
       rowFilter.removeChild(idFix);
-      filterDiv.classList.add('order-pages-list-category-index-sale__position-absolute___1tZOO');
+      filterDiv.classList.add(
+        'order\\pages\\-list-category\\index-sale__position-absolute___1tZOO'
+      );
     }
-    console.log(window.pageYOffset);
-
     console.log(scroll);
   }
   componentDidMount() {
@@ -204,22 +221,22 @@ class ListCategory extends PureComponent {
       filter: !this.state.filter,
     });
     var defautLayout = document.getElementsByClassName(
-      'order-layouts-home-layout-default-layout__container___13v1V'
+      'order\\layouts\\-home-layout-default-layout__container___13v1V'
     )[0];
-    defautLayout.classList.toggle('order-pages-list-category-index-filters-expanded');
+    defautLayout.classList.toggle('order\\pages\\-list-category\\index-filters-expanded');
     var buttonFilter = document.getElementById('button-filter');
-    buttonFilter.classList.toggle('order-pages-list-category-index-sale__filter-btn___30Ofp');
-    buttonFilter.classList.toggle('order-pages-list-category-index-sale__btn-block___O8koG');
+    buttonFilter.classList.toggle('order\\pages\\-list-category\\index-sale__filter-btn___30Ofp');
+    buttonFilter.classList.toggle('order\\pages\\-list-category\\index-sale__btn-block___O8koG');
     var headerFilter = document.getElementById('header-filter');
-    headerFilter.classList.toggle('order-pages-list-category-index-sale__d-t___1Trp4');
+    headerFilter.classList.toggle('order\\pages\\-list-category\\index-sale__d-t___1Trp4');
     var listProduct = document.getElementById('list-product');
-    listProduct.classList.toggle('order-pages-list-category-index-sale__col-md-8___34B6S');
-    listProduct.classList.toggle('order-pages-list-category-index-sale__col-lg-9___2qXAs');
-    listProduct.classList.toggle('order-pages-list-category-index-sale__col-12___82vEz');
+    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-md-8___34B6S');
+    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-lg-9___2qXAs');
+    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-12___82vEz');
     var proudctItem = document.getElementsByClassName('product-items');
     for (var i = 0; i < proudctItem.length; i++) {
-      proudctItem[i].classList.toggle('order-pages-list-category-index-sale__col-md-4___UhAyk');
-      proudctItem[i].classList.toggle('order-pages-list-category-index-sale__col-md-6___3wB0o');
+      proudctItem[i].classList.toggle('order\\pages\\-list-category\\index-sale__col-md-4___UhAyk');
+      proudctItem[i].classList.toggle('order\\pages\\-list-category\\index-sale__col-md-6___3wB0o');
     }
     var titleFilter = document.getElementById('title-filter');
     if (titleFilter.textContent == 'Hiện bộ lọc') {
@@ -228,7 +245,7 @@ class ListCategory extends PureComponent {
       i.setAttribute('id', 'icon-filter');
       i.setAttribute(
         'class',
-        'order-pages-list-category-index-ic-ic-arrow-left order-pages-list-category-index-sale__icon-hide___3Iftv'
+        'order\\pages\\-list-category\\index-ic-ic-arrow-left order\\pages\\-list-category\\index-sale__icon-hide___3Iftv'
       );
       titleFilter.appendChild(i);
       titleFilter.insertBefore(i, titleFilter.childNodes[0]);
@@ -238,7 +255,7 @@ class ListCategory extends PureComponent {
       i.setAttribute('id', 'icon-filter');
       i.setAttribute(
         'class',
-        'order-pages-list-category-index-ic-ic-arrow-right order-pages-list-category-index-sale__icon-show___3nTgw'
+        'order\\pages\\-list-category\\index-ic-ic-arrow-right order\\pages\\-list-category\\index-sale__icon-show___3nTgw'
       );
       titleFilter.appendChild(i);
     }
@@ -254,16 +271,16 @@ class ListCategory extends PureComponent {
     var ulSort = document.getElementById('sort-items');
     ulSort.style.display = 'none';
     var btnSoft = document.getElementsByClassName(
-      'order-pages-list-category-index-sort__btn-text___1mPct'
+      'order\\pages\\-list-category\\index-sort__btn-text___1mPct'
     )[0];
     btnSoft.textContent = 'Sắp xếp: ' + liSort.textContent;
     var activeSoft = document.getElementsByClassName(
-      'order-pages-list-category-index-sort__dropdown-item___XkHiS'
+      'order\\pages\\-list-category\\index-sort__dropdown-item___XkHiS'
     );
     for (var i = 0; i < activeSoft.length; i++) {
-      activeSoft[i].classList.remove('order-pages-list-category-index-sort__active___3DNgx');
+      activeSoft[i].classList.remove('order\\pages\\-list-category\\index-sort__active___3DNgx');
     }
-    liSort.classList.add('order-pages-list-category-index-sort__active___3DNgx');
+    liSort.classList.add('order\\pages\\-list-category\\index-sort__active___3DNgx');
     let pathname = this.props.location.pathname;
     let search = this.props.location.search;
     this.props.history.push({ pathname, search: '?sort=' + sort });
@@ -932,7 +949,7 @@ class ListCategory extends PureComponent {
                   styles['sale__products-list___2pc3u'] + ' ' + styles['sale__col-12___82vEz']
                 }
               >
-                <div className={styles['row__row___2roCA']}>
+                <div id="row-product" className={styles['row__row___2roCA']}>
                   {list.map((value, index) => {
                     return <ProductItem data={value} key={index} />;
                   })}
