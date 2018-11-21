@@ -311,7 +311,7 @@ function productSearch(req, res) {
       },
       function(callback) {
         try {
-          let sort = req.body.params.sort;
+          let sortParams = req.body.params.sort;
           let brand = req.body.brand;
           let style = req.body.style;
           let size = req.body.size;
@@ -349,7 +349,7 @@ function productSearch(req, res) {
               tmpQuery = `"type: *'+${type}+'*'"`;
             }
           }
-          switch (sort) {
+          switch (sortParams) {
             case 'HIGH_PRICE':
               sort = '"sort": "sale_price asc"';
               break;
@@ -412,7 +412,7 @@ function productSearch(req, res) {
       },
     ],
     function(err, result) {
-      if (err) return res.send({ status: 'error', err });
+      if (err) return res.send({ status: 'error', err: err.toString });
       console.log(err);
       res.send({
         status: 'ok',
