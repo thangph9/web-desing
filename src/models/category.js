@@ -4,7 +4,6 @@ export default {
   namespace: 'category',
   state: {
     list: [],
-    breadcrumb: {},
   },
 
   effects: {
@@ -15,23 +14,17 @@ export default {
           yield put({
             type: 'queryList',
             payload: Array.isArray(response.data.items) ? response.data.items : [],
-            breadcrumb:
-              typeof response.data.breadcrumb === 'object' && response.data.breadcrumb != null
-                ? response.data.breadcrumb
-                : {},
           });
         } else {
           yield put({
             type: 'queryList',
             payload: [],
-            breadcrumb: {},
           });
         }
       } catch (e) {
         yield put({
           type: 'queryList',
           payload: [],
-          breadcrumb: {},
         });
       }
     },
@@ -42,24 +35,18 @@ export default {
           console.log(response);
           yield put({
             type: 'querySort',
-            payload: Array.isArray(response.data.list.items) ? response.data.list.items : [],
-            breadcrumb:
-              typeof response.data.breadcrumb === 'object' && response.data.breadcrumb != null
-                ? response.data.breadcrumb
-                : {},
+            payload: Array.isArray(response.data.list) ? response.data.list : [],
           });
         } else {
           yield put({
             type: 'querySort',
             payload: [],
-            breadcrumb: {},
           });
         }
       } catch (e) {
         yield put({
           type: 'querySort',
           payload: [],
-          breadcrumb: {},
         });
       }
     },
@@ -70,14 +57,12 @@ export default {
       return {
         ...state,
         list: action.payload,
-        breadcrumb: action.breadcrumb,
       };
     },
     querySort(state, action) {
       return {
         ...state,
         list: action.payload,
-        breadcrumb: action.breadcrumb,
       };
     },
   },
