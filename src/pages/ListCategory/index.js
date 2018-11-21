@@ -148,52 +148,66 @@ class ListCategory extends PureComponent {
   }
   handleScroll() {
     var screen = document.getElementsByClassName('screen-xl')[0];
-    var number = screen.clientHeight - 1184;
     var scroll = document.documentElement.scrollTop;
     var scrollHeight = window.document.body.scrollHeight;
     var idFix = document.getElementById('filterFiexd');
     var rowFilter = document.getElementById('row-filter');
     var saleFilter = document.getElementById('sale-filter');
     var rowProduct = document.getElementById('row-product');
+    var filterDiv = document.getElementById('transform-fixed');
     if (
-      rowProduct != null &&
-      rowProduct.clientHeight <= rowFilter.clientHeight &&
-      idFix == null &&
-      saleFilter != null
+      screen != null &&
+      scroll != null &&
+      scrollHeight != null &&
+      idFix != null &&
+      rowFilter != null &&
+      rowProduct &&
+      filterDiv != null
     ) {
-      return;
-    }
-    if (scroll >= 115 && scroll < number && idFix == null && saleFilter != null) {
-      var filterDiv = document.getElementById('transform-fixed');
-      saleFilter.classList.add('order-pages-list-category-index-sale__fixed-position___P7XwH');
-      filterDiv.classList.remove('order-pages-list-category-index-sale__position-absolute___1tZOO');
-      var filterFixed = document.createElement('div');
-      filterFixed.setAttribute('id', 'filterFiexd');
-      filterFixed.setAttribute(
-        'class',
-        'order-pages-list-category-index-sale__filters-container___32fTU order-pages-list-category-index-sale__col-md-4___UhAyk order-pages-list-category-index-sale__col-lg-3___2xbHl order-pages-list-category-index-sale__dumb-container___lFg-z'
-      );
-      rowFilter.appendChild(filterFixed);
-      rowFilter.insertBefore(filterFixed, rowFilter.childNodes[1]);
-      var filterDiv = document.getElementById('transform-fixed');
-      if (saleFilter.clientHeight + 115 > window.innerHeight) {
-        filterDiv.style.transform = `translateY(-35px)`;
+      if (rowProduct != null && rowProduct.clientHeight <= filterDiv.clientHeight) {
+        return;
+      }
+      if (
+        scroll >= 115 &&
+        scroll < screen.clientHeight - 1184 &&
+        idFix == null &&
+        saleFilter != null
+      ) {
+        filterDiv = document.getElementById('transform-fixed');
+        saleFilter.classList.add('order-pages-list-category-index-sale__fixed-position___P7XwH');
+        filterDiv.classList.remove(
+          'order-pages-list-category-index-sale__position-absolute___1tZOO'
+        );
+        var filterFixed = document.createElement('div');
+        filterFixed.setAttribute('id', 'filterFiexd');
+        filterFixed.setAttribute(
+          'class',
+          'order-pages-list-category-index-sale__filters-container___32fTU order-pages-list-category-index-sale__col-md-4___UhAyk order-pages-list-category-index-sale__col-lg-3___2xbHl order-pages-list-category-index-sale__dumb-container___lFg-z'
+        );
+        rowFilter.appendChild(filterFixed);
+        rowFilter.insertBefore(filterFixed, rowFilter.childNodes[1]);
+        filterDiv = document.getElementById('transform-fixed');
+        if (saleFilter.clientHeight + 115 > window.innerHeight) {
+          filterDiv.style.transform = `translateY(-35px)`;
+          filterDiv.style.transition = 'transform 0.5s ease';
+        }
+      }
+      if (scroll < 115 && idFix != null && saleFilter != null) {
+        saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
+        rowFilter.removeChild(idFix);
+        filterDiv = document.getElementById('transform-fixed');
+        filterDiv.classList.remove(
+          'order-pages-list-category-index-sale__position-absolute___1tZOO'
+        );
+        filterDiv.style.transform = `translateY(0px)`;
         filterDiv.style.transition = 'transform 0.5s ease';
       }
-    }
-    if (scroll < 115 && idFix != null && saleFilter != null) {
-      saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
-      rowFilter.removeChild(idFix);
-      var filterDiv = document.getElementById('transform-fixed');
-      filterDiv.classList.remove('order-pages-list-category-index-sale__position-absolute___1tZOO');
-      filterDiv.style.transform = `translateY(0px)`;
-      filterDiv.style.transition = 'transform 0.5s ease';
-    }
-    if (scroll >= number && idFix != null) {
-      saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
-      var filterDiv = document.getElementById('transform-fixed');
-      rowFilter.removeChild(idFix);
-      filterDiv.classList.add('order-pages-list-category-index-sale__position-absolute___1tZOO');
+      if (scroll >= screen.clientHeight - 1184 && idFix != null) {
+        saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
+        filterDiv = document.getElementById('transform-fixed');
+        rowFilter.removeChild(idFix);
+        filterDiv.classList.add('order-pages-list-category-index-sale__position-absolute___1tZOO');
+      }
     }
     console.log(scroll);
   }
@@ -203,6 +217,7 @@ class ListCategory extends PureComponent {
       type: 'category/list',
       payload: match.params.nodeid,
     });
+    window.addEventListener('scroll', this.handleScroll.bind(this));
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
@@ -715,7 +730,7 @@ class ListCategory extends PureComponent {
     var {
       category: { list },
     } = this.props;
-    window.addEventListener('scroll', this.handleScroll.bind(this));
+
     return (
       <div
         className={
