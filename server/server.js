@@ -48,7 +48,7 @@ app.get('/*', function (req, res) {
 });
 
 // Here you can add any code.
-//var server = https.createServer(credentials, app);
+var server = https.createServer(credentials, app);
 
 if (!module.parent) {
  
