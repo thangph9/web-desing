@@ -159,12 +159,11 @@ class ListCategory extends PureComponent {
       screen != null &&
       scroll != null &&
       scrollHeight != null &&
-      idFix != null &&
       rowFilter != null &&
-      rowProduct &&
+      rowProduct != null &&
       filterDiv != null
     ) {
-      if (rowProduct != null && rowProduct.clientHeight <= filterDiv.clientHeight) {
+      if (rowProduct.clientHeight <= filterDiv.clientHeight) {
         return;
       }
       if (
