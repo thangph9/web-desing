@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable no-redeclare */
 /* eslint-disable react/jsx-props-no-multi-spaces */
 /* eslint-disable camelcase */
 /* eslint-disable no-var */
@@ -261,11 +263,17 @@ class Home extends PureComponent {
   }
   render() {
     let seoTitle = '';
+    let nodeid = '';
     const {
       product: {
         list: { news, days, hotday },
       },
     } = this.props;
+    if (news != undefined && news.length > 0) {
+      nodeid = news[0].nodeid ? news[0].nodeid.replace(/\-/g, '') : 'null';
+      seoTitle = news[0].seo_link + '/' + nodeid;
+    }
+    console.log(news);
     return (
       <div>
         <div
@@ -273,7 +281,7 @@ class Home extends PureComponent {
             styles['home__featuredContainer___1YAQy']
           }`}
         >
-          <Link to={`#`}>
+          <Link to={`/category/${seoTitle}`}>
             <img
               className={`${styles['hidden-md-up']}`}
               src={`/images/f/061b4f6603934b6caf40d8571be0be35`}

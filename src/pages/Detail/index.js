@@ -172,6 +172,10 @@ class Detail extends PureComponent {
   };
   renderBreadcrumb() {
     const {
+      product: { detail },
+    } = this.props;
+    console.log(detail);
+    const {
       product: {
         detail: { breadcrumb },
       },
@@ -204,6 +208,12 @@ class Detail extends PureComponent {
             </li>
           );
         })}
+        <li
+          className={`${styles['breadcrumb__breadcrumb-item___3ytpk']}
+                    `}
+        >
+          <h1 style={{ color: 'rgba(78, 89, 93, 0.3' }}>{detail.title}</h1>
+        </li>
       </ol>
     );
   }
