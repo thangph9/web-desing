@@ -412,7 +412,7 @@ function productSearch(req, res) {
       },
     ],
     function(err, result) {
-      if (err) return res.send({ status: 'error', err: err.toString });
+      if (err != null) return res.send({ status: 'error' });
       console.log(err);
       res.send({
         status: 'ok',
