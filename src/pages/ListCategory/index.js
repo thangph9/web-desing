@@ -61,6 +61,7 @@ import {
   Tooltip,
   Skeleton,
 } from 'antd';
+import DocumentMeta from 'react-document-meta';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './index.less';
 
@@ -748,217 +749,241 @@ class ListCategory extends PureComponent {
   render() {
     var { filter, test } = this.state;
     var {
-      category: { list },
+      category: { list, breadcrumb },
     } = this.props;
+    console.log(breadcrumb);
+
+    const title = breadcrumb.title ? breadcrumb.title : 'Danh sách sản phẩm';
+    const meta_description = breadcrumb.meta_description
+      ? breadcrumb.meta_description
+      : '123order ';
+    const meta_data = breadcrumb.meta ? breadcrumb.meta : '123order,order';
+    const meta = {
+      title,
+      description: meta_description,
+      canonical: 'http://example.com/path/to/page',
+      meta: {
+        charset: 'utf-8',
+        name: {
+          keywords: meta_data,
+        },
+      },
+    };
     return (
-      <div className={styles['container__container___1fvX0']}>
-        <div className={styles['sale__sale___1auiY']}>
-          <div className={styles['sale__sale-header___1lQxA']}>
-            <div
-              className={
-                styles['row__row___2roCA'] +
-                ' ' +
-                styles['clearfix'] +
-                ' ' +
-                styles['sale__header-top___3nxZf']
-              }
-            >
-              {this.renderBreadcrumb()}
-              {this.renderEndTime()}
-            </div>
-            <div
-              id="header-filter"
-              className={
-                styles['row__row___2roCA'] +
-                ' ' +
-                styles['clearfix'] +
-                ' ' +
-                styles['sale__header-lower___20QGi'] +
-                ' ' +
-                styles['sale__d-t___1Trp4']
-              }
-            >
+      <DocumentMeta {...meta}>
+        <div className={styles['container__container___1fvX0']}>
+          <div className={styles['sale__sale___1auiY']}>
+            <div className={styles['sale__sale-header___1lQxA']}>
               <div
                 className={
-                  styles['sale__left-pane___1c5Jj'] +
+                  styles['row__row___2roCA'] +
                   ' ' +
-                  styles['sale__col-6___1aN_i'] +
+                  styles['clearfix'] +
                   ' ' +
-                  styles['sale__col-md-4___UhAyk'] +
-                  ' ' +
-                  styles['sale__btn-filter-wrap___1hpsO'] +
-                  ' ' +
-                  styles['sale__col-lg-3___2xbHl']
+                  styles['sale__header-top___3nxZf']
                 }
               >
-                <button
-                  id="button-filter"
-                  onClick={() => this.handleClickButtonFilter()}
-                  type="button"
-                  className={
-                    styles['sale__btn___3OqFl'] +
-                    ' ' +
-                    styles['sale__btn-secondary___3ka36'] +
-                    ' ' +
-                    styles['active']
-                  }
-                >
-                  <span id="title-filter">
-                    Hiện bộ lọc
-                    <i
-                      id="icon-filter"
-                      className={
-                        styles['ic-ic-arrow-right'] + ' ' + styles['sale__icon-show___3nTgw']
-                      }
-                    />
-                  </span>
-                </button>
+                {this.renderBreadcrumb()}
+                {this.renderEndTime()}
               </div>
               <div
+                id="header-filter"
                 className={
-                  styles['sale__right-pane___2P_gS'] +
+                  styles['row__row___2roCA'] +
                   ' ' +
-                  styles['sale__col-6___1aN_i'] +
+                  styles['clearfix'] +
                   ' ' +
-                  styles[' sale__col-md-8___34B6S'] +
+                  styles['sale__header-lower___20QGi'] +
                   ' ' +
-                  styles['sale__col-lg-9___2qXAs']
+                  styles['sale__d-t___1Trp4']
                 }
               >
-                <div className={styles['row__row___2roCA']}>
-                  {this.renderTotalProduct()}
-                  <div
-                    className={
-                      styles['clearfix'] +
-                      ' ' +
-                      styles['sale__col-md-6___3wB0o'] +
-                      ' ' +
-                      styles['sale__right-pane___2P_gS'] +
-                      ' ' +
-                      styles['sale__btn-sort-wrap___nd_gy']
-                    }
-                  >
-                    <div className={styles['float-right'] + ' ' + styles['sort__dropdown___2bcri']}>
-                      <button
-                        onClick={() => this.handleClickSort()}
-                        type="button"
-                        className={
-                          styles['sort__btn___1Cu7A'] +
-                          ' ' +
-                          styles['sort__btn-secondary___2iOCb'] +
-                          ' ' +
-                          styles['sort__dropdown-toggle___1pM4w']
-                        }
-                      >
-                        <span className={styles['sort__btn-text___1mPct']}> Sắp xếp: Gợi ý</span>
-                        <i
-                          className={
-                            styles['ic-ic-arrow-down'] + ' ' + styles['sort__icon___3yfiZ']
-                          }
-                        />
-                      </button>
-                      <ul
-                        id="sort-items"
-                        className={
-                          styles['sort__dropdown-menu-right___1zFcq'] +
-                          ' ' +
-                          styles['sort__dropdown-menu___3NLmO']
-                        }
-                        role="menu"
-                        aria-labelledby="single-button"
-                      >
-                        <li role="menuitem">
-                          <a
-                            id="recommend"
-                            onClick={() => this.handleClickSoft('RECOMMEND', 'recommend')}
-                            href="javascript:void(0)"
-                            className={
-                              styles['sort__dropdown-item___XkHiS'] +
-                              ' ' +
-                              styles['sort__active___3DNgx']
-                            }
-                          >
-                            Gợi ý
-                          </a>
-                        </li>
-                        <li role="menuitem">
-                          <a
-                            id="highest-discount"
-                            onClick={() =>
-                              this.handleClickSoft('HIGHEST_DISCOUNT', 'highest-discount')
-                            }
-                            href="javascript:void(0)"
-                            className={styles['sort__dropdown-item___XkHiS']}
-                          >
-                            Giảm giá nhiều nhất
-                          </a>
-                        </li>
-                        <li role="menuitem">
-                          <a
-                            id="low-price"
-                            onClick={() => this.handleClickSoft('LOW_PRICE', 'low-price')}
-                            href="javascript:void(0)"
-                            className={styles['sort__dropdown-item___XkHiS']}
-                          >
-                            Giá thấp đến cao
-                          </a>
-                        </li>
-                        <li role="menuitem">
-                          <a
-                            id="high-price"
-                            onClick={() => this.handleClickSoft('HIGH_PRICE', 'high-price')}
-                            href="javascript:void(0)"
-                            className={styles['sort__dropdown-item___XkHiS']}
-                          >
-                            Giá cao đến thấp
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={styles['hidden-md-up'] + ' ' + styles['sale__mobile-data___evUIw']}>
                 <div
                   className={
-                    styles['sale__total-items___u7EoB'] +
+                    styles['sale__left-pane___1c5Jj'] +
                     ' ' +
                     styles['sale__col-6___1aN_i'] +
                     ' ' +
-                    styles['total-items__text___1TBmn']
+                    styles['sale__col-md-4___UhAyk'] +
+                    ' ' +
+                    styles['sale__btn-filter-wrap___1hpsO'] +
+                    ' ' +
+                    styles['sale__col-lg-3___2xbHl']
                   }
                 >
-                  {list.length} sản phẩm
+                  <button
+                    id="button-filter"
+                    onClick={() => this.handleClickButtonFilter()}
+                    type="button"
+                    className={
+                      styles['sale__btn___3OqFl'] +
+                      ' ' +
+                      styles['sale__btn-secondary___3ka36'] +
+                      ' ' +
+                      styles['active']
+                    }
+                  >
+                    <span id="title-filter">
+                      Hiện bộ lọc
+                      <i
+                        id="icon-filter"
+                        className={
+                          styles['ic-ic-arrow-right'] + ' ' + styles['sale__icon-show___3nTgw']
+                        }
+                      />
+                    </span>
+                  </button>
                 </div>
-                <span
-                  className={styles['sale__end-time___MKUlz'] + ' ' + styles['sale__col-6___1aN_i']}
+                <div
+                  className={
+                    styles['sale__right-pane___2P_gS'] +
+                    ' ' +
+                    styles['sale__col-6___1aN_i'] +
+                    ' ' +
+                    styles[' sale__col-md-8___34B6S'] +
+                    ' ' +
+                    styles['sale__col-lg-9___2qXAs']
+                  }
                 >
-                  <i className={styles['ic-ic-time'] + ' ' + styles['end-time__icon___REEKA']} />{' '}
-                  <span className={styles['end-time__text___1A-sx']}>Còn</span>{' '}
-                  <span className={styles['end-time__timer___LMsIT']}>7 ngày</span>
-                </span>
+                  <div className={styles['row__row___2roCA']}>
+                    {this.renderTotalProduct()}
+                    <div
+                      className={
+                        styles['clearfix'] +
+                        ' ' +
+                        styles['sale__col-md-6___3wB0o'] +
+                        ' ' +
+                        styles['sale__right-pane___2P_gS'] +
+                        ' ' +
+                        styles['sale__btn-sort-wrap___nd_gy']
+                      }
+                    >
+                      <div
+                        className={styles['float-right'] + ' ' + styles['sort__dropdown___2bcri']}
+                      >
+                        <button
+                          onClick={() => this.handleClickSort()}
+                          type="button"
+                          className={
+                            styles['sort__btn___1Cu7A'] +
+                            ' ' +
+                            styles['sort__btn-secondary___2iOCb'] +
+                            ' ' +
+                            styles['sort__dropdown-toggle___1pM4w']
+                          }
+                        >
+                          <span className={styles['sort__btn-text___1mPct']}> Sắp xếp: Gợi ý</span>
+                          <i
+                            className={
+                              styles['ic-ic-arrow-down'] + ' ' + styles['sort__icon___3yfiZ']
+                            }
+                          />
+                        </button>
+                        <ul
+                          id="sort-items"
+                          className={
+                            styles['sort__dropdown-menu-right___1zFcq'] +
+                            ' ' +
+                            styles['sort__dropdown-menu___3NLmO']
+                          }
+                          role="menu"
+                          aria-labelledby="single-button"
+                        >
+                          <li role="menuitem">
+                            <a
+                              id="recommend"
+                              onClick={() => this.handleClickSoft('RECOMMEND', 'recommend')}
+                              href="javascript:void(0)"
+                              className={
+                                styles['sort__dropdown-item___XkHiS'] +
+                                ' ' +
+                                styles['sort__active___3DNgx']
+                              }
+                            >
+                              Gợi ý
+                            </a>
+                          </li>
+                          <li role="menuitem">
+                            <a
+                              id="highest-discount"
+                              onClick={() =>
+                                this.handleClickSoft('HIGHEST_DISCOUNT', 'highest-discount')
+                              }
+                              href="javascript:void(0)"
+                              className={styles['sort__dropdown-item___XkHiS']}
+                            >
+                              Giảm giá nhiều nhất
+                            </a>
+                          </li>
+                          <li role="menuitem">
+                            <a
+                              id="low-price"
+                              onClick={() => this.handleClickSoft('LOW_PRICE', 'low-price')}
+                              href="javascript:void(0)"
+                              className={styles['sort__dropdown-item___XkHiS']}
+                            >
+                              Giá thấp đến cao
+                            </a>
+                          </li>
+                          <li role="menuitem">
+                            <a
+                              id="high-price"
+                              onClick={() => this.handleClickSoft('HIGH_PRICE', 'high-price')}
+                              href="javascript:void(0)"
+                              className={styles['sort__dropdown-item___XkHiS']}
+                            >
+                              Giá cao đến thấp
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className={styles['hidden-md-up'] + ' ' + styles['sale__mobile-data___evUIw']}>
+                  <div
+                    className={
+                      styles['sale__total-items___u7EoB'] +
+                      ' ' +
+                      styles['sale__col-6___1aN_i'] +
+                      ' ' +
+                      styles['total-items__text___1TBmn']
+                    }
+                  >
+                    {list.length} sản phẩm
+                  </div>
+                  <span
+                    className={
+                      styles['sale__end-time___MKUlz'] + ' ' + styles['sale__col-6___1aN_i']
+                    }
+                  >
+                    <i className={styles['ic-ic-time'] + ' ' + styles['end-time__icon___REEKA']} />{' '}
+                    <span className={styles['end-time__text___1A-sx']}>Còn</span>{' '}
+                    <span className={styles['end-time__timer___LMsIT']}>7 ngày</span>
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-          <div className={styles['sale__sale-content___1M-Lr']}>
-            <div id="row-filter" className={styles['row__row___2roCA']}>
-              {this.renderFilterList(filter)}
-              <div
-                id="list-product"
-                className={
-                  styles['sale__products-list___2pc3u'] + ' ' + styles['sale__col-12___82vEz']
-                }
-              >
-                <div id="row-product" className={styles['row__row___2roCA']}>
-                  {list.map((value, index) => {
-                    return <ProductItem data={value} key={index} />;
-                  })}
+            <div className={styles['sale__sale-content___1M-Lr']}>
+              <div id="row-filter" className={styles['row__row___2roCA']}>
+                {this.renderFilterList(filter)}
+                <div
+                  id="list-product"
+                  className={
+                    styles['sale__products-list___2pc3u'] + ' ' + styles['sale__col-12___82vEz']
+                  }
+                >
+                  <div id="row-product" className={styles['row__row___2roCA']}>
+                    {list.map((value, index) => {
+                      return <ProductItem data={value} key={index} />;
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </DocumentMeta>
     );
   }
 }
