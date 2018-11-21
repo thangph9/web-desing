@@ -146,9 +146,7 @@ export async function getCategoryProduct(nodeid) {
 export async function getSearchSortProduct(params) {
   return request('/api/product/SEARCH', {
     method: 'POST',
-    body: {
-      params,
-    },
+    body: params,
   });
 }
 export async function getRaito() {

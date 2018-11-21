@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
 /* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable react/no-array-index-key */
@@ -171,8 +172,15 @@ class Detail extends PureComponent {
   };
   renderBreadcrumb() {
     const {
-      product: { detail },
+      product: {
+        detail: { breadcrumb },
+      },
     } = this.props;
+    console.log(this.props);
+    var dataBreadcrumb = [];
+    if (breadcrumb) {
+      dataBreadcrumb = Array.isArray(breadcrumb) ? breadcrumb : [];
+    }
     return (
       <ol
         className={`${styles['undefined']} ${styles['breadcrumb__breadcrumb___3F6K8']}
@@ -183,24 +191,19 @@ class Detail extends PureComponent {
           className={`${styles['breadcrumb__breadcrumb-item___3ytpk']}
                     `}
         >
-          <a href="/">Ưu đãi</a>
+          <a href="/">Home</a>
         </li>
-        <li
-          className={`${styles['breadcrumb__breadcrumb-item___3ytpk']}
+        {dataBreadcrumb.map((v, i) => {
+          return (
+            <li
+              key={i}
+              className={`${styles['breadcrumb__breadcrumb-item___3ytpk']}
                     `}
-        >
-          <a href="/sales/j-natural-stonesr-trang-suc-phong-thuy-5bd6c4d93bc9335db599c3b6">
-            J Natural Stones® Trang Sức Phong Thủy
-          </a>
-        </li>
-        <li
-          className={`${styles['breadcrumb__breadcrumb-item___3ytpk']}
-                    `}
-        >
-          <h1 style={{ color: 'rgba(78, 89, 93, 0.7)' }}>
-            Bộ Vòng Tay Mặt Trăng Charm Ngôi Sao &amp; Vòng Tay Thạch Anh Tóc Đen Charm Hoa Mai
-          </h1>
-        </li>
+            >
+              <a href="/">{v.title}</a>
+            </li>
+          );
+        })}
       </ol>
     );
   }
