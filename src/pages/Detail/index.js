@@ -195,20 +195,24 @@ class Detail extends PureComponent {
 
                   `}
       >
-        <li
-          className={`${styles['breadcrumb__breadcrumb-item___3ytpk']}
+        {dataBreadcrumb.length > 0 && (
+          <li
+            className={`${styles['breadcrumb__breadcrumb-item___3ytpk']}
                     `}
-        >
-          <Link to={`/`}>{dataBreadcrumb.length > 0 ? dataBreadcrumb[0].title : ''}</Link>
-        </li>
-        <li
-          className={`${styles['breadcrumb__breadcrumb-item___3ytpk']}
+          >
+            <Link to={`/`}>{dataBreadcrumb.length > 0 ? dataBreadcrumb[0].title : ''}</Link>
+          </li>
+        )}
+        {dataBreadcrumb.length > 0 && (
+          <li
+            className={`${styles['breadcrumb__breadcrumb-item___3ytpk']}
                     `}
-        >
-          <Link to={`/category/${seoTitle}`}>
-            {dataBreadcrumb.length > 0 ? dataBreadcrumb[1].title : ''}
-          </Link>
-        </li>
+          >
+            <Link to={`/category/${seoTitle}`}>
+              {dataBreadcrumb.length > 0 ? dataBreadcrumb[1].title : ''}
+            </Link>
+          </li>
+        )}
         <li
           className={`${styles['breadcrumb__breadcrumb-item___3ytpk']}
                     `}
