@@ -151,7 +151,7 @@ export async function getCategoryProduct(nodeid) {
 }
 
 export async function getSearchSortProduct(params) {
-  return request('/api/product/SEARCH', {
+  return request(`/api/product/SEARCH?ref=${new Date().getTime()}`, {
     method: 'POST',
     body: params,
   });

@@ -139,10 +139,22 @@ class ListCategory extends PureComponent {
     this.state = {
       filter: false,
       divFilter: 0,
-      RECOMMEND: 'Gợi ý',
-      HIGHEST_DISCOUNT: 'Giảm giá nhiều nhất',
-      LOW_PRICE: 'Giá thấp đến cao',
-      HIGH_PRICE: 'Giá cao đến thấp',
+      RECOMMEND: {
+        title: 'Gợi ý',
+        body: 'RECOMMEND',
+      },
+      HIGHEST_DISCOUNT: {
+        title: 'Giảm giá nhiều nhất',
+        body: 'HIGHEST_DISCOUNT',
+      },
+      LOW_PRICE: {
+        title: 'Giá thấp đến cao',
+        body: 'LOW_PRICE',
+      },
+      HIGH_PRICE: {
+        title: 'Giá cao đến thấp',
+        body: 'HIGH_PRICE',
+      },
     };
   }
   handleClickSort() {
@@ -216,20 +228,33 @@ class ListCategory extends PureComponent {
   }
   componentDidMount() {
     var { dispatch, match } = this.props;
-    dispatch({
-      type: 'category/list',
-      payload: match.params.nodeid,
-    });
+    var sort = this.props.location.query.sort;
+    if (sort) {
+      dispatch({
+        type: 'category/list',
+        payload: match.params.nodeid,
+      });
+    } else {
+      dispatch({
+        type: 'category/sort',
+        payload: {
+          nodeid: this.props.match.params.nodeid,
+          sort,
+        },
+      });
+    }
     dispatch({
       type: 'category/detail',
-      payload: match.params.nodeid,
+      payload: {
+        nodeid: match.params.nodeid,
+      },
     });
     window.addEventListener('scroll', this.handleScroll.bind(this));
     var btnSoft = document.getElementsByClassName(
       'order-pages-list-category-index-sort__btn-text___1mPct'
     )[0];
     btnSoft.textContent = this.props.location.query.sort
-      ? 'Sắp xếp: ' + this.state[`${this.props.location.query.sort}`]
+      ? 'Sắp xếp: ' + this.state[`${this.props.location.query.sort}`].title
       : 'Sắp xếp: Gợi ý';
     var liSort = document.getElementById(this.props.location.query.sort);
     var activeSoft = document.getElementsByClassName(
@@ -305,12 +330,12 @@ class ListCategory extends PureComponent {
     let pathname = this.props.location.pathname;
     let search = this.props.location.search;
     this.props.history.push({ pathname, search: '?sort=' + sort });
-
+    console.log(sort);
     this.props.dispatch({
       type: 'category/sort',
       payload: {
         nodeid: this.props.match.params.nodeid,
-        sort: this.props.location.query.sort,
+        sort,
       },
     });
   }
