@@ -20,6 +20,12 @@ export default class GlobalHeader extends PureComponent {
     onCollapse(!collapsed);
     this.triggerResizeEvent();
   };
+  handleClickButtonCart() {
+    var cart = document.getElementById('cart-form');
+    cart.classList.add('order-components-global-cart-index-cart__active___Q2UCI');
+    var bodyModal = document.getElementById('body-modals');
+    bodyModal.classList.add('order-layouts-home-layout-backdrop__active___3kejv');
+  }
   render() {
     const { collapsed, isMobile, logo } = this.props;
     return (
@@ -144,6 +150,7 @@ export default class GlobalHeader extends PureComponent {
               </ul>
             </div>
             <button
+              onClick={() => this.handleClickButtonCart()}
               className={`${styles['header__cart-icon___38YSW']} ${
                 styles['cart-button__btn-cart___2KPCq']
               }`}

@@ -1,3 +1,12 @@
+/* eslint-disable vars-on-top */
+/* eslint-disable no-var */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable lines-between-class-members */
+/* eslint-disable react/sort-comp */
+/* eslint-disable dot-notation */
+/* eslint-disable prefer-template */
+/* eslint-disable import/newline-after-import */
+/* eslint-disable react/jsx-tag-spacing */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-vars */
 import React from 'react';
@@ -21,7 +30,7 @@ import Header from './Header';
 import Context from './MenuContext';
 import Exception403 from '../pages/Exception/403';
 import styles from './HomeLayout.less';
-
+import GlobalCart from '@/components/GlobalCart';
 const { Content } = Layout;
 
 // Conversion router to menu.
@@ -230,7 +239,12 @@ class HomeLayout extends React.PureComponent {
     }
     return <SettingDrawer />;
   }
-
+  handleClick() {
+    var cart = document.getElementById('cart-form');
+    cart.classList.remove('order-components-global-cart-index-cart__active___Q2UCI');
+    var bodyModal = document.getElementById('body-modals');
+    bodyModal.classList.remove('order-layouts-home-layout-backdrop__active___3kejv');
+  }
   render() {
     const {
       // eslint-disable-next-line no-unused-vars
@@ -250,6 +264,11 @@ class HomeLayout extends React.PureComponent {
           styles.home__defaultLayout___Q6Udu
         }`}
       >
+        <div
+          id="body-modals"
+          onClick={() => this.handleClick()}
+          className={styles['backdrop__body-backdrop___1rvky']}
+        />
         <Header
           menuData={menuData}
           handleMenuCollapse={this.handleMenuCollapse}
@@ -259,6 +278,7 @@ class HomeLayout extends React.PureComponent {
         />
         {children}
         <Footer />
+        <GlobalCart />
       </div>
     );
     return (
