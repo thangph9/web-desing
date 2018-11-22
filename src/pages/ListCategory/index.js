@@ -198,7 +198,7 @@ class ListCategory extends PureComponent {
         filterFixed.setAttribute('id', 'filterFiexd');
         filterFixed.setAttribute(
           'class',
-          'order-pages-list-category-index-sale__filters-container___32fTU order-pages-list-category-index-sale__col-md-4___UhAyk order-pages-list-category-index-sale__col-lg-3___2xbHl order-pages-list-category-index-sale__dumb-container___lFg-z'
+          'order-pages-list-category-index-sale__filters-container___32fTU order-pages-list-category-index-sale__col-md-4___UhAyk order-pages-list-category-index-sale__col-lg-3___2xbHl order-pages-list-category-index-sale__dumb-container___lFg-z order-pages-list-category-index-visibility-hidden'
         );
         rowFilter.appendChild(filterFixed);
         rowFilter.insertBefore(filterFixed, rowFilter.childNodes[1]);
@@ -229,20 +229,17 @@ class ListCategory extends PureComponent {
   componentDidMount() {
     var { dispatch, match } = this.props;
     var sort = this.props.location.query.sort;
-    if (sort) {
-      dispatch({
-        type: 'category/list',
-        payload: match.params.nodeid,
-      });
-    } else {
-      dispatch({
-        type: 'category/sort',
-        payload: {
-          nodeid: this.props.match.params.nodeid,
-          sort,
-        },
-      });
-    }
+    dispatch({
+      type: 'category/list',
+      payload: match.params.nodeid,
+    });
+    dispatch({
+      type: 'category/sort',
+      payload: {
+        nodeid: this.props.match.params.nodeid,
+        sort,
+      },
+    });
     dispatch({
       type: 'category/detail',
       payload: {
@@ -425,6 +422,9 @@ class ListCategory extends PureComponent {
       </div>
     );
   }
+  handleTestClick() {
+    console.log('ok');
+  }
   renderFilterList(filter) {
     var { filter } = this.state;
     var {
@@ -463,7 +463,10 @@ class ListCategory extends PureComponent {
           </div>
           <div id="transform-fixed" className={styles['sale__fitlers-content-wrap___pU5ed']}>
             <div className={styles['filter__filter-container___1hLIM']}>
-              <div className={styles['filter__filter-header___3I6RP']}>
+              <div
+                onClick={() => this.handleTestClick()}
+                className={styles['filter__filter-header___3I6RP']}
+              >
                 <h5
                   id="phan-loai"
                   onClick={() => this.handleClickFilter('phan-loai-row', 'icon-phan-loai')}
