@@ -1,3 +1,4 @@
+/* eslint-disable prefer-template */
 /* eslint-disable arrow-body-style */
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
 /* eslint-disable react/jsx-first-prop-new-line */
@@ -174,17 +175,20 @@ class Detail extends PureComponent {
     const {
       product: { detail },
     } = this.props;
-    console.log(detail);
     const {
       product: {
         detail: { breadcrumb },
       },
     } = this.props;
-    console.log(this.props);
+    let nodeid = '';
+    let seoTitle = '';
     var dataBreadcrumb = [];
     if (breadcrumb) {
       dataBreadcrumb = Array.isArray(breadcrumb) ? breadcrumb : [];
+      nodeid = dataBreadcrumb[1].nodeid ? dataBreadcrumb[1].nodeid.replace(/\-/g, '') : 'null';
+      seoTitle = dataBreadcrumb[1].seo_link + '/' + nodeid;
     }
+
     return (
       <ol
         className={`${styles['undefined']} ${styles['breadcrumb__breadcrumb___3F6K8']}
@@ -195,19 +199,16 @@ class Detail extends PureComponent {
           className={`${styles['breadcrumb__breadcrumb-item___3ytpk']}
                     `}
         >
-          <a href="/">Home</a>
+          <Link to={`/`}>{dataBreadcrumb.length > 0 ? dataBreadcrumb[0].title : ''}</Link>
         </li>
-        {dataBreadcrumb.map((v, i) => {
-          return (
-            <li
-              key={i}
-              className={`${styles['breadcrumb__breadcrumb-item___3ytpk']}
+        <li
+          className={`${styles['breadcrumb__breadcrumb-item___3ytpk']}
                     `}
-            >
-              <a href="/">{v.title}</a>
-            </li>
-          );
-        })}
+        >
+          <Link to={`/category/${seoTitle}`}>
+            {dataBreadcrumb.length > 0 ? dataBreadcrumb[1].title : ''}
+          </Link>
+        </li>
         <li
           className={`${styles['breadcrumb__breadcrumb-item___3ytpk']}
                     `}

@@ -135,6 +135,12 @@ export async function getProductDetail(params) {
     body: params,
   });
 }
+export async function getCategoryDetail(params) {
+  return request('/api/category/CT', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function getCategoryProduct(nodeid) {
   return request('/api/product/LC', {
     method: 'POST',
@@ -143,6 +149,7 @@ export async function getCategoryProduct(nodeid) {
     },
   });
 }
+
 export async function getSearchSortProduct(params) {
   return request('/api/product/SEARCH', {
     method: 'POST',

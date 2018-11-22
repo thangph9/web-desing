@@ -178,17 +178,15 @@ class ListCategory extends PureComponent {
         saleFilter != null
       ) {
         filterDiv = document.getElementById('transform-fixed');
-        saleFilter.classList.add(
-          'order\\pages\\-list-category\\index-sale__fixed-position___P7XwH'
-        );
+        saleFilter.classList.add('order-pages-list-category-index-sale__fixed-position___P7XwH');
         filterDiv.classList.remove(
-          'order\\pages\\-list-category\\index-sale__position-absolute___1tZOO'
+          'order-pages-list-category-index-sale__position-absolute___1tZOO'
         );
         var filterFixed = document.createElement('div');
         filterFixed.setAttribute('id', 'filterFiexd');
         filterFixed.setAttribute(
           'class',
-          'order\\pages\\-list-category\\index-sale__filters-container___32fTU order\\pages\\-list-category\\index-sale__col-md-4___UhAyk order\\pages\\-list-category\\index-sale__col-lg-3___2xbHl order\\pages\\-list-category\\index-sale__dumb-container___lFg-z'
+          'order-pages-list-category-index-sale__filters-container___32fTU order-pages-list-category-index-sale__col-md-4___UhAyk order-pages-list-category-index-sale__col-lg-3___2xbHl order-pages-list-category-index-sale__dumb-container___lFg-z'
         );
         rowFilter.appendChild(filterFixed);
         rowFilter.insertBefore(filterFixed, rowFilter.childNodes[1]);
@@ -199,29 +197,22 @@ class ListCategory extends PureComponent {
         }
       }
       if (scroll < 115 && idFix != null && saleFilter != null) {
-        saleFilter.classList.remove(
-          'order\\pages\\-list-category\\index-sale__fixed-position___P7XwH'
-        );
+        saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
         rowFilter.removeChild(idFix);
         filterDiv = document.getElementById('transform-fixed');
         filterDiv.classList.remove(
-          'order\\pages\\-list-category\\index-sale__position-absolute___1tZOO'
+          'order-pages-list-category-index-sale__position-absolute___1tZOO'
         );
         filterDiv.style.transform = `translateY(0px)`;
         filterDiv.style.transition = 'transform 0.5s ease';
       }
       if (scroll >= screen.clientHeight - 1184 && idFix != null) {
-        saleFilter.classList.remove(
-          'order\\pages\\-list-category\\index-sale__fixed-position___P7XwH'
-        );
+        saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
         filterDiv = document.getElementById('transform-fixed');
         rowFilter.removeChild(idFix);
-        filterDiv.classList.add(
-          'order\\pages\\-list-category\\index-sale__position-absolute___1tZOO'
-        );
+        filterDiv.classList.add('order-pages-list-category-index-sale__position-absolute___1tZOO');
       }
     }
-    console.log(scroll);
   }
   componentDidMount() {
     var { dispatch, match } = this.props;
@@ -229,11 +220,25 @@ class ListCategory extends PureComponent {
       type: 'category/list',
       payload: match.params.nodeid,
     });
+    dispatch({
+      type: 'category/detail',
+      payload: match.params.nodeid,
+    });
     window.addEventListener('scroll', this.handleScroll.bind(this));
     var btnSoft = document.getElementsByClassName(
-      'order\\pages\\-list-category\\index-sort__btn-text___1mPct'
+      'order-pages-list-category-index-sort__btn-text___1mPct'
     )[0];
-    btnSoft.textContent = 'Sắp xếp: ' + this.state[`${this.props.location.query.sort}`];
+    btnSoft.textContent = this.props.location.query.sort
+      ? 'Sắp xếp: ' + this.state[`${this.props.location.query.sort}`]
+      : 'Sắp xếp: Gợi ý';
+    var liSort = document.getElementById(this.props.location.query.sort);
+    var activeSoft = document.getElementsByClassName(
+      'order-pages-list-category-index-sort__dropdown-item___XkHiS'
+    );
+    for (var i = 0; i < activeSoft.length; i++) {
+      activeSoft[i].classList.remove('order-pages-list-category-index-sort__active___3DNgx');
+    }
+    liSort.classList.add('order-pages-list-category-index-sort__active___3DNgx');
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
@@ -243,22 +248,22 @@ class ListCategory extends PureComponent {
       filter: !this.state.filter,
     });
     var defautLayout = document.getElementsByClassName(
-      'order\\layouts\\-home-layout-default-layout__container___13v1V'
+      'order-layouts-home-layout-default-layout__container___13v1V'
     )[0];
-    defautLayout.classList.toggle('order\\pages\\-list-category\\index-filters-expanded');
+    defautLayout.classList.toggle('order-pages-list-category-index-filters-expanded');
     var buttonFilter = document.getElementById('button-filter');
-    buttonFilter.classList.toggle('order\\pages\\-list-category\\index-sale__filter-btn___30Ofp');
-    buttonFilter.classList.toggle('order\\pages\\-list-category\\index-sale__btn-block___O8koG');
+    buttonFilter.classList.toggle('order-pages-list-category-index-sale__filter-btn___30Ofp');
+    buttonFilter.classList.toggle('order-pages-list-category-index-sale__btn-block___O8koG');
     var headerFilter = document.getElementById('header-filter');
-    headerFilter.classList.toggle('order\\pages\\-list-category\\index-sale__d-t___1Trp4');
+    headerFilter.classList.toggle('order-pages-list-category-index-sale__d-t___1Trp4');
     var listProduct = document.getElementById('list-product');
-    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-md-8___34B6S');
-    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-lg-9___2qXAs');
-    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-12___82vEz');
+    listProduct.classList.toggle('order-pages-list-category-index-sale__col-md-8___34B6S');
+    listProduct.classList.toggle('order-pages-list-category-index-sale__col-lg-9___2qXAs');
+    listProduct.classList.toggle('order-pages-list-category-index-sale__col-12___82vEz');
     var proudctItem = document.getElementsByClassName('product-items');
     for (var i = 0; i < proudctItem.length; i++) {
-      proudctItem[i].classList.toggle('order\\pages\\-list-category\\index-sale__col-md-4___UhAyk');
-      proudctItem[i].classList.toggle('order\\pages\\-list-category\\index-sale__col-md-6___3wB0o');
+      proudctItem[i].classList.toggle('order-pages-list-category-index-sale__col-md-4___UhAyk');
+      proudctItem[i].classList.toggle('order-pages-list-category-index-sale__col-md-6___3wB0o');
     }
     var titleFilter = document.getElementById('title-filter');
     if (titleFilter.textContent == 'Hiện bộ lọc') {
@@ -267,7 +272,7 @@ class ListCategory extends PureComponent {
       i.setAttribute('id', 'icon-filter');
       i.setAttribute(
         'class',
-        'order\\pages\\-list-category\\index-ic-ic-arrow-left order\\pages\\-list-category\\index-sale__icon-hide___3Iftv'
+        'order-pages-list-category-index-ic-ic-arrow-left order-pages-list-category-index-sale__icon-hide___3Iftv'
       );
       titleFilter.appendChild(i);
       titleFilter.insertBefore(i, titleFilter.childNodes[0]);
@@ -277,32 +282,30 @@ class ListCategory extends PureComponent {
       i.setAttribute('id', 'icon-filter');
       i.setAttribute(
         'class',
-        'order\\pages\\-list-category\\index-ic-ic-arrow-right order\\pages\\-list-category\\index-sale__icon-show___3nTgw'
+        'order-pages-list-category-index-ic-ic-arrow-right order-pages-list-category-index-sale__icon-show___3nTgw'
       );
       titleFilter.appendChild(i);
     }
   }
-  handleClickSoft(sort, id) {
-    var liSort = document.getElementById(id);
+  handleClickSoft(sort) {
+    var liSort = document.getElementById(sort);
     var ulSort = document.getElementById('sort-items');
     ulSort.style.display = 'none';
     var btnSoft = document.getElementsByClassName(
-      'order\\pages\\-list-category\\index-sort__btn-text___1mPct'
+      'order-pages-list-category-index-sort__btn-text___1mPct'
     )[0];
     btnSoft.textContent = 'Sắp xếp: ' + liSort.textContent;
     var activeSoft = document.getElementsByClassName(
-      'order\\pages\\-list-category\\index-sort__dropdown-item___XkHiS'
+      'order-pages-list-category-index-sort__dropdown-item___XkHiS'
     );
     for (var i = 0; i < activeSoft.length; i++) {
-      activeSoft[i].classList.remove('order\\pages\\-list-category\\index-sort__active___3DNgx');
+      activeSoft[i].classList.remove('order-pages-list-category-index-sort__active___3DNgx');
     }
-    liSort.classList.add('order\\pages\\-list-category\\index-sort__active___3DNgx');
+    liSort.classList.add('order-pages-list-category-index-sort__active___3DNgx');
     let pathname = this.props.location.pathname;
     let search = this.props.location.search;
     this.props.history.push({ pathname, search: '?sort=' + sort });
-    this.setState({
-      sort: liSort.textContent,
-    });
+
     this.props.dispatch({
       type: 'category/sort',
       payload: {
@@ -311,13 +314,22 @@ class ListCategory extends PureComponent {
       },
     });
   }
+  handleClickFilter(value, value1) {
+    var rowFilter = document.getElementById(value);
+    if (rowFilter.style.display == 'block') {
+      rowFilter.style.display = 'none';
+    } else rowFilter.style.display = 'block';
+    var iconFilter = document.getElementById(value1);
+    iconFilter.classList.toggle('order-pages-list-category-index-ic-ic-minus');
+    iconFilter.classList.toggle('order-pages-list-category-index-ic-ic-plus');
+  }
   renderBreadcrumb() {
     var {
-      category: { breadcrumb },
+      category: { detail },
     } = this.props;
-    var dataBreadcrumb = {};
-    if (dataBreadcrumb) {
-      dataBreadcrumb = typeof breadcrumb === 'object' ? breadcrumb : {};
+    var dataDetail = [];
+    if (dataDetail) {
+      dataDetail = Array.isArray(detail) ? detail : [];
     }
     return (
       <div className={styles['sale__col-md-8___34B6S']}>
@@ -327,10 +339,10 @@ class ListCategory extends PureComponent {
           }
         >
           <li className={styles['breadcrumb__breadcrumb-item___3ytpk']}>
-            <a href="/">Home</a>
+            <Link to={`/`}>{dataDetail.length > 0 ? dataDetail[0].title : ''}</Link>
           </li>
           <li className={styles['breadcrumb__breadcrumb-item___3ytpk']}>
-            <h1>{dataBreadcrumb.title}</h1>
+            <h1 to={`/`}>{dataDetail.length > 0 ? dataDetail[1].title : ''}</h1>
           </li>
         </ol>
       </div>
@@ -340,7 +352,6 @@ class ListCategory extends PureComponent {
     var {
       category: { list },
     } = this.props;
-    console.log(list);
     let timeline = '';
     let start, end;
     let isDeath = false;
@@ -428,7 +439,11 @@ class ListCategory extends PureComponent {
           <div id="transform-fixed" className={styles['sale__fitlers-content-wrap___pU5ed']}>
             <div className={styles['filter__filter-container___1hLIM']}>
               <div className={styles['filter__filter-header___3I6RP']}>
-                <h5 className={styles['clearfix']}>
+                <h5
+                  id="phan-loai"
+                  onClick={() => this.handleClickFilter('phan-loai-row', 'icon-phan-loai')}
+                  className={styles['clearfix']}
+                >
                   <a
                     className={styles['clearfix'] + ' ' + styles['d-block']}
                     href="javascript:void(0)"
@@ -436,6 +451,7 @@ class ListCategory extends PureComponent {
                   >
                     <span className={styles['float-left']}>Phân loại</span>
                     <i
+                      id="icon-phan-loai"
                       className={
                         styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
                       }
@@ -443,7 +459,7 @@ class ListCategory extends PureComponent {
                   </a>
                 </h5>
               </div>
-              <div>
+              <div id="phan-loai-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
                   <div className={styles['grid__col-12___39hfZ']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
@@ -530,7 +546,11 @@ class ListCategory extends PureComponent {
             </div>
             <div className={styles['filter__filter-container___1hLIM']}>
               <div className={styles['filter__filter-header___3I6RP']}>
-                <h5 className={styles['clearfix']}>
+                <h5
+                  id="kich-co"
+                  onClick={() => this.handleClickFilter('kich-co-row', 'icon-kich-co')}
+                  className={styles['clearfix']}
+                >
                   <a
                     className={styles['clearfix'] + ' ' + styles['d-block']}
                     href="javascript:void(0)"
@@ -538,6 +558,7 @@ class ListCategory extends PureComponent {
                   >
                     <span className={styles['float-left']}>Kích cỡ</span>
                     <i
+                      id="icon-kich-co"
                       className={
                         styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
                       }
@@ -545,7 +566,7 @@ class ListCategory extends PureComponent {
                   </a>
                 </h5>
               </div>
-              <div>
+              <div id="kich-co-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
                   <div className={styles['grid__col-6___211BX']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
@@ -696,7 +717,11 @@ class ListCategory extends PureComponent {
             </div>
             <div className={styles['filter__filter-container___1hLIM']}>
               <div className={styles['filter__filter-header___3I6RP']}>
-                <h5 className={styles['clearfix']}>
+                <h5
+                  id="thuong-hieu"
+                  onClick={() => this.handleClickFilter('thuong-hieu-row', 'icon-thuong-hieu')}
+                  className={styles['clearfix']}
+                >
                   <a
                     className={styles['clearfix'] + ' ' + styles['d-block']}
                     href="javascript:void(0)"
@@ -704,6 +729,7 @@ class ListCategory extends PureComponent {
                   >
                     <span className={styles['float-left']}>Thương hiệu</span>
                     <i
+                      id="icon-thuong-hieu"
                       className={
                         styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
                       }
@@ -711,7 +737,7 @@ class ListCategory extends PureComponent {
                   </a>
                 </h5>
               </div>
-              <div>
+              <div id="thuong-hieu-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
                   <div className={styles['grid__col-12___39hfZ']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
@@ -734,7 +760,11 @@ class ListCategory extends PureComponent {
             </div>
             <div className={styles['filter__filter-container___1hLIM']}>
               <div className={styles['filter__filter-header___3I6RP']}>
-                <h5 className={styles['clearfix']}>
+                <h5
+                  id="type"
+                  onClick={() => this.handleClickFilter('type-row', 'icon-type')}
+                  className={styles['clearfix']}
+                >
                   <a
                     className={styles['clearfix'] + ' ' + styles['d-block']}
                     href="javascript:void(0)"
@@ -742,6 +772,7 @@ class ListCategory extends PureComponent {
                   >
                     <span className={styles['float-left']}>TYPE</span>
                     <i
+                      id="icon-type"
                       className={
                         styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
                       }
@@ -749,7 +780,7 @@ class ListCategory extends PureComponent {
                   </a>
                 </h5>
               </div>
-              <div>
+              <div id="type-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
                   <div className={styles['grid__col-6___211BX']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
@@ -950,8 +981,8 @@ class ListCategory extends PureComponent {
                           >
                             <li role="menuitem">
                               <a
-                                id="recommend"
-                                onClick={() => this.handleClickSoft('RECOMMEND', 'recommend')}
+                                id="RECOMMEND"
+                                onClick={() => this.handleClickSoft('RECOMMEND')}
                                 href="javascript:void(0)"
                                 className={
                                   styles['sort__dropdown-item___XkHiS'] +
@@ -964,10 +995,8 @@ class ListCategory extends PureComponent {
                             </li>
                             <li role="menuitem">
                               <a
-                                id="highest-discount"
-                                onClick={() =>
-                                  this.handleClickSoft('HIGHEST_DISCOUNT', 'highest-discount')
-                                }
+                                id="HIGHEST_DISCOUNT"
+                                onClick={() => this.handleClickSoft('HIGHEST_DISCOUNT')}
                                 href="javascript:void(0)"
                                 className={styles['sort__dropdown-item___XkHiS']}
                               >
@@ -976,8 +1005,8 @@ class ListCategory extends PureComponent {
                             </li>
                             <li role="menuitem">
                               <a
-                                id="low-price"
-                                onClick={() => this.handleClickSoft('LOW_PRICE', 'low-price')}
+                                id="LOW_PRICE"
+                                onClick={() => this.handleClickSoft('LOW_PRICE')}
                                 href="javascript:void(0)"
                                 className={styles['sort__dropdown-item___XkHiS']}
                               >
@@ -986,8 +1015,8 @@ class ListCategory extends PureComponent {
                             </li>
                             <li role="menuitem">
                               <a
-                                id="high-price"
-                                onClick={() => this.handleClickSoft('HIGH_PRICE', 'high-price')}
+                                id="HIGH_PRICE"
+                                onClick={() => this.handleClickSoft('HIGH_PRICE')}
                                 href="javascript:void(0)"
                                 className={styles['sort__dropdown-item___XkHiS']}
                               >

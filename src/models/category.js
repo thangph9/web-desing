@@ -1,4 +1,4 @@
-import { getCategoryProduct, getSearchSortProduct } from '@/services/api';
+import { getCategoryProduct, getSearchSortProduct, getCategoryDetail } from '@/services/api';
 
 export default {
   namespace: 'category',
@@ -37,7 +37,6 @@ export default {
       const response = yield call(getSearchSortProduct, payload);
       try {
         if (response.status === 'ok') {
-          console.log(response);
           yield put({
             type: 'querySort',
             payload: Array.isArray(response.data.list) ? response.data.list : [],
@@ -59,6 +58,27 @@ export default {
         });
       }
     },
+    *detail({ payload }, { call, put }) {
+      const response = yield call(getCategoryDetail, payload);
+      try {
+        if (response.status === 'ok') {
+          yield put({
+            type: 'queryDetail',
+            payload: Array.isArray(response.data.breadcrumb) ? response.data.breadcrumb : [],
+          });
+        } else {
+          yield put({
+            type: 'queryDetail',
+            payload: [],
+          });
+        }
+      } catch (e) {
+        yield put({
+          type: 'queryDetail',
+          payload: [],
+        });
+      }
+    },
   },
 
   reducers: {
@@ -74,6 +94,12 @@ export default {
         ...state,
         list: action.payload,
         breadcrumb: action.breadcrumb,
+      };
+    },
+    queryDetail(state, action) {
+      return {
+        ...state,
+        detail: action.payload,
       };
     },
   },
