@@ -204,22 +204,10 @@ class ListCategory extends PureComponent {
         rowFilter.appendChild(filterFixed);
         rowFilter.insertBefore(filterFixed, rowFilter.childNodes[1]);
         filterDiv = document.getElementById('transform-fixed');
-        if (
-          saleFilter.clientHeight + 115 - window.innerHeight > 0 &&
-          saleFilter.clientHeight + 115 - window.innerHeight < 100
-        ) {
-          filterDiv.style.transform = `translateY(-35px)`;
-          filterDiv.style.transition = 'transform 0.5s ease';
-        }
-        if (
-          saleFilter.clientHeight + 115 - window.innerHeight > 100 &&
-          saleFilter.clientHeight + 115 - window.innerHeight < 200
-        ) {
-          filterDiv.style.transform = `translateY(-75px)`;
-          filterDiv.style.transition = 'transform 0.5s ease';
-        }
-        if (saleFilter.clientHeight + 115 - window.innerHeight > 200) {
-          filterDiv.style.transform = `translateY(-120px)`;
+        var numberScreen = saleFilter.clientHeight + 115 - window.innerHeight;
+        console.log(numberScreen);
+        if (numberScreen > 0) {
+          filterDiv.style.transform = `translateY(-${numberScreen}px)`;
           filterDiv.style.transition = 'transform 0.5s ease';
         }
       }
