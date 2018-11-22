@@ -200,11 +200,26 @@ class ListCategory extends PureComponent {
           'class',
           'order-pages-list-category-index-sale__filters-container___32fTU order-pages-list-category-index-sale__col-md-4___UhAyk order-pages-list-category-index-sale__col-lg-3___2xbHl order-pages-list-category-index-sale__dumb-container___lFg-z order-pages-list-category-index-visibility-hidden'
         );
+        console.log(window.innerHeight);
         rowFilter.appendChild(filterFixed);
         rowFilter.insertBefore(filterFixed, rowFilter.childNodes[1]);
         filterDiv = document.getElementById('transform-fixed');
-        if (saleFilter.clientHeight + 115 > window.innerHeight) {
+        if (
+          saleFilter.clientHeight + 115 - window.innerHeight > 0 &&
+          saleFilter.clientHeight + 115 - window.innerHeight < 100
+        ) {
           filterDiv.style.transform = `translateY(-35px)`;
+          filterDiv.style.transition = 'transform 0.5s ease';
+        }
+        if (
+          saleFilter.clientHeight + 115 - window.innerHeight > 100 &&
+          saleFilter.clientHeight + 115 - window.innerHeight < 200
+        ) {
+          filterDiv.style.transform = `translateY(-75px)`;
+          filterDiv.style.transition = 'transform 0.5s ease';
+        }
+        if (saleFilter.clientHeight + 115 - window.innerHeight > 200) {
+          filterDiv.style.transform = `translateY(-120px)`;
           filterDiv.style.transition = 'transform 0.5s ease';
         }
       }
