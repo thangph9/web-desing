@@ -60,6 +60,7 @@ const { TextArea } = Input;
 @Form.create()
 class Amazon extends PureComponent {
   componentDidMount() {
+    var { dispatch } = this.props;
     var anhBanner = document.getElementsByClassName('anh-banner')[0];
     if (anhBanner != null) {
       anhBanner.style.height = '400px';
@@ -72,6 +73,10 @@ class Amazon extends PureComponent {
         anhAo[i].style['background'] = "url('/image/Reload-1s-100px.gif') no-repeat center";
       }
     }
+    dispatch({
+      type: 'product/amazon',
+      payload: {},
+    });
   }
   renderBanner() {
     var {

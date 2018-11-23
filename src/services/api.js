@@ -149,7 +149,18 @@ export async function getCategoryProduct(nodeid) {
     },
   });
 }
-
+export async function getListProductAmazon(params) {
+  return request('/api/product/AM');
+}
+export async function getListProductEbay(params) {
+  return request('/api/product/EB');
+}
+export async function getListProductNike(params) {
+  return request('/api/product/NK');
+}
+export async function getListProductAdidas(params) {
+  return request('/api/product/AD');
+}
 export async function getSearchSortProduct(params) {
   return request(`/api/product/SEARCH?ref=${new Date().getTime()}`, {
     method: 'POST',

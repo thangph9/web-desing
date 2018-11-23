@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-undef */
@@ -72,6 +73,10 @@ class Ebay extends PureComponent {
         anhAo[i].style['background'] = "url('/image/Reload-1s-100px.gif') no-repeat center";
       }
     }
+    this.props.dispatch({
+      type: 'product/ebay',
+      payload: {},
+    });
   }
   renderBanner() {
     var {
