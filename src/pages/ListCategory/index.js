@@ -163,7 +163,7 @@ class ListCategory extends PureComponent {
       size: [],
       type: [],
       brand: [],
-      sortState: [],
+      sortState: ['RECOMMEND'],
       total: '',
       total1: '',
     };
