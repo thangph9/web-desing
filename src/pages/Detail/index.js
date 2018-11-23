@@ -1,3 +1,7 @@
+/* eslint-disable react/no-access-state-in-setstate */
+/* eslint-disable react/no-unused-state */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable no-return-assign */
 /* eslint-disable prefer-template */
 /* eslint-disable arrow-body-style */
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
@@ -36,8 +40,8 @@
 /* eslint-disable dot-notation */
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
-import Slider from 'react-slick';
 import { connect } from 'dva';
+import Slider from 'react-slick';
 import DocumentTitle from 'react-document-title';
 import DocumentMeta from 'react-document-meta';
 import CountDown from '@/components/CountDown';
@@ -54,6 +58,7 @@ import {
   InputNumber,
   Radio,
   Icon,
+  Carousel,
   Tooltip,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -74,9 +79,10 @@ const { TextArea } = Input;
 function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
 }
-@connect(({ loading, product }) => ({
+@connect(({ loading, product, list }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   product,
+  list,
 }))
 @Form.create()
 class Detail extends PureComponent {
@@ -105,8 +111,64 @@ class Detail extends PureComponent {
         element.style.display = 'block';
       }
     }
+    this.setState({
+      [idDetail]: !this.state[idDetail],
+    });
   }
-
+  setCookieDetail(product) {
+    this.props.dispatch({
+      type: 'list/modal',
+      payload: true,
+    });
+    var productDetail = product;
+    var local = localStorage.getItem(product.seo_link);
+    this.setState({
+      total: !this.state.total,
+    });
+    var listArr = [];
+    var authorityString = '';
+    if (local != null) {
+      localStorage.setItem(product.seo_link, local + '|' + JSON.stringify(productDetail));
+      for (var i = 0, len = localStorage.length; i < len; ++i) {
+        authorityString = localStorage.getItem(localStorage.key(i))
+          ? localStorage.getItem(localStorage.key(i)).split('|')
+          : '';
+        var arr =
+          authorityString != ''
+            ? authorityString.map(v => {
+                return JSON.parse(v);
+              })
+            : [];
+        listArr.push(arr);
+      }
+    } else {
+      localStorage.setItem(product.seo_link, JSON.stringify(productDetail));
+      for (var i = 0, len = localStorage.length; i < len; ++i) {
+        authorityString = localStorage.getItem(localStorage.key(i))
+          ? localStorage.getItem(localStorage.key(i)).split('|')
+          : '';
+        var arr =
+          authorityString != ''
+            ? authorityString.map(v => {
+                return JSON.parse(v);
+              })
+            : [];
+        listArr.push(arr);
+      }
+    }
+    this.props.dispatch({
+      type: 'list/local',
+      payload: listArr,
+    });
+    this.props.dispatch({
+      type: 'list/value',
+      payload: this.props.list.value + 1,
+    });
+    console.log(listArr);
+  }
+  getAuthority() {
+    const authorityString = localStorage.getItem('detail-product');
+  }
   componentDidMount() {
     const { dispatch, match } = this.props;
     let productid = '';
@@ -125,12 +187,16 @@ class Detail extends PureComponent {
   };
   onHover = e => {};
   onMouseMove = e => {
-    var pos_x = e.offsetX ? e.offsetX : e.pageX - document.getElementById('pointer_div').offsetLeft;
-    var pos_y = e.offsetY ? e.offsetY : e.pageY - document.getElementById('pointer_div').offsetTop;
-    document.getElementById('zoom-image').style.position = 'absolute';
-    document.getElementById('zoom-image').style.left = `${-(pos_x - 342)}px`;
-    document.getElementById('zoom-image').style.top = `${-(pos_y - 132)}px`;
-    document.getElementById('zoom-image').style.display = 'block';
+    var root = document.getElementById('screen');
+    if (root && root.clientWidth > 991) {
+      var pos_x = e.nativeEvent.offsetX;
+      var pos_y = e.nativeEvent.offsetY;
+      console.log(pos_x + ' ' + pos_y);
+      document.getElementById('zoom-image').style.position = 'absolute';
+      document.getElementById('zoom-image').style.left = `${-pos_x}px`;
+      document.getElementById('zoom-image').style.top = `${-pos_y}px`;
+      document.getElementById('zoom-image').style.display = 'block';
+    }
   };
   handleMoveOut() {
     document.getElementById('zoom-image').style.left = `0px`;
@@ -228,7 +294,6 @@ class Detail extends PureComponent {
     } = this.props;
     const { imageChoose } = this.state;
     const settings = {
-      dots: false,
       infinite: true,
       speed: 500,
       slidesToShow: 1,
@@ -289,7 +354,9 @@ class Detail extends PureComponent {
           id="zoom-image"
           className={`${styles['images-slider__zoom-image___3jo-j']}`}
           src={`/images/f/${imageChoose || image_huge[0].replace(/\-/g, '')}`}
-          // eslint-disable-next-line react/destructuring-assignment
+          srcSet={`/images/f/${imageChoose ||
+            image_huge[0].replace(/\-/g, '')} 1100w, /images/f/${imageChoose ||
+            image_huge[0].replace(/\-/g, '')} 1280w`}
         />
       );
     }
@@ -326,21 +393,23 @@ class Detail extends PureComponent {
               styles['images-slider__slider-wrapper___1hmGf']
             }`}
           >
-            <Slider {...settings}>{HugeImageUI}</Slider>
+            <Slider>{HugeImageUI}</Slider>
             <div className={`${styles['images-slider__sold-out-overlay___2Avrv']}`}>Hết hàng</div>
           </div>
         </div>
         <div
           className={`${styles['hidden-md-down']} ${styles['images-slider__col-lg-10___3uZXv']}`}
         >
-          <div className={`${styles['images-slider__main-image___1MFAY']}`}>
+          <div
+            onMouseMove={this.onMouseMove.bind(this)}
+            className={`${styles['images-slider__main-image___1MFAY']}`}
+          >
             {huge_image}
             <div className={`${styles['images-slider__sold-out-overlay___2Avrv']}`}>Hết hàng</div>
             {zoom_image}
             <div
               id="pointer_div"
               className={`${styles['images-slider__overlay___CJo-l']}`}
-              onMouseMove={this.onMouseMove.bind(this)}
               onMouseOut={() => this.handleMoveOut()}
             />
           </div>
@@ -354,7 +423,6 @@ class Detail extends PureComponent {
       product: { detail },
       loading,
     } = this.props;
-
     const data = detail || {};
     const title = detail.title ? detail.title : 'Chi tiết sản phẩm';
     const meta_description = detail.meta_description ? detail.meta_description : '123order ';
@@ -393,8 +461,16 @@ class Detail extends PureComponent {
         infomation.push(item_weight);
       }
     }
-
     const delivery = '';
+    var detailCookie = {};
+    if (detail) {
+      detailCookie.productid = detail.productid;
+      detailCookie.image = detail.image_huge ? detail.image_huge[0] : '';
+      detailCookie.price = detail.price;
+      detailCookie.sale_price = detail.sale_price;
+      detailCookie.title = detail.title;
+      detailCookie['seo_link'] = detail.seo_link;
+    }
     return (
       <DocumentMeta {...meta}>
         <div id="app__body___3NlTJ">
@@ -460,6 +536,7 @@ class Detail extends PureComponent {
                     </p>
                     <div className={`${styles['product__few-items-notify___1Q8z3']}`}>
                       <button
+                        onClick={() => this.setCookieDetail(detailCookie)}
                         type="button"
                         className={`${styles['add-to-bag__btn___2i-kl']} ${
                           styles['add-to-bag__btn-primary___HSF2G']
@@ -541,16 +618,19 @@ class Detail extends PureComponent {
                                     styles['product-description__btn-collapse___3Pk93']
                                   }`}
                                 >
-                                  <i
-                                    className={`${styles['ic-ic-minus']} ${
-                                      styles['product-description__expanded___wm98V']
-                                    }`}
-                                  />
-                                  <i
-                                    className={`${styles['ic-ic-plus']} ${
-                                      styles['product-description__collapsed___ahwQq']
-                                    }`}
-                                  />
+                                  {!this.state['info-product'] ? (
+                                    <i
+                                      className={`${styles['ic-ic-plus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  ) : (
+                                    <i
+                                      className={`${styles['ic-ic-minus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  )}
                                 </span>
                               </div>
                             </Link>
@@ -586,16 +666,19 @@ class Detail extends PureComponent {
                                     styles['product-description__btn-collapse___3Pk93']
                                   }`}
                                 >
-                                  <i
-                                    className={`${styles['ic-ic-minus']} ${
-                                      styles['product-description__expanded___wm98V']
-                                    }`}
-                                  />
-                                  <i
-                                    className={`${styles['ic-ic-plus']} ${
-                                      styles['product-description__collapsed___ahwQq']
-                                    }`}
-                                  />
+                                  {!this.state['material'] ? (
+                                    <i
+                                      className={`${styles['ic-ic-plus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  ) : (
+                                    <i
+                                      className={`${styles['ic-ic-minus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  )}
                                 </span>
                               </div>
                             </Link>
@@ -635,16 +718,19 @@ class Detail extends PureComponent {
                                     styles['product-description__btn-collapse___3Pk93']
                                   }`}
                                 >
-                                  <i
-                                    className={`${styles['ic-ic-minus']} ${
-                                      styles['product-description__expanded___wm98V']
-                                    }`}
-                                  />
-                                  <i
-                                    className={`${styles['ic-ic-plus']} ${
-                                      styles['product-description__collapsed___ahwQq']
-                                    }`}
-                                  />
+                                  {!this.state['size-table'] ? (
+                                    <i
+                                      className={`${styles['ic-ic-plus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  ) : (
+                                    <i
+                                      className={`${styles['ic-ic-minus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  )}
                                 </span>
                               </div>
                             </Link>
@@ -702,16 +788,19 @@ class Detail extends PureComponent {
                                     styles['product-description__btn-collapse___3Pk93']
                                   }`}
                                 >
-                                  <i
-                                    className={`${styles['ic-ic-minus']} ${
-                                      styles['product-description__expanded___wm98V']
-                                    }`}
-                                  />
-                                  <i
-                                    className={`${styles['ic-ic-plus']} ${
-                                      styles['product-description__collapsed___ahwQq']
-                                    }`}
-                                  />
+                                  {!this.state['info-brand'] ? (
+                                    <i
+                                      className={`${styles['ic-ic-plus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  ) : (
+                                    <i
+                                      className={`${styles['ic-ic-minus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  )}
                                 </span>
                               </div>
                             </Link>

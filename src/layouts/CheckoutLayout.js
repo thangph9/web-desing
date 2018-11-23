@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+/* eslint-disable react/prefer-stateless-function */
 /* eslint-disable vars-on-top */
 /* eslint-disable no-var */
 /* eslint-disable class-methods-use-this */
@@ -24,13 +26,13 @@ import { formatMessage } from 'umi/locale';
 import SiderMenu from '@/components/SiderMenu';
 import Authorized from '@/utils/Authorized';
 import SettingDrawer from '@/components/SettingDrawer';
+import styles1 from './Checkout.less';
 import logo from '../assets/logo.svg';
-import Footer from './Footer';
-import Header from './Header';
 import Context from './MenuContext';
 import Exception403 from '../pages/Exception/403';
 import styles from './HomeLayout.less';
 import GlobalCart from '@/components/GlobalCart';
+
 const { Content } = Layout;
 
 // Conversion router to menu.
@@ -91,6 +93,48 @@ const query = {
     minWidth: 1600,
   },
 };
+
+class Header extends React.PureComponent {
+  render() {
+    return (
+      <div
+        className={styles1['header__header___1t3MH']}
+        id={styles1['header__checkout-header___35cYd']}
+      >
+        <nav
+          className={
+            styles1['clearfix'] +
+            ' ' +
+            styles1['header__my-navbar___2Cghd'] +
+            ' ' +
+            styles1['header__navbar-toggleable-sm___pR4tF']
+          }
+        >
+          <div
+            className={
+              styles1['container__container___1fvX0'] +
+              ' ' +
+              styles1['header__header-container___srczf']
+            }
+          >
+            <a
+              className={styles1['header__navbar-brand___SzzgD'] + ' ' + styles1['checkout']}
+              href="/"
+            >
+              <img alt="img" src="/image/logo123order.png" />
+            </a>
+            <div className={styles1['header__contact___2Xrtx']}>
+              <a className={styles1['header__navbar-text___1z8x-']} href="tel:19006710">
+                <i className={styles1['ic-ic-phone']} /> 1900 6710
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    );
+  }
+}
+
 @connect(({ list }) => ({
   list,
 }))
@@ -266,11 +310,10 @@ class HomeLayout extends React.PureComponent {
     // eslint-disable-next-line no-unused-vars
     const isTop = PropsLayout === 'topmenu';
     const routerConfig = this.matchParamsPath(pathname);
-    console.log(children);
     const layout = (
       <div
         className={`${styles['default-layout__container___13v1V']} ${
-          styles.home__defaultLayout___Q6Udu
+          styles['continue__padding-remove___2Gfod']
         }`}
       >
         <div
@@ -282,15 +325,8 @@ class HomeLayout extends React.PureComponent {
               : styles['backdrop__body-backdrop___1rvky'] + ' ' + styles['backdrop__active___3kejv']
           }
         />
-        <Header
-          menuData={menuData}
-          handleMenuCollapse={this.handleMenuCollapse}
-          logo={logo}
-          isMobile={isMobile}
-          {...this.props}
-        />
+        <Header />
         {children}
-        <Footer />
         <GlobalCart />
       </div>
     );

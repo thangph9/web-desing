@@ -1,11 +1,21 @@
-import { getProductByCategory, getProductDetail } from '@/services/api';
+import {
+  getProductByCategory,
+  getProductDetail,
+  getListProductAmazon,
+  getListProductEbay,
+  getListProductNike,
+  getListProductAdidas,
+} from '@/services/api';
 
 export default {
   namespace: 'product',
-
   state: {
     list: [],
     detail: {},
+    amazon: [],
+    adidas: [],
+    nike: [],
+    ebay: [],
   },
 
   effects: {
@@ -26,6 +36,90 @@ export default {
       } catch (e) {
         yield put({
           type: 'queryList',
+          payload: [],
+        });
+      }
+    },
+    *amazon({ payload }, { call, put }) {
+      const response = yield call(getListProductAmazon, payload);
+      try {
+        if (response.status === 'ok') {
+          yield put({
+            type: 'queryListAmazon',
+            payload: Array.isArray(response.data) ? response.data : [],
+          });
+        } else {
+          yield put({
+            type: 'queryListAmazon',
+            payload: [],
+          });
+        }
+      } catch (e) {
+        yield put({
+          type: 'queryListAmazon',
+          payload: [],
+        });
+      }
+    },
+    *ebay({ payload }, { call, put }) {
+      const response = yield call(getListProductEbay, payload);
+      try {
+        if (response.status === 'ok') {
+          yield put({
+            type: 'queryListEbay',
+            payload: Array.isArray(response.data) ? response.data : [],
+          });
+        } else {
+          yield put({
+            type: 'queryListEbay',
+            payload: [],
+          });
+        }
+      } catch (e) {
+        yield put({
+          type: 'queryListEbay',
+          payload: [],
+        });
+      }
+    },
+    *nike({ payload }, { call, put }) {
+      const response = yield call(getListProductNike, payload);
+      try {
+        if (response.status === 'ok') {
+          yield put({
+            type: 'queryListNike',
+            payload: Array.isArray(response.data) ? response.data : [],
+          });
+        } else {
+          yield put({
+            type: 'queryListNike',
+            payload: [],
+          });
+        }
+      } catch (e) {
+        yield put({
+          type: 'queryListNike',
+          payload: [],
+        });
+      }
+    },
+    *adidas({ payload }, { call, put }) {
+      const response = yield call(getListProductAdidas, payload);
+      try {
+        if (response.status === 'ok') {
+          yield put({
+            type: 'queryListAdidas',
+            payload: Array.isArray(response.data) ? response.data : [],
+          });
+        } else {
+          yield put({
+            type: 'queryListAdidas',
+            payload: [],
+          });
+        }
+      } catch (e) {
+        yield put({
+          type: 'queryListAdidas',
           payload: [],
         });
       }
@@ -53,6 +147,30 @@ export default {
       return {
         ...state,
         detail: action.payload,
+      };
+    },
+    queryListAmazon(state, action) {
+      return {
+        ...state,
+        list: action.payload,
+      };
+    },
+    queryListEbay(state, action) {
+      return {
+        ...state,
+        list: action.payload,
+      };
+    },
+    queryListNike(state, action) {
+      return {
+        ...state,
+        list: action.payload,
+      };
+    },
+    queryListAdidas(state, action) {
+      return {
+        ...state,
+        list: action.payload,
       };
     },
   },
