@@ -1,3 +1,6 @@
+/* eslint-disable no-shadow */
+/* eslint-disable no-nested-ternary */
+/* eslint-disable no-use-before-define */
 /* eslint-disable one-var */
 /* eslint-disable consistent-return */
 /* eslint-disable camelcase */
@@ -155,11 +158,14 @@ class ListCategory extends PureComponent {
         title: 'Giá cao đến thấp',
         body: 'HIGH_PRICE',
       },
-      search: [],
+      search: '',
       category: [],
       size: [],
       type: [],
       brand: [],
+      sortState: [],
+      total: '',
+      total1: '',
     };
   }
   handleClickSort() {
@@ -334,12 +340,28 @@ class ListCategory extends PureComponent {
     let pathname = this.props.location.pathname;
     let search = this.props.location.search;
     let query = this.props.location.query;
-    if (search == '') {
-      this.props.history.push({ pathname, search: 'sort=' + sort1 });
-    } else {
-      this.props.history.push({ pathname, search: `${search}&sort=` + sort1 });
-    }
-
+    var search1 = '';
+    var ques = '?';
+    this.setState({
+      sortState: sort1,
+    });
+    this.setState({}, () => {
+      var result = this.state.total.split('&');
+      console.log(result);
+      result.splice(result.length - 2, 2);
+      console.log(result);
+      this.setState(
+        {
+          search:
+            result.length > 0
+              ? result.join('&') + '&sort=' + this.state.sortState.toString()
+              : this.state.total + 'sort=' + this.state.sortState.toString(),
+        },
+        () => {
+          this.props.history.push({ pathname, search: this.state.search });
+        }
+      );
+    });
     this.props.dispatch({
       type: 'category/sort',
       payload: {
@@ -349,17 +371,65 @@ class ListCategory extends PureComponent {
     });
   }
   handleCheckFilter(filter, title) {
-    this.setState(
-      {
-        category: filter == 'category' ? this.state.category.push(title) : [],
-        size: filter == 'size' ? this.state.size.push(title) : [],
-        type: filter == 'type' ? this.state.type.push(title) : [],
-        brand: filter == 'brand' ? this.state.brand.push(title) : [],
-      },
-      () => {
-        console.log(this.state);
+    let pathname = this.props.location.pathname;
+    let search = this.props.location.search;
+    var result = this.state[filter].filter((v, i) => {
+      return v == title;
+    });
+    if (result.length == 0) {
+      this.setState(
+        {
+          category: filter == 'category' ? [...this.state.category, title] : this.state.category,
+          size: filter == 'size' ? [...this.state.size, title] : this.state.size,
+          type: filter == 'type' ? [...this.state.type, title] : this.state.type,
+          brand: filter == 'brand' ? [...this.state.brand, title] : this.state.brand,
+        },
+        () => {
+          console.log(this.state);
+        }
+      );
+    } else {
+      var arr = this.state[filter].filter(v => {
+        return v != title;
+      });
+      this.setState(
+        {
+          category: filter == 'category' ? arr : this.state.category,
+          size: filter == 'size' ? arr : this.state.size,
+          type: filter == 'type' ? arr : this.state.type,
+          brand: filter == 'brand' ? arr : this.state.brand,
+        },
+        () => {
+          console.log(this.state);
+        }
+      );
+    }
+    this.setState({}, () => {
+      var search1 = '';
+      var ques = '?';
+      if (this.state.category.length > 0) {
+        search1 = search1 + 'category=' + this.state.category.toString() + '&';
       }
-    );
+      if (this.state.size.length > 0) {
+        search1 = search1 + 'size=' + this.state.size.toString() + '&';
+      }
+      if (this.state.brand.length > 0) {
+        search1 = search1 + 'brand=' + this.state.brand.toString() + '&';
+      }
+      if (this.state.type.length > 0) {
+        search1 = search1 + 'type=' + this.state.type.toString() + '&';
+      }
+      search1 = search1 + 'sort=' + this.state.sortState + '&';
+      this.setState(
+        {
+          search: search1 != '' ? ques + search1.substring(0, search1.length - 1) : '',
+          total: search1,
+        },
+        () => {
+          this.props.history.push({ pathname, search: this.state.search });
+        }
+      );
+    });
   }
   handleClickFilter(value, value1) {
     var rowFilter = document.getElementById(value);
@@ -519,7 +589,7 @@ class ListCategory extends PureComponent {
                   <div className={styles['grid__col-12___39hfZ']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
                       <button
-                        onClick={() => this.handleCheckFilter('category', 'Derbys & Oxfords')}
+                        onClick={() => this.handleCheckFilter('category', 'Derbys_Oxfords')}
                         type="button"
                         className={
                           styles['filter-option__btn___2u45i'] +
@@ -553,7 +623,7 @@ class ListCategory extends PureComponent {
                   <div className={styles['grid__col-12___39hfZ']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
                       <button
-                        onClick={() => this.handleCheckFilter('category', 'Giày tây')}
+                        onClick={() => this.handleCheckFilter('category', 'Giay-tay')}
                         type="button"
                         className={
                           styles['filter-option__btn___2u45i'] +
@@ -570,7 +640,7 @@ class ListCategory extends PureComponent {
                   <div className={styles['grid__col-12___39hfZ']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
                       <button
-                        onClick={() => this.handleCheckFilter('category', 'Thắt dây thể thao')}
+                        onClick={() => this.handleCheckFilter('category', 'that-day-the-thao')}
                         type="button"
                         className={
                           styles['filter-option__btn___2u45i'] +
@@ -587,7 +657,7 @@ class ListCategory extends PureComponent {
                   <div className={styles['grid__col-12___39hfZ']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
                       <button
-                        onClick={() => this.handleCheckFilter('Loafers')}
+                        onClick={() => this.handleCheckFilter('category', 'Loafers')}
                         type="button"
                         className={
                           styles['filter-option__btn___2u45i'] +
@@ -682,7 +752,7 @@ class ListCategory extends PureComponent {
                   <div className={styles['grid__col-6___211BX']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
                       <button
-                        onClick={() => this.handleCheckFilter('26')}
+                        onClick={() => this.handleCheckFilter('size', '26')}
                         type="button"
                         className={
                           styles['filter-option__btn___2u45i'] +
@@ -699,7 +769,7 @@ class ListCategory extends PureComponent {
                   <div className={styles['grid__col-6___211BX']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
                       <button
-                        onClick={() => this.handleCheckFilter('26.5')}
+                        onClick={() => this.handleCheckFilter('size', '26.5')}
                         type="button"
                         className={
                           styles['filter-option__btn___2u45i'] +
@@ -716,7 +786,7 @@ class ListCategory extends PureComponent {
                   <div className={styles['grid__col-6___211BX']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
                       <button
-                        onClick={() => this.handleCheckFilter('27')}
+                        onClick={() => this.handleCheckFilter('size', '27')}
                         type="button"
                         className={
                           styles['filter-option__btn___2u45i'] +
@@ -733,7 +803,7 @@ class ListCategory extends PureComponent {
                   <div className={styles['grid__col-6___211BX']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
                       <button
-                        onClick={() => this.handleCheckFilter('27.5')}
+                        onClick={() => this.handleCheckFilter('size', '27.5')}
                         type="button"
                         className={
                           styles['filter-option__btn___2u45i'] +
@@ -750,7 +820,7 @@ class ListCategory extends PureComponent {
                   <div className={styles['grid__col-6___211BX']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
                       <button
-                        onClick={() => this.handleCheckFilter('28')}
+                        onClick={() => this.handleCheckFilter('size', '28')}
                         type="button"
                         className={
                           styles['filter-option__btn___2u45i'] +
@@ -767,7 +837,7 @@ class ListCategory extends PureComponent {
                   <div className={styles['grid__col-6___211BX']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
                       <button
-                        onClick={() => this.handleCheckFilter('29')}
+                        onClick={() => this.handleCheckFilter('size', '29')}
                         type="button"
                         className={
                           styles['filter-option__btn___2u45i'] +
@@ -811,7 +881,7 @@ class ListCategory extends PureComponent {
                   <div className={styles['grid__col-12___39hfZ']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
                       <button
-                        onClick={() => this.handleCheckFilter('JacQ')}
+                        onClick={() => this.handleCheckFilter('brand', 'JacQ')}
                         type="button"
                         className={
                           styles['filter-option__btn___2u45i'] +
@@ -855,7 +925,7 @@ class ListCategory extends PureComponent {
                   <div className={styles['grid__col-6___211BX']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
                       <button
-                        onClick={() => this.handleCheckFilter('Giày Nam')}
+                        onClick={() => this.handleCheckFilter('type', 'Giay-nam')}
                         type="button"
                         className={
                           styles['filter-option__btn___2u45i'] +
@@ -928,6 +998,7 @@ class ListCategory extends PureComponent {
         },
       };
       console.log(this.props);
+      console.log(this.state);
       return (
         <DocumentMeta {...meta}>
           <div className={styles['container__container___1fvX0']}>
