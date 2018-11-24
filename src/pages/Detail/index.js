@@ -112,7 +112,7 @@ class Detail extends PureComponent {
   }
   setCookieDetail(product) {
     var productDetail = product;
-    var local = localStorage.getItem(product.seo_link + 'test');
+    var local = localStorage.getItem(product.seo_link);
     this.setState({
       total: !this.state.total,
     });
@@ -121,12 +121,9 @@ class Detail extends PureComponent {
     var bodyModal = document.getElementById('body-modals');
     bodyModal.classList.add('order\\layouts\\-home-layout-backdrop__active___3kejv');
     if (local != null) {
-      return localStorage.setItem(
-        product.seo_link + 'test',
-        local + '|' + JSON.stringify(productDetail)
-      );
+      return localStorage.setItem(product.seo_link, local + '|' + JSON.stringify(productDetail));
     }
-    return localStorage.setItem(product.seo_link + 'test', JSON.stringify(productDetail));
+    return localStorage.setItem(product.seo_link, JSON.stringify(productDetail));
   }
   getAuthority() {
     const authorityString = localStorage.getItem('detail-product');
