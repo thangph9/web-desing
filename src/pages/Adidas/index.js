@@ -1,3 +1,10 @@
+/* eslint-disable prefer-const */
+/* eslint-disable react/jsx-first-prop-new-line */
+/* eslint-disable no-useless-escape */
+/* eslint-disable prefer-template */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable react/no-multi-comp */
+/* eslint-disable react/prefer-stateless-function */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-undef */
@@ -29,6 +36,7 @@
 /* eslint-disable dot-notation */
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
+import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
@@ -52,10 +60,50 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
+class ProductItem extends PureComponent {
+  render() {
+    var { data } = this.props;
+    let seoTitle = '';
+    let nodeid = '';
+    nodeid = data.nodeid ? data.nodeid.replace(/\-/g, '') : 'null';
+    seoTitle = data.seo_link + '/' + nodeid;
+    let thumbnail = data.thumbnail ? data.thumbnail.replace(/\-/g, '') : 'false';
+    return (
+      <Link
+        to={`/category/${seoTitle}`}
+        className={`${styles['default__col-md-6___9I2wX']} ${
+          styles['default__padding-remove___2T9LM']
+        }`}
+        href="/sales/nanas-wonderland-windmill-nutritionworks...-5bd98f1f6ada6d0bdd52fc2f"
+      >
+        <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
+          <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
+            <img
+              className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
+              src={`/images/f/${thumbnail}`}
+              alt="Nana's Wonderland, Windmill, NutritionWorks..."
+            />
+          </div>
+          <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
+            <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>{data.title}</div>
+            <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
+              <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
+                <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />{' '}
+                <span className={`${styles['end-time__text___1A-sx']}`}>Còn</span>{' '}
+                <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </Link>
+    );
+  }
+}
 
-@connect(({ loading }) => ({
+@connect(({ loading, product }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   loading,
+  product,
 }))
 @Form.create()
 class Adidas extends PureComponent {
@@ -74,38 +122,49 @@ class Adidas extends PureComponent {
       }
     }
     dispatch({
-      type: 'product/adidas',
+      type: 'product/Adidas',
       payload: {},
     });
   }
   renderBanner() {
     var {
-      loading: { global },
+      product: { list },
     } = this.props;
+    var dataList = list && list.length > 0 ? list : [];
+    let seoTitle = '';
+    let nodeid = '';
+    if (dataList != undefined && dataList.length > 0) {
+      nodeid = dataList[0].nodeid ? dataList[0].nodeid.replace(/\-/g, '') : 'null';
+      seoTitle = dataList[0].seo_link + '/' + nodeid;
+    }
     return (
-      <div className={`${styles['row__row___2roCA']}`}>
-        <div
-          className={`${styles['first-sale-tile__col-lg-9___2uu-j']} ${
-            styles['first-sale-tile__image-container___VGe3q']
-          }`}
-        >
-          <Skeleton className="anh-banner" active loading={!global} paragraph={false} title={false}>
+      <Link
+        to={`/category/${seoTitle}`}
+        className={`${styles['hidden-md-down']} ${
+          styles['first-sale-tile__first-sale-desktop___3DYvl']
+        }`}
+        href="/sales/giam-den-50-blackmoresr-thuc-pham-chuc-nang-tu-uc-5bd6c3137cf0476b22488d23"
+      >
+        <div className={`${styles['row__row___2roCA']}`}>
+          <div
+            className={`${styles['first-sale-tile__col-lg-9___2uu-j']} ${
+              styles['first-sale-tile__image-container___VGe3q']
+            }`}
+          >
             <img
-              src="https://images.leflair.vn/w640/q85/5bdad591afd2a6680da62d6e.jpg"
-              srcSet="https://images.leflair.vn/w640/q85/5bdad591afd2a6680da62d6e.jpg 640w, https://images.leflair.vn/w1080/q85/5bdad591afd2a6680da62d6e.jpg 1080w, https://images.leflair.vn/w1440/q85/5bdad591afd2a6680da62d6e.jpg 1440w"
-              sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, 100vw"
+              src={`/images/f/${dataList != undefined &&
+                dataList.length > 0 &&
+                dataList[0].thumbnail.replace(/\-/g, '')}`}
               alt="Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc"
             />
-          </Skeleton>
-        </div>
-        <div
-          className={`${styles['first-sale-tile__col-lg-3___2ZXJG']} ${
-            styles['first-sale-tile__text-container___3Kt7T']
-          }`}
-        >
-          <Skeleton active loading={!global} paragraph={{ rows: 5, width: '100%' }}>
+          </div>
+          <div
+            className={`${styles['first-sale-tile__col-lg-3___2ZXJG']} ${
+              styles['first-sale-tile__text-container___3Kt7T']
+            }`}
+          >
             <h2 className={`${styles['first-sale-tile__title___2Dutp']}`}>
-              Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc
+              {dataList != undefined && dataList.length > 0 && dataList[0].title}
             </h2>
             <span className={`${styles['first-sale-tile__time-wrap___3v0IL']}`}>
               <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />{' '}
@@ -119,87 +178,64 @@ class Adidas extends PureComponent {
             >
               Xem chi tiết
             </button>
-          </Skeleton>
+          </div>
         </div>
-      </div>
+      </Link>
     );
   }
   renderBannerMoblie() {
     var {
-      loading: { global },
+      product: { list },
     } = this.props;
+    var dataList = list && list.length > 0 ? list : [];
+    let seoTitle = '';
+    let nodeid = '';
+    if (dataList != undefined && dataList.length > 0) {
+      nodeid = dataList[0].nodeid ? dataList[0].nodeid.replace(/\-/g, '') : 'null';
+      seoTitle = dataList[0].seo_link + '/' + nodeid;
+    }
     return (
-      <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
-        <div className={`${styles['sale-card__international-tile___3A645']}`}>Hàng nhập khẩu</div>
-        <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-          <Skeleton className="anh-ao" active loading={!global} paragraph={false} title={false}>
-            <img
-              className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-              src="https://images.leflair.vn/w640/q85/5bdad591afd2a6680da62d6e.jpg"
-              srcSet="https://images.leflair.vn/w640/q85/5bdad591afd2a6680da62d6e.jpg 640w, https://images.leflair.vn/w1080/q85/5bdad591afd2a6680da62d6e.jpg 1080w, https://images.leflair.vn/w1440/q85/5bdad591afd2a6680da62d6e.jpg 1440w"
-              sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, (max-width: 991px) 336px, (min-width: 992px) 456px, (min-width: 1200px) 546px, 100vw"
-              alt="Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc"
-            />
-          </Skeleton>
-        </div>
-        <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
-          <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
-            Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc
-          </div>
-          <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
-            <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
-              <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />{' '}
-              <span className={`${styles['end-time__text___1A-sx']}`}>Còn</span>{' '}
-              <span className={`${styles['end-time__timer___LMsIT']}`}>4 ngày</span>
-            </span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  renderItems() {
-    var {
-      loading: { global },
-    } = this.props;
-    return (
-      <a
-        className={`${styles['default__col-md-6___9I2wX']} ${
-          styles['default__padding-remove___2T9LM']
+      <Link
+        to={`/category/${seoTitle}`}
+        className={`${styles['hidden-lg-up']} ${styles['cate-first-sale']} ${
+          styles['first-sale-tile__col-md-6___86-SM']
+        } ${styles['first-sale-tile__padding-remove___lzvjK']} ${
+          styles['first-sale-tile__sale-card-container___3zr_W']
         }`}
-        href="/sales/nanas-wonderland-windmill-nutritionworks...-5bd98f1f6ada6d0bdd52fc2f"
+        href="/sales/giam-den-50-blackmoresr-thuc-pham-chuc-nang-tu-uc-5bd6c3137cf0476b22488d23"
       >
         <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
+          <div className={`${styles['sale-card__international-tile___3A645']}`}>Hàng nhập khẩu</div>
           <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-            <Skeleton className="anh-ao" active loading={!global} paragraph={false} title={false}>
-              <img
-                className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-                src="https://images.leflair.vn/w640/q85/5bdadd62c6b3c5db940a2338.jpg"
-                srcSet="https://images.leflair.vn/w640/q85/5bdadd62c6b3c5db940a2338.jpg 640w, https://images.leflair.vn/w1080/q85/5bdadd62c6b3c5db940a2338.jpg 1080w, https://images.leflair.vn/w1440/q85/5bdadd62c6b3c5db940a2338.jpg 1440w"
-                sizes="(max-width: 575px) 100vw, (max-width: 767px) 540px, (max-width: 991px) 336px, (min-width: 992px) 456px, (min-width: 1200px) 546px, 100vw"
-                alt="Nana's Wonderland, Windmill, NutritionWorks..."
-              />
-            </Skeleton>
+            <img
+              className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
+              src={`/images/f/${dataList != undefined &&
+                dataList.length > 0 &&
+                dataList[0].thumbnail.replace(/\-/g, '')}`}
+              alt="Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc"
+            />
           </div>
           <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
             <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
-              Nana's Wonderland, Windmill, NutritionWorks...
+              {dataList != undefined && dataList.length > 0 && dataList[0].title}
             </div>
             <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
               <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
                 <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />{' '}
                 <span className={`${styles['end-time__text___1A-sx']}`}>Còn</span>{' '}
-                <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
+                <span className={`${styles['end-time__timer___LMsIT']}`}>4 ngày</span>
               </span>
             </div>
           </div>
         </div>
-      </a>
+      </Link>
     );
   }
   render() {
     var {
-      loading: { global },
+      product: { list },
     } = this.props;
+    var dataList = list && list.length > 0 ? list : [];
     return (
       <div
         className={`${styles['container__container___1fvX0']} ${
@@ -208,28 +244,13 @@ class Adidas extends PureComponent {
       >
         <div className={`${styles['row__row___2roCA']}`}>
           <div className={`${styles['first-sale-tile__first-sale-container___12AH9']}`}>
-            <a
-              className={`${styles['hidden-md-down']} ${
-                styles['first-sale-tile__first-sale-desktop___3DYvl']
-              }`}
-              href="/sales/giam-den-50-blackmoresr-thuc-pham-chuc-nang-tu-uc-5bd6c3137cf0476b22488d23"
-            >
-              {this.renderBanner()}
-            </a>
-            <a
-              className={`${styles['hidden-lg-up']} ${styles['cate-first-sale']} ${
-                styles['first-sale-tile__col-md-6___86-SM']
-              } ${styles['first-sale-tile__padding-remove___lzvjK']} ${
-                styles['first-sale-tile__sale-card-container___3zr_W']
-              }`}
-              href="/sales/giam-den-50-blackmoresr-thuc-pham-chuc-nang-tu-uc-5bd6c3137cf0476b22488d23"
-            >
-              {this.renderBannerMoblie()}
-            </a>
+            {this.renderBanner()}
+            {this.renderBannerMoblie()}
           </div>
 
-          {this.renderItems()}
-          {this.renderItems()}
+          {dataList.map((v, i) => (
+            <ProductItem key={i} data={v} />
+          ))}
         </div>
       </div>
     );

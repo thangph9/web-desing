@@ -152,25 +152,25 @@ export default {
     queryListAmazon(state, action) {
       return {
         ...state,
-        amazon: action.payload,
+        list: action.payload,
       };
     },
     queryListEbay(state, action) {
       return {
         ...state,
-        ebay: action.payload,
+        list: action.payload,
       };
     },
     queryListNike(state, action) {
       return {
         ...state,
-        nike: action.payload,
+        list: action.payload,
       };
     },
     queryListAdidas(state, action) {
       return {
         ...state,
-        adidas: action.payload,
+        list: action.payload,
       };
     },
   },
