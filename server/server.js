@@ -52,7 +52,7 @@ var server = https.createServer(credentials, app);
 
 if (!module.parent) {
  
-  server.listen(445, function () {
+  server.listen(443, function () {
     console.log("server running at https://123order.vn/")
   });
 
