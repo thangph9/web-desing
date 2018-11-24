@@ -122,7 +122,7 @@ class Adidas extends PureComponent {
       }
     }
     dispatch({
-      type: 'product/Adidas',
+      type: 'product/adidas',
       payload: {},
     });
   }

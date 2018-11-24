@@ -122,7 +122,7 @@ class Nike extends PureComponent {
       }
     }
     dispatch({
-      type: 'product/Nike',
+      type: 'product/nike',
       payload: {},
     });
   }
