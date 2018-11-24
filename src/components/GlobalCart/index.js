@@ -277,7 +277,7 @@ export default class GlobalCart extends PureComponent {
                   <div className={styles['row__row___2roCA']}>
                     <div className={styles['cart__col-6___7l1MC']}>
                       Bạn đã tiết kiệm:
-                      {this.summary(listArr).sale_price}
+                      {this.summary(listArr).price - this.summary(listArr).sale_price}
                       &nbsp;đ
                     </div>
                     <div className={styles['text-right'] + ' ' + styles['cart__col-6___7l1MC']}>
