@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable no-shadow */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-use-before-define */
@@ -241,7 +242,6 @@ class ListCategory extends PureComponent {
   componentDidMount() {
     var { dispatch, match } = this.props;
     var sort = this.props.location.query.sort;
-    console.log(sort);
     dispatch({
       type: 'category/list',
       payload: match.params.nodeid,
@@ -431,6 +431,14 @@ class ListCategory extends PureComponent {
       );
     });
   }
+  handleClick(obj) {
+    if (obj.id) {
+      console.log(obj);
+      this.setState({
+        [obj.id]: !this.state[obj.id],
+      });
+    }
+  }
   handleClickFilter(value, value1) {
     var rowFilter = document.getElementById(value);
     if (rowFilter.style.display == 'block') {
@@ -519,10 +527,16 @@ class ListCategory extends PureComponent {
       </div>
     );
   }
-  handleTestClick() {
-    console.log('ok');
-  }
+
   renderFilterList(filter) {
+    let data_filter = [
+      { id: 'a-1', title: 'a-1' },
+      { id: 'a-2', title: 'a-2' },
+      { id: 'a-3', title: 'a-3' },
+      { id: 'a-4', title: 'a-4' },
+      { id: 'a-5', title: 'a-5' },
+      { id: 'a-6', title: 'a-6' },
+    ];
     var { filter } = this.state;
     var {
       category: { list },
@@ -560,10 +574,7 @@ class ListCategory extends PureComponent {
           </div>
           <div id="transform-fixed" className={styles['sale__fitlers-content-wrap___pU5ed']}>
             <div className={styles['filter__filter-container___1hLIM']}>
-              <div
-                onClick={() => this.handleTestClick()}
-                className={styles['filter__filter-header___3I6RP']}
-              >
+              <div className={styles['filter__filter-header___3I6RP']}>
                 <h5
                   id="phan-loai"
                   onClick={() => this.handleClickFilter('phan-loai-row', 'icon-phan-loai')}
@@ -586,10 +597,55 @@ class ListCategory extends PureComponent {
               </div>
               <div id="phan-loai-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
+                  {data_filter.map((e, i) => {
+                    return (
+                      <div key={i} className={styles['grid__col-12___39hfZ']}>
+                        <div className={styles['filter-option__filter-option___3Xmf0']}>
+                          <button
+                            onClick={() => this.handleCheckFilter('category', 'Slip-Ons')}
+                            onClick={() => {
+                              this.handleClick(e);
+                            }}
+                            type="button"
+                            className={
+                              !this.state[e.id]
+                                ? styles['filter-option__btn___2u45i'] +
+                                  ' ' +
+                                  styles['filter-option__btn-secondary___1DPfK'] +
+                                  ' ' +
+                                  styles['filter-option__btn-block___1tZOy']
+                                : styles['filter-option__btn___2u45i'] +
+                                  ' ' +
+                                  styles['filter-option__btn-secondary___1DPfK'] +
+                                  ' ' +
+                                  styles['filter-option__btn-block___1tZOy'] +
+                                  ' ' +
+                                  styles['filter-option__active___1HV6C']
+                            }
+                          >
+                            {this.state[e.id] && (
+                              <span
+                                className={
+                                  styles['filter-option__icon___1wxyY'] +
+                                  ' ' +
+                                  styles['ic-ic-close']
+                                }
+                              />
+                            )}
+                            {e.title}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+
                   <div className={styles['grid__col-12___39hfZ']}>
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
                       <button
                         onClick={() => this.handleCheckFilter('category', 'Derbys_Oxfords')}
+                        onClick={() => {
+                          this.handleClick({ id: 'demo', title: ' Derbys &amp; Oxfords' });
+                        }}
                         type="button"
                         className={
                           styles['filter-option__btn___2u45i'] +
@@ -607,6 +663,9 @@ class ListCategory extends PureComponent {
                     <div className={styles['filter-option__filter-option___3Xmf0']}>
                       <button
                         onClick={() => this.handleCheckFilter('category', 'Slip-Ons')}
+                        onClick={() => {
+                          this.handleClick({ id: 'demo', title: ' Derbys &amp; Oxfords' });
+                        }}
                         type="button"
                         className={
                           styles['filter-option__btn___2u45i'] +
@@ -952,7 +1011,6 @@ class ListCategory extends PureComponent {
     var {
       category: { list },
     } = this.props;
-
     return (
       <div
         className={
@@ -975,6 +1033,7 @@ class ListCategory extends PureComponent {
   }
   render() {
     var { filter, test } = this.state;
+    console.log(this.state['abc']);
     var {
       category: { list, breadcrumb },
     } = this.props;
@@ -997,8 +1056,6 @@ class ListCategory extends PureComponent {
           },
         },
       };
-      console.log(this.props);
-      console.log(this.state);
       return (
         <DocumentMeta {...meta}>
           <div className={styles['container__container___1fvX0']}>

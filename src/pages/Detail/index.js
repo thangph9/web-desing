@@ -1,3 +1,7 @@
+/* eslint-disable react/no-access-state-in-setstate */
+/* eslint-disable react/no-unused-state */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable no-return-assign */
 /* eslint-disable prefer-template */
 /* eslint-disable arrow-body-style */
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
@@ -106,7 +110,27 @@ class Detail extends PureComponent {
       }
     }
   }
-
+  setCookieDetail(product) {
+    var productDetail = product;
+    var local = localStorage.getItem(product.seo_link + 'test');
+    this.setState({
+      total: !this.state.total,
+    });
+    var cart = document.getElementById('cart-form');
+    cart.classList.add('order\\components\\-global-cart\\index-cart__active___Q2UCI');
+    var bodyModal = document.getElementById('body-modals');
+    bodyModal.classList.add('order\\layouts\\-home-layout-backdrop__active___3kejv');
+    if (local != null) {
+      return localStorage.setItem(
+        product.seo_link + 'test',
+        local + '|' + JSON.stringify(productDetail)
+      );
+    }
+    return localStorage.setItem(product.seo_link + 'test', JSON.stringify(productDetail));
+  }
+  getAuthority() {
+    const authorityString = localStorage.getItem('detail-product');
+  }
   componentDidMount() {
     const { dispatch, match } = this.props;
     let productid = '';
@@ -354,7 +378,6 @@ class Detail extends PureComponent {
       product: { detail },
       loading,
     } = this.props;
-
     const data = detail || {};
     const title = detail.title ? detail.title : 'Chi tiết sản phẩm';
     const meta_description = detail.meta_description ? detail.meta_description : '123order ';
@@ -393,8 +416,16 @@ class Detail extends PureComponent {
         infomation.push(item_weight);
       }
     }
-
     const delivery = '';
+    var detailCookie = {};
+    if (detail) {
+      detailCookie.productid = detail.productid;
+      detailCookie.image = detail.image_huge ? detail.image_huge[0] : '';
+      detailCookie.price = detail.price;
+      detailCookie.sale_price = detail.sale_price;
+      detailCookie.title = detail.title;
+      detailCookie['seo_link'] = detail.seo_link;
+    }
     return (
       <DocumentMeta {...meta}>
         <div id="app__body___3NlTJ">
@@ -460,6 +491,7 @@ class Detail extends PureComponent {
                     </p>
                     <div className={`${styles['product__few-items-notify___1Q8z3']}`}>
                       <button
+                        onClick={() => this.setCookieDetail(detailCookie)}
                         type="button"
                         className={`${styles['add-to-bag__btn___2i-kl']} ${
                           styles['add-to-bag__btn-primary___HSF2G']
