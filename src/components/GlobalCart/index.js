@@ -1,3 +1,12 @@
+/* eslint-disable no-redeclare */
+/* eslint-disable block-scoped-var */
+/* eslint-disable eqeqeq */
+/* eslint-disable no-plusplus */
+/* eslint-disable vars-on-top */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable lines-between-class-members */
+/* eslint-disable no-empty-pattern */
 /* eslint-disable react/no-unused-state */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-useless-escape */
@@ -24,6 +33,9 @@ import { connect } from 'dva';
 import Slider from 'react-slick';
 import styles from './index.less';
 
+@connect(({ list }) => ({
+  list,
+}))
 class CartItem extends PureComponent {
   constructor(props) {
     super(props);
@@ -32,11 +44,77 @@ class CartItem extends PureComponent {
       sale_price: 0,
     };
   }
+  handleChange(event, id, index) {
+    var listArr = [];
+    if (id.length - 1 >= Number(event.target.value)) {
+      var authorityString = '';
+      this.setState({
+        [id[0].title]: Number(event.target.value),
+      });
+      for (var i = 0, len = localStorage.length; i < len; ++i) {
+        if (i == index) {
+          authorityString = localStorage.getItem(localStorage.key(i))
+            ? localStorage
+                .getItem(localStorage.key(i))
+                .split('|')
+                .splice(0, Number(event.target.value))
+            : '';
+          var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
+          var b = arr.map(v => JSON.stringify(v));
+          localStorage.setItem(localStorage.key(i), b.join('|'));
+          listArr.push(arr);
+        } else {
+          authorityString = localStorage.getItem(localStorage.key(i))
+            ? localStorage.getItem(localStorage.key(i)).split('|')
+            : '';
+          var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
+          listArr.push(arr);
+        }
+      }
+      var a = this.props.list.listArr[index];
+      var b = this.props.list.listArr;
+      a.splice(0, a.length - Number(event.target.value));
+    } else {
+      this.setState({
+        [id[0].title]: Number(event.target.value),
+      });
+      var a = this.props.list.listArr[index];
+      var number = Number(event.target.value) - id.length;
 
+      var i = 0;
+      while (i < number) {
+        a.push(a[0]);
+        i++;
+      }
+      for (var i = 0, len = localStorage.length; i < len; ++i) {
+        if (i == index) {
+          authorityString = localStorage.getItem(localStorage.key(i))
+            ? localStorage.getItem(localStorage.key(i)).split('|')
+            : '';
+          var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
+          var b = a.map(v => JSON.stringify(v));
+          localStorage.setItem(localStorage.key(i), b.join('|'));
+
+          listArr.push(a);
+        } else {
+          authorityString = localStorage.getItem(localStorage.key(i))
+            ? localStorage.getItem(localStorage.key(i)).split('|')
+            : '';
+          var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
+          listArr.push(arr);
+        }
+      }
+    }
+    this.props.dispatch({
+      type: 'list/local',
+      payload: listArr,
+    });
+  }
   render() {
     // eslint-disable-next-line prefer-destructuring
-    var { data } = this.props;
+    var { data, index } = this.props;
     var dataCart = {};
+
     data && Array.isArray(data) ? (dataCart = data[0]) : {};
     return (
       <div className={styles['clearfix'] + ' ' + styles['cart__product___2fY_V']}>
@@ -61,7 +139,8 @@ class CartItem extends PureComponent {
                   }
                 >
                   <select
-                    defaultValue={data.length}
+                    value={data.length}
+                    onChange={e => this.handleChange(e, data, index)}
                     className={
                       styles['cart__form-control___3g0tc'] +
                       ' ' +
@@ -81,6 +160,13 @@ class CartItem extends PureComponent {
                     <option value={11}>11</option>
                     <option value={12}>12</option>
                     <option value={13}>13</option>
+                    <option value={14}>14</option>
+                    <option value={15}>15</option>
+                    <option value={16}>16</option>
+                    <option value={17}>17</option>
+                    <option value={18}>18</option>
+                    <option value={19}>19</option>
+                    <option value={20}>20</option>
                   </select>
                 </span>
               </div>
@@ -114,7 +200,15 @@ class CartItem extends PureComponent {
     );
   }
 }
-export default class GlobalCart extends PureComponent {
+@connect(({ list }) => ({
+  list,
+}))
+class GlobalCart extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
   componentWillUnmount() {
     this.triggerResizeEvent.cancel();
   }
@@ -139,12 +233,16 @@ export default class GlobalCart extends PureComponent {
   }
   summary(listArr) {
     var obj = {};
-    listArr &&
-      listArr.length > 0 &&
+    var price = 0;
+    var sale_price = 0;
+    if (listArr && listArr.length > 0) {
       listArr.forEach((v, i) => {
-        obj.price = v[i].price * v.length;
-        obj.sale_price = v[i].sale_price * v.length;
+        price = price + v[0].price * v.length;
+        sale_price = sale_price + v[0].sale_price * v.length;
       });
+    }
+    obj.price = price;
+    obj.sale_price = sale_price;
     return obj;
   }
   render() {
@@ -159,22 +257,7 @@ export default class GlobalCart extends PureComponent {
       arrows: true,
     };
     var authorityString = '';
-
-    var listArr = [];
-    console.log(arr);
-    console.log(localStorage);
-    for (var i = 0, len = localStorage.length; i < len; ++i) {
-      authorityString = localStorage.getItem(localStorage.key(i))
-        ? localStorage.getItem(localStorage.key(i)).split('|')
-        : '';
-      var arr =
-        authorityString != ''
-          ? authorityString.map((v, i) => {
-              return JSON.parse(v);
-            })
-          : [];
-      listArr.push(arr);
-    }
+    var { listArr } = this.props.list;
     console.log(listArr);
     return (
       <div id="cart-form" className={styles['cart__cart___yD7P6']}>
@@ -233,7 +316,7 @@ export default class GlobalCart extends PureComponent {
             <div>
               {listArr && listArr.length > 0 ? (
                 listArr.map((v, i) => {
-                  return <CartItem key={i} data={v} />;
+                  return <CartItem key={i} index={i} data={v} />;
                 })
               ) : (
                 <div className={styles['cart__cart-empty___2VwBC']}>
@@ -307,3 +390,4 @@ export default class GlobalCart extends PureComponent {
     );
   }
 }
+export default GlobalCart;

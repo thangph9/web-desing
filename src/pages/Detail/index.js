@@ -78,9 +78,10 @@ const { TextArea } = Input;
 function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
 }
-@connect(({ loading, product }) => ({
+@connect(({ loading, product, list }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   product,
+  list,
 }))
 @Form.create()
 class Detail extends PureComponent {
@@ -116,14 +117,50 @@ class Detail extends PureComponent {
     this.setState({
       total: !this.state.total,
     });
+    var listArr = [];
+    var authorityString = '';
     var cart = document.getElementById('cart-form');
     cart.classList.add('order\\components\\-global-cart\\index-cart__active___Q2UCI');
     var bodyModal = document.getElementById('body-modals');
     bodyModal.classList.add('order\\layouts\\-home-layout-backdrop__active___3kejv');
     if (local != null) {
-      return localStorage.setItem(product.seo_link, local + '|' + JSON.stringify(productDetail));
+      localStorage.setItem(product.seo_link, local + '|' + JSON.stringify(productDetail));
+      for (var i = 0, len = localStorage.length; i < len; ++i) {
+        authorityString = localStorage.getItem(localStorage.key(i))
+          ? localStorage.getItem(localStorage.key(i)).split('|')
+          : '';
+        var arr =
+          authorityString != ''
+            ? authorityString.map(v => {
+                return JSON.parse(v);
+              })
+            : [];
+        listArr.push(arr);
+      }
+    } else {
+      localStorage.setItem(product.seo_link, JSON.stringify(productDetail));
+      for (var i = 0, len = localStorage.length; i < len; ++i) {
+        authorityString = localStorage.getItem(localStorage.key(i))
+          ? localStorage.getItem(localStorage.key(i)).split('|')
+          : '';
+        var arr =
+          authorityString != ''
+            ? authorityString.map(v => {
+                return JSON.parse(v);
+              })
+            : [];
+        listArr.push(arr);
+      }
     }
-    return localStorage.setItem(product.seo_link, JSON.stringify(productDetail));
+    this.props.dispatch({
+      type: 'list/local',
+      payload: listArr,
+    });
+    this.props.dispatch({
+      type: 'list/value',
+      payload: this.props.list.value + 1,
+    });
+    console.log(listArr);
   }
   getAuthority() {
     const authorityString = localStorage.getItem('detail-product');
