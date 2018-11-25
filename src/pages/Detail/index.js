@@ -110,6 +110,9 @@ class Detail extends PureComponent {
         element.style.display = 'block';
       }
     }
+    this.setState({
+      [idDetail]: !this.state[idDetail],
+    });
   }
   setCookieDetail(product) {
     var productDetail = product;
@@ -613,16 +616,19 @@ class Detail extends PureComponent {
                                     styles['product-description__btn-collapse___3Pk93']
                                   }`}
                                 >
-                                  <i
-                                    className={`${styles['ic-ic-minus']} ${
-                                      styles['product-description__expanded___wm98V']
-                                    }`}
-                                  />
-                                  <i
-                                    className={`${styles['ic-ic-plus']} ${
-                                      styles['product-description__collapsed___ahwQq']
-                                    }`}
-                                  />
+                                  {!this.state['info-product'] ? (
+                                    <i
+                                      className={`${styles['ic-ic-plus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  ) : (
+                                    <i
+                                      className={`${styles['ic-ic-minus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  )}
                                 </span>
                               </div>
                             </Link>
@@ -658,16 +664,19 @@ class Detail extends PureComponent {
                                     styles['product-description__btn-collapse___3Pk93']
                                   }`}
                                 >
-                                  <i
-                                    className={`${styles['ic-ic-minus']} ${
-                                      styles['product-description__expanded___wm98V']
-                                    }`}
-                                  />
-                                  <i
-                                    className={`${styles['ic-ic-plus']} ${
-                                      styles['product-description__collapsed___ahwQq']
-                                    }`}
-                                  />
+                                  {!this.state['material'] ? (
+                                    <i
+                                      className={`${styles['ic-ic-plus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  ) : (
+                                    <i
+                                      className={`${styles['ic-ic-minus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  )}
                                 </span>
                               </div>
                             </Link>
@@ -707,16 +716,19 @@ class Detail extends PureComponent {
                                     styles['product-description__btn-collapse___3Pk93']
                                   }`}
                                 >
-                                  <i
-                                    className={`${styles['ic-ic-minus']} ${
-                                      styles['product-description__expanded___wm98V']
-                                    }`}
-                                  />
-                                  <i
-                                    className={`${styles['ic-ic-plus']} ${
-                                      styles['product-description__collapsed___ahwQq']
-                                    }`}
-                                  />
+                                  {!this.state['size-table'] ? (
+                                    <i
+                                      className={`${styles['ic-ic-plus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  ) : (
+                                    <i
+                                      className={`${styles['ic-ic-minus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  )}
                                 </span>
                               </div>
                             </Link>
@@ -774,16 +786,19 @@ class Detail extends PureComponent {
                                     styles['product-description__btn-collapse___3Pk93']
                                   }`}
                                 >
-                                  <i
-                                    className={`${styles['ic-ic-minus']} ${
-                                      styles['product-description__expanded___wm98V']
-                                    }`}
-                                  />
-                                  <i
-                                    className={`${styles['ic-ic-plus']} ${
-                                      styles['product-description__collapsed___ahwQq']
-                                    }`}
-                                  />
+                                  {!this.state['info-brand'] ? (
+                                    <i
+                                      className={`${styles['ic-ic-plus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  ) : (
+                                    <i
+                                      className={`${styles['ic-ic-minus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                      }`}
+                                    />
+                                  )}
                                 </span>
                               </div>
                             </Link>
