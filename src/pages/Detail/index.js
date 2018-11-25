@@ -183,13 +183,16 @@ class Detail extends PureComponent {
   };
   onHover = e => {};
   onMouseMove = e => {
-    var pos_x = e.nativeEvent.offsetX;
-    var pos_y = e.nativeEvent.offsetY;
-    console.log(pos_x + ' ' + pos_y);
-    document.getElementById('zoom-image').style.position = 'absolute';
-    document.getElementById('zoom-image').style.left = `${-pos_x}px`;
-    document.getElementById('zoom-image').style.top = `${-pos_y}px`;
-    document.getElementById('zoom-image').style.display = 'block';
+    var root = document.getElementById('root');
+    if (root && root.offsetWidth > 991) {
+      var pos_x = e.nativeEvent.offsetX;
+      var pos_y = e.nativeEvent.offsetY;
+      console.log(pos_x + ' ' + pos_y);
+      document.getElementById('zoom-image').style.position = 'absolute';
+      document.getElementById('zoom-image').style.left = `${-pos_x}px`;
+      document.getElementById('zoom-image').style.top = `${-pos_y}px`;
+      document.getElementById('zoom-image').style.display = 'block';
+    }
   };
   handleMoveOut() {
     document.getElementById('zoom-image').style.left = `0px`;
