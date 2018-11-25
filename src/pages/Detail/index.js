@@ -186,8 +186,8 @@ class Detail extends PureComponent {
   };
   onHover = e => {};
   onMouseMove = e => {
-    var root = document.getElementById('root');
-    if (root && root.offsetWidth > 991) {
+    var root = document.getElementById('screen');
+    if (root && root.clientWidth > 991) {
       var pos_x = e.nativeEvent.offsetX;
       var pos_y = e.nativeEvent.offsetY;
       console.log(pos_x + ' ' + pos_y);
@@ -354,7 +354,9 @@ class Detail extends PureComponent {
           id="zoom-image"
           className={`${styles['images-slider__zoom-image___3jo-j']}`}
           src={`/images/f/${imageChoose || image_huge[0].replace(/\-/g, '')}`}
-          // eslint-disable-next-line react/destructuring-assignment
+          srcSet={`/images/f/${imageChoose ||
+            image_huge[0].replace(/\-/g, '')} 1100w, /images/f/${imageChoose ||
+            image_huge[0].replace(/\-/g, '')} 1280w`}
         />
       );
     }
