@@ -183,11 +183,12 @@ class Detail extends PureComponent {
   };
   onHover = e => {};
   onMouseMove = e => {
-    var pos_x = e.offsetX ? e.offsetX : e.pageX - document.getElementById('pointer_div').offsetLeft;
-    var pos_y = e.offsetY ? e.offsetY : e.pageY - document.getElementById('pointer_div').offsetTop;
+    var pos_x = e.nativeEvent.offsetX;
+    var pos_y = e.nativeEvent.offsetY;
+    console.log(pos_x + ' ' + pos_y);
     document.getElementById('zoom-image').style.position = 'absolute';
-    document.getElementById('zoom-image').style.left = `${-(pos_x - 342)}px`;
-    document.getElementById('zoom-image').style.top = `${-(pos_y - 132)}px`;
+    document.getElementById('zoom-image').style.left = `${-pos_x}px`;
+    document.getElementById('zoom-image').style.top = `${-pos_y}px`;
     document.getElementById('zoom-image').style.display = 'block';
   };
   handleMoveOut() {
@@ -391,14 +392,16 @@ class Detail extends PureComponent {
         <div
           className={`${styles['hidden-md-down']} ${styles['images-slider__col-lg-10___3uZXv']}`}
         >
-          <div className={`${styles['images-slider__main-image___1MFAY']}`}>
+          <div
+            onMouseMove={this.onMouseMove.bind(this)}
+            className={`${styles['images-slider__main-image___1MFAY']}`}
+          >
             {huge_image}
             <div className={`${styles['images-slider__sold-out-overlay___2Avrv']}`}>Hết hàng</div>
             {zoom_image}
             <div
               id="pointer_div"
               className={`${styles['images-slider__overlay___CJo-l']}`}
-              onMouseMove={this.onMouseMove.bind(this)}
               onMouseOut={() => this.handleMoveOut()}
             />
           </div>
