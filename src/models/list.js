@@ -22,6 +22,7 @@ export default {
     list: [],
     value: 0,
     listArr: listArr,
+    modal: false,
   },
   effects: {
     *fetch({ payload }, { call, put }) {
@@ -75,6 +76,12 @@ export default {
       return {
         ...state,
         value: action.payload,
+      };
+    },
+    modal(state, action) {
+      return {
+        ...state,
+        modal: action.payload,
       };
     },
   },

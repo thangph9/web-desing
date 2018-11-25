@@ -91,7 +91,9 @@ const query = {
     minWidth: 1600,
   },
 };
-
+@connect(({ list }) => ({
+  list,
+}))
 class HomeLayout extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -240,12 +242,13 @@ class HomeLayout extends React.PureComponent {
     return <SettingDrawer />;
   }
   handleClick() {
-    var cart = document.getElementById('cart-form');
-    cart.classList.remove('order-components-global-cart-index-cart__active___Q2UCI');
-    var bodyModal = document.getElementById('body-modals');
-    bodyModal.classList.remove('order-layouts-home-layout-backdrop__active___3kejv');
+    this.props.dispatch({
+      type: 'list/modal',
+      payload: false,
+    });
   }
   render() {
+    var { modal } = this.props.list;
     const {
       // eslint-disable-next-line no-unused-vars
       navTheme,
@@ -267,7 +270,11 @@ class HomeLayout extends React.PureComponent {
         <div
           id="body-modals"
           onClick={() => this.handleClick()}
-          className={styles['backdrop__body-backdrop___1rvky']}
+          className={
+            modal === false
+              ? styles['backdrop__body-backdrop___1rvky']
+              : styles['backdrop__body-backdrop___1rvky'] + ' ' + styles['backdrop__active___3kejv']
+          }
         />
         <Header
           menuData={menuData}

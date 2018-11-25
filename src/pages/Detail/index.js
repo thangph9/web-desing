@@ -115,6 +115,10 @@ class Detail extends PureComponent {
     });
   }
   setCookieDetail(product) {
+    this.props.dispatch({
+      type: 'list/modal',
+      payload: true,
+    });
     var productDetail = product;
     var local = localStorage.getItem(product.seo_link);
     this.setState({
@@ -122,10 +126,6 @@ class Detail extends PureComponent {
     });
     var listArr = [];
     var authorityString = '';
-    var cart = document.getElementById('cart-form');
-    cart.classList.add('order-components-global-cart-index-cart__active___Q2UCI');
-    var bodyModal = document.getElementById('body-modals');
-    bodyModal.classList.add('order-layouts-home-layout-backdrop__active___3kejv');
     if (local != null) {
       localStorage.setItem(product.seo_link, local + '|' + JSON.stringify(productDetail));
       for (var i = 0, len = localStorage.length; i < len; ++i) {

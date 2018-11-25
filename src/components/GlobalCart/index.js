@@ -226,10 +226,10 @@ class GlobalCart extends PureComponent {
     this.triggerResizeEvent();
   };
   handleClickButtonOut() {
-    var cart = document.getElementById('cart-form');
-    cart.classList.remove('order\\components\\-global-cart\\index-cart__active___Q2UCI');
-    var bodyModal = document.getElementById('body-modals');
-    bodyModal.classList.remove('order\\layouts\\-home-layout-backdrop__active___3kejv');
+    this.props.dispatch({
+      type: 'list/modal',
+      payload: false,
+    });
   }
   summary(listArr) {
     var obj = {};
@@ -259,8 +259,17 @@ class GlobalCart extends PureComponent {
     var authorityString = '';
     var { listArr } = this.props.list;
     console.log(listArr);
+    console.log(this.props.list.modal);
+    var { modal } = this.props.list;
     return (
-      <div id="cart-form" className={styles['cart__cart___yD7P6']}>
+      <div
+        id="cart-form"
+        className={
+          modal == false
+            ? styles['cart__cart___yD7P6']
+            : styles['cart__cart___yD7P6'] + ' ' + styles['cart__active___Q2UCI']
+        }
+      >
         <div className={styles['clearfix'] + ' ' + styles['cart__heading___1Yc0F']}>
           <div
             onClick={() => this.handleClickButtonOut()}

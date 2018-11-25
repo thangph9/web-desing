@@ -21,10 +21,10 @@ export default class GlobalHeader extends PureComponent {
     this.triggerResizeEvent();
   };
   handleClickButtonCart() {
-    var cart = document.getElementById('cart-form');
-    cart.classList.add('order-components-global-cart-index-cart__active___Q2UCI');
-    var bodyModal = document.getElementById('body-modals');
-    bodyModal.classList.add('order-layouts-home-layout-backdrop__active___3kejv');
+    this.props.dispatch({
+      type: 'list/modal',
+      payload: true,
+    });
   }
   render() {
     const { collapsed, isMobile, logo } = this.props;
