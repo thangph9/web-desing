@@ -227,9 +227,9 @@ class GlobalCart extends PureComponent {
   };
   handleClickButtonOut() {
     var cart = document.getElementById('cart-form');
-    cart.classList.remove('order-components-global-cart-index-cart__active___Q2UCI');
+    cart.classList.remove('order\\components\\-global-cart\\index-cart__active___Q2UCI');
     var bodyModal = document.getElementById('body-modals');
-    bodyModal.classList.remove('order-layouts-home-layout-backdrop__active___3kejv');
+    bodyModal.classList.remove('order\\layouts\\-home-layout-backdrop__active___3kejv');
   }
   summary(listArr) {
     var obj = {};
