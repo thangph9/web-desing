@@ -341,7 +341,6 @@ class Detail extends PureComponent {
       // eslint-disable-next-line camelcase
       huge_image = (
         <img
-          style={{ pointerEvents: 'none' }}
           key={imageChoose ? `huge${imageChoose}` : `huge${image_huge[0].replace(/\-/g, '')}`}
           className={`${styles['images-slider__image___wW9Yw']}`}
           src={`/images/f/${imageChoose || image_huge[0].replace(/\-/g, '')}`}
