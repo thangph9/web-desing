@@ -456,6 +456,7 @@ class ListCategory extends PureComponent {
     if (dataDetail) {
       dataDetail = Array.isArray(detail) ? detail : [];
     }
+    console.log(detail);
     return (
       <div className={styles['sale__col-md-8___34B6S']}>
         <ol
@@ -1033,13 +1034,16 @@ class ListCategory extends PureComponent {
   }
   render() {
     var { filter, test } = this.state;
-    console.log(this.state['abc']);
     var {
-      category: { list, breadcrumb },
+      category: { list },
     } = this.props;
-    var dataBreadcrumb = {};
-    if (dataBreadcrumb) {
-      dataBreadcrumb = typeof breadcrumb === 'object' ? breadcrumb : {};
+    var {
+      category: { detail },
+    } = this.props;
+    var dataDetail = [];
+    if (dataDetail) {
+      dataDetail = Array.isArray(detail) ? detail : [];
+      var dataBreadcrumb = typeof dataDetail[1] === 'object' ? dataDetail[1] : {};
       const title = dataBreadcrumb.title ? dataBreadcrumb.title : 'Danh sách sản phẩm';
       const meta_description = dataBreadcrumb.meta_description
         ? dataBreadcrumb.meta_description

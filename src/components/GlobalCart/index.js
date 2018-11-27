@@ -33,6 +33,8 @@ import { connect } from 'dva';
 import Slider from 'react-slick';
 import styles from './index.less';
 
+var currencyFormatter = require('currency-formatter');
+
 @connect(({ list }) => ({
   list,
 }))
@@ -104,6 +106,22 @@ class CartItem extends PureComponent {
           listArr.push(arr);
         }
       }
+    }
+    this.props.dispatch({
+      type: 'list/local',
+      payload: listArr,
+    });
+  }
+  handleRemoveItem(item) {
+    var listArr = [];
+    var authorityString = '';
+    localStorage.removeItem(item);
+    for (var i = 0, len = localStorage.length; i < len; ++i) {
+      authorityString = localStorage.getItem(localStorage.key(i))
+        ? localStorage.getItem(localStorage.key(i)).split('|')
+        : '';
+      var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
+      listArr.push(arr);
     }
     this.props.dispatch({
       type: 'list/local',
@@ -182,15 +200,18 @@ class CartItem extends PureComponent {
             >
               <div className={styles['cart__price___10cWN']}>
                 <span className={styles['cart__retail-price___1SKLf']}>
-                  {dataCart.price}
-                  &nbsp;đ
+                  {currencyFormatter.format(dataCart.price, { locale: 'vi-VN' })}
                 </span>
                 <span className={styles['cart__sale-price___3jWGr']}>
-                  {dataCart.sale_price}
+                  {currencyFormatter.format(dataCart.sale_price, { locale: 'vi-VN' })}
                   &nbsp;đ
                 </span>
               </div>
-              <a className={styles['cart__btn-remove___3IkR9']} href="javascript:void(0)">
+              <a
+                onClick={() => this.handleRemoveItem(dataCart.seo_link)}
+                className={styles['cart__btn-remove___3IkR9']}
+                href="javascript:void(0)"
+              >
                 Bỏ sản phẩm
               </a>
             </div>
@@ -260,6 +281,10 @@ class GlobalCart extends PureComponent {
     var { listArr } = this.props.list;
     console.log(listArr);
     console.log(this.props.list.modal);
+    var total = 0;
+    for (var i = 0; i < listArr.length; i++) {
+      total = total + listArr[i].length;
+    }
     var { modal } = this.props.list;
     return (
       <div
@@ -280,10 +305,11 @@ class GlobalCart extends PureComponent {
           </div>
           <h4 className={styles['cart__title___XIF0i']}>
             Giỏ hàng
-            <span>(0 Sản phẩm)</span>
+            <span>({total} Sản phẩm)</span>
           </h4>
         </div>
         <div
+          style={{ display: 'none' }}
           className={
             styles['partner-promote-section'] +
             ' ' +
@@ -359,8 +385,10 @@ class GlobalCart extends PureComponent {
                     className={styles['row__row___2roCA'] + ' ' + styles['cart__subtotal___b7ocn']}
                   >
                     <div className={styles['cart__col-6___7l1MC']}>
-                      Thành tiền: {this.summary(listArr).price}
-                      &nbsp;đ
+                      Thành tiền:{' '}
+                      {currencyFormatter.format(this.summary(listArr).sale_price, {
+                        locale: 'vi-VN',
+                      })}
                     </div>
                     <div className={styles['text-right'] + ' ' + styles['cart__col-6___7l1MC']}>
                       <span />
@@ -369,8 +397,10 @@ class GlobalCart extends PureComponent {
                   <div className={styles['row__row___2roCA']}>
                     <div className={styles['cart__col-6___7l1MC']}>
                       Bạn đã tiết kiệm:
-                      {this.summary(listArr).price - this.summary(listArr).sale_price}
-                      &nbsp;đ
+                      {currencyFormatter.format(
+                        this.summary(listArr).price - this.summary(listArr).sale_price,
+                        { locale: 'vi-VN' }
+                      )}
                     </div>
                     <div className={styles['text-right'] + ' ' + styles['cart__col-6___7l1MC']}>
                       <span />

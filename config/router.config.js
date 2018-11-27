@@ -11,6 +11,11 @@ export default [
     ],
   },
   {
+    path: '/checkout',
+    component: '../layouts/CheckoutLayout',
+    routes: [{ path: '/checkout', component: './Checkout/' }],
+  },
+  {
     path: '/',
     component: '../layouts/HomeLayout',
     Routes: ['src/pages/Authorized'],

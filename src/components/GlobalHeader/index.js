@@ -3,7 +3,9 @@ import Link from 'umi/link';
 import Debounce from 'lodash-decorators/debounce';
 import styles from './styles.less';
 
-export default class GlobalHeader extends PureComponent {
+// eslint-disable-next-line no-undef
+
+class GlobalHeader extends PureComponent {
   componentWillUnmount() {
     this.triggerResizeEvent.cancel();
   }
@@ -28,6 +30,11 @@ export default class GlobalHeader extends PureComponent {
   }
   render() {
     const { collapsed, isMobile, logo } = this.props;
+    var { listArr } = this.props.list;
+    var total = 0;
+    for (var i = 0; i < listArr.length; i++) {
+      total = total + listArr[i].length;
+    }
     return (
       <div className={`${styles.header__header___1t3MH}`}>
         <nav
@@ -156,7 +163,9 @@ export default class GlobalHeader extends PureComponent {
               }`}
               type="button"
             >
-              <i className={`${styles['ic-ic-bag']} ${styles['cart-button__icon___3QHeM']}`} />
+              <i className={`${styles['ic-ic-bag']} ${styles['cart-button__icon___3QHeM']}`}>
+                {total > 0 && <span className={styles['cart-button__badge___1tnYa']}>{total}</span>}
+              </i>
             </button>
           </div>
         </nav>
@@ -200,3 +209,4 @@ export default class GlobalHeader extends PureComponent {
     );
   }
 }
+export default GlobalHeader;
