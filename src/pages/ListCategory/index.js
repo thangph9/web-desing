@@ -1,3 +1,5 @@
+/* eslint-disable no-fallthrough */
+/* eslint-disable default-case */
 /* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable no-shadow */
 /* eslint-disable no-nested-ternary */
@@ -456,7 +458,20 @@ class ListCategory extends PureComponent {
     if (dataDetail) {
       dataDetail = Array.isArray(detail) ? detail : [];
     }
-    console.log(detail);
+    var link = '';
+    console.log(dataDetail[0]);
+    if (dataDetail[0] != undefined) {
+      switch (dataDetail[0].nodeid) {
+        case 'f4e2643d-3585-4bc9-a116-be9bd7c9b96f':
+          link = `/amazon`;
+        case 'ddb73d42-ac5b-4148-b4da-104010a766ce':
+          link = `/adidas`;
+        case `eb86db6f-7d34-4efc-8594-210f0d7cb9c5`:
+          link = `/adidas`;
+        case `a1ff473a-37cb-4a1d-b8f1-8b7b24afd842`:
+          link = `/nike`;
+      }
+    }
     return (
       <div className={styles['sale__col-md-8___34B6S']}>
         <ol
@@ -466,11 +481,11 @@ class ListCategory extends PureComponent {
         >
           {dataDetail.length > 0 && (
             <li className={styles['breadcrumb__breadcrumb-item___3ytpk']}>
-              <Link to={`/`}>{dataDetail.length > 0 ? dataDetail[0].title : ''}</Link>
+              <Link to={link}>{dataDetail.length > 0 ? dataDetail[0].title : ''}</Link>
             </li>
           )}
           <li className={styles['breadcrumb__breadcrumb-item___3ytpk']}>
-            <h1 to={`/`}>{dataDetail.length > 0 ? dataDetail[1].title : ''}</h1>
+            <h1>{dataDetail.length > 0 ? dataDetail[1].title : ''}</h1>
           </li>
         </ol>
       </div>
