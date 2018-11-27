@@ -461,20 +461,7 @@ class ListCategory extends PureComponent {
     var link = '';
     console.log(dataDetail[0]);
     if (dataDetail[0] != undefined) {
-      switch (dataDetail[0].nodeid) {
-        case 'f4e2643d-3585-4bc9-a116-be9bd7c9b96f':
-          link = `/amazon`;
-          break;
-        case 'ddb73d42-ac5b-4148-b4da-104010a766ce':
-          link = `/ebay`;
-          break;
-        case `eb86db6f-7d34-4efc-8594-210f0d7cb9c5`:
-          link = `/adidas`;
-          break;
-        case `a1ff473a-37cb-4a1d-b8f1-8b7b24afd842`:
-          link = `/nike`;
-          break;
-      }
+      link = dataDetail[0].seo_link;
     }
     return (
       <div className={styles['sale__col-md-8___34B6S']}>
