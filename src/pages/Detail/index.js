@@ -40,8 +40,8 @@
 /* eslint-disable dot-notation */
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
-import Slider from 'react-slick';
 import { connect } from 'dva';
+import Slider from 'react-slick';
 import DocumentTitle from 'react-document-title';
 import DocumentMeta from 'react-document-meta';
 import CountDown from '@/components/CountDown';
@@ -58,6 +58,7 @@ import {
   InputNumber,
   Radio,
   Icon,
+  Carousel,
   Tooltip,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -293,7 +294,6 @@ class Detail extends PureComponent {
     } = this.props;
     const { imageChoose } = this.state;
     const settings = {
-      dots: false,
       infinite: true,
       speed: 500,
       slidesToShow: 1,
@@ -393,7 +393,7 @@ class Detail extends PureComponent {
               styles['images-slider__slider-wrapper___1hmGf']
             }`}
           >
-            <Slider {...settings}>{HugeImageUI}</Slider>
+            <Slider>{HugeImageUI}</Slider>
             <div className={`${styles['images-slider__sold-out-overlay___2Avrv']}`}>Hết hàng</div>
           </div>
         </div>

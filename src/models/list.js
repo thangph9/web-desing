@@ -8,13 +8,19 @@
 import { queryFakeList, removeFakeList, addFakeList, updateFakeList } from '@/services/api';
 var listArr = [];
 var authorityString = '';
-for (var i = 0, len = localStorage.length; i < len; ++i) {
-  authorityString = localStorage.getItem(localStorage.key(i))
-    ? localStorage.getItem(localStorage.key(i)).split('|')
-    : '';
-  var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
-  listArr.push(arr);
+try {
+  for (var i = 0, len = localStorage.length; i < len; ++i) {
+    authorityString = localStorage.getItem(localStorage.key(i))
+      ? localStorage.getItem(localStorage.key(i)).split('|')
+      : '';
+    var arr =
+      (authorityString && authorityString) != '' ? authorityString.map(v => JSON.parse(v)) : [];
+    listArr.push(arr);
+  }
+} catch (e) {
+  console.log(e);
 }
+
 export default {
   namespace: 'list',
 

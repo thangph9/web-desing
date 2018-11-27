@@ -30,7 +30,6 @@
 import React, { PureComponent } from 'react';
 import Debounce from 'lodash-decorators/debounce';
 import { connect } from 'dva';
-import Slider from 'react-slick';
 import styles from './index.less';
 
 var currencyFormatter = require('currency-formatter');
@@ -204,7 +203,6 @@ class CartItem extends PureComponent {
                 </span>
                 <span className={styles['cart__sale-price___3jWGr']}>
                   {currencyFormatter.format(dataCart.sale_price, { locale: 'vi-VN' })}
-                  &nbsp;đ
                 </span>
               </div>
               <a
@@ -316,28 +314,26 @@ class GlobalCart extends PureComponent {
             styles['cart-promo-list__promote-section___VzfTM']
           }
         >
-          <Slider {...settings}>
-            <p
-              className={
-                styles['cart-promo-list__content___1N3l1'] +
-                ' ' +
-                styles['cart-promo-list__multi-item____Q_7w']
-              }
-            >
-              <span>Giảm giá </span>
-              <span className={styles['cart-promo-list__bold-text___1wUCM']}>200.000₫</span>
-              <span> cho thẻ </span>
-              <span className={styles['cart-promo-list__bold-text___1wUCM']}>VP Bank</span>
-              <span> khi mua hàng trên </span>
-              <span className={styles['cart-promo-list__bold-text___1wUCM']}>
-                <span>1.000.000₫</span>.
-              </span>
-              <a href="https://pages.leflair.vn/promotions" target="blank">
-                {' '}
-                Chi tiết→
-              </a>
-            </p>
-          </Slider>
+          <p
+            className={
+              styles['cart-promo-list__content___1N3l1'] +
+              ' ' +
+              styles['cart-promo-list__multi-item____Q_7w']
+            }
+          >
+            <span>Giảm giá </span>
+            <span className={styles['cart-promo-list__bold-text___1wUCM']}>200.000₫</span>
+            <span> cho thẻ </span>
+            <span className={styles['cart-promo-list__bold-text___1wUCM']}>VP Bank</span>
+            <span> khi mua hàng trên </span>
+            <span className={styles['cart-promo-list__bold-text___1wUCM']}>
+              <span>1.000.000₫</span>.
+            </span>
+            <a href="https://pages.leflair.vn/promotions" target="blank">
+              {' '}
+              Chi tiết→
+            </a>
+          </p>
         </div>
         <div
           style={{ height: 'calc(100% - 115px)' }}

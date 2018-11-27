@@ -1,6 +1,5 @@
 // https://umijs.org/config/
 import os from 'os';
-import path from 'path';
 import pageRoutes from './router.config';
 import webpackPlugin from './plugin.config';
 import defaultSettings from '../src/defaultSettings';
