@@ -230,7 +230,6 @@ function productCategory(req, res) {
           })
       },
       function(callback){
-          results.filter=renderFilter(results.items);
           callback(null,null);
       }
     ],
