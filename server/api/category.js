@@ -84,7 +84,8 @@ function generateMap(category,nodeid){
     children=getBreadcumb(category,node);
     parent.push(children[0]);
     var i=1;
-    while(children[0].category!=null && i < 100){
+    try{
+        while(children[0].category!=null && i < 100){
         if(children[0] && children[0].category && children[0].category.length > 0){
             node=children[0].category[0]
             children=getBreadcumb(category,node);
@@ -95,6 +96,10 @@ function generateMap(category,nodeid){
         }
         i++;
     }
+    }catch(e){
+        
+    }
+    
     return parent.reverse();
 }
 router.post('/CT',category);
