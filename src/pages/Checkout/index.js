@@ -1,3 +1,7 @@
+/* eslint-disable react/sort-comp */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/no-unused-state */
+/* eslint-disable no-undef */
 /* eslint-disable react/prefer-stateless-function */
 /* eslint-disable react/button-has-type */
 /* eslint-disable eqeqeq */
@@ -45,7 +49,11 @@ import {
   Radio,
   Icon,
   Tooltip,
+  Row,
+  Col,
+  Checkbox,
   Skeleton,
+  Cascader,
 } from 'antd';
 import styles from './index.less';
 
@@ -56,9 +64,40 @@ const { TextArea } = Input;
 
 @Form.create()
 class Checkout extends PureComponent {
-  state = {};
+  state = {
+    confirmDirty: false,
+    autoCompleteResult: [],
+  };
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
+    });
+  };
+
   componentDidMount() {}
   render() {
+    const { getFieldDecorator } = this.props.form;
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+      },
+    };
+    const prefixSelector = getFieldDecorator('prefix', {
+      initialValue: '84',
+    })(
+      <Select style={{ width: 70 }}>
+        <Option value="84">+84</Option>
+      </Select>
+    );
+    const tailFormItemLayout = {};
     return (
       <div className={styles['container__container___1fvX0']}>
         <div className={styles['process-indicator__indicator-section___Z-6r8']}>
@@ -134,364 +173,86 @@ class Checkout extends PureComponent {
           <p className={styles['continue__text-desc___ukUpu']}>
             Bạn có thể mua hàng không cần đăng ký, vui lòng nhập thông tin bên dưới để tiếp tục:
           </p>
-          <form>
-            <div className={styles['shipping-address__form-group___1dFdf']}>
-              <label htmlFor="email">Địa chỉ email</label>
-              <input
-                type="email"
-                className={styles['shipping-address__form-control___pWwJC']}
-                placeholder="example@example.com"
-                required
-              />
-              <small className={styles['shipping-address__small___2rluX']}>
-                Để nhận thông tin &amp; theo dõi đơn hàng
-              </small>
-            </div>
-            <div>
-              <h4 className={styles['shipping-address__title___3fcR4']}>Địa chỉ giao hàng</h4>
-              <fieldset>
-                <div
-                  className={
-                    styles['row__row___2roCA'] +
-                    ' ' +
-                    styles['shipping-address__form-group___1dFdf']
-                  }
-                >
-                  <div className={styles['shipping-address__col-6___2fe7q']}>
-                    <label htmlFor="last-name">Họ</label>
-                    <input
-                      type="text"
-                      className={styles['shipping-address__form-control___pWwJC']}
-                      name="lastName"
-                      id="last-name"
-                      placeholder="Họ"
-                      required
-                    />
-                  </div>
-                  <div className={styles['shipping-address__col-6___2fe7q']}>
-                    <label htmlFor="first-name">Tên</label>
-                    <input
-                      type="text"
-                      className={styles['shipping-address__form-control___pWwJC']}
-                      name="firstName"
-                      id="first-name"
-                      placeholder="Tên"
-                      required
-                    />
-                  </div>
-                </div>
-                <div
-                  className={styles['clearfix'] + ' ' + styles['text-input__form-group___2DnhG']}
-                >
-                  <label htmlFor="address">Địa chỉ</label>
-                  <span
-                    className={
-                      styles['float-right'] + ' ' + styles['text-input__text-muted___2iML-']
-                    }
-                  >
-                    0/70
-                  </span>
-                  <input
-                    id="address"
-                    name="address"
-                    placeholder="Ví dụ: 12 Tôn Đản, P. 13"
-                    className={styles['text-input__form-control___3hVs1']}
-                    required
-                    maxLength={70}
-                  />
-                </div>
-                <div className={styles['shipping-address__form-group___1dFdf']}>
-                  <label htmlFor="city">Tỉnh / Thành phố</label>
-                  <div
-                    style={{ padding: '0px' }}
-                    className={
-                      styles['shipping-address__select-style___2czfE'] +
-                      ' ' +
-                      styles['shipping-address__form-control___pWwJC']
-                    }
-                  >
-                    <select
-                      style={{ height: 'calc(2.688rem + 2px)' }}
-                      className={styles['shipping-address__form-control___pWwJC']}
-                      name="city"
-                      required
-                    >
-                      <option value>Chọn thành phố</option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1b4&quot;,&quot;name&quot;:&quot;Thành phố Hà Nội&quot;}">
-                        Thành phố Hà Nội
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1b9&quot;,&quot;name&quot;:&quot;Hồ Chí Minh&quot;}">
-                        Hồ Chí Minh
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1d6&quot;,&quot;name&quot;:&quot;Tiền Giang&quot;}">
-                        Tiền Giang
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1a4&quot;,&quot;name&quot;:&quot;Bình Định&quot;}">
-                        Bình Định
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1b2&quot;,&quot;name&quot;:&quot;Hà Giang&quot;}">
-                        Hà Giang
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1be&quot;,&quot;name&quot;:&quot;Kon Tum&quot;}">
-                        Kon Tum
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1c8&quot;,&quot;name&quot;:&quot;Phú Thọ&quot;}">
-                        Phú Thọ
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1ca&quot;,&quot;name&quot;:&quot;Quảng Bình&quot;}">
-                        Quảng Bình
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1db&quot;,&quot;name&quot;:&quot;Yên Bái&quot;}">
-                        Yên Bái
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1a1&quot;,&quot;name&quot;:&quot;Bạc Liêu&quot;}">
-                        Bạc Liêu
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1a7&quot;,&quot;name&quot;:&quot;Bình Thuận&quot;}">
-                        Bình Thuận
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1ab&quot;,&quot;name&quot;:&quot;Đà Nẵng&quot;}">
-                        Đà Nẵng
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1a3&quot;,&quot;name&quot;:&quot;Bến Tre&quot;}">
-                        Bến Tre
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1a0&quot;,&quot;name&quot;:&quot;Bắc Kạn&quot;}">
-                        Bắc Kạn
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1b0&quot;,&quot;name&quot;:&quot;Đồng Tháp&quot;}">
-                        Đồng Tháp
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1a6&quot;,&quot;name&quot;:&quot;Bình Phước&quot;}">
-                        Bình Phước
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1c4&quot;,&quot;name&quot;:&quot;Nam Định&quot;}">
-                        Nam Định
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1ae&quot;,&quot;name&quot;:&quot;Điện Biên&quot;}">
-                        Điện Biên
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1b5&quot;,&quot;name&quot;:&quot;Hà Tĩnh&quot;}">
-                        Hà Tĩnh
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1a5&quot;,&quot;name&quot;:&quot;Bình Dương&quot;}">
-                        Bình Dương
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1b3&quot;,&quot;name&quot;:&quot;Hà Nam&quot;}">
-                        Hà Nam
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1d4&quot;,&quot;name&quot;:&quot;Thanh Hóa&quot;}">
-                        Thanh Hóa
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f19f&quot;,&quot;name&quot;:&quot;Bắc Giang&quot;}">
-                        Bắc Giang
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f19e&quot;,&quot;name&quot;:&quot;Bà Rịa Vũng Tàu&quot;}">
-                        Bà Rịa Vũng Tàu
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1b8&quot;,&quot;name&quot;:&quot;Hậu Giang&quot;}">
-                        Hậu Giang
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1cc&quot;,&quot;name&quot;:&quot;Quảng Ngãi&quot;}">
-                        Quảng Ngãi
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1c9&quot;,&quot;name&quot;:&quot;Phú Yên&quot;}">
-                        Phú Yên
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1bd&quot;,&quot;name&quot;:&quot;Kiên Giang&quot;}">
-                        Kiên Giang
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1cb&quot;,&quot;name&quot;:&quot;Quảng Nam&quot;}">
-                        Quảng Nam
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1ce&quot;,&quot;name&quot;:&quot;Quảng Trị&quot;}">
-                        Quảng Trị
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1c2&quot;,&quot;name&quot;:&quot;Lào Cai&quot;}">
-                        Lào Cai
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1d7&quot;,&quot;name&quot;:&quot;Trà Vinh&quot;}">
-                        Trà Vinh
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1cf&quot;,&quot;name&quot;:&quot;Sóc Trăng&quot;}">
-                        Sóc Trăng
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1c6&quot;,&quot;name&quot;:&quot;Ninh Bình&quot;}">
-                        Ninh Bình
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1d1&quot;,&quot;name&quot;:&quot;Tây Ninh&quot;}">
-                        Tây Ninh
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1cd&quot;,&quot;name&quot;:&quot;Quảng Ninh&quot;}">
-                        Quảng Ninh
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1a2&quot;,&quot;name&quot;:&quot;Bắc Ninh&quot;}">
-                        Bắc Ninh
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1d0&quot;,&quot;name&quot;:&quot;Sơn La&quot;}">
-                        Sơn La
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1ad&quot;,&quot;name&quot;:&quot;Đắk Nông&quot;}">
-                        Đắk Nông
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1b7&quot;,&quot;name&quot;:&quot;Hải Phòng&quot;}">
-                        Hải Phòng
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1a9&quot;,&quot;name&quot;:&quot;Cần Thơ&quot;}">
-                        Cần Thơ
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f19d&quot;,&quot;name&quot;:&quot;An Giang&quot;}">
-                        An Giang
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1b6&quot;,&quot;name&quot;:&quot;Hải Dương&quot;}">
-                        Hải Dương
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1c0&quot;,&quot;name&quot;:&quot;Lâm Đồng&quot;}">
-                        Lâm Đồng
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1ac&quot;,&quot;name&quot;:&quot;Đắk Lắk&quot;}">
-                        Đắk Lắk
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1da&quot;,&quot;name&quot;:&quot;Vĩnh Phúc&quot;}">
-                        Vĩnh Phúc
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1d3&quot;,&quot;name&quot;:&quot;Thái Nguyên&quot;}">
-                        Thái Nguyên
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1aa&quot;,&quot;name&quot;:&quot;Cao Bằng&quot;}">
-                        Cao Bằng
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1af&quot;,&quot;name&quot;:&quot;Đồng Nai&quot;}">
-                        Đồng Nai
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1d5&quot;,&quot;name&quot;:&quot;Thừa Thiên – Huế&quot;}">
-                        Thừa Thiên – Huế
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1c7&quot;,&quot;name&quot;:&quot;Ninh Thuận&quot;}">
-                        Ninh Thuận
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1b1&quot;,&quot;name&quot;:&quot;Gia Lai&quot;}">
-                        Gia Lai
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1d8&quot;,&quot;name&quot;:&quot;Tuyên Quang&quot;}">
-                        Tuyên Quang
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1bf&quot;,&quot;name&quot;:&quot;Lai Châu&quot;}">
-                        Lai Châu
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1c1&quot;,&quot;name&quot;:&quot;Lạng Sơn&quot;}">
-                        Lạng Sơn
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1d9&quot;,&quot;name&quot;:&quot;Vĩnh Long&quot;}">
-                        Vĩnh Long
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1ba&quot;,&quot;name&quot;:&quot;Hòa Bình&quot;}">
-                        Hòa Bình
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1bc&quot;,&quot;name&quot;:&quot;Khánh Hòa&quot;}">
-                        Khánh Hòa
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1c5&quot;,&quot;name&quot;:&quot;Nghệ An&quot;}">
-                        Nghệ An
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1d2&quot;,&quot;name&quot;:&quot;Thái Bình&quot;}">
-                        Thái Bình
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1a8&quot;,&quot;name&quot;:&quot;Cà Mau&quot;}">
-                        Cà Mau
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1bb&quot;,&quot;name&quot;:&quot;Hưng Yên&quot;}">
-                        Hưng Yên
-                      </option>
-                      <option value="{&quot;id&quot;:&quot;578c1c2c4bda02a85e93f1c3&quot;,&quot;name&quot;:&quot;Long An&quot;}">
-                        Long An
-                      </option>
-                    </select>
-                  </div>
-                </div>
-                <div className={styles['shipping-address__form-group___1dFdf']}>
-                  <label htmlFor="district">Quận / Huyện</label>
-                  <div
-                    style={{ padding: '0px' }}
-                    className={
-                      styles['shipping-address__select-style___2czfE'] +
-                      ' ' +
-                      styles['shipping-address__form-control___pWwJC']
-                    }
-                  >
-                    <select
-                      style={{ height: 'calc(2.688rem + 2px)' }}
-                      className={styles['shipping-address__form-control___pWwJC']}
-                      name="district"
-                      required
-                    >
-                      <option value>Chọn quận</option>
-                    </select>
-                  </div>
-                </div>
-                <div
-                  className={styles['clearfix'] + ' ' + styles['text-input__form-group___2DnhG']}
-                >
-                  <label htmlFor="phone">Số điện thoại</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    placeholder="0978111000"
-                    className={styles['text-input__form-control___3hVs1']}
-                    defaultValue
-                    required
-                    maxLength={13}
-                    pattern="^0[0-9]{9,12}$"
-                  />
-                  <small
-                    className={
-                      styles['text-input__form-text___1bYda'] +
-                      ' ' +
-                      styles['text-input__text-muted___2iML-']
-                    }
-                  >
-                    Để xác nhận đơn hàng
-                  </small>
-                </div>
-                <div className={styles['shipping-address__form-group___1dFdf']}>
-                  <label
-                    className={
-                      styles['shipping-address__custom-control___3h9xG'] +
-                      ' ' +
-                      styles['shipping-address__custom-checkbox___1xHa2']
-                    }
-                  >
-                    <input
-                      style={{ marginRight: '5px', position: 'relative', top: '2px' }}
-                      type="checkbox"
-                      className={styles['shipping-address__custom-control-input___2CNFH']}
-                      name="duplicateBilling"
-                      defaultValue="on"
-                    />
-                    <span
-                      className={styles['shipping-address__custom-control-description___3LfCP']}
-                    >
-                      Sử dụng địa chỉ này trên hóa đơn
-                    </span>
-                  </label>
-                </div>
-              </fieldset>
-              <button
-                className={
-                  styles['shipping-address__btn___23gq5'] +
-                  ' ' +
-                  styles['shipping-address__btn-primary___1t_Pj'] +
-                  ' ' +
-                  styles['shipping-address__btn-save___3RZIn']
-                }
-                type="submit"
-                value="submit"
-              >
-                Lưu &amp; Tiếp tục
-              </button>
-            </div>
-          </form>
+          <Form onSubmit={this.handleSubmit}>
+            <FormItem {...formItemLayout} label="Địa chỉ E-mail">
+              {getFieldDecorator('email', {
+                rules: [
+                  {
+                    type: 'email',
+                    message: 'Địa chỉ E-mail chưa hợp lệ!',
+                  },
+                  {
+                    required: true,
+                    message: 'Vui long nhập địa chỉ E-mail!',
+                  },
+                ],
+              })(<Input />)}
+            </FormItem>
+            <FormItem {...formItemLayout} label="Địa chỉ">
+              {getFieldDecorator('address', {
+                rules: [
+                  {
+                    required: true,
+                    message: 'Vui lòng nhập địa chỉ của bạn!',
+                  },
+                ],
+              })(<Input type="text" />)}
+            </FormItem>
+            <FormItem {...formItemLayout} label={<span>Họ và tên đệm&nbsp;</span>}>
+              {getFieldDecorator('firstname', {
+                rules: [
+                  {
+                    required: true,
+                    message: 'Vui lòng nhập họ và tên đệm của bạn!',
+                    whitespace: true,
+                  },
+                ],
+              })(<Input />)}
+            </FormItem>
+            <FormItem {...formItemLayout} label={<span>Tên&nbsp;</span>}>
+              {getFieldDecorator('lastname', {
+                rules: [
+                  { required: true, message: 'Vui lòng nhập tên của bạn!', whitespace: true },
+                ],
+              })(<Input />)}
+            </FormItem>
+            <FormItem {...formItemLayout} label="Số điện thoại">
+              {getFieldDecorator('phone', {
+                rules: [{ required: true, message: 'Vui lòng nhập số điện thoại!' }],
+              })(<Input addonBefore={prefixSelector} style={{ width: '100%' }} />)}
+            </FormItem>
+
+            <FormItem
+              {...formItemLayout}
+              label="Captcha"
+              extra="We must make sure that your are a human."
+            >
+              <Row gutter={8}>
+                <Col span={12}>
+                  {getFieldDecorator('captcha', {
+                    rules: [{ required: true, message: 'Please input the captcha you got!' }],
+                  })(<Input />)}
+                </Col>
+                <Col span={12}>
+                  <Button>Get captcha</Button>
+                </Col>
+              </Row>
+            </FormItem>
+            <FormItem {...tailFormItemLayout}>
+              {getFieldDecorator('agreement', {
+                valuePropName: 'checked',
+              })(
+                <Checkbox>
+                  I have read the <a href="">agreement</a>
+                </Checkbox>
+              )}
+            </FormItem>
+            <FormItem {...tailFormItemLayout}>
+              <Button type="primary" htmlType="submit">
+                Register
+              </Button>
+            </FormItem>
+          </Form>
         </div>
       </div>
     );

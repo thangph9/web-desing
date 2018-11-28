@@ -143,7 +143,6 @@ class Amazon extends PureComponent {
         className={`${styles['hidden-md-down']} ${
           styles['first-sale-tile__first-sale-desktop___3DYvl']
         }`}
-        href="/sales/giam-den-50-blackmoresr-thuc-pham-chuc-nang-tu-uc-5bd6c3137cf0476b22488d23"
       >
         <div className={`${styles['row__row___2roCA']}`}>
           <div
@@ -155,7 +154,7 @@ class Amazon extends PureComponent {
               src={`/images/f/${dataList != undefined &&
                 dataList.length > 0 &&
                 dataList[0].thumbnail.replace(/\-/g, '')}`}
-              alt="Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc"
+              alt={dataList.title}
             />
           </div>
           <div
@@ -212,7 +211,7 @@ class Amazon extends PureComponent {
               src={`/images/f/${dataList != undefined &&
                 dataList.length > 0 &&
                 dataList[0].thumbnail.replace(/\-/g, '')}`}
-              alt="Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc"
+              alt={dataList.title}
             />
           </div>
           <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
@@ -244,7 +243,7 @@ class Amazon extends PureComponent {
       >
         <div className={`${styles['row__row___2roCA']}`}>
           <div className={`${styles['first-sale-tile__first-sale-container___12AH9']}`}>
-            {this.renderBanner()}
+            {dataList.length > 0 ? this.renderBanner() : ''}
             {this.renderBannerMoblie()}
           </div>
 
