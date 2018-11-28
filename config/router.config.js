@@ -31,13 +31,6 @@ export default [
         path: '/home',
         name: 'home',
         component: './Home/',
-        routes: [
-          {
-            path: '/home/monitor',
-            name: 'monitor',
-            component: './Dashboard/Monitor',
-          },
-        ],
       },
       {
         path: '/exception',
@@ -104,6 +97,9 @@ export default [
         path: '/category/:title/:nodeid',
         name: 'listcategory',
         component: './ListCategory/',
+      },
+      {
+        component: '404',
       },
     ],
   },

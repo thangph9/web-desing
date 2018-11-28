@@ -60,7 +60,7 @@ if (!module.parent) {
   http.createServer(function (req, res) {
     res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
     res.end();
-  }).listen(80);
+  }).listen(8000);
  
   /*  
   app.listen(80,function(){

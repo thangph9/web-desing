@@ -57,7 +57,7 @@ function category(req,res){
              
           },
           function(callback){
-              if(nodeid!='' && nodeid !=undefined){
+              if(nodeid!='' && nodeid !=undefined && category.length > 0 ){
                   result.breadcrumb=generateMap(category,nodeid);
                   result.current=category.filter(e=> e.nodeid.toString()==nodeid)[0]
               }
@@ -84,7 +84,8 @@ function generateMap(category,nodeid){
     children=getBreadcumb(category,node);
     parent.push(children[0]);
     var i=1;
-    while(children[0].category!=null && i < 100){
+    try{
+        while(children[0].category!=null && i < 100){
         if(children[0] && children[0].category && children[0].category.length > 0){
             node=children[0].category[0]
             children=getBreadcumb(category,node);
@@ -94,6 +95,9 @@ function generateMap(category,nodeid){
            parent.push(children[0]);
         }
         i++;
+    }
+    }catch(e){
+        parent=[]
     }
     return parent.reverse();
 }
