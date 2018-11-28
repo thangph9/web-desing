@@ -13,7 +13,10 @@ export default [
   {
     path: '/checkout',
     component: '../layouts/CheckoutLayout',
-    routes: [{ path: '/checkout', component: './Checkout/' }],
+    routes: [
+      { path: '/checkout', component: './Checkout/' },
+      { path: '/checkout/paycomplete', component: './PayCompleted/' },
+    ],
   },
   {
     path: '/',

@@ -349,9 +349,7 @@ class ListCategory extends PureComponent {
     });
     this.setState({}, () => {
       var result = this.state.total.split('&');
-      console.log(result);
       result.splice(result.length - 2, 2);
-      console.log(result);
       this.setState(
         {
           search:
@@ -386,9 +384,7 @@ class ListCategory extends PureComponent {
           type: filter == 'type' ? [...this.state.type, title] : this.state.type,
           brand: filter == 'brand' ? [...this.state.brand, title] : this.state.brand,
         },
-        () => {
-          console.log(this.state);
-        }
+        () => {}
       );
     } else {
       var arr = this.state[filter].filter(v => {
@@ -401,9 +397,7 @@ class ListCategory extends PureComponent {
           type: filter == 'type' ? arr : this.state.type,
           brand: filter == 'brand' ? arr : this.state.brand,
         },
-        () => {
-          console.log(this.state);
-        }
+        () => {}
       );
     }
     this.setState({}, () => {
@@ -435,7 +429,6 @@ class ListCategory extends PureComponent {
   }
   handleClick(obj) {
     if (obj.id) {
-      console.log(obj);
       this.setState({
         [obj.id]: !this.state[obj.id],
       });
@@ -458,11 +451,18 @@ class ListCategory extends PureComponent {
     if (dataDetail) {
       dataDetail = Array.isArray(detail) ? detail : [];
     }
-    var link = '';
-    console.log(dataDetail[0]);
+    var link = '/';
     if (dataDetail[0] != undefined) {
-      link = dataDetail[0].seo_link;
+      if (
+        dataDetail[0].seo_link == 'amazon' ||
+        dataDetail[0].seo_link == 'ebay' ||
+        dataDetail[0].seo_link == 'nike' ||
+        dataDetail[0].seo_link == 'adidas'
+      ) {
+        link += dataDetail[0].seo_link;
+      }
     }
+    console.log(link);
     return (
       <div className={styles['sale__col-md-8___34B6S']}>
         <ol
