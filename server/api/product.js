@@ -134,7 +134,7 @@ function productDetail(req, res) {
         callback(null, null);
       },
       function(callback) {
-        models.instance.product_detail.find({ productid: productid }, function(err, res) {
+        models.instance.product_detail.find({ productid }, function(err, res) {
           if (res && res.length >0) {
             results = res[0];
             if(nodeid==''){
@@ -212,9 +212,9 @@ function productCategory(req, res) {
         models.instance.product_detail.find(
           { $solr_query: '{"q": "nodeid: *' + PARAMS_IS_VALID['nodeid'] + '*"}' },
           { select: ['title', 'thumbnail','seo_link','nodeid','productid','sale','price','seller','brand','sale_price'] },
-          function(err, res) {
-            if (res) {
-              results['items'] = res;
+          function(err, rs) {
+            if (rs) {
+              results['items'] = rs;
             }
             callback(err, null);
           }
@@ -230,7 +230,6 @@ function productCategory(req, res) {
           })
       },
       function(callback){
-          result.filter=renderFilter(res);
           callback(null,null);
       }
     ],
@@ -431,7 +430,6 @@ function productSearch(req,res){
         callback(null, null);
       },
       function(callback) {
-        console.log(query);
         models.instance.product_detail.find({$solr_query: query}, function(err, res) {
           if (res) {
             results = res;
