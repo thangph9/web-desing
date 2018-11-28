@@ -110,6 +110,7 @@ function productDetail(req, res) {
             rawProductid.substring(15, 20) +
             '-' +
             rawProductid.substring(20, 32);
+            
             productid = models.uuidFromString(uuid);
             if(req.body.nodeid){
                 let rawNodeid=req.body.nodeid;
@@ -227,7 +228,11 @@ function productCategory(req, res) {
               
               callback(err,null);
           })
-      }    
+      },
+      function(callback){
+          result.filter=renderFilter(res);
+          callback(null,null);
+      }
     ],
     function(err, result) {
       if (err) return res.send({ status: 'error' });
@@ -326,9 +331,9 @@ function productAdidas(req,res){
         res.send({status: 'ok',data: results});
     })
 }
-
 function productSearch(req,res){
   let results = {};
+  let filterMap={};
   let raito = {};
   let query={};
   let sort='';
@@ -426,7 +431,7 @@ function productSearch(req,res){
         callback(null, null);
       },
       function(callback) {
-          console.log(query);
+        console.log(query);
         models.instance.product_detail.find({$solr_query: query}, function(err, res) {
           if (res) {
             results = res;
@@ -434,10 +439,17 @@ function productSearch(req,res){
           callback(err, null);
         });
       },
+      function(callback){
+          renderFilter(results,function(err,r){
+              filterMap=r;
+              callback(err,null);
+          });
+          
+      }    
     ],
     function(err, result) {
       if (err) return res.send({ status: 'error' });
-      res.send({ status: 'ok', data:{list: results,pagination: {total : results.length,current: current}}});
+      res.send({ status: 'ok', data:{list: results,pagination: {total : results.length,current: current} , filterMap: filterMap}});
     }
   );
 }
@@ -467,6 +479,60 @@ function generateMap(category,nodeid){
         i++;
     }
     return parent.reverse();
+}
+
+function renderFilter(result,callback){
+    let filterMap={};
+    filterMap.style=[];
+    filterMap.color=[];
+    filterMap.size=[];
+    filterMap.brand=[];
+    filterMap.type=[];
+    async.series([
+        function(callback){
+            result.map(e=>{
+                if(e.style && e.style.length > 0 ){
+                    filterMap.style.push(e.style);  
+                }
+                if(e.color && e.color.length > 0){
+                    filterMap.color.push(e.color);   
+                }
+                if(e.size && e.size.length > 0){
+                    filterMap.size.push(e.size);   
+                }
+                if(e.brand && e.brand.length > 0){
+                    filterMap.brand.push(e.brand);   
+                }
+                if(e.type && e.type.length > 0){
+                    filterMap.type.push(e.type);   
+                }
+            })
+            callback(null,null)
+        },
+        function(callback){
+            filterMap.style = filterMap.style.filter(function(elem, pos) {
+                return filterMap.style.indexOf(elem) == pos;
+            })
+            filterMap.color = filterMap.color.filter(function(elem, pos) {
+                return filterMap.color.indexOf(elem) == pos;
+            })
+            filterMap.size = filterMap.size.filter(function(elem, pos) {
+                return filterMap.size.indexOf(elem) == pos;
+            })
+            filterMap.brand = filterMap.brand.filter(function(elem, pos) {
+                return filterMap.brand.indexOf(elem) == pos;
+            })
+            filterMap.type = filterMap.type.filter(function(elem, pos) {
+                return filterMap.type.indexOf(elem) == pos;
+            })
+            callback(null,null)
+        }
+    ],function(err, res){
+        callback(err,filterMap);
+    })
+    
+    
+    
 }
 
 function treeMapBreadCumb(category,nodeid,callback){

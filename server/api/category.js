@@ -57,7 +57,7 @@ function category(req,res){
              
           },
           function(callback){
-              if(nodeid!='' && nodeid !=undefined){
+              if(nodeid!='' && nodeid !=undefined && category.length > 0 ){
                   result.breadcrumb=generateMap(category,nodeid);
                   result.current=category.filter(e=> e.nodeid.toString()==nodeid)[0]
               }
