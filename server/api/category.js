@@ -97,9 +97,8 @@ function generateMap(category,nodeid){
         i++;
     }
     }catch(e){
-        
+        parent=[]
     }
-    
     return parent.reverse();
 }
 router.post('/CT',category);
