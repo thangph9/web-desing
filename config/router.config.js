@@ -99,6 +99,11 @@ export default [
         component: './ListCategory/',
       },
       {
+        path: '/register',
+        name: 'register',
+        component: './Register/',
+      },
+      {
         component: '404',
       },
     ],

@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-else-return */
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-unneeded-ternary */
@@ -75,9 +76,7 @@ class ProductItem extends PureComponent {
     return (
       <Link
         to={`/category/${seoTitle}`}
-        className={`${styles['default__col-md-6___9I2wX']} ${
-          styles['default__padding-remove___2T9LM']
-        }`}
+        className={`${styles['home__col-md-6___2zJjj']} ${styles['home__paddingRemove___3EmRr']}`}
         href="/sales/nanas-wonderland-windmill-nutritionworks...-5bd98f1f6ada6d0bdd52fc2f"
       >
         <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
@@ -254,7 +253,7 @@ class Adidas extends PureComponent {
   renderNews() {
     const {
       product: {
-        list: { news },
+        adidas: { news },
       },
     } = this.props;
     let data = news ? news : [];
@@ -375,10 +374,8 @@ class Adidas extends PureComponent {
   }
   render() {
     const {
-      product: {
-        list: { news, days, hotday },
-      },
-    } = this.props;
+      adidas: { news },
+    } = this.props.product;
     const meta = {
       title: 'Adidas',
       description: null,
@@ -390,12 +387,8 @@ class Adidas extends PureComponent {
         },
       },
     };
-    let seoTitle = '';
-    let nodeid = '';
-    if (news != undefined && news.length > 0) {
-      nodeid = news[0].nodeid ? news[0].nodeid.replace(/\-/g, '') : 'null';
-      seoTitle = news[0].seo_link + '/' + nodeid;
-    }
+
+    var seoTitle = '';
     return (
       <DocumentMeta {...meta}>
         <div

@@ -13,7 +13,7 @@ export default {
     list: [],
     detail: {},
     amazon: [],
-    adidas: [],
+    adidas: {},
     nike: [],
     ebay: [],
   },
@@ -88,7 +88,7 @@ export default {
         if (response.status === 'ok') {
           yield put({
             type: 'queryListNike',
-            payload: Array.isArray(response.data) ? response.data : [],
+            payload: response.data ? response.data : [],
           });
         } else {
           yield put({
@@ -109,7 +109,7 @@ export default {
         if (response.status === 'ok') {
           yield put({
             type: 'queryListAdidas',
-            payload: Array.isArray(response.data) ? response.data : [],
+            payload: typeof response.data === 'object' ? response.data : {},
           });
         } else {
           yield put({
@@ -170,7 +170,7 @@ export default {
     queryListAdidas(state, action) {
       return {
         ...state,
-        list: action.payload,
+        adidas: action.payload,
       };
     },
   },

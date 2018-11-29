@@ -5,6 +5,7 @@ export default {
   state: {
     list: [],
     breadcrumb: {},
+    sort: {},
   },
 
   effects: {
@@ -39,7 +40,7 @@ export default {
         if (response.status === 'ok') {
           yield put({
             type: 'querySort',
-            payload: Array.isArray(response.data.list) ? response.data.list : [],
+            payload: typeof response.data.filterMap === 'object' ? response.data.filterMap : {},
             breadcrumb:
               typeof response.data.breadcrumb === 'object' ? response.data.breadcrumb : {},
           });
@@ -92,7 +93,7 @@ export default {
     querySort(state, action) {
       return {
         ...state,
-        list: action.payload,
+        sort: action.payload,
         breadcrumb: action.breadcrumb,
       };
     },
