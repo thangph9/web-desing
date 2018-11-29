@@ -1,3 +1,5 @@
+/* eslint-disable import/order */
+/* eslint-disable no-continue */
 /* eslint-disable no-redeclare */
 /* eslint-disable block-scoped-var */
 /* eslint-disable eqeqeq */
@@ -31,6 +33,7 @@ import React, { PureComponent } from 'react';
 import Debounce from 'lodash-decorators/debounce';
 import { connect } from 'dva';
 import styles from './index.less';
+import Link from 'umi/link';
 
 var currencyFormatter = require('currency-formatter');
 
@@ -53,6 +56,9 @@ class CartItem extends PureComponent {
         [id[0].title]: Number(event.target.value),
       });
       for (var i = 0, len = localStorage.length; i < len; ++i) {
+        if (localStorage.key(i) == 'Information') {
+          continue;
+        }
         if (i == index) {
           authorityString = localStorage.getItem(localStorage.key(i))
             ? localStorage
@@ -88,6 +94,9 @@ class CartItem extends PureComponent {
         i++;
       }
       for (var i = 0, len = localStorage.length; i < len; ++i) {
+        if (localStorage.key(i) == 'Information') {
+          continue;
+        }
         if (i == index) {
           authorityString = localStorage.getItem(localStorage.key(i))
             ? localStorage.getItem(localStorage.key(i)).split('|')
@@ -116,6 +125,9 @@ class CartItem extends PureComponent {
     var authorityString = '';
     localStorage.removeItem(item);
     for (var i = 0, len = localStorage.length; i < len; ++i) {
+      if (localStorage.key(i) == 'Information') {
+        continue;
+      }
       authorityString = localStorage.getItem(localStorage.key(i))
         ? localStorage.getItem(localStorage.key(i)).split('|')
         : '';
@@ -277,8 +289,6 @@ class GlobalCart extends PureComponent {
     };
     var authorityString = '';
     var { listArr } = this.props.list;
-    console.log(listArr);
-    console.log(this.props.list.modal);
     var total = 0;
     for (var i = 0; i < listArr.length; i++) {
       total = total + listArr[i].length;
@@ -403,19 +413,20 @@ class GlobalCart extends PureComponent {
                     </div>
                   </div>
                   <div className={styles['cart__btn-proceed-checkout-dt___YP2ij']}>
-                    <button
-                      href="javascript:void(0)"
-                      className={
-                        styles['cart__btn___1bOR1'] +
-                        ' ' +
-                        styles['cart__btn-proceed-checkout___1xAEz'] +
-                        ' ' +
-                        styles['cart__btn-primary___2una7']
-                      }
-                      id="btn-proceed-checkout"
-                    >
-                      Tiến Hành Đặt Hàng
-                    </button>
+                    <Link to={'/checkout'}>
+                      <button
+                        className={
+                          styles['cart__btn___1bOR1'] +
+                          ' ' +
+                          styles['cart__btn-proceed-checkout___1xAEz'] +
+                          ' ' +
+                          styles['cart__btn-primary___2una7']
+                        }
+                        id="btn-proceed-checkout"
+                      >
+                        Tiến Hành Đặt Hàng
+                      </button>
+                    </Link>
                   </div>
                 </div>
               )}

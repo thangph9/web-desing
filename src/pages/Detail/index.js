@@ -1,3 +1,4 @@
+/* eslint-disable no-continue */
 /* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/no-unused-state */
@@ -133,6 +134,9 @@ class Detail extends PureComponent {
     if (local != null) {
       localStorage.setItem(product.seo_link, local + '|' + JSON.stringify(productDetail));
       for (var i = 0, len = localStorage.length; i < len; ++i) {
+        if (localStorage.key(i) == 'Information') {
+          continue;
+        }
         authorityString = localStorage.getItem(localStorage.key(i))
           ? localStorage.getItem(localStorage.key(i)).split('|')
           : '';
@@ -147,6 +151,9 @@ class Detail extends PureComponent {
     } else {
       localStorage.setItem(product.seo_link, JSON.stringify(productDetail));
       for (var i = 0, len = localStorage.length; i < len; ++i) {
+        if (localStorage.key(i) == 'Information') {
+          continue;
+        }
         authorityString = localStorage.getItem(localStorage.key(i))
           ? localStorage.getItem(localStorage.key(i)).split('|')
           : '';
@@ -167,7 +174,6 @@ class Detail extends PureComponent {
       type: 'list/value',
       payload: this.props.list.value + 1,
     });
-    console.log(listArr);
   }
   getAuthority() {
     const authorityString = localStorage.getItem('detail-product');
@@ -195,7 +201,6 @@ class Detail extends PureComponent {
     if (root && root.clientWidth > 991) {
       var pos_x = e.nativeEvent.offsetX;
       var pos_y = e.nativeEvent.offsetY;
-      console.log(pos_x + ' ' + pos_y);
       document.getElementById('zoom-image').style.position = 'absolute';
       document.getElementById('zoom-image').style.left = `${-pos_x}px`;
       document.getElementById('zoom-image').style.top = `${-pos_y}px`;
@@ -487,7 +492,6 @@ class Detail extends PureComponent {
       detailCookie.title = detail.title;
       detailCookie['seo_link'] = detail.seo_link;
     }
-    console.log(detail['_price']);
     return (
       <DocumentMeta {...meta}>
         <div id="app__body___3NlTJ">

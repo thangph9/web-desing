@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable react/sort-comp */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/no-unused-state */
@@ -35,7 +36,7 @@
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import {
@@ -61,7 +62,9 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
-
+@connect(({ list }) => ({
+  list,
+}))
 @Form.create()
 class Checkout extends PureComponent {
   state = {
@@ -72,13 +75,19 @@ class Checkout extends PureComponent {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        localStorage.setItem('Information', JSON.stringify(values));
       }
     });
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.dispatch({
+      type: 'list/modal',
+      payload: false,
+    });
+  }
   render() {
+    const Information = JSON.parse(localStorage.getItem('Information'));
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: {
@@ -98,164 +107,170 @@ class Checkout extends PureComponent {
       </Select>
     );
     const tailFormItemLayout = {};
-    return (
-      <div className={styles['container__container___1fvX0']}>
-        <div className={styles['process-indicator__indicator-section___Z-6r8']}>
-          <div className={styles['process-indicator__indicator-wrap___3PSK7']}>
-            <div
-              className={
-                styles['process-indicator__step___2m61M'] +
-                ' ' +
-                styles['process-indicator__completed___2UpYW']
-              }
-            >
-              <i className={styles['false'] + ' ' + styles['process-indicator__icon___G4w8B']}> </i>
-              <span>Địa chỉ / Đăng nhập</span>
-            </div>
-            <div className={styles['process-indicator__step___2m61M'] + ' ' + styles['false']}>
-              <span>Thanh toán</span>
+    if (Information != null) {
+      return <Redirect to="/checkout/paycomplete" />;
+    } else {
+      return (
+        <div className={styles['container__container___1fvX0']}>
+          <div className={styles['process-indicator__indicator-section___Z-6r8']}>
+            <div className={styles['process-indicator__indicator-wrap___3PSK7']}>
+              <div
+                className={
+                  styles['process-indicator__step___2m61M'] +
+                  ' ' +
+                  styles['process-indicator__completed___2UpYW']
+                }
+              >
+                <i className={styles['false'] + ' ' + styles['process-indicator__icon___G4w8B']}>
+                  {' '}
+                </i>
+                <span>Địa chỉ / Đăng nhập</span>
+              </div>
+              <div className={styles['process-indicator__step___2m61M'] + ' ' + styles['false']}>
+                <span>Thanh toán</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          className={
-            styles['continue__col-lg-6___1PrwO'] +
-            ' ' +
-            styles['continue__col-md-8___1o6n8'] +
-            ' ' +
-            styles['continue__offset-lg-3___1DXQF'] +
-            ' ' +
-            styles['continue__offset-md-2___2e4Qq'] +
-            ' ' +
-            styles['continue__continueContainer___29VZv']
-          }
-        >
-          <h3 className={styles['continue__title___24Yiu']}>Đã là thành viên?</h3>
-          <p className={styles['continue__text-desc___ukUpu']}>
-            Đăng nhập để thanh toán nhanh và theo dõi đơn hàng.
-          </p>
-          <p>
-            <a
-              href="/api/v2/account/facebook?redirect=https://www.leflair.vn/checkout "
-              id="btn-facebook-signin-checkout"
-              className={
-                styles['facebook-sign-in-button__btn___8j_B7'] +
-                ' ' +
-                styles['facebook-sign-in-button__btn-primary___mzij6'] +
-                ' ' +
-                styles['facebook-sign-in-button__btn-block___2iNzn'] +
-                ' ' +
-                styles['facebook-sign-in-button__btnFacebookSignIn___Pymre']
-              }
-            >
-              <i className={styles['ic-facebook']} />
-              Đăng nhập bằng Facebook
-            </a>
-          </p>
-          <p className={styles['continue__btn-email___1nv9z']}>
-            <button
-              id="btn-email-signin-checkout"
-              className={
-                styles['continue__btn___1ZlRu'] +
-                ' ' +
-                styles['continue__btn-primary___2Rtms'] +
-                ' ' +
-                styles['continue__btn-block___3jiI1']
-              }
-            >
-              Đăng nhập bằng email
-            </button>
-          </p>
-          <div className={styles['continue__separator___3gsgK']}>
-            <hr />
-          </div>
-          <h3 className={styles['continue__title___24Yiu']}>Khách hàng mới?</h3>
-          <p className={styles['continue__text-desc___ukUpu']}>
-            Bạn có thể mua hàng không cần đăng ký, vui lòng nhập thông tin bên dưới để tiếp tục:
-          </p>
-          <Form onSubmit={this.handleSubmit}>
-            <FormItem {...formItemLayout} label="Địa chỉ E-mail">
-              {getFieldDecorator('email', {
-                rules: [
-                  {
-                    type: 'email',
-                    message: 'Địa chỉ E-mail chưa hợp lệ!',
-                  },
-                  {
-                    required: true,
-                    message: 'Vui long nhập địa chỉ E-mail!',
-                  },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Địa chỉ">
-              {getFieldDecorator('address', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Vui lòng nhập địa chỉ của bạn!',
-                  },
-                ],
-              })(<Input type="text" />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label={<span>Họ và tên đệm&nbsp;</span>}>
-              {getFieldDecorator('firstname', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Vui lòng nhập họ và tên đệm của bạn!',
-                    whitespace: true,
-                  },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label={<span>Tên&nbsp;</span>}>
-              {getFieldDecorator('lastname', {
-                rules: [
-                  { required: true, message: 'Vui lòng nhập tên của bạn!', whitespace: true },
-                ],
-              })(<Input />)}
-            </FormItem>
-            <FormItem {...formItemLayout} label="Số điện thoại">
-              {getFieldDecorator('phone', {
-                rules: [{ required: true, message: 'Vui lòng nhập số điện thoại!' }],
-              })(<Input addonBefore={prefixSelector} style={{ width: '100%' }} />)}
-            </FormItem>
+          <div
+            className={
+              styles['continue__col-lg-6___1PrwO'] +
+              ' ' +
+              styles['continue__col-md-8___1o6n8'] +
+              ' ' +
+              styles['continue__offset-lg-3___1DXQF'] +
+              ' ' +
+              styles['continue__offset-md-2___2e4Qq'] +
+              ' ' +
+              styles['continue__continueContainer___29VZv']
+            }
+          >
+            <h3 className={styles['continue__title___24Yiu']}>Đã là thành viên?</h3>
+            <p className={styles['continue__text-desc___ukUpu']}>
+              Đăng nhập để thanh toán nhanh và theo dõi đơn hàng.
+            </p>
+            <p>
+              <a
+                href="/api/v2/account/facebook?redirect=https://www.leflair.vn/checkout "
+                id="btn-facebook-signin-checkout"
+                className={
+                  styles['facebook-sign-in-button__btn___8j_B7'] +
+                  ' ' +
+                  styles['facebook-sign-in-button__btn-primary___mzij6'] +
+                  ' ' +
+                  styles['facebook-sign-in-button__btn-block___2iNzn'] +
+                  ' ' +
+                  styles['facebook-sign-in-button__btnFacebookSignIn___Pymre']
+                }
+              >
+                <i className={styles['ic-facebook']} />
+                Đăng nhập bằng Facebook
+              </a>
+            </p>
+            <p className={styles['continue__btn-email___1nv9z']}>
+              <button
+                id="btn-email-signin-checkout"
+                className={
+                  styles['continue__btn___1ZlRu'] +
+                  ' ' +
+                  styles['continue__btn-primary___2Rtms'] +
+                  ' ' +
+                  styles['continue__btn-block___3jiI1']
+                }
+              >
+                Đăng nhập bằng email
+              </button>
+            </p>
+            <div className={styles['continue__separator___3gsgK']}>
+              <hr />
+            </div>
+            <h3 className={styles['continue__title___24Yiu']}>Khách hàng mới?</h3>
+            <p className={styles['continue__text-desc___ukUpu']}>
+              Bạn có thể mua hàng không cần đăng ký, vui lòng nhập thông tin bên dưới để tiếp tục:
+            </p>
+            <Form onSubmit={this.handleSubmit}>
+              <FormItem {...formItemLayout} label="Địa chỉ E-mail">
+                {getFieldDecorator('email', {
+                  rules: [
+                    {
+                      type: 'email',
+                      message: 'Địa chỉ E-mail chưa hợp lệ!',
+                    },
+                    {
+                      required: true,
+                      message: 'Vui long nhập địa chỉ E-mail!',
+                    },
+                  ],
+                })(<Input />)}
+              </FormItem>
+              <FormItem {...formItemLayout} label="Địa chỉ">
+                {getFieldDecorator('address', {
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Vui lòng nhập địa chỉ của bạn!',
+                    },
+                  ],
+                })(<Input type="text" />)}
+              </FormItem>
+              <FormItem {...formItemLayout} label={<span>Họ và tên đệm&nbsp;</span>}>
+                {getFieldDecorator('firstname', {
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Vui lòng nhập họ và tên đệm của bạn!',
+                      whitespace: true,
+                    },
+                  ],
+                })(<Input />)}
+              </FormItem>
+              <FormItem {...formItemLayout} label={<span>Tên&nbsp;</span>}>
+                {getFieldDecorator('lastname', {
+                  rules: [
+                    { required: true, message: 'Vui lòng nhập tên của bạn!', whitespace: true },
+                  ],
+                })(<Input />)}
+              </FormItem>
+              <FormItem {...formItemLayout} label="Số điện thoại">
+                {getFieldDecorator('phone', {
+                  rules: [{ required: true, message: 'Vui lòng nhập số điện thoại!' }],
+                })(<Input addonBefore={prefixSelector} style={{ width: '100%' }} />)}
+              </FormItem>
 
-            <FormItem
-              {...formItemLayout}
-              label="Captcha"
-              extra="We must make sure that your are a human."
-            >
-              <Row gutter={8}>
-                <Col span={12}>
-                  {getFieldDecorator('captcha', {
-                    rules: [{ required: true, message: 'Please input the captcha you got!' }],
-                  })(<Input />)}
-                </Col>
-                <Col span={12}>
-                  <Button>Get captcha</Button>
-                </Col>
-              </Row>
-            </FormItem>
-            <FormItem {...tailFormItemLayout}>
-              {getFieldDecorator('agreement', {
-                valuePropName: 'checked',
-              })(
-                <Checkbox>
-                  I have read the <a href="">agreement</a>
-                </Checkbox>
-              )}
-            </FormItem>
-            <FormItem {...tailFormItemLayout}>
-              <Button type="primary" htmlType="submit">
-                Register
-              </Button>
-            </FormItem>
-          </Form>
+              <FormItem
+                {...formItemLayout}
+                label="Captcha"
+                extra="We must make sure that your are a human."
+              >
+                <Row gutter={8}>
+                  <Col span={12}>
+                    {getFieldDecorator('captcha', {
+                      rules: [{ required: true, message: 'Please input the captcha you got!' }],
+                    })(<Input />)}
+                  </Col>
+                  <Col span={12}>
+                    <Button>Get captcha</Button>
+                  </Col>
+                </Row>
+              </FormItem>
+              <FormItem {...tailFormItemLayout}>
+                {getFieldDecorator('agreement', {
+                  valuePropName: 'checked',
+                })(
+                  <Checkbox>
+                    I have read the <a href="">agreement</a>
+                  </Checkbox>
+                )}
+              </FormItem>
+              <FormItem {...tailFormItemLayout}>
+                <Button type="primary" htmlType="submit">
+                  Xác nhận thanh toán
+                </Button>
+              </FormItem>
+            </Form>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-continue */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-undef */
@@ -10,6 +11,9 @@ var listArr = [];
 var authorityString = '';
 try {
   for (var i = 0, len = localStorage.length; i < len; ++i) {
+    if (localStorage.key(i) == 'Information') {
+      continue;
+    }
     authorityString = localStorage.getItem(localStorage.key(i))
       ? localStorage.getItem(localStorage.key(i)).split('|')
       : '';

@@ -37,6 +37,7 @@
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
+import DocumentMeta from 'react-document-meta';
 import Slider from 'react-slick';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
@@ -87,7 +88,10 @@ class ProductItem extends PureComponent {
           <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
             <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>{data.title}</div>
             <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
-              <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
+              <span
+                style={{ display: 'none' }}
+                className={`${styles['sale-card__endTimeContent___3z5se']}`}
+              >
                 <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />{' '}
                 <span className={`${styles['end-time__text___1A-sx']}`}>Còn</span>{' '}
                 <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
@@ -236,23 +240,36 @@ class Adidas extends PureComponent {
       product: { list },
     } = this.props;
     var dataList = list && list.length > 0 ? list : [];
+    const meta = {
+      title: 'Adidas',
+      description: null,
+      canonical: 'http://example.com/path/to/page',
+      meta: {
+        charset: 'utf-8',
+        name: {
+          keywords: '123order,order',
+        },
+      },
+    };
     return (
-      <div
-        className={`${styles['container__container___1fvX0']} ${
-          styles['default__container___1TdpD']
-        }`}
-      >
-        <div className={`${styles['row__row___2roCA']}`}>
-          <div className={`${styles['first-sale-tile__first-sale-container___12AH9']}`}>
-            {this.renderBanner()}
-            {this.renderBannerMoblie()}
-          </div>
+      <DocumentMeta {...meta}>
+        <div
+          className={`${styles['container__container___1fvX0']} ${
+            styles['default__container___1TdpD']
+          }`}
+        >
+          <div className={`${styles['row__row___2roCA']}`}>
+            <div className={`${styles['first-sale-tile__first-sale-container___12AH9']}`}>
+              {dataList.length > 0 ? this.renderBanner() : ''}
+              {this.renderBannerMoblie()}
+            </div>
 
-          {dataList.map((v, i) => (
-            <ProductItem key={i} data={v} />
-          ))}
+            {dataList.map((v, i) => (
+              <ProductItem key={i} data={v} />
+            ))}
+          </div>
         </div>
-      </div>
+      </DocumentMeta>
     );
   }
 }

@@ -266,7 +266,6 @@ class HomeLayout extends React.PureComponent {
     // eslint-disable-next-line no-unused-vars
     const isTop = PropsLayout === 'topmenu';
     const routerConfig = this.matchParamsPath(pathname);
-    console.log(children);
     const layout = (
       <div
         className={`${styles['default-layout__container___13v1V']} ${
