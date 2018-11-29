@@ -131,7 +131,10 @@ class Detail extends PureComponent {
     });
     var listArr = [];
     var authorityString = '';
+
     if (local != null) {
+      var Listarr = local.split('|');
+      if (Listarr.length >= 20) return;
       localStorage.setItem(product.seo_link, local + '|' + JSON.stringify(productDetail));
       for (var i = 0, len = localStorage.length; i < len; ++i) {
         if (localStorage.key(i) == 'Information') {
