@@ -155,12 +155,15 @@ class Adidas extends PureComponent {
               styles['first-sale-tile__image-container___VGe3q']
             }`}
           >
-            <img
-              src={`/images/f/${dataList != undefined &&
-                (dataList.length > 0 && dataList[0].thumbnail) &&
-                dataList[0].thumbnail.replace(/\-/g, '')}`}
-              alt="Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc"
-            />
+            {thumbnail ? (
+              <img
+                className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
+                src={`/images/f/${thumbnail}`}
+                alt="Nana's Wonderland, Windmill, NutritionWorks..."
+              />
+            ) : (
+              ''
+            )}
           </div>
           <div
             className={`${styles['first-sale-tile__col-lg-3___2ZXJG']} ${

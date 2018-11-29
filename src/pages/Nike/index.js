@@ -79,15 +79,15 @@ class ProductItem extends PureComponent {
       >
         <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
           <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-            <img
-              className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-              src={`/images/f/${
-                dataList != undefined && dataList.length > 0 && dataList[0].thumbnail
-                  ? dataList[0].thumbnail.replace(/\-/g, '')
-                  : ''
-              }`}
-              alt="Nana's Wonderland, Windmill, NutritionWorks..."
-            />
+            {thumbnail ? (
+              <img
+                className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
+                src={`/images/f/${thumbnail}`}
+                alt="Nana's Wonderland, Windmill, NutritionWorks..."
+              />
+            ) : (
+              ''
+            )}
           </div>
           <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
             <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>{data.title}</div>
