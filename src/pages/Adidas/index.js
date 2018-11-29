@@ -79,7 +79,7 @@ class ProductItem extends PureComponent {
       >
         <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
           <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-            {thumbnail || thumbnail == 'false' ? (
+            {thumbnail || thumbnail != 'false' ? (
               <img
                 className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
                 src={`/images/f/${thumbnail}`}
