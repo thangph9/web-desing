@@ -252,9 +252,33 @@ function productAmazon(req,res){
             callback(null,null);
         },
         function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: 17bee6a4-aea3-4ce5-8128-718ae760aa26"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.news=res;
+                }
+                callback(err,null);
+            })
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: dacc6da8-8439-404d-b2b8-bcfef824ff55"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.days=res;
+                }
+                callback(err,null);
+            })
+        },
+        function(callback){
             models.instance.category.find({$solr_query:'{"q": "category: f4e2643d-3585-4bc9-a116-be9bd7c9b96f"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
-                if(res){
-                    results=res;
+                if(res && res.length > 0){
+                    results.hotnew=res;
+                }
+                callback(err,null);
+            })
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: 42b2279b-5aca-42c7-b38f-05f8d05fa510"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.bestSeller=res;
                 }
                 callback(err,null);
             })
@@ -274,9 +298,33 @@ function productEbay(req,res){
             callback(null,null);
         },
         function(callback){
-            models.instance.category.find({$solr_query:'{"q": "category: ddb73d42-ac5b-4148-b4da-104010a766ce"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
-                if(res){
-                    results=res;
+            models.instance.category.find({$solr_query:'{"q": "category: 66a38a3f-1623-4f8e-9c6c-4a113cb08f24"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.news=res;
+                }
+                callback(err,null);
+            })
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: 97990f3a-5112-4569-a193-dd57fff59ca2"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.days=res;
+                }
+                callback(err,null);
+            })
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: a2b7830e-83f4-4fdb-8095-24e5c43efac8"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.hotnew=res;
+                }
+                callback(err,null);
+            })
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: 50863914-762c-4d1a-abda-fb1a5a5282ff"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.bestSeller=res;
                 }
                 callback(err,null);
             })
@@ -296,9 +344,33 @@ function productNike(req,res){
             callback(null,null);
         },
         function(callback){
-            models.instance.category.find({$solr_query:'{"q": "category: a1ff473a-37cb-4a1d-b8f1-8b7b24afd842"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
-                if(res){
-                    results=res;
+            models.instance.category.find({$solr_query:'{"q": "category: 8fffc784-7abf-4170-a49e-c43e02d4a373"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.news=res;
+                }
+                callback(err,null);
+            })
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: c37e118d-7cb4-4530-a67d-9b231271d20d"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.days=res;
+                }
+                callback(err,null);
+            })
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: b1f6e114-2784-487c-8a5a-4db5c5780347"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.hotnew=res;
+                }
+                callback(err,null);
+            })
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: b1f6e114-2784-487c-8a5a-4db5c5780347"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.bestSeller=res;
                 }
                 callback(err,null);
             })
@@ -312,15 +384,33 @@ function productAdidas(req,res){
     let results=[];
     async.series([
         function(callback){
-            callback(null,null);
+            models.instance.category.find({$solr_query:'{"q": "category: b94fc58d-3446-477b-b82c-13d002d5facc"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.news=res;
+                }
+                callback(err,null);
+            })
         },
         function(callback){
-            callback(null,null);
+            models.instance.category.find({$solr_query:'{"q": "category: 8c264c8f-c0a8-49b8-abe9-eb0e07c22337"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.days=res;
+                }
+                callback(err,null);
+            })
         },
         function(callback){
-            models.instance.category.find({$solr_query:'{"q": "category: eb86db6f-7d34-4efc-8594-210f0d7cb9c5"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
-                if(res){
-                    results=res;
+            models.instance.category.find({$solr_query:'{"q": "category: f07b01f1-4d4d-47b0-9043-3dad61600596"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.hotnew=res;
+                }
+                callback(err,null);
+            })
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: 80a2e1db-cbb8-47cb-b67a-27d854cae3f8"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.bestSeller=res;
                 }
                 callback(err,null);
             })
