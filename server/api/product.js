@@ -312,15 +312,33 @@ function productAdidas(req,res){
     let results=[];
     async.series([
         function(callback){
-            callback(null,null);
+            models.instance.category.find({$solr_query:'{"q": "category: b94fc58d-3446-477b-b82c-13d002d5facc"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.news=res;
+                }
+                callback(err,null);
+            })
         },
         function(callback){
-            callback(null,null);
+            models.instance.category.find({$solr_query:'{"q": "category: 8c264c8f-c0a8-49b8-abe9-eb0e07c22337"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.days=res;
+                }
+                callback(err,null);
+            })
         },
         function(callback){
-            models.instance.category.find({$solr_query:'{"q": "category: eb86db6f-7d34-4efc-8594-210f0d7cb9c5"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
-                if(res){
-                    results=res;
+            models.instance.category.find({$solr_query:'{"q": "category: f07b01f1-4d4d-47b0-9043-3dad61600596"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.hotnew=res;
+                }
+                callback(err,null);
+            })
+        },
+        function(callback){
+            models.instance.category.find({$solr_query:'{"q": "category: 80a2e1db-cbb8-47cb-b67a-27d854cae3f8"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+                if(res && res.length > 0){
+                    results.bestSeller=res;
                 }
                 callback(err,null);
             })
