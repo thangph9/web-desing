@@ -158,7 +158,7 @@ class Amazon extends PureComponent {
               styles['first-sale-tile__image-container___VGe3q']
             }`}
           >
-            {dataList[0].thumbnail ? (
+            {dataList.length > 0 && dataList[0].thumbnail ? (
               <img
                 className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
                 src={`/images/f/${dataList != undefined &&
@@ -219,7 +219,7 @@ class Amazon extends PureComponent {
         <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
           <div className={`${styles['sale-card__international-tile___3A645']}`}>Hàng nhập khẩu</div>
           <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-            {dataList[0].thumbnail ? (
+            {dataList.length > 0 && dataList[0].thumbnail ? (
               <img
                 className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
                 src={`/images/f/${dataList != undefined &&
