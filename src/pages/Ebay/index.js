@@ -211,13 +211,17 @@ class Adidas extends PureComponent {
         <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
           <div className={`${styles['sale-card__international-tile___3A645']}`}>Hàng nhập khẩu</div>
           <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-            <img
-              className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-              src={`/images/f/${dataList != undefined &&
-                dataList.length > 0 &&
-                dataList[0].thumbnail.replace(/\-/g, '')}`}
-              alt="Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc"
-            />
+            {dataList[0].thumbnail ? (
+              <img
+                className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
+                src={`/images/f/${dataList != undefined &&
+                  dataList.length > 0 &&
+                  dataList[0].thumbnail.replace(/\-/g, '')}`}
+                alt="Giảm Đến 50% - Blackmores® Thực Phẩm Chức Năng Từ Úc"
+              />
+            ) : (
+              ''
+            )}
           </div>
           <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
             <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
