@@ -33,11 +33,12 @@
 const async = require('async');
 const models = require('../settings');
 const fs = require('fs');
+var express = require('express');
 const sharp = require('sharp');
 const Uuid = require('cassandra-driver').types.Uuid;
 const bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
-
+var router = express.Router();
 var jwtpublic = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
 var jwtprivate = fs.readFileSync('./ssl/jwtprivate.pem', 'utf8');
 
@@ -215,7 +216,7 @@ function login(req, res) {
     }
   );
 }
-var router = express.Router();
+
 router.post('/register', register);
 router.post('/login', login);
 module.exports = router;
