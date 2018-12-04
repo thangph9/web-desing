@@ -60,6 +60,7 @@ import {
   Cascader,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import FacebookLogin from 'react-facebook-login';
 import styles from './index.less';
 
 const FormItem = Form.Item;
@@ -75,6 +76,11 @@ const RadioGroup = Radio.Group;
 }))
 @Form.create()
 class Register extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.responseFacebook = this.responseFacebook.bind(this);
+  }
+
   componentDidMount() {}
   handleSubmit = e => {
     e.preventDefault();
@@ -87,6 +93,9 @@ class Register extends PureComponent {
       }
     });
   };
+  responseFacebook(res) {
+    console.log(res);
+  }
   render() {
     const meta = {
       title: 'Đăng ký',
@@ -117,14 +126,16 @@ class Register extends PureComponent {
             <div className={styles['container__container___1fvX0']}>
               <div className={styles['register-form__registerContainer___2J6fH']}>
                 <Form onSubmit={this.handleSubmit}>
-                  <Button block style={{ backgroundColor: '#3b5998' }}>
-                    <Icon
-                      type="facebook"
-                      style={{ fontSize: '24px', color: '#fff' }}
-                      theme="filled"
-                    />
-                    <span style={{ color: '#fff' }}>Tạo mới bằng Facebook</span>
-                  </Button>
+                  <FacebookLogin
+                    appId="275785029894237"
+                    autoLoad={false}
+                    textButton="Đăng nhập với Facebook"
+                    language="vi_VN"
+                    size="medium"
+                    icon="fa-facebook"
+                    fields="name,email,picture"
+                    callback={this.responseFacebook}
+                  />
                   <FormItem label="Địa chỉ Email" className={styles['register-form__form___2s9YQ']}>
                     {getFieldDecorator('email', {
                       rules: [
