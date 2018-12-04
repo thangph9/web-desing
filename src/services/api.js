@@ -142,13 +142,13 @@ export async function getCategoryDetail(params) {
   });
 }
 export async function Register(params) {
-  return request('/api/user/register', {
+  return request('/api/authentication/register', {
     method: 'POST',
     body: params,
   });
 }
 export async function Login(params) {
-  return request('/api/user/login', {
+  return request('/api/authentication/login', {
     method: 'POST',
     body: params,
   });
