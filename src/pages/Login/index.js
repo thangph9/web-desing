@@ -38,7 +38,7 @@
 /* eslint-disable dot-notation */
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import DocumentMeta from 'react-document-meta';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
@@ -74,14 +74,14 @@ const RadioGroup = Radio.Group;
   user,
 }))
 @Form.create()
-class Register extends PureComponent {
+class Login extends PureComponent {
   componentDidMount() {}
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.props.dispatch({
-          type: 'user/register',
+          type: 'user/login',
           payload: values,
         });
       }
@@ -89,7 +89,7 @@ class Register extends PureComponent {
   };
   render() {
     const meta = {
-      title: 'Đăng ký',
+      title: 'Đăng Nhập',
       description: null,
       canonical: 'http://example.com/path/to/page',
       meta: {
@@ -101,6 +101,12 @@ class Register extends PureComponent {
     };
     const tailFormItemLayout = {};
     const { getFieldDecorator } = this.props.form;
+    if (sessionStorage.account) {
+      var obj = JSON.parse(sessionStorage.account);
+    }
+    if (sessionStorage.account) {
+      return <Redirect to={`/`} />;
+    }
     return (
       <DocumentMeta {...meta}>
         <div className={styles['container__container___1fvX0']}>
@@ -113,7 +119,7 @@ class Register extends PureComponent {
               styles['register__register___BuPHZ']
             }
           >
-            <h3 className={styles['auth__title___2xOb7']}>Tạo tài khoản</h3>
+            <h3 className={styles['auth__title___2xOb7']}>Đăng nhập</h3>
             <div className={styles['container__container___1fvX0']}>
               <div className={styles['register-form__registerContainer___2J6fH']}>
                 <Form onSubmit={this.handleSubmit}>
@@ -123,17 +129,17 @@ class Register extends PureComponent {
                       style={{ fontSize: '24px', color: '#fff' }}
                       theme="filled"
                     />
-                    <span style={{ color: '#fff' }}>Tạo mới bằng Facebook</span>
+                    <span style={{ color: '#fff' }}>Đăng nhập bằng facebook</span>
                   </Button>
-                  <FormItem label="Địa chỉ Email" className={styles['register-form__form___2s9YQ']}>
-                    {getFieldDecorator('email', {
+                  <FormItem label="Tên đăng nhập">
+                    {getFieldDecorator('username', {
                       rules: [
                         {
                           required: true,
-                          message: 'Vui lòng nhập địa chỉ E-mail!',
+                          message: 'Vui lòng nhập tên đăng nhập!',
                         },
                       ],
-                    })(<Input type="email" />)}
+                    })(<Input type="text" />)}
                   </FormItem>
                   <FormItem label="Mật khẩu">
                     {getFieldDecorator('password', {
@@ -145,39 +151,9 @@ class Register extends PureComponent {
                       ],
                     })(<Input type="password" />)}
                   </FormItem>
-                  <FormItem label="Họ và tên">
-                    {getFieldDecorator('fullname', {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Vui lòng nhập họ tên của bạn!',
-                        },
-                      ],
-                    })(<Input type="text" />)}
-                  </FormItem>
-                  <FormItem label="Tên đăng nhập">
-                    {getFieldDecorator('username', {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Vui lòng nhập tên đăng nhập!',
-                        },
-                      ],
-                    })(<Input type="text" />)}
-                  </FormItem>
-                  <FormItem label="Địa chỉ">
-                    {getFieldDecorator('address', {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Vui lòng nhập địa chỉ của bạn!',
-                        },
-                      ],
-                    })(<Input type="text" />)}
-                  </FormItem>
                   <FormItem>
                     <Button type="primary" htmlType="submit" block>
-                      Đăng ký
+                      Đăng nhập
                     </Button>
                   </FormItem>
                 </Form>
@@ -190,4 +166,4 @@ class Register extends PureComponent {
   }
 }
 
-export default Register;
+export default Login;

@@ -104,6 +104,11 @@ export default [
         component: './Register/',
       },
       {
+        path: '/login',
+        name: 'login',
+        component: './Login/',
+      },
+      {
         component: '404',
       },
     ],

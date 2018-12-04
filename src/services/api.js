@@ -141,6 +141,18 @@ export async function getCategoryDetail(params) {
     body: params,
   });
 }
+export async function Register(params) {
+  return request('/api/user/register', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function Login(params) {
+  return request('/api/user/login', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function getCategoryProduct(nodeid) {
   return request('/api/product/LC', {
     method: 'POST',

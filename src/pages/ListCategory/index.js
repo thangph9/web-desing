@@ -204,15 +204,17 @@ class ListCategory extends PureComponent {
         saleFilter != null
       ) {
         filterDiv = document.getElementById('transform-fixed');
-        saleFilter.classList.add('order-pages-list-category-index-sale__fixed-position___P7XwH');
+        saleFilter.classList.add(
+          'order\\pages\\-list-category\\index-sale__fixed-position___P7XwH'
+        );
         filterDiv.classList.remove(
-          'order-pages-list-category-index-sale__position-absolute___1tZOO'
+          'order\\pages\\-list-category\\index-sale__position-absolute___1tZOO'
         );
         var filterFixed = document.createElement('div');
         filterFixed.setAttribute('id', 'filterFiexd');
         filterFixed.setAttribute(
           'class',
-          'order-pages-list-category-index-sale__filters-container___32fTU order-pages-list-category-index-sale__col-md-4___UhAyk order-pages-list-category-index-sale__col-lg-3___2xbHl order-pages-list-category-index-sale__dumb-container___lFg-z order-pages-list-category-index-visibility-hidden'
+          'order\\pages\\-list-category\\index-sale__filters-container___32fTU order\\pages\\-list-category\\index-sale__col-md-4___UhAyk order\\pages\\-list-category\\index-sale__col-lg-3___2xbHl order\\pages\\-list-category\\index-sale__dumb-container___lFg-z order\\pages\\-list-category\\index-visibility-hidden'
         );
         rowFilter.appendChild(filterFixed);
         rowFilter.insertBefore(filterFixed, rowFilter.childNodes[1]);
@@ -224,20 +226,26 @@ class ListCategory extends PureComponent {
         }
       }
       if (scroll < 115 && idFix != null && saleFilter != null) {
-        saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
+        saleFilter.classList.remove(
+          'order\\pages\\-list-category\\index-sale__fixed-position___P7XwH'
+        );
         rowFilter.removeChild(idFix);
         filterDiv = document.getElementById('transform-fixed');
         filterDiv.classList.remove(
-          'order-pages-list-category-index-sale__position-absolute___1tZOO'
+          'order\\pages\\-list-category\\index-sale__position-absolute___1tZOO'
         );
         filterDiv.style.transform = `translateY(0px)`;
         filterDiv.style.transition = 'transform 0.5s ease';
       }
       if (scroll >= screen.clientHeight - 1184 && idFix != null) {
-        saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
+        saleFilter.classList.remove(
+          'order\\pages\\-list-category\\index-sale__fixed-position___P7XwH'
+        );
         filterDiv = document.getElementById('transform-fixed');
         rowFilter.removeChild(idFix);
-        filterDiv.classList.add('order-pages-list-category-index-sale__position-absolute___1tZOO');
+        filterDiv.classList.add(
+          'order\\pages\\-list-category\\index-sale__position-absolute___1tZOO'
+        );
       }
     }
   }
@@ -263,19 +271,19 @@ class ListCategory extends PureComponent {
     });
     window.addEventListener('scroll', this.handleScroll.bind(this));
     var btnSoft = document.getElementsByClassName(
-      'order-pages-list-category-index-sort__btn-text___1mPct'
+      'order\\pages\\-list-category\\index-sort__btn-text___1mPct'
     )[0];
     btnSoft.textContent = this.props.location.query.sort
       ? 'Sắp xếp: ' + this.state[`${this.props.location.query.sort}`].title
       : 'Sắp xếp: Gợi ý';
     var liSort = document.getElementById(this.props.location.query.sort);
     var activeSoft = document.getElementsByClassName(
-      'order-pages-list-category-index-sort__dropdown-item___XkHiS'
+      'order\\pages\\-list-category\\index-sort__dropdown-item___XkHiS'
     );
     for (var i = 0; i < activeSoft.length; i++) {
-      activeSoft[i].classList.remove('order-pages-list-category-index-sort__active___3DNgx');
+      activeSoft[i].classList.remove('order\\pages\\-list-category\\index-sort__active___3DNgx');
     }
-    liSort.classList.add('order-pages-list-category-index-sort__active___3DNgx');
+    liSort.classList.add('order\\pages\\-list-category\\index-sort__active___3DNgx');
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
@@ -285,22 +293,22 @@ class ListCategory extends PureComponent {
       filter: !this.state.filter,
     });
     var defautLayout = document.getElementsByClassName(
-      'order-layouts-home-layout-default-layout__container___13v1V'
+      'order\\layouts\\-home-layout-default-layout__container___13v1V'
     )[0];
-    defautLayout.classList.toggle('order-pages-list-category-index-filters-expanded');
+    defautLayout.classList.toggle('order\\pages\\-list-category\\index-filters-expanded');
     var buttonFilter = document.getElementById('button-filter');
-    buttonFilter.classList.toggle('order-pages-list-category-index-sale__filter-btn___30Ofp');
-    buttonFilter.classList.toggle('order-pages-list-category-index-sale__btn-block___O8koG');
+    buttonFilter.classList.toggle('order\\pages\\-list-category\\index-sale__filter-btn___30Ofp');
+    buttonFilter.classList.toggle('order\\pages\\-list-category\\index-sale__btn-block___O8koG');
     var headerFilter = document.getElementById('header-filter');
-    headerFilter.classList.toggle('order-pages-list-category-index-sale__d-t___1Trp4');
+    headerFilter.classList.toggle('order\\pages\\-list-category\\index-sale__d-t___1Trp4');
     var listProduct = document.getElementById('list-product');
-    listProduct.classList.toggle('order-pages-list-category-index-sale__col-md-8___34B6S');
-    listProduct.classList.toggle('order-pages-list-category-index-sale__col-lg-9___2qXAs');
-    listProduct.classList.toggle('order-pages-list-category-index-sale__col-12___82vEz');
+    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-md-8___34B6S');
+    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-lg-9___2qXAs');
+    listProduct.classList.toggle('order\\pages\\-list-category\\index-sale__col-12___82vEz');
     var proudctItem = document.getElementsByClassName('product-items');
     for (var i = 0; i < proudctItem.length; i++) {
-      proudctItem[i].classList.toggle('order-pages-list-category-index-sale__col-md-4___UhAyk');
-      proudctItem[i].classList.toggle('order-pages-list-category-index-sale__col-md-6___3wB0o');
+      proudctItem[i].classList.toggle('order\\pages\\-list-category\\index-sale__col-md-4___UhAyk');
+      proudctItem[i].classList.toggle('order\\pages\\-list-category\\index-sale__col-md-6___3wB0o');
     }
     var titleFilter = document.getElementById('title-filter');
     if (titleFilter.textContent == 'Hiện bộ lọc') {
@@ -309,7 +317,7 @@ class ListCategory extends PureComponent {
       i.setAttribute('id', 'icon-filter');
       i.setAttribute(
         'class',
-        'order-pages-list-category-index-ic-ic-arrow-left order-pages-list-category-index-sale__icon-hide___3Iftv'
+        'order\\pages\\-list-category\\index-ic-ic-arrow-left order\\pages\\-list-category\\index-sale__icon-hide___3Iftv'
       );
       titleFilter.appendChild(i);
       titleFilter.insertBefore(i, titleFilter.childNodes[0]);
@@ -319,7 +327,7 @@ class ListCategory extends PureComponent {
       i.setAttribute('id', 'icon-filter');
       i.setAttribute(
         'class',
-        'order-pages-list-category-index-ic-ic-arrow-right order-pages-list-category-index-sale__icon-show___3nTgw'
+        'order\\pages\\-list-category\\index-ic-ic-arrow-right order\\pages\\-list-category\\index-sale__icon-show___3nTgw'
       );
       titleFilter.appendChild(i);
     }
@@ -329,16 +337,16 @@ class ListCategory extends PureComponent {
     var ulSort = document.getElementById('sort-items');
     ulSort.style.display = 'none';
     var btnSoft = document.getElementsByClassName(
-      'order-pages-list-category-index-sort__btn-text___1mPct'
+      'order\\pages\\-list-category\\index-sort__btn-text___1mPct'
     )[0];
     btnSoft.textContent = 'Sắp xếp: ' + liSort.textContent;
     var activeSoft = document.getElementsByClassName(
-      'order-pages-list-category-index-sort__dropdown-item___XkHiS'
+      'order\\pages\\-list-category\\index-sort__dropdown-item___XkHiS'
     );
     for (var i = 0; i < activeSoft.length; i++) {
-      activeSoft[i].classList.remove('order-pages-list-category-index-sort__active___3DNgx');
+      activeSoft[i].classList.remove('order\\pages\\-list-category\\index-sort__active___3DNgx');
     }
-    liSort.classList.add('order-pages-list-category-index-sort__active___3DNgx');
+    liSort.classList.add('order\\pages\\-list-category\\index-sort__active___3DNgx');
     let pathname = this.props.location.pathname;
     let search = this.props.location.search;
     let query = this.props.location.query;
@@ -371,6 +379,11 @@ class ListCategory extends PureComponent {
     });
   }
   handleCheckFilter(filter, title) {
+    if (title) {
+      this.setState({
+        [title]: !this.state[title],
+      });
+    }
     let pathname = this.props.location.pathname;
     let search = this.props.location.search;
     var result = this.state[filter].filter((v, i) => {
@@ -427,21 +440,15 @@ class ListCategory extends PureComponent {
       );
     });
   }
-  handleClick(obj) {
-    if (obj.id) {
-      this.setState({
-        [obj.id]: !this.state[obj.id],
-      });
-    }
-  }
+
   handleClickFilter(value, value1) {
     var rowFilter = document.getElementById(value);
     if (rowFilter.style.display == 'block') {
       rowFilter.style.display = 'none';
     } else rowFilter.style.display = 'block';
     var iconFilter = document.getElementById(value1);
-    iconFilter.classList.toggle('order-pages-list-category-index-ic-ic-minus');
-    iconFilter.classList.toggle('order-pages-list-category-index-ic-ic-plus');
+    iconFilter.classList.toggle('order\\pages\\-list-category\\index-ic-ic-minus');
+    iconFilter.classList.toggle('order\\pages\\-list-category\\index-ic-ic-plus');
   }
   renderBreadcrumb() {
     var {
@@ -451,6 +458,7 @@ class ListCategory extends PureComponent {
     if (dataDetail) {
       dataDetail = Array.isArray(detail) ? detail : [];
     }
+
     var link = '/';
     if (dataDetail[0] != undefined) {
       if (
@@ -462,7 +470,6 @@ class ListCategory extends PureComponent {
         link += dataDetail[0].seo_link;
       }
     }
-    console.log(link);
     return (
       <div className={styles['sale__col-md-8___34B6S']}>
         <ol
@@ -545,6 +552,7 @@ class ListCategory extends PureComponent {
       { id: 'a-6', title: 'a-6' },
     ];
     var { filter } = this.state;
+    var { sort } = this.props.category;
     var {
       category: { list },
     } = this.props;
@@ -604,139 +612,47 @@ class ListCategory extends PureComponent {
               </div>
               <div id="phan-loai-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
-                  {data_filter.map((e, i) => {
-                    return (
-                      <div key={i} className={styles['grid__col-12___39hfZ']}>
-                        <div className={styles['filter-option__filter-option___3Xmf0']}>
-                          <button
-                            onClick={() => this.handleCheckFilter('category', 'Slip-Ons')}
-                            onClick={() => {
-                              this.handleClick(e);
-                            }}
-                            type="button"
-                            className={
-                              !this.state[e.id]
-                                ? styles['filter-option__btn___2u45i'] +
-                                  ' ' +
-                                  styles['filter-option__btn-secondary___1DPfK'] +
-                                  ' ' +
-                                  styles['filter-option__btn-block___1tZOy']
-                                : styles['filter-option__btn___2u45i'] +
-                                  ' ' +
-                                  styles['filter-option__btn-secondary___1DPfK'] +
-                                  ' ' +
-                                  styles['filter-option__btn-block___1tZOy'] +
-                                  ' ' +
-                                  styles['filter-option__active___1HV6C']
-                            }
-                          >
-                            {this.state[e.id] && (
-                              <span
+                  {sort.style && sort.style.length > 0
+                    ? sort.style.map((e, i) => {
+                        var v = e.replace(/ /g, '');
+                        return (
+                          <div key={i} className={styles['grid__col-12___39hfZ']}>
+                            <div className={styles['filter-option__filter-option___3Xmf0']}>
+                              <button
+                                onClick={() => this.handleCheckFilter('category', v)}
+                                type="button"
                                 className={
-                                  styles['filter-option__icon___1wxyY'] +
-                                  ' ' +
-                                  styles['ic-ic-close']
+                                  !this.state[v]
+                                    ? styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy']
+                                    : styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy'] +
+                                      ' ' +
+                                      styles['filter-option__active___1HV6C']
                                 }
-                              />
-                            )}
-                            {e.title}
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-
-                  <div className={styles['grid__col-12___39hfZ']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('category', 'Derbys_Oxfords')}
-                        onClick={() => {
-                          this.handleClick({ id: 'demo', title: ' Derbys &amp; Oxfords' });
-                        }}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        Derbys &amp; Oxfords
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-12___39hfZ']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('category', 'Slip-Ons')}
-                        onClick={() => {
-                          this.handleClick({ id: 'demo', title: ' Derbys &amp; Oxfords' });
-                        }}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        Slip-Ons
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-12___39hfZ']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('category', 'Giay-tay')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        Giày tây
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-12___39hfZ']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('category', 'that-day-the-thao')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        Thắt dây thể thao
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-12___39hfZ']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('category', 'Loafers')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        Loafers
-                      </button>
-                    </div>
-                  </div>
+                              >
+                                {this.state[v] && (
+                                  <span
+                                    className={
+                                      styles['filter-option__icon___1wxyY'] +
+                                      ' ' +
+                                      styles['ic-ic-close']
+                                    }
+                                  />
+                                )}
+                                {e}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                    : ''}
                 </div>
               </div>
             </div>
@@ -764,159 +680,31 @@ class ListCategory extends PureComponent {
               </div>
               <div id="kich-co-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '24.5')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        24.5
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '25')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        25
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '25.5')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        25.5
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '26')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        26
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '26.5')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        26.5
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '27')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        27
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '27.5')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        27.5
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '28')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        28
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '29')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        29
-                      </button>
-                    </div>
-                  </div>
+                  {sort.size && sort.size.length > 0
+                    ? sort.size.map((e, i) => {
+                        var v = e.replace(/ /g, '');
+
+                        return (
+                          <div key={i} className={styles['grid__col-6___211BX']}>
+                            <div className={styles['filter-option__filter-option___3Xmf0']}>
+                              <button
+                                onClick={() => this.handleCheckFilter('size', v)}
+                                type="button"
+                                className={
+                                  styles['filter-option__btn___2u45i'] +
+                                  ' ' +
+                                  styles['filter-option__btn-secondary___1DPfK'] +
+                                  ' ' +
+                                  styles['filter-option__btn-block___1tZOy']
+                                }
+                              >
+                                e
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                    : ''}
                 </div>
               </div>
             </div>
@@ -944,23 +732,47 @@ class ListCategory extends PureComponent {
               </div>
               <div id="thuong-hieu-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
-                  <div className={styles['grid__col-12___39hfZ']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('brand', 'JacQ')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        JacQ
-                      </button>
-                    </div>
-                  </div>
+                  {sort.brand && sort.brand.length > 0
+                    ? sort.brand.map((e, i) => {
+                        var v = e.replace(/ /g, '');
+                        return (
+                          <div key={i} className={styles['grid__col-12___39hfZ']}>
+                            <div className={styles['filter-option__filter-option___3Xmf0']}>
+                              <button
+                                onClick={() => this.handleCheckFilter('brand', v)}
+                                type="button"
+                                className={
+                                  !this.state[v]
+                                    ? styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy']
+                                    : styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy'] +
+                                      ' ' +
+                                      styles['filter-option__active___1HV6C']
+                                }
+                              >
+                                {this.state[v] && (
+                                  <span
+                                    className={
+                                      styles['filter-option__icon___1wxyY'] +
+                                      ' ' +
+                                      styles['ic-ic-close']
+                                    }
+                                  />
+                                )}
+                                {e}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                    : ''}
                 </div>
               </div>
             </div>
@@ -988,23 +800,47 @@ class ListCategory extends PureComponent {
               </div>
               <div id="type-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('type', 'Giay-nam')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        Giày Nam
-                      </button>
-                    </div>
-                  </div>
+                  {sort.type && sort.type.length > 0
+                    ? sort.type.map((e, i) => {
+                        var v = e.replace(/ /g, '');
+                        return (
+                          <div key={i} className={styles['grid__col-12___39hfZ']}>
+                            <div className={styles['filter-option__filter-option___3Xmf0']}>
+                              <button
+                                onClick={() => this.handleCheckFilter('type', v)}
+                                type="button"
+                                className={
+                                  !this.state[v]
+                                    ? styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy']
+                                    : styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy'] +
+                                      ' ' +
+                                      styles['filter-option__active___1HV6C']
+                                }
+                              >
+                                {this.state[v] && (
+                                  <span
+                                    className={
+                                      styles['filter-option__icon___1wxyY'] +
+                                      ' ' +
+                                      styles['ic-ic-close']
+                                    }
+                                  />
+                                )}
+                                {e}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                    : ''}
                 </div>
               </div>
             </div>
