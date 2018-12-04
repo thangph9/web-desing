@@ -127,7 +127,7 @@ class Register extends PureComponent {
               <div className={styles['register-form__registerContainer___2J6fH']}>
                 <Form onSubmit={this.handleSubmit}>
                   <FacebookLogin
-                    appId="275785029894237"
+                    appId="287241238592791"
                     autoLoad={false}
                     textButton="Đăng nhập với Facebook"
                     language="vi_VN"
