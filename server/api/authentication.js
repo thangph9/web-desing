@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-undef-init */
 /* eslint-disable no-underscore-dangle */
@@ -34,6 +35,8 @@ const async = require('async');
 const models = require('../settings');
 const fs = require('fs');
 var express = require('express');
+var bodyParser = require('body-parser');
+var app = express();
 const sharp = require('sharp');
 const Uuid = require('cassandra-driver').types.Uuid;
 const bcrypt = require('bcryptjs');
@@ -41,7 +44,7 @@ var jwt = require('jsonwebtoken');
 var router = express.Router();
 var jwtpublic = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
 var jwtprivate = fs.readFileSync('./ssl/jwtprivate.pem', 'utf8');
-
+var request = require('request');
 const MESSAGE = {
   USER_NOT_MATCH: 'Tài khoản hoặc mật khẩu không đúng',
   USER_NOT_FOUND: 'Tài khoản này không tồn tại!',
@@ -264,6 +267,7 @@ function login(req, res) {
       function(callback) {
         PARAM_IS_VALID['username'] = params.username;
         PARAM_IS_VALID['password'] = params.password;
+        PARAM_IS_VALID['captcha'] = params.captcha;
         callback(null, null);
       },
       function(callback) {
@@ -318,7 +322,29 @@ function login(req, res) {
     }
   );
 }
-
+app.post('/submit', function(req, res) {
+  if (
+    req.body['g-recaptcha-response'] === undefined ||
+    req.body['g-recaptcha-response'] === '' ||
+    req.body['g-recaptcha-response'] === null
+  ) {
+    return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
+  }
+  var verificationUrl =
+    'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
+    req.body['g-recaptcha-response'] +
+    '&remoteip=' +
+    req.connection.remoteAddress;
+  // Hitting GET request to the URL, Google will respond with success or error scenario.
+  request(verificationUrl, function(error, response, body) {
+    body = JSON.parse(body);
+    // Success will be true or false depending upon captcha validation.
+    if (body.success !== undefined && !body.success) {
+      return res.json({ responseCode: 1, responseDesc: 'Failed captcha verification' });
+    }
+    res.json({ responseCode: 0, responseDesc: 'Sucess' });
+  });
+});
 router.post('/register', register);
 router.post('/registerfb', registerfb);
 router.post('/login', login);
