@@ -60,6 +60,7 @@ function register(req, res) {
   let token = undefined;
   var _salt = '';
   var _hash = '';
+  var msg = '';
   var PARAM_IS_VALID = {};
   async.series(
     [
@@ -116,20 +117,22 @@ function register(req, res) {
           password_salt: _salt,
           user_id: PARAM_IS_VALID.user_id,
         };
-        const account = () => {
-          let object = account_object;
-          let instance = new models.instance.account(object);
-          let save = instance.save({ if_exist: true, return_query: true });
-          return save;
-        };
-        queries.push(account());
-        const account_login = () => {
-          let object = account_login_object;
-          let instance = new models.instance.account_login(object);
-          let save = instance.save({ if_exist: true, return_query: true });
-          return save;
-        };
-        queries.push(account_login());
+        if (msg.leng > 0) {
+          const account = () => {
+            let object = account_object;
+            let instance = new models.instance.account(object);
+            let save = instance.save({ if_exist: true, return_query: true });
+            return save;
+          };
+          queries.push(account());
+          const account_login = () => {
+            let object = account_login_object;
+            let instance = new models.instance.account_login(object);
+            let save = instance.save({ if_exist: true, return_query: true });
+            return save;
+          };
+          queries.push(account_login());
+        }
         callback(null, null);
       },
     ],
@@ -156,7 +159,7 @@ function register(req, res) {
         if (err) return res.json({ status: false });
         else
           msg.length > 0
-            ? res.json({ status: false, message: msg, form: PARAM_IS_VALID })
+            ? res.json({ status: false, message: msg })
             : res.json({ status: true, currentAuthority: currentAuthority });
       });
     }
@@ -294,10 +297,10 @@ function login(req, res) {
     function(err, result) {
       let currentAuthority = { auth: isLogin, token: token };
       if (err) {
-        res.json({ status: false, message: msg, currentAuthority: currentAuthority });
+        res.json({ status: false, message: msg });
       } else
         msg != ''
-          ? res.json({ status: false, message: msg, currentAuthority: currentAuthority })
+          ? res.json({ status: false, message: msg })
           : res.json({
               status: true,
               currentAuthority: currentAuthority,
