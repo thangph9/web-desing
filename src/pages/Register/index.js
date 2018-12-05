@@ -94,7 +94,26 @@ class Register extends PureComponent {
     });
   };
   responseFacebook(res) {
+    const { dispatch } = this.props;
+
+    const { id, email, name, accessToken, picture } = res;
     console.log(res);
+    let dataObject = {
+      accessToken,
+      fullname: name,
+      picture: picture.data ? picture.data.url : null,
+      bypage: 'facebook',
+    };
+    dispatch({
+      type: 'user/registerfb',
+      payload: {
+        with3rd: {
+          id,
+          email,
+          dataObject,
+        },
+      },
+    });
   }
   render() {
     const meta = {
