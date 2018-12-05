@@ -334,12 +334,12 @@ function login(req, res) {
         res.json({ status: false, message: msg });
       } else
         msg != '' || successBody.success == false
-          ? res.json({ status: false, message: msg, success })
+          ? res.json({ status: false, message: msg, success: successBody.success })
           : res.json({
               status: true,
               currentAuthority: currentAuthority,
               username: user[0].username,
-              success,
+              success: successBody.success,
             });
     }
   );
