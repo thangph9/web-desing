@@ -155,6 +155,8 @@ function register(req, res) {
         request(verificationUrl, function(error, response, body) {
           body = JSON.parse(body);
           successBody = body;
+          console.log('chay truoc ');
+          console.log(successBody);
         });
         callback(null, null);
       },
@@ -178,6 +180,7 @@ function register(req, res) {
         isLogin = true;
       }
       let currentAuthority = { auth: isLogin, token: token };
+      console.log('chay sau');
       console.log(successBody);
       models.doBatch(queries, function(err) {
         if (err) return res.json({ status: false });
@@ -273,6 +276,7 @@ function registerfb(req, res) {
         isLogin = true;
       }
       let currentAuthority = { auth: isLogin, token: token };
+
       models.doBatch(queries, function(err) {
         if (err) return res.json({ status: false });
         else return res.json({ status: true, currentAuthority: currentAuthority });
@@ -349,16 +353,12 @@ function login(req, res) {
         request(verificationUrl, function(error, response, body) {
           body = JSON.parse(body);
           successBody = body;
-          console.log('chay truoc ');
-          console.log(successBody);
         });
         callback(null, null);
       },
     ],
     function(err, result) {
       let currentAuthority = { auth: isLogin, token: token };
-      console.log('chay sau');
-      console.log(successBody);
       if (err) {
         res.json({ status: false, message: msg });
       } else
