@@ -158,6 +158,7 @@ function registerfb(req, res) {
   var _salt = '';
   var _hash = '';
   var PARAM_IS_VALID = {};
+  console.log(params.with3rd);
   async.series(
     [
       function(callback) {
@@ -222,8 +223,6 @@ function registerfb(req, res) {
       }
       let currentAuthority = { auth: isLogin, token: token };
       models.doBatch(queries, function(err) {
-        // if (err) throw err;
-        //console.log(queries);
         if (err) return res.json({ status: false });
         else res.json({ status: true, currentAuthority: currentAuthority });
       });
