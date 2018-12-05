@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unused-state */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/sort-comp */
 /* eslint-disable react/destructuring-assignment */
@@ -40,6 +42,7 @@
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import ReCAPTCHA from 'react-google-recaptcha';
 import DocumentMeta from 'react-document-meta';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
@@ -70,6 +73,9 @@ const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
+const DELAY = 1500;
+let rerenders = 0;
+const TEST_SITE_KEY = '6LcBNGgUAAAAAIj17J6UuVmX_kb7vo6AxMJYj07C';
 @connect(({ loading, user }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   loading,
@@ -81,11 +87,22 @@ class Login extends PureComponent {
     super(props);
     this.state = {
       load: false,
+      fireRerender: rerenders,
+      callback: 'not fired',
+      value: '[empty]',
+      load: false,
+      expired: 'false',
     };
     this.responseFacebook = this.responseFacebook.bind(this);
+    this._reCaptchaRef = React.createRef();
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({ load: true });
+    }, DELAY);
+    console.log('didMount - reCaptcha Ref-', this._reCaptchaRef);
+  }
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -99,6 +116,21 @@ class Login extends PureComponent {
     this.setState({
       load: !this.state.load,
     });
+  };
+  handleChange = value => {
+    console.log('Captcha value:', value);
+    this.setState({ value });
+  };
+
+  asyncScriptOnLoad = () => {
+    this.setState({ callback: 'called!' });
+    console.log('scriptLoad - reCaptcha Ref-', this._reCaptchaRef);
+  };
+  handleExpired = () => {
+    this.setState({ expired: 'true' });
+  };
+  handleExpired2 = () => {
+    this.setState({ expired2: 'true' });
   };
   responseFacebook(res) {
     const { dispatch } = this.props;
@@ -191,6 +223,13 @@ class Login extends PureComponent {
                       ],
                     })(<Input type="password" />)}
                   </FormItem>
+                  <ReCAPTCHA
+                    style={{ display: 'inline-block' }}
+                    ref={this._reCaptchaRef}
+                    sitekey={TEST_SITE_KEY}
+                    onChange={this.handleChange}
+                    asyncScriptOnLoad={this.asyncScriptOnLoad}
+                  />
                   <FormItem>
                     <Button type="primary" htmlType="submit" block>
                       Đăng nhập
