@@ -226,7 +226,7 @@ class Login extends PureComponent {
                   <ReCAPTCHA
                     style={{ display: 'inline-block' }}
                     ref={this._reCaptchaRef}
-                    sitekey={TEST_SITE_KEY}
+                    sitekey="6LcBNGgUAAAAAIj17J6UuVmX_kb7vo6AxMJYj07C"
                     onChange={this.handleChange}
                     asyncScriptOnLoad={this.asyncScriptOnLoad}
                   />
