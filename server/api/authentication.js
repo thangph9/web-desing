@@ -154,7 +154,6 @@ function register(req, res) {
       function(callback) {
         request(verificationUrl, function(error, response, body) {
           body = JSON.parse(body);
-          console.log(body);
           successBody = body;
         });
         callback(null, null);
@@ -344,16 +343,12 @@ function login(req, res) {
           params.captcha +
           '&remoteip=' +
           req.connection.remoteAddress;
-        console.log(verificationUrl);
         callback(null, null);
       },
-      function(callback) {
-        request(verificationUrl, function(error, response, body) {
-          body = JSON.parse(body);
-          successBody = body;
-        });
-        callback(null, null);
-      },
+      request(verificationUrl, function(error, response, body) {
+        body = JSON.parse(body);
+        successBody = body;
+      }),
     ],
     function(err, result) {
       let currentAuthority = { auth: isLogin, token: token };
