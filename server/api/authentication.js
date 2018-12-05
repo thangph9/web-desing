@@ -262,7 +262,7 @@ function login(req, res) {
   var isLogin = false;
   var token = '';
   var msg = '';
-  var success = false;
+  var successBody = {};
   var verificationUrl = '';
   async.series(
     [
@@ -323,9 +323,7 @@ function login(req, res) {
       function(callback) {
         request(verificationUrl, function(error, response, body) {
           body = JSON.parse(body);
-          // Success will be true or false depending upon captcha validation.
-          console.log(body);
-          success = body.success;
+          successBody = body;
         });
         callback(null, null);
       },
@@ -335,7 +333,7 @@ function login(req, res) {
       if (err) {
         res.json({ status: false, message: msg });
       } else
-        msg != '' || success == false
+        msg != '' || successBody.success == false
           ? res.json({ status: false, message: msg, success })
           : res.json({
               status: true,
