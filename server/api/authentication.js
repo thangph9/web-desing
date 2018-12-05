@@ -154,6 +154,7 @@ function register(req, res) {
       function(callback) {
         request(verificationUrl, function(error, response, body) {
           body = JSON.parse(body);
+          console.log(body);
           successBody = body;
         });
         callback(null, null);
