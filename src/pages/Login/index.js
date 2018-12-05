@@ -93,6 +93,7 @@ class Login extends PureComponent {
       load: false,
       expired: 'false',
     };
+    this._reCaptchaRef = React.createRef();
   }
   componentDidMount() {
     setTimeout(() => {
@@ -220,8 +221,9 @@ class Login extends PureComponent {
                   </FormItem>
 
                   <ReCAPTCHA
+                    ref={this._reCaptchaRef}
                     sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
-                    onChange={() => this.handleChange()}
+                    onChange={this.handleChange}
                   />
 
                   <FormItem>
