@@ -175,6 +175,8 @@ function registerfb(req, res) {
   var user = [];
   let token = undefined;
   var PARAM_IS_VALID = {};
+  var success = false;
+  var msgCheckcaptcha = '';
   async.series(
     [
       function(callback) {
@@ -306,45 +308,43 @@ function login(req, res) {
         }
         callback(null, null);
       },
+      function(callback) {
+        if (
+          req.body['g-recaptcha-response'] === undefined ||
+          req.body['g-recaptcha-response'] === '' ||
+          req.body['g-recaptcha-response'] === null
+        ) {
+          return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
+        }
+        var verificationUrl =
+          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
+          req.body['g-recaptcha-response'] +
+          '&remoteip=' +
+          req.connection.remoteAddress;
+        // Hitting GET request to the URL, Google will respond with success or error scenario.
+        request(verificationUrl, function(error, response, body) {
+          body = JSON.parse(body);
+          // Success will be true or false depending upon captcha validation.
+          success = body.success;
+        });
+      },
     ],
     function(err, result) {
       let currentAuthority = { auth: isLogin, token: token };
       if (err) {
         res.json({ status: false, message: msg });
       } else
-        msg != ''
-          ? res.json({ status: false, message: msg })
+        msg != '' || success == false
+          ? res.json({ status: false, message: msg, success })
           : res.json({
               status: true,
               currentAuthority: currentAuthority,
               username: user[0].username,
+              success,
             });
     }
   );
 }
-app.post('/submit', function(req, res) {
-  if (
-    req.body['g-recaptcha-response'] === undefined ||
-    req.body['g-recaptcha-response'] === '' ||
-    req.body['g-recaptcha-response'] === null
-  ) {
-    return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
-  }
-  var verificationUrl =
-    'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
-    req.body['g-recaptcha-response'] +
-    '&remoteip=' +
-    req.connection.remoteAddress;
-  // Hitting GET request to the URL, Google will respond with success or error scenario.
-  request(verificationUrl, function(error, response, body) {
-    body = JSON.parse(body);
-    // Success will be true or false depending upon captcha validation.
-    if (body.success !== undefined && !body.success) {
-      return res.json({ responseCode: 1, responseDesc: 'Failed captcha verification' });
-    }
-    res.json({ responseCode: 0, responseDesc: 'Sucess' });
-  });
-});
 router.post('/register', register);
 router.post('/registerfb', registerfb);
 router.post('/login', login);
