@@ -151,15 +151,6 @@ function register(req, res) {
         console.log(verificationUrl);
         callback(null, null);
       },
-      function(callback) {
-        request(verificationUrl, function(error, response, body) {
-          body = JSON.parse(body);
-          successBody = body;
-          console.log('chay truoc ');
-          console.log(successBody);
-        });
-        callback(null, null);
-      },
     ],
     function(err, result) {
       if (err) res.json({ status: false });
@@ -180,18 +171,20 @@ function register(req, res) {
         isLogin = true;
       }
       let currentAuthority = { auth: isLogin, token: token };
-      console.log('chay sau');
-      console.log(successBody);
       models.doBatch(queries, function(err) {
         if (err) return res.json({ status: false });
-        else
-          msg.length > 0 || successBody.success == false
-            ? res.json({ status: false, message: msg, success: successBody.success })
-            : res.json({
-                status: true,
-                currentAuthority: currentAuthority,
-                success: successBody.success,
-              });
+        else {
+          request(verificationUrl, function(error, response, body) {
+            body = JSON.parse(body);
+            msg.length > 0 || body.success == false
+              ? res.json({ status: false, message: msg, success: body.success })
+              : res.json({
+                  status: true,
+                  currentAuthority: currentAuthority,
+                  success: body.success,
+                });
+          });
+        }
       });
     }
   );
