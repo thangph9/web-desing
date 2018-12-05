@@ -314,9 +314,10 @@ function login(req, res) {
         }
         var verificationUrl =
           'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
-          req.body['g-recaptcha-response'] +
+          params.captcha +
           '&remoteip=' +
           req.connection.remoteAddress;
+        console.log(verificationUrl);
         // Hitting GET request to the URL, Google will respond with success or error scenario.
         request(verificationUrl, function(error, response, body) {
           body = JSON.parse(body);
