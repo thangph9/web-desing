@@ -76,7 +76,7 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const DELAY = 1500;
 let rerenders = 0;
-const TEST_SITE_KEY = '6LcBNGgUAAAAAIj17J6UuVmX_kb7vo6AxMJYj07C';
+
 @connect(({ loading, user }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   loading,
@@ -95,6 +95,7 @@ class Login extends PureComponent {
       expired: 'false',
     };
     this._reCaptchaRef = React.createRef();
+    this.responseFacebook = this.responseFacebook.bind(this);
   }
   componentDidMount() {
     setTimeout(() => {

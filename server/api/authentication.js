@@ -64,6 +64,8 @@ function register(req, res) {
   var _hash = '';
   var msg = '';
   var PARAM_IS_VALID = {};
+  var successBody = {};
+  var verificationUrl = '';
   async.series(
     [
       function(callback) {
@@ -137,6 +139,25 @@ function register(req, res) {
         }
         callback(null, null);
       },
+      function(callback) {
+        if (!params.captcha) {
+          return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
+        }
+        verificationUrl =
+          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
+          params.captcha +
+          '&remoteip=' +
+          req.connection.remoteAddress;
+        console.log(verificationUrl);
+        callback(null, null);
+      },
+      function(callback) {
+        request(verificationUrl, function(error, response, body) {
+          body = JSON.parse(body);
+          successBody = body;
+        });
+        callback(null, null);
+      },
     ],
     function(err, result) {
       if (err) res.json({ status: false });
@@ -160,9 +181,13 @@ function register(req, res) {
       models.doBatch(queries, function(err) {
         if (err) return res.json({ status: false });
         else
-          msg.length > 0
-            ? res.json({ status: false, message: msg })
-            : res.json({ status: true, currentAuthority: currentAuthority });
+          msg.length > 0 || successBody.success == false
+            ? res.json({ status: false, message: msg, success: successBody.success })
+            : res.json({
+                status: true,
+                currentAuthority: currentAuthority,
+                success: successBody.success,
+              });
       });
     }
   );
