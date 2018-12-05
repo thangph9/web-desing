@@ -349,27 +349,24 @@ function login(req, res) {
           req.connection.remoteAddress;
         callback(null, null);
       },
-      function(callback) {
-        request(verificationUrl, function(error, response, body) {
-          body = JSON.parse(body);
-          successBody = body;
-        });
-        callback(null, null);
-      },
     ],
     function(err, result) {
       let currentAuthority = { auth: isLogin, token: token };
       if (err) {
         res.json({ status: false, message: msg });
-      } else
-        msg != '' || successBody.success == false
-          ? res.json({ status: false, message: msg, success: successBody.success })
-          : res.json({
-              status: true,
-              currentAuthority: currentAuthority,
-              username: user[0].username,
-              success: successBody.success,
-            });
+      } else {
+        request(verificationUrl, function(error, response, body) {
+          body = JSON.parse(body);
+          msg != '' || body.success == false
+            ? res.json({ status: false, message: msg, success: body.success })
+            : res.json({
+                status: true,
+                currentAuthority: currentAuthority,
+                username: user[0].username,
+                success: body.success,
+              });
+        });
+      }
     }
   );
 }
