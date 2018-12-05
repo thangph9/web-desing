@@ -273,7 +273,7 @@ class Home extends PureComponent {
       nodeid = news[0].nodeid ? news[0].nodeid.replace(/\-/g, '') : 'null';
       seoTitle = news[0].seo_link + '/' + nodeid;
     }
-    if (sessionStorage.account) console.log(JSON.parse(sessionStorage.account));
+    if (sessionStorage.account) console.log(sessionStorage.account);
     return (
       <div>
         <div
