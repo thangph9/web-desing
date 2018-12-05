@@ -322,6 +322,7 @@ function login(req, res) {
         request(verificationUrl, function(error, response, body) {
           body = JSON.parse(body);
           // Success will be true or false depending upon captcha validation.
+          console.log(body);
           success = body.success;
         });
         callback(null, null);
