@@ -50,6 +50,7 @@ const MESSAGE = {
   PAYMENT_NOT_SEND_OTP: 'Bạn chưa nhắn tin xác thực! Hãy nhắn tin tới tổng đài.',
   PAYMENT_OTP_OK: 'Xác thực thành công!',
   PAYMENT_OTP_WRONG: 'OTP không chính xác.',
+  USER_EXISTS: 'Tài khoản đã được sử dụng',
 };
 function register(req, res) {
   var params = req.body;
@@ -83,6 +84,17 @@ function register(req, res) {
       function(callback) {
         bcrypt.hash(params.password, _salt, function(err, hash) {
           _hash = hash;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        models.instance.account_login.find({ username: PARAM_IS_VALID['username'] }, function(
+          err,
+          _user
+        ) {
+          if (_user != undefined && _user.length > 0) {
+            msg = MESSAGE.USER_EXISTS;
+          }
           callback(err, null);
         });
       },
@@ -141,10 +153,11 @@ function register(req, res) {
       }
       let currentAuthority = { auth: isLogin, token: token };
       models.doBatch(queries, function(err) {
-        // if (err) throw err;
-        //console.log(queries);
         if (err) return res.json({ status: false });
-        else res.json({ status: true, currentAuthority: currentAuthority });
+        else
+          msg.length > 0
+            ? res.json({ status: false, message: msg, form: PARAM_IS_VALID })
+            : res.json({ status: true, currentAuthority: currentAuthority });
       });
     }
   );
