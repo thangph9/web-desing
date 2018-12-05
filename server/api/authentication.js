@@ -190,7 +190,7 @@ function registerfb(req, res) {
             user_id: PARAM_IS_VALID.user_id,
             name: PARAM_IS_VALID.fullname,
             picture: PARAM_IS_VALID.preview_thumbnail,
-            by: PARAM_IS_VALID['3rd_by'],
+            bypage: PARAM_IS_VALID['3rd_by'],
           };
           const user_by_3rd = () => {
             let object = user_by_3rd_object;
