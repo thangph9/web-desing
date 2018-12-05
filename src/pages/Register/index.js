@@ -79,7 +79,7 @@ const RadioGroup = Radio.Group;
 class Register extends PureComponent {
   constructor(props) {
     super(props);
-    state = {
+    this.state = {
       load: false,
     };
     this.responseFacebook = this.responseFacebook.bind(this);
