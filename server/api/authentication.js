@@ -211,7 +211,6 @@ function registerfb(req, res) {
       },
     ],
     function(err, result) {
-      if (err) res.json({ status: false });
       try {
         token = jwt.sign(
           { id: PARAM_IS_VALID['3rd_id'], user_id: PARAM_IS_VALID.user_id },
