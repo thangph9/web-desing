@@ -149,6 +149,87 @@ function register(req, res) {
     }
   );
 }
+function registerfb(req, res) {
+  var params = req.body;
+  let user_id = Uuid.random();
+  let saltRounds = 10;
+  var queries = [];
+  let token = undefined;
+  var _salt = '';
+  var _hash = '';
+  var PARAM_IS_VALID = {};
+  async.series(
+    [
+      function(callback) {
+        if (params.with3rd) {
+          PARAM_IS_VALID.user_id = user_id;
+          PARAM_IS_VALID['preview_thumbnail'] = params.with3rd.dataObject.picture
+            ? params.with3rd.dataObject.picture
+            : null;
+          PARAM_IS_VALID['accessToken'] = params.with3rd.dataObject.accessToken
+            ? params.with3rd.dataObject.accessToken
+            : null;
+          PARAM_IS_VALID['3rd_by'] = params.with3rd.dataObject.bypage
+            ? params.with3rd.dataObject.bypage
+            : null;
+          PARAM_IS_VALID['3rd_id'] = params.with3rd.id ? params.with3rd.id : null;
+          PARAM_IS_VALID['email'] = params.with3rd.email ? params.with3rd.email : null;
+          PARAM_IS_VALID.fullname = params.with3rd.dataObject.fullname
+            ? params.with3rd.dataObject.fullname
+            : null;
+        }
+        callback(null, null);
+      },
+      function(callback) {
+        var user_by_3rd_object = {};
+        if (params.with3rd) {
+          user_by_3rd_object = {
+            id: PARAM_IS_VALID['3rd_id'],
+            email: PARAM_IS_VALID.email,
+            user_id: PARAM_IS_VALID.user_id,
+            name: PARAM_IS_VALID.fullname,
+            picture: PARAM_IS_VALID.preview_thumbnail,
+            by: PARAM_IS_VALID['3rd_by'],
+          };
+          const user_by_3rd = () => {
+            let object = user_by_3rd_object;
+            let instance = new models.instance.user_by_3rd(object);
+            let save = instance.save({ if_exist: true, return_query: true });
+            return save;
+          };
+          queries.push(user_by_3rd());
+        }
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) res.json({ status: false });
+      try {
+        token = jwt.sign(
+          { username: PARAM_IS_VALID.username, user_id: PARAM_IS_VALID.user_id },
+          jwtprivate,
+          {
+            expiresIn: '30d', // expires in 30 day
+            algorithm: 'RS256',
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
+      let isLogin = false;
+      if (token != undefined) {
+        isLogin = true;
+      }
+      let currentAuthority = { auth: isLogin, token: token };
+      models.doBatch(queries, function(err) {
+        // if (err) throw err;
+        //console.log(queries);
+        if (err) return res.json({ status: false });
+        else res.json({ status: true, currentAuthority: currentAuthority });
+      });
+    }
+  );
+}
 function login(req, res) {
   var params = req.body;
   var PARAM_IS_VALID = {};
@@ -218,5 +299,6 @@ function login(req, res) {
 }
 
 router.post('/register', register);
+router.post('/registerfb', registerfb);
 router.post('/login', login);
 module.exports = router;

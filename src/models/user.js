@@ -1,5 +1,5 @@
 import { query as queryUsers, queryCurrent } from '@/services/user';
-import { Register, Login } from '@/services/api';
+import { Register, Login, RegisterFacebook } from '@/services/api';
 
 export default {
   namespace: 'user',
@@ -26,10 +26,20 @@ export default {
     },
     *register({ payload }, { call, put }) {
       const response = yield call(Register, payload);
-
+      sessionStorage.account = JSON.stringify(response);
       if (response.status === true) {
         yield put({
           type: 'registration',
+          payload: response || {},
+        });
+      }
+    },
+    *registerfb({ payload }, { call, put }) {
+      const response = yield call(RegisterFacebook, payload);
+      sessionStorage.account = JSON.stringify(response);
+      if (response.status === true) {
+        yield put({
+          type: 'registrationfb',
           payload: response || {},
         });
       }
@@ -72,6 +82,12 @@ export default {
       return {
         ...state,
         register: action.payload,
+      };
+    },
+    registrationfb(state, action) {
+      return {
+        ...state,
+        registerfb: action.payload,
       };
     },
     loginAuthentication(state, action) {
