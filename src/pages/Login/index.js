@@ -101,7 +101,6 @@ class Login extends PureComponent {
     setTimeout(() => {
       this.setState({ load: true });
     }, DELAY);
-    console.log('didMount - reCaptcha Ref-', this._reCaptchaRef);
   }
   handleSubmit = e => {
     e.preventDefault();
@@ -118,13 +117,11 @@ class Login extends PureComponent {
     });
   };
   handleChange = value => {
-    console.log('Captcha value:', value);
     this.setState({ value });
   };
 
   asyncScriptOnLoad = () => {
     this.setState({ callback: 'called!' });
-    console.log('scriptLoad - reCaptcha Ref-', this._reCaptchaRef);
   };
   handleExpired = () => {
     this.setState({ expired: 'true' });
@@ -223,15 +220,15 @@ class Login extends PureComponent {
                       ],
                     })(<Input type="password" />)}
                   </FormItem>
-                  <FormItem>
-                    <ReCAPTCHA
-                      style={{ display: 'inline-block' }}
-                      ref={this._reCaptchaRef}
-                      sitekey={'6LdV534UAAAAAMJIIOjG5fVKhEigm4KgpR4WPv_f'}
-                      onChange={this.handleChange}
-                      asyncScriptOnLoad={this.asyncScriptOnLoad}
-                    />
-                  </FormItem>
+
+                  <ReCAPTCHA
+                    style={{ display: 'inline-block' }}
+                    ref={this._reCaptchaRef}
+                    sitekey={'6LcG5X4UAAAAAIonIJnn5uPMQVgCapGy3ZYRwJBU'}
+                    onChange={this.handleChange}
+                    asyncScriptOnLoad={this.asyncScriptOnLoad}
+                  />
+
                   <FormItem>
                     <Button type="primary" htmlType="submit" block>
                       Đăng nhập
