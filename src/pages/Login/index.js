@@ -94,9 +94,6 @@ class Login extends PureComponent {
       expired: 'false',
     };
   }
-  onChange(value) {
-    console.log('Captcha value:', value);
-  }
   componentDidMount() {
     setTimeout(() => {
       this.setState({ load: true });
@@ -117,6 +114,7 @@ class Login extends PureComponent {
     });
   };
   handleChange = value => {
+    console.log('Captcha value:', value);
     this.setState({ value });
   };
 
@@ -223,7 +221,7 @@ class Login extends PureComponent {
 
                   <ReCAPTCHA
                     sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
-                    onChange={() => this.onChange()}
+                    onChange={() => this.handleChange()}
                   />
 
                   <FormItem>
