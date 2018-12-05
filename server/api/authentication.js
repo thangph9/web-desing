@@ -117,7 +117,7 @@ function register(req, res) {
           password_salt: _salt,
           user_id: PARAM_IS_VALID.user_id,
         };
-        if (msg.leng > 0) {
+        if (msg.length == 0) {
           const account = () => {
             let object = account_object;
             let instance = new models.instance.account(object);
