@@ -152,13 +152,10 @@ function register(req, res) {
 function registerfb(req, res) {
   var params = req.body;
   let user_id = Uuid.random();
-  let saltRounds = 10;
   var queries = [];
+  var user = [];
   let token = undefined;
-  var _salt = '';
-  var _hash = '';
   var PARAM_IS_VALID = {};
-  console.log(params.with3rd);
   async.series(
     [
       function(callback) {
@@ -182,32 +179,42 @@ function registerfb(req, res) {
         callback(null, null);
       },
       function(callback) {
-        var user_by_3rd_object = {};
-        if (params.with3rd) {
-          user_by_3rd_object = {
-            id: PARAM_IS_VALID['3rd_id'],
-            email: PARAM_IS_VALID.email,
-            user_id: PARAM_IS_VALID.user_id,
-            name: PARAM_IS_VALID.fullname,
-            picture: PARAM_IS_VALID.preview_thumbnail,
-            bypage: PARAM_IS_VALID['3rd_by'],
-          };
-          const user_by_3rd = () => {
-            let object = user_by_3rd_object;
-            let instance = new models.instance.user_by_3rd(object);
-            let save = instance.save({ if_exist: true, return_query: true });
-            return save;
-          };
-          queries.push(user_by_3rd());
+        models.instance.user_by_3rd.find({ id: PARAM_IS_VALID['3rd_id'] }, function(err, _user) {
+          if (_user != undefined && _user.length > 0) {
+            user = _user;
+          }
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        if (user.length == 0) {
+          var user_by_3rd_object = {};
+          if (params.with3rd) {
+            user_by_3rd_object = {
+              id: PARAM_IS_VALID['3rd_id'],
+              email: PARAM_IS_VALID.email,
+              user_id: PARAM_IS_VALID.user_id,
+              name: PARAM_IS_VALID.fullname,
+              picture: PARAM_IS_VALID.preview_thumbnail,
+              bypage: PARAM_IS_VALID['3rd_by'],
+            };
+            const user_by_3rd = () => {
+              let object = user_by_3rd_object;
+              let instance = new models.instance.user_by_3rd(object);
+              let save = instance.save({ if_exist: true, return_query: true });
+              return save;
+            };
+            queries.push(user_by_3rd());
+          }
+          callback(null, null);
         }
-        callback(null, null);
       },
     ],
     function(err, result) {
       if (err) res.json({ status: false });
       try {
         token = jwt.sign(
-          { username: PARAM_IS_VALID.username, user_id: PARAM_IS_VALID.user_id },
+          { id: PARAM_IS_VALID['3rd_id'], user_id: PARAM_IS_VALID.user_id },
           jwtprivate,
           {
             expiresIn: '30d', // expires in 30 day

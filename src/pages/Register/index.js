@@ -38,7 +38,7 @@
 /* eslint-disable dot-notation */
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import DocumentMeta from 'react-document-meta';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
@@ -129,6 +129,10 @@ class Register extends PureComponent {
     };
     const tailFormItemLayout = {};
     const { getFieldDecorator } = this.props.form;
+    if (sessionStorage.account) {
+      return <Redirect to={`/`} />;
+    }
+
     return (
       <DocumentMeta {...meta}>
         <div className={styles['container__container___1fvX0']}>
