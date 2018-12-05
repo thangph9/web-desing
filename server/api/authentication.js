@@ -229,10 +229,13 @@ function registerfb(req, res) {
         isLogin = true;
       }
       let currentAuthority = { auth: isLogin, token: token };
-      models.doBatch(queries, function(err) {
-        if (err) return res.json({ status: false });
-        else res.json({ status: true, currentAuthority: currentAuthority });
-      });
+      if (queries.length > 0) {
+        models.doBatch(queries, function(err) {
+          if (err) return res.json({ status: false });
+          else res.json({ status: true, currentAuthority: currentAuthority });
+        });
+      } else if (err) return res.json({ status: false });
+      else res.json({ status: true, currentAuthority: currentAuthority });
     }
   );
 }
