@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable react/no-unused-state */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable react/no-access-state-in-setstate */
@@ -89,8 +90,8 @@ class Login extends PureComponent {
       load: false,
       fireRerender: rerenders,
       callback: 'not fired',
-      value: '[empty]',
-      load: false,
+      value: '',
+      loadpage: false,
       expired: 'false',
     };
     this._reCaptchaRef = React.createRef();
@@ -103,7 +104,9 @@ class Login extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      if (!err) {
+      if (!err && this.state.value) {
+        values['captcha'] = value;
+        console.log(values);
         this.props.dispatch({
           type: 'user/login',
           payload: values,
@@ -111,11 +114,10 @@ class Login extends PureComponent {
       }
     });
     this.setState({
-      load: !this.state.load,
+      loadpage: !this.state.load,
     });
   };
   handleChange = value => {
-    console.log('Captcha value:', value);
     this.setState({ value });
   };
 
@@ -150,7 +152,7 @@ class Login extends PureComponent {
       });
     }
     this.setState({
-      load: !this.state.load,
+      loadpage: !this.state.load,
     });
   }
   render() {
