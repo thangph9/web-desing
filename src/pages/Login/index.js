@@ -93,10 +93,10 @@ class Login extends PureComponent {
       load: false,
       expired: 'false',
     };
-    this.responseFacebook = this.responseFacebook.bind(this);
-    this._reCaptchaRef = React.createRef();
   }
-
+  onChange(value) {
+    console.log('Captcha value:', value);
+  }
   componentDidMount() {
     setTimeout(() => {
       this.setState({ load: true });
@@ -223,7 +223,7 @@ class Login extends PureComponent {
 
                   <ReCAPTCHA
                     sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
-                    onChange={this.handleChange}
+                    onChange={() => this.onChange}
                   />
 
                   <FormItem>
