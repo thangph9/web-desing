@@ -37,6 +37,7 @@ export default {
     *registerfb({ payload }, { call, put }) {
       const response = yield call(RegisterFacebook, payload);
       sessionStorage.account = JSON.stringify(response);
+      console.log(response);
       if (response.status === true) {
         yield put({
           type: 'registrationfb',
