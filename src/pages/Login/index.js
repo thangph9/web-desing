@@ -1,3 +1,4 @@
+/* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/sort-comp */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable prefer-const */
@@ -60,6 +61,7 @@ import {
   Cascader,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import FacebookLogin from 'react-facebook-login';
 import styles from './index.less';
 
 const FormItem = Form.Item;
@@ -75,6 +77,14 @@ const RadioGroup = Radio.Group;
 }))
 @Form.create()
 class Login extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      load: false,
+    };
+    this.responseFacebook = this.responseFacebook.bind(this);
+  }
+
   componentDidMount() {}
   handleSubmit = e => {
     e.preventDefault();
@@ -86,7 +96,35 @@ class Login extends PureComponent {
         });
       }
     });
+    this.setState({
+      load: !this.state.load,
+    });
   };
+  responseFacebook(res) {
+    const { dispatch } = this.props;
+    if (res) {
+      const { id, email, name, accessToken, picture } = res;
+      let dataObject = {
+        accessToken,
+        fullname: name,
+        picture: picture.data ? picture.data.url : null,
+        bypage: 'facebook',
+      };
+      dispatch({
+        type: 'user/registerfb',
+        payload: {
+          with3rd: {
+            id,
+            email,
+            dataObject,
+          },
+        },
+      });
+    }
+    this.setState({
+      load: !this.state.load,
+    });
+  }
   render() {
     const meta = {
       title: 'Đăng Nhập',
@@ -123,14 +161,16 @@ class Login extends PureComponent {
             <div className={styles['container__container___1fvX0']}>
               <div className={styles['register-form__registerContainer___2J6fH']}>
                 <Form onSubmit={this.handleSubmit}>
-                  <Button block style={{ backgroundColor: '#3b5998' }}>
-                    <Icon
-                      type="facebook"
-                      style={{ fontSize: '24px', color: '#fff' }}
-                      theme="filled"
-                    />
-                    <span style={{ color: '#fff' }}>Đăng nhập bằng facebook</span>
-                  </Button>
+                  <FacebookLogin
+                    appId="287241238592791"
+                    autoLoad={false}
+                    textButton="Đăng nhập với Facebook"
+                    language="vi_VN"
+                    size="medium"
+                    icon="fa-facebook"
+                    fields="name,email,picture"
+                    callback={this.responseFacebook}
+                  />
                   <FormItem label="Tên đăng nhập">
                     {getFieldDecorator('username', {
                       rules: [
