@@ -194,7 +194,14 @@ function registerfb(req, res) {
         }
         callback(null, null);
       },
-
+      function(callback) {
+        models.instance.account_login.find({ id: PARAM_IS_VALID['3rd_id'] }, function(err, _user) {
+          if (_user != undefined && _user.length > 0) {
+            user = _user;
+          }
+          callback(err, null);
+        });
+      },
       function(callback) {
         var user_by_3rd_object = {};
         if (params.with3rd) {
@@ -206,13 +213,15 @@ function registerfb(req, res) {
             picture: PARAM_IS_VALID.preview_thumbnail,
             bypage: PARAM_IS_VALID['3rd_by'],
           };
-          const user_by_3rd = () => {
-            let object = user_by_3rd_object;
-            let instance = new models.instance.user_by_3rd(object);
-            let save = instance.save({ if_exist: true, return_query: true });
-            return save;
-          };
-          queries.push(user_by_3rd());
+          if (user.length == 0) {
+            const user_by_3rd = () => {
+              let object = user_by_3rd_object;
+              let instance = new models.instance.user_by_3rd(object);
+              let save = instance.save({ if_exist: true, return_query: true });
+              return save;
+            };
+            queries.push(user_by_3rd());
+          }
         }
         callback(null, null);
       },
