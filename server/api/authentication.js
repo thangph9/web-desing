@@ -175,7 +175,6 @@ function registerfb(req, res) {
   var user = [];
   let token = undefined;
   var PARAM_IS_VALID = {};
-  var success = false;
   var msgCheckcaptcha = '';
   async.series(
     [
@@ -264,6 +263,7 @@ function login(req, res) {
   var isLogin = false;
   var token = '';
   var msg = '';
+  var success = false;
   async.series(
     [
       function(callback) {
