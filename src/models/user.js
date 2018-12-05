@@ -28,7 +28,7 @@ export default {
       const response = yield call(Register, payload);
 
       if (response.status === true) {
-        sessionStorage.account = JSON.stringify(response).currentAuthority.username;
+        sessionStorage.account = response.currentAuthority.username;
         yield put({
           type: 'registration',
           payload: response || {},
@@ -39,7 +39,7 @@ export default {
       const response = yield call(RegisterFacebook, payload);
 
       if (response.status === true) {
-        sessionStorage.account = JSON.stringify(response).currentAuthority.username;
+        sessionStorage.account = response.currentAuthority.username;
         yield put({
           type: 'registrationfb',
           payload: response || {},
@@ -49,7 +49,7 @@ export default {
     *login({ payload }, { call, put }) {
       const response = yield call(Login, payload);
       if (response.status === true) {
-        sessionStorage.account = JSON.stringify(response).currentAuthority.username;
+        sessionStorage.account = response.currentAuthority.username;
         yield put({
           type: 'loginAuthentication',
           payload: response || {},
