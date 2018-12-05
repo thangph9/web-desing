@@ -223,7 +223,7 @@ class Login extends PureComponent {
 
                   <ReCAPTCHA
                     sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
-                    onChange={() => this.onChange}
+                    onChange={() => this.onChange()}
                   />
 
                   <FormItem>
