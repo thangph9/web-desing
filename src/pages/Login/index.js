@@ -105,7 +105,7 @@ class Login extends PureComponent {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err && this.state.value) {
-        values['captcha'] = value;
+        values['captcha'] = this.state.value;
         console.log(values);
         this.props.dispatch({
           type: 'user/login',
