@@ -345,13 +345,20 @@ function login(req, res) {
           req.connection.remoteAddress;
         callback(null, null);
       },
-      request(verificationUrl, function(error, response, body) {
-        body = JSON.parse(body);
-        successBody = body;
-      }),
+      function(callback) {
+        request(verificationUrl, function(error, response, body) {
+          body = JSON.parse(body);
+          successBody = body;
+          console.log('chay truoc ');
+          console.log(successBody);
+        });
+        callback(null, null);
+      },
     ],
     function(err, result) {
       let currentAuthority = { auth: isLogin, token: token };
+      console.log('chay sau');
+      console.log(successBody);
       if (err) {
         res.json({ status: false, message: msg });
       } else
