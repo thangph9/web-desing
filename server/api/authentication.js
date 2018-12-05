@@ -36,7 +36,6 @@ const models = require('../settings');
 const fs = require('fs');
 var express = require('express');
 var bodyParser = require('body-parser');
-var app = express();
 const sharp = require('sharp');
 const Uuid = require('cassandra-driver').types.Uuid;
 const bcrypt = require('bcryptjs');
@@ -264,6 +263,7 @@ function login(req, res) {
   var token = '';
   var msg = '';
   var success = false;
+  var verificationUrl = '';
   async.series(
     [
       function(callback) {
@@ -312,13 +312,15 @@ function login(req, res) {
         if (!params.captcha) {
           return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
         }
-        var verificationUrl =
+        verificationUrl =
           'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
           params.captcha +
           '&remoteip=' +
           req.connection.remoteAddress;
         console.log(verificationUrl);
-        // Hitting GET request to the URL, Google will respond with success or error scenario.
+        callback(null, null);
+      },
+      function(callback) {
         request(verificationUrl, function(error, response, body) {
           body = JSON.parse(body);
           // Success will be true or false depending upon captcha validation.
