@@ -309,11 +309,7 @@ function login(req, res) {
         callback(null, null);
       },
       function(callback) {
-        if (
-          req.body['g-recaptcha-response'] === undefined ||
-          req.body['g-recaptcha-response'] === '' ||
-          req.body['g-recaptcha-response'] === null
-        ) {
+        if (!params.captcha) {
           return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
         }
         var verificationUrl =
@@ -327,6 +323,7 @@ function login(req, res) {
           // Success will be true or false depending upon captcha validation.
           success = body.success;
         });
+        callback(null, null);
       },
     ],
     function(err, result) {
