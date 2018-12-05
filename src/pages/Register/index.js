@@ -1,3 +1,4 @@
+/* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/sort-comp */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable prefer-const */
@@ -78,6 +79,9 @@ const RadioGroup = Radio.Group;
 class Register extends PureComponent {
   constructor(props) {
     super(props);
+    state = {
+      load: false,
+    };
     this.responseFacebook = this.responseFacebook.bind(this);
   }
 
@@ -92,27 +96,33 @@ class Register extends PureComponent {
         });
       }
     });
+    this.setState({
+      load: !this.state.load,
+    });
   };
   responseFacebook(res) {
     const { dispatch } = this.props;
-
-    const { id, email, name, accessToken, picture } = res;
-    console.log(res);
-    let dataObject = {
-      accessToken,
-      fullname: name,
-      picture: picture.data ? picture.data.url : null,
-      bypage: 'facebook',
-    };
-    dispatch({
-      type: 'user/registerfb',
-      payload: {
-        with3rd: {
-          id,
-          email,
-          dataObject,
+    if (res) {
+      const { id, email, name, accessToken, picture } = res;
+      let dataObject = {
+        accessToken,
+        fullname: name,
+        picture: picture.data ? picture.data.url : null,
+        bypage: 'facebook',
+      };
+      dispatch({
+        type: 'user/registerfb',
+        payload: {
+          with3rd: {
+            id,
+            email,
+            dataObject,
+          },
         },
-      },
+      });
+    }
+    this.setState({
+      load: !this.state.load,
     });
   }
   render() {
