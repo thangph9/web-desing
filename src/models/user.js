@@ -7,7 +7,7 @@ export default {
   state: {
     list: [],
     currentUser: {},
-    register: {},
+    register: undefined,
   },
 
   effects: {
@@ -27,19 +27,13 @@ export default {
     },
     *register({ payload }, { call, put }) {
       const response = yield call(Register, payload);
-
       if (response.status === 'ok') {
         sessionStorage.account = JSON.stringify(response);
-        yield put({
-          type: 'registration',
-          payload: response,
-        });
-      } else {
-        yield put({
-          type: 'registration',
-          payload: response,
-        });
       }
+      yield put({
+        type: 'registration',
+        payload: response,
+      });
     },
     *registerfb({ payload }, { call, put }) {
       const response = yield call(RegisterFacebook, payload);
@@ -89,7 +83,7 @@ export default {
     registration(state, action) {
       return {
         ...state,
-        register: action.payload,
+        register: action.payload.status,
       };
     },
     registrationfb(state, action) {
