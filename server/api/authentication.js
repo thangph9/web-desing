@@ -182,6 +182,7 @@ function register(req, res) {
       }
       let currentAuthority = { auth: isLogin, token: token };
       models.doBatch(queries, function(err) {
+        console.log(err);
         if (err) return res.json({ status: false });
         else {
           msg.length > 0 || successBody == false
