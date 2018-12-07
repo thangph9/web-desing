@@ -1,4 +1,5 @@
 import { query as queryUsers, queryCurrent } from '@/services/user';
+import { Register, Login, RegisterFacebook, CheckEmail } from '@/services/api';
 
 export default {
   namespace: 'user',
@@ -6,6 +7,8 @@ export default {
   state: {
     list: [],
     currentUser: {},
+    register: undefined,
+    check: '',
   },
 
   effects: {
@@ -22,6 +25,51 @@ export default {
         type: 'saveCurrentUser',
         payload: response,
       });
+    },
+    *register({ payload }, { call, put }) {
+      const response = yield call(Register, payload);
+      if (response.status === 'ok') {
+        sessionStorage.account = JSON.stringify(response);
+      }
+      yield put({
+        type: 'registration',
+        payload: response,
+      });
+    },
+    *registerfb({ payload }, { call, put }) {
+      const response = yield call(RegisterFacebook, payload);
+
+      if (response.status === 'ok') {
+        sessionStorage.account = JSON.stringify(response);
+        yield put({
+          type: 'registrationfb',
+          payload: response || {},
+        });
+      }
+    },
+    *login({ payload }, { call, put }) {
+      const response = yield call(Login, payload);
+      if (response.status === 'ok') {
+        sessionStorage.account = JSON.stringify(response);
+        yield put({
+          type: 'loginAuthentication',
+          payload: response || {},
+        });
+      }
+    },
+    *check({ payload }, { call, put }) {
+      const response = yield call(CheckEmail, payload);
+      if (response.status === 'ok') {
+        yield put({
+          type: 'checkAuthentication',
+          payload: response.message || '',
+        });
+      } else {
+        yield put({
+          type: 'checkAuthentication',
+          payload: response.message,
+        });
+      }
     },
   },
 
@@ -45,6 +93,30 @@ export default {
           ...state.currentUser,
           notifyCount: action.payload,
         },
+      };
+    },
+    registration(state, action) {
+      return {
+        ...state,
+        register: action.payload.status,
+      };
+    },
+    registrationfb(state, action) {
+      return {
+        ...state,
+        registerfb: action.payload,
+      };
+    },
+    loginAuthentication(state, action) {
+      return {
+        ...state,
+        login: action.payload,
+      };
+    },
+    checkAuthentication(state, action) {
+      return {
+        ...state,
+        check: action.payload,
       };
     },
   },

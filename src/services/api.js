@@ -146,6 +146,30 @@ export async function getCategoryDetail(params) {
     body: params,
   });
 }
+export async function Register(params) {
+  return request('/api/authentication/register', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function CheckEmail(params) {
+  return request('/api/authentication/checkemail', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function RegisterFacebook(params) {
+  return request('/api/authentication/registerfb', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function Login(params) {
+  return request('/api/authentication/login', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function getCategoryProduct(nodeid) {
   return request('/api/product/LC', {
     method: 'POST',

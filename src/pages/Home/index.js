@@ -262,13 +262,13 @@ class Home extends PureComponent {
     }
   }
   render() {
-    let seoTitle = '';
-    let nodeid = '';
     const {
       product: {
         list: { news, days, hotday },
       },
     } = this.props;
+    let seoTitle = '';
+    let nodeid = '';
     if (news != undefined && news.length > 0) {
       nodeid = news[0].nodeid ? news[0].nodeid.replace(/\-/g, '') : 'null';
       seoTitle = news[0].seo_link + '/' + nodeid;

@@ -1,3 +1,7 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable no-else-return */
+/* eslint-disable arrow-body-style */
+/* eslint-disable no-unneeded-ternary */
 /* eslint-disable prefer-const */
 /* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable no-useless-escape */
@@ -72,9 +76,7 @@ class ProductItem extends PureComponent {
     return (
       <Link
         to={`/category/${seoTitle}`}
-        className={`${styles['default__col-md-6___9I2wX']} ${
-          styles['default__padding-remove___2T9LM']
-        }`}
+        className={`${styles['home__col-md-6___2zJjj']} ${styles['home__paddingRemove___3EmRr']}`}
         href="/sales/nanas-wonderland-windmill-nutritionworks...-5bd98f1f6ada6d0bdd52fc2f"
       >
         <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
@@ -151,6 +153,7 @@ class Amazon extends PureComponent {
         className={`${styles['hidden-md-down']} ${
           styles['first-sale-tile__first-sale-desktop___3DYvl']
         }`}
+        href="/sales/giam-den-50-blackmoresr-thuc-pham-chuc-nang-tu-uc-5bd6c3137cf0476b22488d23"
       >
         <div className={`${styles['row__row___2roCA']}`}>
           <div
@@ -247,11 +250,128 @@ class Amazon extends PureComponent {
       </Link>
     );
   }
-  render() {
-    var {
-      product: { list },
+  renderNews() {
+    const {
+      product: {
+        amazon: { news },
+      },
     } = this.props;
-    var dataList = list && list.length > 0 ? list : [];
+    let data = news ? news : [];
+    return data.length > 0 ? (
+      <div>
+        <div
+          className={`${styles['section-title__title-wrap___9DwpB']} ${
+            styles['home__currentSaleSectionTitle___XcRpN']
+          }`}
+        >
+          <h2 className={`${styles['section-title__title___2Dw2G']}`}>Ưu đãi mới Nhất</h2>
+        </div>
+        <div className={`${styles['row__row___2roCA']}`}>
+          {data.map((e, i) => {
+            return <ProductItem data={e} key={i} />;
+          })}
+        </div>
+      </div>
+    ) : (
+      ''
+    );
+  }
+  renderDays() {
+    const {
+      product: {
+        list: { days },
+      },
+    } = this.props;
+    let data = days ? days : [];
+    if (data.length > 0) {
+      return (
+        <div
+          className={`${styles['potd-container']} ${styles['potd-new__potd-container___1mO4T']}`}
+        >
+          <div
+            className={`${styles['section-title__title-wrap___9DwpB']} ${
+              styles['potd-new__title-container___1o6iD']
+            }`}
+          >
+            <h2 className={`${styles['section-title__title___2Dw2G']}`}>
+              Đặc biệt nhất trong Ngày
+            </h2>
+            <div className={`${styles['section-title__sub-title___333O9']}`}>
+              (Kết thúc vào hôm nay)
+            </div>
+          </div>
+          <div className={`${styles['row__row___2roCA']}`}>
+            {data.map((e, i) => {
+              return <ProductItem data={e} key={i} />;
+            })}
+          </div>
+        </div>
+      );
+    } else {
+      return '';
+    }
+  }
+  renderBestSeller() {
+    const {
+      product: {
+        list: { bestSeller },
+      },
+    } = this.props;
+    let data = bestSeller ? bestSeller : [];
+    if (data.length > 0) {
+      return (
+        <div>
+          <div
+            className={`${styles['section-title__title-wrap___9DwpB']} ${
+              styles['home__stillOnSaleWrap____52sJ']
+            }`}
+          >
+            <h2 className={`${styles['section-title__title___2Dw2G']}`}>Vẫn đang diễn Ra</h2>
+            <div className={`${styles['section-title__sub-title___333O9']}`}>
+              (Nhưng sẽ kết thúc sớm)
+            </div>
+          </div>
+          <div className={`${styles['row__row___2roCA']}`}>
+            {data.map((e, i) => {
+              return <ProductItem data={e} key={i} />;
+            })}
+          </div>
+        </div>
+      );
+    } else {
+      return '';
+    }
+  }
+  renderHotNew() {
+    const {
+      product: {
+        amazon: { hotnew },
+      },
+    } = this.props;
+    let data = hotnew ? hotnew : [];
+    return data.length > 0 ? (
+      <div>
+        <div
+          className={`${styles['section-title__title-wrap___9DwpB']} ${
+            styles['home__currentSaleSectionTitle___XcRpN']
+          }`}
+        >
+          <h2 className={`${styles['section-title__title___2Dw2G']}`}>Ưu đãi mới Nhất</h2>
+        </div>
+        <div className={`${styles['row__row___2roCA']}`}>
+          {data.map((e, i) => {
+            return <ProductItem data={e} key={i} />;
+          })}
+        </div>
+      </div>
+    ) : (
+      ''
+    );
+  }
+  render() {
+    const {
+      amazon: { news },
+    } = this.props.product;
     const meta = {
       title: 'Amazon',
       description: null,
@@ -263,23 +383,88 @@ class Amazon extends PureComponent {
         },
       },
     };
+
+    var seoTitle = '';
     return (
       <DocumentMeta {...meta}>
         <div
           className={`${styles['container__container___1fvX0']} ${
-            styles['default__container___1TdpD']
+            styles['home__featuredContainer___1YAQy']
           }`}
         >
-          <div className={`${styles['row__row___2roCA']}`}>
-            <div className={`${styles['first-sale-tile__first-sale-container___12AH9']}`}>
-              {dataList.length > 0 ? this.renderBanner() : ''}
-              {this.renderBannerMoblie()}
-            </div>
+          <Link to={`/category/${seoTitle}`}>
+            <img
+              className={`${styles['hidden-md-up']}`}
+              src={`/images/f/061b4f6603934b6caf40d8571be0be35`}
+              alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
+            />
+            <img
+              className={`${styles['hidden-sm-down']}`}
+              src={`/images/f/061b4f6603934b6caf40d8571be0be35`}
+              alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
+            />
 
-            {dataList.map((v, i) => (
-              <ProductItem key={i} data={v} />
-            ))}
+            <div
+              className={`${styles['hidden-md-up']} ${styles['home__badge___2w2Lc']} ${
+                styles['home__featured-badge___2hhaD']
+              }`}
+            >
+              Ưu đãi nổi bật
+            </div>
+            <div className={`${styles['hidden-md-up']} ${styles['home__currentSaleInfo___2Fj0C']}`}>
+              <div className={`${styles['home__currentSaleTitle___1jXFQ']}`}>
+                Giảm Đến 82% - Nike Giày Thể Thao Nam
+              </div>
+              <div className={`${styles['home__endTimeWrap___25O4u']}`}>
+                <span className={`${styles['home__endTimeContent___2G8rq']}`}>
+                  <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
+                  <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>{' '}
+                  <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
+                </span>
+              </div>
+            </div>
+          </Link>
+        </div>
+        <div
+          className={`${styles['container__container___1fvX0']} ${
+            styles['home__homeContainer___1VKcQ']
+          }`}
+        >
+          <div className={`${styles['home__topShadow___3wy_J']}`} />
+          {this.renderNews()}
+          <div
+            id={`${styles['home-banner']}`}
+            className={`${styles['banner__bannerContainer___3Inm6']} ${
+              styles['home__bannerWrap___1k6zX']
+            }`}
+          >
+            <div className={`${styles['banner__csslider___3IuXB']}`}>
+              <input type="radio" id="slides_0" name="slides" defaultValue="on" />
+              <div className={`${styles['banner__arrows___iX3cf']}`}>
+                <label htmlFor="slides_0" />
+              </div>
+              <ul style={{ display: 'none' }}>
+                <li>
+                  <a
+                    href="https://support.leflair.vn/hc/vi/articles/360009061113-Ch%C6%B0%C6%A1ng-tr%C3%ACnh-%C6%AFu-%C4%91%C3%A3i-Cashback-5-C%C3%A0-th%E1%BA%BB-li%E1%BB%81n-tay-S%C4%83n-ngay-%C6%B0u-%C4%91%C3%A3i"
+                    className={`${styles['home__bannerWrap___1k6zX']} ${
+                      styles['banner__imageContainer___1Q2f8']
+                    }`}
+                    target="blank"
+                  >
+                    <img
+                      className={`${styles['banner__bannerImg___3rOw2']}`}
+                      src="https://images.leflair.vn/w640/q85/5bd9cf9c6ada6d26d252fea1.jpg"
+                      srcSet="https://images.leflair.vn/w640/q85/5bd9cf9c6ada6d26d252fea1.jpg 640w, https://images.leflair.vn/w1080/q85/5bd9cf9c6ada6d26d252fea1.jpg 1080w, https://images.leflair.vn/w1440/q85/5bd9cf9c6ada6d26d252fea1.jpg 1440w"
+                      sizes="100vw, (min-width: 992px) 960px, 1140px"
+                    />
+                  </a>
+                </li>
+              </ul>
+              <div className={`${styles['banner__navigation___1KLgF']}`} />
+            </div>
           </div>
+          {this.renderHotNew()}
         </div>
       </DocumentMeta>
     );

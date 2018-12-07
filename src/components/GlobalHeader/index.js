@@ -1,11 +1,13 @@
 import React, { PureComponent } from 'react';
-import Link from 'umi/link';
+import { Link } from 'react-router-dom';
 import Debounce from 'lodash-decorators/debounce';
 import styles from './styles.less';
 
 // eslint-disable-next-line no-undef
 
 class GlobalHeader extends PureComponent {
+  state = {};
+
   componentWillUnmount() {
     this.triggerResizeEvent.cancel();
   }
@@ -26,6 +28,20 @@ class GlobalHeader extends PureComponent {
     this.props.dispatch({
       type: 'list/modal',
       payload: true,
+    });
+  }
+  handleOpenAccount(open) {
+    this.setState(
+      {
+        [open]: !this.state[open],
+      },
+      () => {}
+    );
+  }
+  handleClickOut() {
+    sessionStorage.removeItem('account');
+    this.setState({
+      open: false,
     });
   }
   render() {
@@ -134,26 +150,158 @@ class GlobalHeader extends PureComponent {
                     </ul>
                   </div>
                 </li>
-                <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                    <a
-                      className={`${styles['auth-buttons__nav-link___1DCMU']} ${
-                        styles['auth-buttons__btn-sign-in___1nV-O']
-                      }`}
-                      href="/auth/signin?redirect=/"
+                {this.state.open ? (
+                  <li className={`${styles['header__nav-item___MQLXP']}`}>
+                    <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
+                      {sessionStorage.account ? (
+                        <span
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => this.handleOpenAccount('open')}
+                          className={`${styles['auth-buttons__nav-link___1DCMU']} ${styles[
+                            'auth-buttons__btn-sign-in___1nV-O'
+                          ] +
+                            ' ' +
+                            styles['language-dropdown__dropdown-toggle___3DM4H']}`}
+                          href="/auth/signin?redirect=/"
+                        >
+                          Tài khoản
+                        </span>
+                      ) : (
+                        <Link
+                          to={'/login'}
+                          className={`${styles['auth-buttons__nav-link___1DCMU']} ${
+                            styles['auth-buttons__btn-sign-in___1nV-O']
+                          }`}
+                          href="/auth/signin?redirect=/"
+                        >
+                          Đăng nhập
+                        </Link>
+                      )}
+                      {!sessionStorage.account && (
+                        <Link
+                          to={'/register'}
+                          className={`${styles['auth-buttons__nav-link___1DCMU']} ${
+                            styles['auth-buttons__btn-register___3sIO1']
+                          }`}
+                          href="/auth/register"
+                        >
+                          Tạo tài khoản
+                        </Link>
+                      )}
+                    </div>
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '30px',
+                        left: '0px',
+                        boxShadow: 'rgba(78, 89, 93, 0.15) 0px 8px 11px 0px',
+                        zIndex: 10,
+                        background: 'rgb(255, 255, 255)',
+                        padding: '9px 0px',
+                      }}
+                      className="jsx-1151532622 jsx-1655770887 content"
                     >
-                      Đăng nhập
-                    </a>
-                    <a
-                      className={`${styles['auth-buttons__nav-link___1DCMU']} ${
-                        styles['auth-buttons__btn-register___3sIO1']
-                      }`}
-                      href="/auth/register"
-                    >
-                      Tạo tài khoản
-                    </a>
-                  </div>
-                </li>
+                      <div style={{ minWidth: '159px' }}>
+                        <Link
+                          to={`/accountinformation`}
+                          onClick={() => this.handleOpenAccount('open')}
+                          className={
+                            styles['jsx-2989784357'] +
+                            ' ' +
+                            styles['dropdown-item'] +
+                            ' ' +
+                            styles['item-login']
+                          }
+                        >
+                          Thông tin tài khoản
+                        </Link>
+                        <Link
+                          to={`/order`}
+                          onClick={() => this.handleOpenAccount('open')}
+                          className={
+                            styles['jsx-2989784357'] +
+                            ' ' +
+                            styles['dropdown-item'] +
+                            ' ' +
+                            styles['item-login']
+                          }
+                        >
+                          Quản lý đơn hàng
+                        </Link>
+                        <Link
+                          to={`/accountaddress`}
+                          onClick={() => this.handleOpenAccount('open')}
+                          className={
+                            styles['jsx-2989784357'] +
+                            ' ' +
+                            styles['dropdown-item'] +
+                            ' ' +
+                            styles['item-login']
+                          }
+                          href="/vn/account/addresses"
+                        >
+                          Địa chỉ của tôi
+                        </Link>
+
+                        <hr />
+                        <div>
+                          <div
+                            onClick={() => this.handleClickOut()}
+                            className={
+                              styles['jsx-2989784357'] +
+                              ' ' +
+                              styles['dropdown-item'] +
+                              ' ' +
+                              styles['item-login']
+                            }
+                          >
+                            Thoát
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                ) : (
+                  <li className={`${styles['header__nav-item___MQLXP']}`}>
+                    <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
+                      {sessionStorage.account ? (
+                        <span
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => this.handleOpenAccount('open')}
+                          className={`${styles['auth-buttons__nav-link___1DCMU']} ${styles[
+                            'auth-buttons__btn-sign-in___1nV-O'
+                          ] +
+                            ' ' +
+                            styles['language-dropdown__dropdown-toggle___3DM4H']}`}
+                          href="/auth/signin?redirect=/"
+                        >
+                          Tài khoản
+                        </span>
+                      ) : (
+                        <Link
+                          to={'/login'}
+                          className={`${styles['auth-buttons__nav-link___1DCMU']} ${
+                            styles['auth-buttons__btn-sign-in___1nV-O']
+                          }`}
+                          href="/auth/signin?redirect=/"
+                        >
+                          Đăng nhập
+                        </Link>
+                      )}
+                      {!sessionStorage.account && (
+                        <Link
+                          to={'/register'}
+                          className={`${styles['auth-buttons__nav-link___1DCMU']} ${
+                            styles['auth-buttons__btn-register___3sIO1']
+                          }`}
+                          href="/auth/register"
+                        >
+                          Tạo tài khoản
+                        </Link>
+                      )}
+                    </div>
+                  </li>
+                )}
               </ul>
             </div>
             <button

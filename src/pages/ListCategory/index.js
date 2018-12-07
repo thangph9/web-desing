@@ -244,6 +244,11 @@ class ListCategory extends PureComponent {
   componentDidMount() {
     var { dispatch, match } = this.props;
     var sort = this.props.location.query.sort;
+    if (this.props.location.query.brand) {
+      this.setState({
+        brand: [...this.state.brand, this.props.location.query.brand],
+      });
+    }
     dispatch({
       type: 'category/list',
       payload: match.params.nodeid,
@@ -371,12 +376,19 @@ class ListCategory extends PureComponent {
     });
   }
   handleCheckFilter(filter, title) {
+    if (title) {
+      this.setState({
+        [title]: !this.state[title],
+      });
+    }
     let pathname = this.props.location.pathname;
     let search = this.props.location.search;
     var result = this.state[filter].filter((v, i) => {
       return v == title;
     });
+
     if (result.length == 0) {
+      console.log('ok');
       this.setState(
         {
           category: filter == 'category' ? [...this.state.category, title] : this.state.category,
@@ -387,6 +399,7 @@ class ListCategory extends PureComponent {
         () => {}
       );
     } else {
+      console.log('ok1');
       var arr = this.state[filter].filter(v => {
         return v != title;
       });
@@ -427,13 +440,7 @@ class ListCategory extends PureComponent {
       );
     });
   }
-  handleClick(obj) {
-    if (obj.id) {
-      this.setState({
-        [obj.id]: !this.state[obj.id],
-      });
-    }
-  }
+
   handleClickFilter(value, value1) {
     var rowFilter = document.getElementById(value);
     if (rowFilter.style.display == 'block') {
@@ -451,6 +458,7 @@ class ListCategory extends PureComponent {
     if (dataDetail) {
       dataDetail = Array.isArray(detail) ? detail : [];
     }
+
     var link = '/';
     if (dataDetail[0] != undefined) {
       if (
@@ -462,7 +470,6 @@ class ListCategory extends PureComponent {
         link += dataDetail[0].seo_link;
       }
     }
-    console.log(link);
     return (
       <div className={styles['sale__col-md-8___34B6S']}>
         <ol
@@ -475,9 +482,11 @@ class ListCategory extends PureComponent {
               <Link to={link}>{dataDetail.length > 0 ? dataDetail[0].title : ''}</Link>
             </li>
           )}
-          <li className={styles['breadcrumb__breadcrumb-item___3ytpk']}>
-            <h1>{dataDetail.length > 0 ? dataDetail[1].title : ''}</h1>
-          </li>
+          {dataDetail.length > 0 && (
+            <li className={styles['breadcrumb__breadcrumb-item___3ytpk']}>
+              <h1>{dataDetail.length > 0 ? dataDetail[2].title : ''}</h1>
+            </li>
+          )}
         </ol>
       </div>
     );
@@ -545,6 +554,7 @@ class ListCategory extends PureComponent {
       { id: 'a-6', title: 'a-6' },
     ];
     var { filter } = this.state;
+    var { sort } = this.props.category;
     var {
       category: { list },
     } = this.props;
@@ -604,139 +614,47 @@ class ListCategory extends PureComponent {
               </div>
               <div id="phan-loai-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
-                  {data_filter.map((e, i) => {
-                    return (
-                      <div key={i} className={styles['grid__col-12___39hfZ']}>
-                        <div className={styles['filter-option__filter-option___3Xmf0']}>
-                          <button
-                            onClick={() => this.handleCheckFilter('category', 'Slip-Ons')}
-                            onClick={() => {
-                              this.handleClick(e);
-                            }}
-                            type="button"
-                            className={
-                              !this.state[e.id]
-                                ? styles['filter-option__btn___2u45i'] +
-                                  ' ' +
-                                  styles['filter-option__btn-secondary___1DPfK'] +
-                                  ' ' +
-                                  styles['filter-option__btn-block___1tZOy']
-                                : styles['filter-option__btn___2u45i'] +
-                                  ' ' +
-                                  styles['filter-option__btn-secondary___1DPfK'] +
-                                  ' ' +
-                                  styles['filter-option__btn-block___1tZOy'] +
-                                  ' ' +
-                                  styles['filter-option__active___1HV6C']
-                            }
-                          >
-                            {this.state[e.id] && (
-                              <span
+                  {sort.style && sort.style.length > 0
+                    ? sort.style.map((e, i) => {
+                        var v = e.replace(/ /g, '');
+                        return (
+                          <div key={i} className={styles['grid__col-12___39hfZ']}>
+                            <div className={styles['filter-option__filter-option___3Xmf0']}>
+                              <button
+                                onClick={() => this.handleCheckFilter('category', v)}
+                                type="button"
                                 className={
-                                  styles['filter-option__icon___1wxyY'] +
-                                  ' ' +
-                                  styles['ic-ic-close']
+                                  !this.state[v] && this.props.location.query.brand != v
+                                    ? styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy']
+                                    : styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy'] +
+                                      ' ' +
+                                      styles['filter-option__active___1HV6C']
                                 }
-                              />
-                            )}
-                            {e.title}
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-
-                  <div className={styles['grid__col-12___39hfZ']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('category', 'Derbys_Oxfords')}
-                        onClick={() => {
-                          this.handleClick({ id: 'demo', title: ' Derbys &amp; Oxfords' });
-                        }}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        Derbys &amp; Oxfords
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-12___39hfZ']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('category', 'Slip-Ons')}
-                        onClick={() => {
-                          this.handleClick({ id: 'demo', title: ' Derbys &amp; Oxfords' });
-                        }}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        Slip-Ons
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-12___39hfZ']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('category', 'Giay-tay')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        Giày tây
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-12___39hfZ']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('category', 'that-day-the-thao')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        Thắt dây thể thao
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-12___39hfZ']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('category', 'Loafers')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        Loafers
-                      </button>
-                    </div>
-                  </div>
+                              >
+                                {(this.state[v] || this.props.location.query.brand == v) && (
+                                  <span
+                                    className={
+                                      styles['filter-option__icon___1wxyY'] +
+                                      ' ' +
+                                      styles['ic-ic-close']
+                                    }
+                                  />
+                                )}
+                                {e}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                    : ''}
                 </div>
               </div>
             </div>
@@ -764,159 +682,31 @@ class ListCategory extends PureComponent {
               </div>
               <div id="kich-co-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '24.5')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        24.5
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '25')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        25
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '25.5')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        25.5
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '26')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        26
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '26.5')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        26.5
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '27')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        27
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '27.5')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        27.5
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '28')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        28
-                      </button>
-                    </div>
-                  </div>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('size', '29')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        29
-                      </button>
-                    </div>
-                  </div>
+                  {sort.size && sort.size.length > 0
+                    ? sort.size.map((e, i) => {
+                        var v = e.replace(/ /g, '');
+
+                        return (
+                          <div key={i} className={styles['grid__col-6___211BX']}>
+                            <div className={styles['filter-option__filter-option___3Xmf0']}>
+                              <button
+                                onClick={() => this.handleCheckFilter('size', v)}
+                                type="button"
+                                className={
+                                  styles['filter-option__btn___2u45i'] +
+                                  ' ' +
+                                  styles['filter-option__btn-secondary___1DPfK'] +
+                                  ' ' +
+                                  styles['filter-option__btn-block___1tZOy']
+                                }
+                              >
+                                e
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                    : ''}
                 </div>
               </div>
             </div>
@@ -944,23 +734,47 @@ class ListCategory extends PureComponent {
               </div>
               <div id="thuong-hieu-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
-                  <div className={styles['grid__col-12___39hfZ']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('brand', 'JacQ')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        JacQ
-                      </button>
-                    </div>
-                  </div>
+                  {sort.brand && sort.brand.length > 0
+                    ? sort.brand.map((e, i) => {
+                        var v = e.replace(/ /g, '');
+                        return (
+                          <div key={i} className={styles['grid__col-12___39hfZ']}>
+                            <div className={styles['filter-option__filter-option___3Xmf0']}>
+                              <button
+                                onClick={() => this.handleCheckFilter('brand', v)}
+                                type="button"
+                                className={
+                                  this.props.location.query.brand != v
+                                    ? styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy']
+                                    : styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy'] +
+                                      ' ' +
+                                      styles['filter-option__active___1HV6C']
+                                }
+                              >
+                                {this.props.location.query.brand == v && (
+                                  <span
+                                    className={
+                                      styles['filter-option__icon___1wxyY'] +
+                                      ' ' +
+                                      styles['ic-ic-close']
+                                    }
+                                  />
+                                )}
+                                {e}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                    : ''}
                 </div>
               </div>
             </div>
@@ -988,23 +802,47 @@ class ListCategory extends PureComponent {
               </div>
               <div id="type-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
-                  <div className={styles['grid__col-6___211BX']}>
-                    <div className={styles['filter-option__filter-option___3Xmf0']}>
-                      <button
-                        onClick={() => this.handleCheckFilter('type', 'Giay-nam')}
-                        type="button"
-                        className={
-                          styles['filter-option__btn___2u45i'] +
-                          ' ' +
-                          styles['filter-option__btn-secondary___1DPfK'] +
-                          ' ' +
-                          styles['filter-option__btn-block___1tZOy']
-                        }
-                      >
-                        Giày Nam
-                      </button>
-                    </div>
-                  </div>
+                  {sort.type && sort.type.length > 0
+                    ? sort.type.map((e, i) => {
+                        var v = e.replace(/ /g, '');
+                        return (
+                          <div key={i} className={styles['grid__col-12___39hfZ']}>
+                            <div className={styles['filter-option__filter-option___3Xmf0']}>
+                              <button
+                                onClick={() => this.handleCheckFilter('type', v)}
+                                type="button"
+                                className={
+                                  !this.state[v] && this.props.location.query.brand != v
+                                    ? styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy']
+                                    : styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy'] +
+                                      ' ' +
+                                      styles['filter-option__active___1HV6C']
+                                }
+                              >
+                                {(this.state[v] || this.props.location.query.brand == v) && (
+                                  <span
+                                    className={
+                                      styles['filter-option__icon___1wxyY'] +
+                                      ' ' +
+                                      styles['ic-ic-close']
+                                    }
+                                  />
+                                )}
+                                {e}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                    : ''}
                 </div>
               </div>
             </div>
@@ -1040,6 +878,7 @@ class ListCategory extends PureComponent {
   }
   render() {
     var { filter, test } = this.state;
+    console.log(this.props);
     var {
       category: { list },
     } = this.props;

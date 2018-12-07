@@ -43,6 +43,7 @@
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import ReCAPTCHA from 'react-google-recaptcha';
 import DocumentMeta from 'react-document-meta';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
@@ -62,15 +63,11 @@ import {
   Checkbox,
   Skeleton,
   Cascader,
-  Popover,
-  Progress,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import FacebookLogin from 'react-facebook-login';
-import ReCAPTCHA from 'react-google-recaptcha';
 import styles from './index.less';
 
-const InputGroup = Input.Group;
 const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -79,23 +76,14 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const DELAY = 1500;
 let rerenders = 0;
-const passwordStatusMap = {
-  ok: <div className={styles.success}>Mức độ：Mạnh</div>,
-  pass: <div className={styles.warning}>Mức độ：Vừa</div>,
-  poor: <div className={styles.error}>Mức độ：Yếu</div>,
-};
-const passwordProgressMap = {
-  ok: 'success',
-  pass: 'normal',
-  poor: 'exception',
-};
+
 @connect(({ loading, user }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   loading,
   user,
 }))
 @Form.create()
-class Register extends PureComponent {
+class Login extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -105,83 +93,29 @@ class Register extends PureComponent {
       value: '',
       loadpage: false,
       expired: 'false',
-      count: 0,
-      confirmDirty: false,
-      visible: false,
-      help: '',
-      prefix: '84',
-      rule: 'member',
     };
     this._reCaptchaRef = React.createRef();
     this.responseFacebook = this.responseFacebook.bind(this);
   }
-
   componentDidMount() {
     setTimeout(() => {
       this.setState({ load: true });
     }, DELAY);
   }
-  getPasswordStatus = () => {
-    const { form } = this.props;
-    const value = form.getFieldValue('password');
-    if (value && value.length > 9) {
-      return 'ok';
-    }
-    if (value && value.length > 5) {
-      return 'pass';
-    }
-    return 'poor';
-  };
   handleSubmit = e => {
     e.preventDefault();
-    const { form, user } = this.props;
     this.props.form.validateFields((err, values) => {
-      if (!err && user.check.length == 0 && this.state.value.length > 0) {
+      if (!err && this.state.value) {
         values['captcha'] = this.state.value;
         this.props.dispatch({
-          type: 'user/register',
+          type: 'user/login',
           payload: values,
-        });
-      } else {
-        this.props.form.setFields({
-          email: {
-            value: values.email,
-            errors: [new Error(user.check)],
-          },
         });
       }
     });
     this.setState({
-      load: !this.state.load,
+      loadpage: !this.state.load,
     });
-  };
-  checkPassword = (rule, value, callback) => {
-    const { visible, confirmDirty } = this.state;
-    if (!value) {
-      this.setState({
-        help: 'Nhập mật khẩu！',
-        visible: !!value,
-      });
-      callback('error');
-    } else {
-      this.setState({
-        help: '',
-      });
-      if (!visible) {
-        this.setState({
-          visible: !!value,
-        });
-      }
-      if (value.length < 6) {
-        callback('error');
-      } else {
-        const { form } = this.props;
-        if (value && confirmDirty) {
-          form.validateFields(['confirm'], { force: true });
-        }
-        callback();
-      }
-    }
   };
   handleChange = value => {
     this.setState({ value });
@@ -218,44 +152,12 @@ class Register extends PureComponent {
       });
     }
     this.setState({
-      loadPage: !this.state.loadPage,
+      loadpage: !this.state.load,
     });
   }
-  renderPasswordProgress = () => {
-    const { form } = this.props;
-    const value = form.getFieldValue('password');
-    const passwordStatus = this.getPasswordStatus();
-    return value && value.length ? (
-      <div className={styles[`progress-${passwordStatus}`]}>
-        <Progress
-          status={passwordProgressMap[passwordStatus]}
-          className={styles.progress}
-          strokeWidth={6}
-          percent={value.length * 10 > 100 ? 100 : value.length * 10}
-          showInfo={false}
-        />
-      </div>
-    ) : null;
-  };
-  validEmailSync = e => {
-    const { value } = e.target;
-    const { form, dispatch, user } = this.props;
-
-    form.validateFields(['email'], (errors, values) => {
-      if (!errors) {
-        this.props.dispatch({
-          type: 'user/check',
-          payload: values,
-        });
-      }
-    });
-  };
   render() {
-    const { count, prefix, help, visible, rule } = this.state;
-    var { user } = this.props;
-    console.log(user);
     const meta = {
-      title: 'Đăng ký',
+      title: 'Đăng Nhập',
       description: null,
       canonical: 'http://example.com/path/to/page',
       meta: {
@@ -267,6 +169,9 @@ class Register extends PureComponent {
     };
     const tailFormItemLayout = {};
     const { getFieldDecorator } = this.props.form;
+    if (sessionStorage.account) {
+      var obj = JSON.parse(sessionStorage.account);
+    }
     if (sessionStorage.account) {
       return <Redirect to={`/`} />;
     }
@@ -282,7 +187,7 @@ class Register extends PureComponent {
               styles['register__register___BuPHZ']
             }
           >
-            <h3 className={styles['auth__title___2xOb7']}>Tạo tài khoản</h3>
+            <h3 className={styles['auth__title___2xOb7']}>Đăng nhập</h3>
             <div className={styles['container__container___1fvX0']}>
               <div className={styles['register-form__registerContainer___2J6fH']}>
                 <Form onSubmit={this.handleSubmit}>
@@ -296,92 +201,36 @@ class Register extends PureComponent {
                     fields="name,email,picture"
                     callback={this.responseFacebook}
                   />
-                  <FormItem>
-                    {getFieldDecorator('email', {
-                      rules: [
-                        {
-                          type: 'email',
-                          message: 'Sai định dạng email',
-                        },
-                      ],
-                    })(
-                      <Input
-                        size="large"
-                        placeholder="Email"
-                        onBlur={e => this.validEmailSync(e, user.check)}
-                      />
-                    )}
-                  </FormItem>
-                  <FormItem>
-                    <InputGroup compact>
-                      <Select
-                        size="large"
-                        value={prefix}
-                        onChange={this.changePrefix}
-                        style={{ width: '20%' }}
-                      >
-                        <Option value="84">+84</Option>
-                      </Select>
-                      {getFieldDecorator('phone', {
-                        rules: [
-                          {
-                            required: true,
-                            message: 'Yêu cầu nhập số điện thoại',
-                          },
-                          {
-                            pattern: /\d{9}$/,
-                            message: 'Nhập sai định dạng hoặc chưa đủ chữ số！',
-                          },
-                        ],
-                      })(<Input size="large" style={{ width: '80%' }} placeholder="  " />)}
-                    </InputGroup>
-                  </FormItem>
-                  <FormItem help={help}>
-                    <Popover
-                      content={
-                        <div style={{ padding: '4px 0' }}>
-                          {passwordStatusMap[this.getPasswordStatus()]}
-                          {this.renderPasswordProgress()}
-                          <div style={{ marginTop: 10 }}>Mât khẩu lớn hơn 6 ký tự</div>
-                        </div>
-                      }
-                      overlayStyle={{ width: 240 }}
-                      placement="right"
-                      visible={visible}
-                    >
-                      {getFieldDecorator('password', {
-                        rules: [
-                          {
-                            validator: this.checkPassword,
-                          },
-                        ],
-                      })(<Input size="large" type="password" placeholder="Mật khẩu" />)}
-                    </Popover>
-                  </FormItem>
-
-                  <FormItem>
-                    {getFieldDecorator('fullname', {
+                  <FormItem label="Tên đăng nhập">
+                    {getFieldDecorator('username', {
                       rules: [
                         {
                           required: true,
-                          message: 'Nhập họ tên',
+                          message: 'Vui lòng nhập tên đăng nhập!',
                         },
                       ],
-                    })(<Input size="large" placeholder="Họ tên" />)}
+                    })(<Input type="text" />)}
                   </FormItem>
-                  <FormItem>
-                    {getFieldDecorator('address', {})(<Input size="large" placeholder="Địa chỉ" />)}
+                  <FormItem label="Mật khẩu">
+                    {getFieldDecorator('password', {
+                      rules: [
+                        {
+                          required: true,
+                          message: 'Vui lòng nhập mật khẩu!',
+                        },
+                      ],
+                    })(<Input type="password" />)}
                   </FormItem>
-                  <FormItem>
-                    <ReCAPTCHA
-                      ref={this._reCaptchaRef}
-                      sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
-                      onChange={this.handleChange}
-                    />
-                  </FormItem>
+
+                  <ReCAPTCHA
+                    ref={this._reCaptchaRef}
+                    sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
+                    onChange={this.handleChange}
+                  />
+
                   <FormItem>
                     <Button type="primary" htmlType="submit" block>
-                      Đăng ký
+                      Đăng nhập
                     </Button>
                   </FormItem>
                 </Form>
@@ -394,4 +243,4 @@ class Register extends PureComponent {
   }
 }
 
-export default Register;
+export default Login;

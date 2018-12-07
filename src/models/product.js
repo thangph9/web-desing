@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   getProductByCategory,
   getProductDetail,
@@ -153,19 +154,19 @@ export default {
     queryListAmazon(state, action) {
       return {
         ...state,
-        list: action.payload,
+        amazon: action.payload,
       };
     },
     queryListEbay(state, action) {
       return {
         ...state,
-        list: action.payload,
+        ebay: action.payload,
       };
     },
     queryListNike(state, action) {
       return {
         ...state,
-        list: action.payload,
+        nike: action.payload,
       };
     },
     queryListAdidas(state, action) {
