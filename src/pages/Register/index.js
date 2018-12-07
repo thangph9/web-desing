@@ -140,6 +140,7 @@ class Register extends PureComponent {
       if (!err && this.state.value) {
         setTimeout(() => {
           // server validate
+          console.log(user.register.status);
           if (user.register && user.register.status !== true) {
             this.props.form.setFields({
               email: {
