@@ -135,6 +135,7 @@ class Register extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form, user } = this.props;
+    console.log(user);
     this.props.form.validateFields((err, values) => {
       if (!err && this.state.value) {
         values['captcha'] = this.state.value;
