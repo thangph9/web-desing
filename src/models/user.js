@@ -7,6 +7,7 @@ export default {
   state: {
     list: [],
     currentUser: {},
+    register: {},
   },
 
   effects: {
