@@ -72,7 +72,7 @@ function register(req, res) {
         PARAM_IS_VALID['phone'] = params.phone;
         PARAM_IS_VALID['email'] = params.email;
         PARAM_IS_VALID['fullname'] = params.fullname;
-        PARAM_IS_VALID['username'] = params.username;
+        PARAM_IS_VALID['username'] = params.email;
         PARAM_IS_VALID['address'] = params.address;
         PARAM_IS_VALID['password'] = params.password;
         PARAM_IS_VALID['user_id'] = user_id;
@@ -156,7 +156,7 @@ function register(req, res) {
       if (err) res.json({ status: false });
       try {
         token = jwt.sign(
-          { username: PARAM_IS_VALID.username, user_id: PARAM_IS_VALID.user_id },
+          { email: PARAM_IS_VALID.username, user_id: PARAM_IS_VALID.user_id },
           jwtprivate,
           {
             expiresIn: '30d', // expires in 30 day
