@@ -119,7 +119,7 @@ function register(req, res) {
           body = JSON.parse(body);
 
           successBody = body.success;
-          callback(err, null);
+          callback(error, null);
         });
       },
       function(callback) {
