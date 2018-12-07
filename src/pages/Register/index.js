@@ -134,13 +134,27 @@ class Register extends PureComponent {
   };
   handleSubmit = e => {
     e.preventDefault();
+    var { user } = this.props;
+    console.log(user);
     this.props.form.validateFields((err, values) => {
       if (!err && this.state.value) {
-        values['captcha'] = this.state.value;
-        this.props.dispatch({
-          type: 'user/register',
-          payload: values,
-        });
+        setTimeout(() => {
+          // server validate
+          if (user.register.status && user.register.status !== false) {
+            this.props.form.setFields({
+              username: {
+                value: register.status.username,
+                errors: [new Error('Tài khoản đã tồn tại!')],
+              },
+            });
+          } else {
+            values['captcha'] = this.state.value;
+            this.props.dispatch({
+              type: 'user/register',
+              payload: values,
+            });
+          }
+        }, 500);
       }
     });
     this.setState({

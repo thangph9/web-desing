@@ -33,6 +33,11 @@ export default {
           type: 'registration',
           payload: response || {},
         });
+      } else {
+        yield put({
+          type: 'registration',
+          payload: response.message ? response.message : '',
+        });
       }
     },
     *registerfb({ payload }, { call, put }) {
