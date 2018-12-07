@@ -32,12 +32,12 @@ export default {
         sessionStorage.account = JSON.stringify(response);
         yield put({
           type: 'registration',
-          payload: response || {},
+          payload: response,
         });
       } else {
         yield put({
           type: 'registration',
-          payload: response || {},
+          payload: response,
         });
       }
     },
