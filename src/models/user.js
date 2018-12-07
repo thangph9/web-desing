@@ -37,7 +37,7 @@ export default {
       } else {
         yield put({
           type: 'registration',
-          payload: response.message ? response.message : '',
+          payload: response || {},
         });
       }
     },
