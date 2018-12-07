@@ -135,7 +135,7 @@ class Register extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     var { user } = this.props;
-    console.log(user);
+
     this.props.form.validateFields((err, values) => {
       if (!err && this.state.value) {
         values['captcha'] = this.state.value;
@@ -244,10 +244,10 @@ class Register extends PureComponent {
         },
       },
     };
+    console.log(user);
     if (user && user.register.status === false) {
       this.props.form.setFields({
         email: {
-          value: values.email,
           errors: [new Error('Tài khoản đã tồn tại!')],
         },
       });
