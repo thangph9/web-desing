@@ -64,7 +64,7 @@ function register(req, res) {
   var _hash = '';
   var msg = '';
   var PARAM_IS_VALID = {};
-  var successBody = {};
+  var successBody = false;
   var verificationUrl = '';
   async.series(
     [
@@ -117,8 +117,7 @@ function register(req, res) {
       function(callback) {
         request(verificationUrl, function(error, response, body) {
           body = JSON.parse(body);
-
-          successBody = body.success;
+          successBody = body;
           callback(error, null);
         });
       },
@@ -185,7 +184,7 @@ function register(req, res) {
       models.doBatch(queries, function(err) {
         if (err) return res.json({ status: false });
         else {
-          msg.length > 0 || body.success == false
+          msg.length > 0 || successBody == false
             ? res.json({ status: false, message: msg })
             : res.json({
                 status: true,
