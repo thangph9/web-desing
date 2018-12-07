@@ -104,6 +104,29 @@ function register(req, res) {
         });
       },
       function(callback) {
+        if (!params.captcha) {
+          return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
+        }
+        verificationUrl =
+          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
+          params.captcha +
+          '&remoteip=' +
+          req.connection.remoteAddress;
+        callback(null, null);
+      },
+      function(callback) {
+        request(verificationUrl, function(error, response, body) {
+          body = JSON.parse(body);
+
+          successBody = body.success;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        console.log(successBody);
+        callback(null, null);
+      },
+      function(callback) {
         let account_object = {
           user_id: PARAM_IS_VALID['user_id'],
           address: PARAM_IS_VALID['address'],
@@ -139,18 +162,6 @@ function register(req, res) {
         }
         callback(null, null);
       },
-      function(callback) {
-        if (!params.captcha) {
-          return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
-        }
-        verificationUrl =
-          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
-          params.captcha +
-          '&remoteip=' +
-          req.connection.remoteAddress;
-        console.log(verificationUrl);
-        callback(null, null);
-      },
     ],
     function(err, result) {
       if (err) res.json({ status: false });
@@ -174,16 +185,12 @@ function register(req, res) {
       models.doBatch(queries, function(err) {
         if (err) return res.json({ status: false });
         else {
-          request(verificationUrl, function(error, response, body) {
-            body = JSON.parse(body);
-            msg.length > 0 || body.success == false
-              ? res.json({ status: false, message: msg, success: body.success })
-              : res.json({
-                  status: true,
-                  currentAuthority: currentAuthority,
-                  success: body.success,
-                });
-          });
+          msg.length > 0 || body.success == false
+            ? res.json({ status: false, message: msg })
+            : res.json({
+                status: true,
+                currentAuthority: currentAuthority,
+              });
         }
       });
     }
