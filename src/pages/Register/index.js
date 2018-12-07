@@ -249,7 +249,7 @@ class Register extends PureComponent {
       return <Redirect to={`/`} />;
     }
     console.log(user);
-    if (user && user.register.status !== 'ok') {
+    if (user.register && user.register.status !== 'ok') {
       this.props.form.setFields({
         email: {
           errors: [new Error('Tài khoản đã tồn tại!')],
