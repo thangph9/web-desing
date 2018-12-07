@@ -140,10 +140,10 @@ class Register extends PureComponent {
       if (!err && this.state.value) {
         setTimeout(() => {
           // server validate
-          if (user.register.status && user.register.status !== false) {
+          if (user.register.status && user.register.status !== true) {
             this.props.form.setFields({
               email: {
-                value: user.register.email,
+                value: values.email,
                 errors: [new Error('Tài khoản đã tồn tại!')],
               },
             });
