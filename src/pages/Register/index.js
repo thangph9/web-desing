@@ -138,28 +138,11 @@ class Register extends PureComponent {
     console.log(user);
     this.props.form.validateFields((err, values) => {
       if (!err && this.state.value) {
-        setTimeout(() => {
-          // server validate
-          console.log(user.register);
-          console.log(user.register.status);
-          if (
-            user.register &&
-            (user.register.status === undefined || user.register.status !== true)
-          ) {
-            this.props.form.setFields({
-              email: {
-                value: values.email,
-                errors: [new Error('Tài khoản đã tồn tại!')],
-              },
-            });
-          } else {
-            values['captcha'] = this.state.value;
-            this.props.dispatch({
-              type: 'user/register',
-              payload: values,
-            });
-          }
-        }, 500);
+        values['captcha'] = this.state.value;
+        this.props.dispatch({
+          type: 'user/register',
+          payload: values,
+        });
       }
     });
     this.setState({
@@ -249,7 +232,7 @@ class Register extends PureComponent {
     ) : null;
   };
   render() {
-    const { count, prefix, help, visible, rule } = this.state;
+    const { count, prefix, help, visible, rule, user } = this.state;
     const meta = {
       title: 'Đăng ký',
       description: null,
@@ -261,6 +244,14 @@ class Register extends PureComponent {
         },
       },
     };
+    if (user.register.status === false) {
+      this.props.form.setFields({
+        email: {
+          value: values.email,
+          errors: [new Error('Tài khoản đã tồn tại!')],
+        },
+      });
+    }
     const tailFormItemLayout = {};
     const { getFieldDecorator } = this.props.form;
     if (sessionStorage.account) {
