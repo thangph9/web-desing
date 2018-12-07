@@ -242,6 +242,11 @@ class Register extends PureComponent {
       </div>
     ) : null;
   };
+  validEmailSync = e => {
+    const { form } = this.props;
+    const value = form.getFieldValue('email');
+    console.log(value, e);
+  };
   render() {
     const { count, prefix, help, visible, rule } = this.state;
     var { user } = this.props;
@@ -293,6 +298,7 @@ class Register extends PureComponent {
                         {
                           type: 'email',
                           message: 'Sai định dạng email',
+                          validator: this.validEmailSync,
                         },
                       ],
                     })(<Input size="large" placeholder="Email" />)}
@@ -357,11 +363,7 @@ class Register extends PureComponent {
                   <FormItem>
                     {getFieldDecorator('address', {})(<Input size="large" placeholder="Địa chỉ" />)}
                   </FormItem>
-                  <ReCAPTCHA
-                    ref={this._reCaptchaRef}
-                    sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
-                    onChange={this.handleChange}
-                  />
+
                   <FormItem>
                     <Button type="primary" htmlType="submit" block>
                       Đăng ký
