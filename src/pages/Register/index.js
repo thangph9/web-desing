@@ -247,6 +247,14 @@ class Register extends PureComponent {
     if (sessionStorage.account) {
       return <Redirect to={`/`} />;
     }
+    console.log(user);
+    if (user && user.register.status !== 'ok') {
+      this.props.form.setFields({
+        username: {
+          errors: [new Error('Tài khoản đã tồn tại!')],
+        },
+      });
+    }
     return (
       <DocumentMeta {...meta}>
         <div className={styles['container__container___1fvX0']}>

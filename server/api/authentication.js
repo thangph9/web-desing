@@ -117,13 +117,9 @@ function register(req, res) {
       function(callback) {
         request(verificationUrl, function(error, response, body) {
           body = JSON.parse(body);
-          successBody = body;
+          successBody = body.success;
           callback(error, null);
         });
-      },
-      function(callback) {
-        console.log(successBody);
-        callback(null, null);
       },
       function(callback) {
         let account_object = {
@@ -163,7 +159,7 @@ function register(req, res) {
       },
     ],
     function(err, result) {
-      if (err) res.json({ status: false });
+      if (err) res.json({ status: 'error' });
       try {
         token = jwt.sign(
           { email: PARAM_IS_VALID.username, user_id: PARAM_IS_VALID.user_id },
@@ -182,13 +178,12 @@ function register(req, res) {
       }
       let currentAuthority = { auth: isLogin, token: token };
       models.doBatch(queries, function(err) {
-        console.log(err);
         if (err) return res.json({ status: false });
         else {
           msg.length > 0 || successBody == false
-            ? res.json({ status: false, message: msg })
+            ? res.json({ status: 'error', message: msg })
             : res.json({
-                status: true,
+                status: 'ok',
                 currentAuthority: currentAuthority,
               });
         }
@@ -257,6 +252,24 @@ function registerfb(req, res) {
         }
         callback(null, null);
       },
+      function(callback) {
+        if (!params.captcha) {
+          return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
+        }
+        verificationUrl =
+          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
+          params.captcha +
+          '&remoteip=' +
+          req.connection.remoteAddress;
+        callback(null, null);
+      },
+      function(callback) {
+        request(verificationUrl, function(error, response, body) {
+          body = JSON.parse(body);
+          successBody = body.success;
+          callback(error, null);
+        });
+      },
     ],
     function(err, result) {
       try {
@@ -278,8 +291,8 @@ function registerfb(req, res) {
       let currentAuthority = { auth: isLogin, token: token };
 
       models.doBatch(queries, function(err) {
-        if (err) return res.json({ status: false });
-        else return res.json({ status: true, currentAuthority: currentAuthority });
+        if (err) return res.json({ status: 'error' });
+        else return res.json({ status: 'ok', currentAuthority: currentAuthority });
       });
     }
   );
@@ -292,7 +305,7 @@ function login(req, res) {
   var isLogin = false;
   var token = '';
   var msg = '';
-  var successBody = {};
+  var successBody = false;
   var verificationUrl = '';
   async.series(
     [
@@ -353,14 +366,14 @@ function login(req, res) {
     function(err, result) {
       let currentAuthority = { auth: isLogin, token: token };
       if (err) {
-        res.json({ status: false, message: msg });
+        res.json({ status: 'error', message: msg });
       } else {
         request(verificationUrl, function(error, response, body) {
           body = JSON.parse(body);
           msg != '' || body.success == false
-            ? res.json({ status: false, message: msg, success: body.success })
+            ? res.json({ status: 'error', message: msg, success: body.success })
             : res.json({
-                status: true,
+                status: 'ok',
                 currentAuthority: currentAuthority,
                 username: user[0].username,
                 success: body.success,
