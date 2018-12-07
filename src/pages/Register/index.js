@@ -244,7 +244,7 @@ class Register extends PureComponent {
         },
       },
     };
-    if (user.register.status === false) {
+    if (user && user.register.status === false) {
       this.props.form.setFields({
         email: {
           value: values.email,
