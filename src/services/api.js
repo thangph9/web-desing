@@ -130,7 +130,12 @@ export async function getProductByCategory(category) {
 }
 
 export async function getProductDetail(params) {
-  return request('/api/product/DT', {
+  return request('/api/product/DTT', {
+    method: 'POST',
+    body: params,
+  });
+}export async function getDEVDETAIL(params) {
+  return request('/api/product/DEV_DETAIL',{
     method: 'POST',
     body: params,
   });

@@ -5,6 +5,7 @@ import {
   getListProductEbay,
   getListProductNike,
   getListProductAdidas,
+  getDEVDETAIL
 } from '@/services/api';
 
 export default {
@@ -125,7 +126,7 @@ export default {
       }
     },
     *detail({ payload }, { call, put }) {
-      const response = yield call(getProductDetail, payload);
+      const response = yield call(getDEVDETAIL, payload);
 
       if (response.status === 'ok') {
         yield put({
