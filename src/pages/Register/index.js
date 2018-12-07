@@ -331,7 +331,7 @@ class Register extends PureComponent {
                   </FormItem>
 
                   <FormItem>
-                    {getFieldDecorator('fuulname', {
+                    {getFieldDecorator('fullname', {
                       rules: [
                         {
                           required: true,
