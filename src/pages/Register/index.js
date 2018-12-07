@@ -230,7 +230,8 @@ class Register extends PureComponent {
     ) : null;
   };
   render() {
-    const { count, prefix, help, visible, rule, user } = this.state;
+    const { count, prefix, help, visible, rule } = this.state;
+    var { user } = this.props;
     const meta = {
       title: 'Đăng ký',
       description: null,
@@ -250,7 +251,7 @@ class Register extends PureComponent {
     console.log(user);
     if (user && user.register.status !== 'ok') {
       this.props.form.setFields({
-        username: {
+        email: {
           errors: [new Error('Tài khoản đã tồn tại!')],
         },
       });
