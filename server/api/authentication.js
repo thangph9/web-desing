@@ -383,7 +383,46 @@ function login(req, res) {
     }
   );
 }
+function checkEmail(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var user = [];
+  var msg = '';
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.email = params.email;
+        callback(null, null);
+      },
+      function(callback) {
+        models.instance.account_login.find({ username: PARAM_IS_VALID.email }, function(
+          err,
+          _user
+        ) {
+          user = _user;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        if (user.length > 0) {
+          msg = MESSAGE.USER_EXISTS;
+        }
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) {
+        return res.json({ status: 'error' });
+      } else {
+        user.length > 0
+          ? res.json({ status: 'error', message: msg })
+          : res.json({ status: 'ok', message: '' });
+      }
+    }
+  );
+}
 router.post('/register', register);
 router.post('/registerfb', registerfb);
 router.post('/login', login);
+router.post('/checkemail', checkEmail);
 module.exports = router;

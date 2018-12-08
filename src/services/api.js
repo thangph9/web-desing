@@ -147,7 +147,12 @@ export async function Register(params) {
     body: params,
   });
 }
-
+export async function CheckEmail(params) {
+  return request('/api/authentication/checkemail', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function RegisterFacebook(params) {
   return request('/api/authentication/registerfb', {
     method: 'POST',

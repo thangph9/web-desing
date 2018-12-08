@@ -1,5 +1,5 @@
 import { query as queryUsers, queryCurrent } from '@/services/user';
-import { Register, Login, RegisterFacebook } from '@/services/api';
+import { Register, Login, RegisterFacebook, CheckEmail } from '@/services/api';
 
 export default {
   namespace: 'user',
@@ -8,6 +8,7 @@ export default {
     list: [],
     currentUser: {},
     register: undefined,
+    check: '',
   },
 
   effects: {
@@ -56,6 +57,20 @@ export default {
         });
       }
     },
+    *check({ payload }, { call, put }) {
+      const response = yield call(CheckEmail, payload);
+      if (response.status === 'ok') {
+        yield put({
+          type: 'checkAuthentication',
+          payload: response.message || '',
+        });
+      } else {
+        yield put({
+          type: 'checkAuthentication',
+          payload: response.message,
+        });
+      }
+    },
   },
 
   reducers: {
@@ -96,6 +111,12 @@ export default {
       return {
         ...state,
         login: action.payload,
+      };
+    },
+    checkAuthentication(state, action) {
+      return {
+        ...state,
+        check: action.payload,
       };
     },
   },

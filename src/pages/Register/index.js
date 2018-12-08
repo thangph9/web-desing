@@ -135,25 +135,20 @@ class Register extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form, user } = this.props;
-    console.log(user);
     this.props.form.validateFields((err, values) => {
-      if (!err && this.state.value) {
+      if (!err && user.check.length == 0 && this.state.value.length > 0) {
         values['captcha'] = this.state.value;
-        setTimeout(() => {
-          if (user.register && user.register.status !== 'ok') {
-            this.props.form.setFields({
-              email: {
-                value: values.email,
-                errors: [new Error('Tài khoản đã tồn tại!')],
-              },
-            });
-          } else {
-            this.props.dispatch({
-              type: 'user/register',
-              payload: values,
-            });
-          }
-        }, 500);
+        this.props.dispatch({
+          type: 'user/register',
+          payload: values,
+        });
+      } else {
+        this.props.form.setFields({
+          email: {
+            value: values.email,
+            errors: [new Error(user.check)],
+          },
+        });
       }
     });
     this.setState({
@@ -243,13 +238,22 @@ class Register extends PureComponent {
     ) : null;
   };
   validEmailSync = e => {
-    const { form } = this.props;
-    const value = form.getFieldValue('email');
-    console.log(value, e);
+    const { value } = e.target;
+    const { form, dispatch, user } = this.props;
+
+    form.validateFields(['email'], (errors, values) => {
+      if (!errors) {
+        this.props.dispatch({
+          type: 'user/check',
+          payload: values,
+        });
+      }
+    });
   };
   render() {
     const { count, prefix, help, visible, rule } = this.state;
     var { user } = this.props;
+    console.log(user);
     const meta = {
       title: 'Đăng ký',
       description: null,
@@ -298,10 +302,15 @@ class Register extends PureComponent {
                         {
                           type: 'email',
                           message: 'Sai định dạng email',
-                          validator: this.validEmailSync,
                         },
                       ],
-                    })(<Input size="large" placeholder="Email" />)}
+                    })(
+                      <Input
+                        size="large"
+                        placeholder="Email"
+                        onBlur={e => this.validEmailSync(e, user.check)}
+                      />
+                    )}
                   </FormItem>
                   <FormItem>
                     <InputGroup compact>
@@ -363,7 +372,13 @@ class Register extends PureComponent {
                   <FormItem>
                     {getFieldDecorator('address', {})(<Input size="large" placeholder="Địa chỉ" />)}
                   </FormItem>
-
+                  <FormItem>
+                    <ReCAPTCHA
+                      ref={this._reCaptchaRef}
+                      sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
+                      onChange={this.handleChange}
+                    />
+                  </FormItem>
                   <FormItem>
                     <Button type="primary" htmlType="submit" block>
                       Đăng ký
