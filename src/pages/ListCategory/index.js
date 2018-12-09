@@ -244,6 +244,11 @@ class ListCategory extends PureComponent {
   componentDidMount() {
     var { dispatch, match } = this.props;
     var sort = this.props.location.query.sort;
+    if (this.props.location.query.brand) {
+      this.setState({
+        brand: [...this.state.brand, this.props.location.query.brand],
+      });
+    }
     dispatch({
       type: 'category/list',
       payload: match.params.nodeid,
@@ -381,7 +386,9 @@ class ListCategory extends PureComponent {
     var result = this.state[filter].filter((v, i) => {
       return v == title;
     });
+
     if (result.length == 0) {
+      console.log('ok');
       this.setState(
         {
           category: filter == 'category' ? [...this.state.category, title] : this.state.category,
@@ -392,6 +399,7 @@ class ListCategory extends PureComponent {
         () => {}
       );
     } else {
+      console.log('ok1');
       var arr = this.state[filter].filter(v => {
         return v != title;
       });
@@ -474,9 +482,11 @@ class ListCategory extends PureComponent {
               <Link to={link}>{dataDetail.length > 0 ? dataDetail[0].title : ''}</Link>
             </li>
           )}
-          <li className={styles['breadcrumb__breadcrumb-item___3ytpk']}>
-            <h1>{dataDetail.length > 0 ? dataDetail[1].title : ''}</h1>
-          </li>
+          {dataDetail.length > 0 && (
+            <li className={styles['breadcrumb__breadcrumb-item___3ytpk']}>
+              <h1>{dataDetail.length > 0 ? dataDetail[2].title : ''}</h1>
+            </li>
+          )}
         </ol>
       </div>
     );
@@ -614,7 +624,7 @@ class ListCategory extends PureComponent {
                                 onClick={() => this.handleCheckFilter('category', v)}
                                 type="button"
                                 className={
-                                  !this.state[v]
+                                  !this.state[v] && this.props.location.query.brand != v
                                     ? styles['filter-option__btn___2u45i'] +
                                       ' ' +
                                       styles['filter-option__btn-secondary___1DPfK'] +
@@ -629,7 +639,7 @@ class ListCategory extends PureComponent {
                                       styles['filter-option__active___1HV6C']
                                 }
                               >
-                                {this.state[v] && (
+                                {(this.state[v] || this.props.location.query.brand == v) && (
                                   <span
                                     className={
                                       styles['filter-option__icon___1wxyY'] +
@@ -734,7 +744,7 @@ class ListCategory extends PureComponent {
                                 onClick={() => this.handleCheckFilter('brand', v)}
                                 type="button"
                                 className={
-                                  !this.state[v]
+                                  this.props.location.query.brand != v
                                     ? styles['filter-option__btn___2u45i'] +
                                       ' ' +
                                       styles['filter-option__btn-secondary___1DPfK'] +
@@ -749,7 +759,7 @@ class ListCategory extends PureComponent {
                                       styles['filter-option__active___1HV6C']
                                 }
                               >
-                                {this.state[v] && (
+                                {this.props.location.query.brand == v && (
                                   <span
                                     className={
                                       styles['filter-option__icon___1wxyY'] +
@@ -802,7 +812,7 @@ class ListCategory extends PureComponent {
                                 onClick={() => this.handleCheckFilter('type', v)}
                                 type="button"
                                 className={
-                                  !this.state[v]
+                                  !this.state[v] && this.props.location.query.brand != v
                                     ? styles['filter-option__btn___2u45i'] +
                                       ' ' +
                                       styles['filter-option__btn-secondary___1DPfK'] +
@@ -817,7 +827,7 @@ class ListCategory extends PureComponent {
                                       styles['filter-option__active___1HV6C']
                                 }
                               >
-                                {this.state[v] && (
+                                {(this.state[v] || this.props.location.query.brand == v) && (
                                   <span
                                     className={
                                       styles['filter-option__icon___1wxyY'] +
@@ -868,6 +878,7 @@ class ListCategory extends PureComponent {
   }
   render() {
     var { filter, test } = this.state;
+    console.log(this.props);
     var {
       category: { list },
     } = this.props;
