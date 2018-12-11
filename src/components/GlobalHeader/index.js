@@ -202,9 +202,7 @@ class GlobalHeader extends PureComponent {
                       className="jsx-1151532622 jsx-1655770887 content"
                     >
                       <div style={{ minWidth: '159px' }}>
-                        <Link
-                          to={`/accountinformation`}
-                          onClick={() => this.handleOpenAccount('open')}
+                        <a
                           className={
                             styles['jsx-2989784357'] +
                             ' ' +
@@ -212,12 +210,11 @@ class GlobalHeader extends PureComponent {
                             ' ' +
                             styles['item-login']
                           }
+                          href="/vn/account"
                         >
                           Thông tin tài khoản
-                        </Link>
-                        <Link
-                          to={`/order`}
-                          onClick={() => this.handleOpenAccount('open')}
+                        </a>
+                        <a
                           className={
                             styles['jsx-2989784357'] +
                             ' ' +
@@ -225,12 +222,11 @@ class GlobalHeader extends PureComponent {
                             ' ' +
                             styles['item-login']
                           }
+                          href="/vn/account/orders"
                         >
                           Quản lý đơn hàng
-                        </Link>
-                        <Link
-                          to={`/accountaddress`}
-                          onClick={() => this.handleOpenAccount('open')}
+                        </a>
+                        <a
                           className={
                             styles['jsx-2989784357'] +
                             ' ' +
@@ -241,8 +237,19 @@ class GlobalHeader extends PureComponent {
                           href="/vn/account/addresses"
                         >
                           Địa chỉ của tôi
-                        </Link>
-
+                        </a>
+                        <a
+                          className={
+                            styles['jsx-2989784357'] +
+                            ' ' +
+                            styles['dropdown-item'] +
+                            ' ' +
+                            styles['item-login']
+                          }
+                          href="/vn/account/cards"
+                        >
+                          Thẻ của tôi
+                        </a>
                         <hr />
                         <div>
                           <div

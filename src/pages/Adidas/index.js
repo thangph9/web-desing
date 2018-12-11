@@ -468,6 +468,9 @@ class Adidas extends PureComponent {
               <div className={`${styles['banner__navigation___1KLgF']}`} />
             </div>
           </div>
+          {this.renderDays()}
+          {this.renderBestSeller()}
+          {this.renderHotNew()}
         </div>
       </DocumentMeta>
     );

@@ -99,21 +99,6 @@ export default [
         component: './ListCategory/',
       },
       {
-        path: '/accountinformation',
-        name: 'accountinformation',
-        component: './Account1/AccountInformation/',
-      },
-      {
-        path: '/order',
-        name: 'accountinorder',
-        component: './Account1/AccountOrder/',
-      },
-      {
-        path: '/accountaddress',
-        name: 'accountaddress',
-        component: './Account1/AccountAddress/',
-      },
-      {
         path: '/register',
         name: 'register',
         component: './Register/',
