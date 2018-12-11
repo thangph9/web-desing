@@ -345,32 +345,28 @@ class Amazon extends PureComponent {
   renderHotNew() {
     const {
       product: {
-        list: { hotnew },
+        amazon: { hotnew },
       },
     } = this.props;
     let data = hotnew ? hotnew : [];
-    if (data.length > 0) {
-      return (
-        <div id={`${styles['best-sellers']}`} className={`${styles['home__best-sellers___3Yh-1']}`}>
-          <div
-            className={`${styles['section-title__title-wrap___9DwpB']} ${
-              styles['best-sellers__title-container___3YMp3']
-            }`}
-          >
-            <h2 className={`${styles['section-title__title___2Dw2G']}`}>
-              Bán chạy nhất trong Ngày
-            </h2>
-          </div>
-          <div className={`${styles['row__row___2roCA']}`}>
-            {data.map((e, i) => {
-              return <ProductItem data={e} key={i} />;
-            })}
-          </div>
+    return data.length > 0 ? (
+      <div>
+        <div
+          className={`${styles['section-title__title-wrap___9DwpB']} ${
+            styles['home__currentSaleSectionTitle___XcRpN']
+          }`}
+        >
+          <h2 className={`${styles['section-title__title___2Dw2G']}`}>Ưu đãi mới Nhất</h2>
         </div>
-      );
-    } else {
-      return '';
-    }
+        <div className={`${styles['row__row___2roCA']}`}>
+          {data.map((e, i) => {
+            return <ProductItem data={e} key={i} />;
+          })}
+        </div>
+      </div>
+    ) : (
+      ''
+    );
   }
   render() {
     const {
@@ -468,8 +464,6 @@ class Amazon extends PureComponent {
               <div className={`${styles['banner__navigation___1KLgF']}`} />
             </div>
           </div>
-          {this.renderDays()}
-          {this.renderBestSeller()}
           {this.renderHotNew()}
         </div>
       </DocumentMeta>
