@@ -383,7 +383,6 @@ class Detail extends PureComponent {
         />
       );
     }
-
     return (
       <div className={styles['row__row___2roCA']}>
         <div
