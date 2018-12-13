@@ -123,6 +123,7 @@ class Login extends PureComponent {
       loadpage: !this.state.load,
       click: false,
     });
+    resetRecaptcha();
   };
   handleChange = value => {
     this.setState({ value });
@@ -201,7 +202,6 @@ class Login extends PureComponent {
     if (sessionStorage.account) {
       return <Redirect to={`/`} />;
     }
-    console.log(this.state.click);
     return (
       <DocumentMeta {...meta}>
         <div className={styles['container__container___1fvX0']}>
@@ -268,12 +268,7 @@ class Login extends PureComponent {
                     help={this.state.click == false ? help_pass : this.state.help_pass}
                   />
                   <FormItem>
-                    <Button
-                      onClick={() => this.resetRecaptcha()}
-                      type="primary"
-                      htmlType="submit"
-                      block
-                    >
+                    <Button type="primary" htmlType="submit" block>
                       Đăng nhập
                     </Button>
                   </FormItem>
