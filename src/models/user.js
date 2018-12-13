@@ -106,12 +106,12 @@ export default {
       if (response.status === 'ok') {
         yield put({
           type: 'checkAuthentication',
-          payload: response || {},
+          payload: response.message || {},
         });
       } else {
         yield put({
           type: 'checkAuthentication',
-          payload: response,
+          payload: response.message,
         });
       }
     },
