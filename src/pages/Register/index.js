@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/no-unused-state */
@@ -80,6 +81,7 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const DELAY = 1500;
 let rerenders = 0;
+let recaptchaInstance;
 const passwordStatusMap = {
   ok: <div className={styles.success}>Mức độ：Mạnh</div>,
   pass: <div className={styles.warning}>Mức độ：Vừa</div>,
@@ -153,6 +155,10 @@ class Register extends PureComponent {
     this.setState({
       load: !this.state.load,
     });
+    this.resetRecaptcha();
+  };
+  resetRecaptcha = () => {
+    recaptchaInstance.reset();
   };
   checkPassword = (rule, value, callback) => {
     const { visible, confirmDirty } = this.state;
@@ -373,7 +379,7 @@ class Register extends PureComponent {
                   </FormItem>
                   <FormItem>
                     <ReCAPTCHA
-                      ref={this._reCaptchaRef}
+                      ref={e => (recaptchaInstance = e)}
                       sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
                       onChange={this.handleChange}
                     />
