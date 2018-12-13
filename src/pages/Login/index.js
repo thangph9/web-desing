@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 /* eslint-disable camelcase */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-param-reassign */
@@ -116,11 +117,8 @@ class Login extends PureComponent {
           type: 'user/login',
           payload: values,
         });
-      } else {
-        console.log('abc');
       }
     });
-
     this.setState({
       loadpage: !this.state.load,
       click: false,
@@ -169,6 +167,9 @@ class Login extends PureComponent {
       click: true,
     });
   }
+  resetRecaptcha = () => {
+    recaptchaInstance.reset();
+  };
   render() {
     const meta = {
       title: 'Đăng Nhập',
@@ -255,7 +256,7 @@ class Login extends PureComponent {
                   </FormItem>
                   <FormItem>
                     <ReCAPTCHA
-                      ref={this._reCaptchaRef}
+                      ref={e => (recaptchaInstance = e)}
                       sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
                       onChange={this.handleChange}
                     />
@@ -267,7 +268,12 @@ class Login extends PureComponent {
                     help={this.state.click == false ? help_pass : this.state.help_pass}
                   />
                   <FormItem>
-                    <Button type="primary" htmlType="submit" block>
+                    <Button
+                      onClick={() => this.resetRecaptcha()}
+                      type="primary"
+                      htmlType="submit"
+                      block
+                    >
                       Đăng nhập
                     </Button>
                   </FormItem>
