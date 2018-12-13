@@ -280,7 +280,7 @@ class AccountInformation extends PureComponent {
                     <div className={styles['jsx-4204020708']}>
                       <div className={styles['jsx-3824923981']}>
                         <h4 className={styles['jsx-3824923981']}>Thông tin cá nhân</h4>
-                        <span className={styles['jsx-3824923981']}>
+                        <span className={styles['jsx-3824923981']} style={{ display: 'none' }}>
                           <span className={styles['link-style']}>Sửa</span>
                         </span>
                       </div>

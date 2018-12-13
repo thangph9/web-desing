@@ -136,7 +136,7 @@ class Register extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form, user } = this.props;
-    console.log(user.check);
+
     this.props.form.validateFields((err, values) => {
       if (!err && user.check.length == 0 && this.state.value.length > 0) {
         values['captcha'] = this.state.value;
@@ -145,7 +145,7 @@ class Register extends PureComponent {
           payload: values,
         });
       } else {
-        console.log(err);
+        console.log('vao day');
         this.props.form.setFields({
           email: {
             value: values.email,
@@ -159,9 +159,11 @@ class Register extends PureComponent {
     });
     this.resetRecaptcha();
   };
+
   resetRecaptcha = () => {
     recaptchaInstance.reset();
   };
+
   checkPassword = (rule, value, callback) => {
     const { visible, confirmDirty } = this.state;
     if (!value) {

@@ -161,10 +161,14 @@ function register(req, res) {
     function(err, result) {
       if (err) res.json({ status: 'error' });
       try {
-        token = jwt.sign({ username: user[0].username, name: userInfo[0].name }, jwtprivate, {
-          expiresIn: '30d', // expires in 30 day
-          algorithm: 'RS256',
-        });
+        token = jwt.sign(
+          { username: PARAM_IS_VALID.email, name: PARAM_IS_VALID.fullname },
+          jwtprivate,
+          {
+            expiresIn: '30d', // expires in 30 day
+            algorithm: 'RS256',
+          }
+        );
       } catch (e) {
         console.log(e);
       }

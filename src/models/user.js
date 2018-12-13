@@ -106,7 +106,7 @@ export default {
       if (response.status === 'ok') {
         yield put({
           type: 'checkAuthentication',
-          payload: response.message || {},
+          payload: response.message || '',
         });
       } else {
         yield put({
