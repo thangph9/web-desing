@@ -123,7 +123,7 @@ class Login extends PureComponent {
       loadpage: !this.state.load,
       click: false,
     });
-    resetRecaptcha();
+    this.resetRecaptcha();
   };
   handleChange = value => {
     this.setState({ value });
