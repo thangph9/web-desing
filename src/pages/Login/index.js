@@ -79,7 +79,7 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const DELAY = 1500;
 let rerenders = 0;
-
+let recaptchaInstance;
 @connect(({ loading, user }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   loading,
