@@ -252,7 +252,7 @@ class Register extends PureComponent {
   render() {
     const { count, prefix, help, visible, rule } = this.state;
     var { user } = this.props;
-    console.log(user);
+
     const meta = {
       title: 'Đăng ký',
       description: null,
