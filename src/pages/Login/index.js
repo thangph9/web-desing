@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/no-unused-state */
 /* eslint-disable no-underscore-dangle */
@@ -93,6 +95,9 @@ class Login extends PureComponent {
       value: '',
       loadpage: false,
       expired: 'false',
+      click: false,
+      help_pass: '',
+      validateStt: '',
     };
     this._reCaptchaRef = React.createRef();
     this.responseFacebook = this.responseFacebook.bind(this);
@@ -105,16 +110,21 @@ class Login extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      if (!err && this.state.value) {
-        values['captcha'] = this.state.value;
+      if (!err) {
+        // && this.state.value
+        // values['captcha'] = this.state.value;
         this.props.dispatch({
           type: 'user/login',
           payload: values,
         });
+      } else {
+        console.log('abc');
       }
     });
+
     this.setState({
       loadpage: !this.state.load,
+      click: false,
     });
   };
   handleChange = value => {
@@ -155,6 +165,11 @@ class Login extends PureComponent {
       loadpage: !this.state.load,
     });
   }
+  handleChangeEmail() {
+    this.setState({
+      click: true,
+    });
+  }
   render() {
     const meta = {
       title: 'Đăng Nhập',
@@ -167,14 +182,26 @@ class Login extends PureComponent {
         },
       },
     };
+    var { user } = this.props;
+    var validateStt = '';
+    var help_pass = '';
+    if (user.login.status == 'error') {
+      validateStt = 'error';
+      help_pass = user.login.message;
+    } else {
+      validateStt = '';
+      help_pass = '';
+    }
     const tailFormItemLayout = {};
     const { getFieldDecorator } = this.props.form;
     if (sessionStorage.account) {
       var obj = JSON.parse(sessionStorage.account);
     }
+
     if (sessionStorage.account) {
       return <Redirect to={`/`} />;
     }
+    console.log(this.state.click);
     return (
       <DocumentMeta {...meta}>
         <div className={styles['container__container___1fvX0']}>
@@ -201,17 +228,23 @@ class Login extends PureComponent {
                     fields="name,email,picture"
                     callback={this.responseFacebook}
                   />
-                  <FormItem label="Tên đăng nhập">
+                  <FormItem>
                     {getFieldDecorator('username', {
                       rules: [
                         {
-                          required: true,
-                          message: 'Vui lòng nhập tên đăng nhập!',
+                          type: 'email',
+                          message: 'Sai định dạng email',
                         },
                       ],
-                    })(<Input type="text" />)}
+                    })(
+                      <Input
+                        size="large"
+                        placeholder="Tên đăng nhập"
+                        onChange={() => this.handleChangeEmail()}
+                      />
+                    )}
                   </FormItem>
-                  <FormItem label="Mật khẩu">
+                  <FormItem>
                     {getFieldDecorator('password', {
                       rules: [
                         {
@@ -219,15 +252,21 @@ class Login extends PureComponent {
                           message: 'Vui lòng nhập mật khẩu!',
                         },
                       ],
-                    })(<Input type="password" />)}
+                    })(<Input type="password" size="large" placeholder="Mật khẩu" />)}
                   </FormItem>
-
-                  <ReCAPTCHA
-                    ref={this._reCaptchaRef}
-                    sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
-                    onChange={this.handleChange}
+                  <FormItem>
+                    <ReCAPTCHA
+                      ref={this._reCaptchaRef}
+                      sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
+                      onChange={this.handleChange}
+                    />
+                  </FormItem>
+                  <FormItem
+                    validateStatus={
+                      this.state.click == false ? validateStt : this.state.validateStt
+                    }
+                    help={this.state.click == false ? help_pass : this.state.help_pass}
                   />
-
                   <FormItem>
                     <Button type="primary" htmlType="submit" block>
                       Đăng nhập

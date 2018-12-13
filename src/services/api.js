@@ -153,6 +153,13 @@ export async function CheckEmail(params) {
     body: params,
   });
 }
+export async function changePassword(params) {
+  return request('/api/authentication/changepassword', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(sessionStorage.getItem('account')) },
+  });
+}
 export async function RegisterFacebook(params) {
   return request('/api/authentication/registerfb', {
     method: 'POST',
@@ -163,6 +170,13 @@ export async function Login(params) {
   return request('/api/authentication/login', {
     method: 'POST',
     body: params,
+  });
+}
+export async function getInfoUser(params) {
+  return request('/api/authentication/getinfo', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(sessionStorage.getItem('account')) },
   });
 }
 export async function getCategoryProduct(nodeid) {

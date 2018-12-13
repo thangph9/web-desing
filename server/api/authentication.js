@@ -161,14 +161,10 @@ function register(req, res) {
     function(err, result) {
       if (err) res.json({ status: 'error' });
       try {
-        token = jwt.sign(
-          { email: PARAM_IS_VALID.username, user_id: PARAM_IS_VALID.user_id },
-          jwtprivate,
-          {
-            expiresIn: '30d', // expires in 30 day
-            algorithm: 'RS256',
-          }
-        );
+        token = jwt.sign({ username: user[0].username, name: userInfo[0].name }, jwtprivate, {
+          expiresIn: '30d', // expires in 30 day
+          algorithm: 'RS256',
+        });
       } catch (e) {
         console.log(e);
       }
@@ -252,29 +248,11 @@ function registerfb(req, res) {
         }
         callback(null, null);
       },
-      function(callback) {
-        if (!params.captcha) {
-          return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
-        }
-        verificationUrl =
-          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
-          params.captcha +
-          '&remoteip=' +
-          req.connection.remoteAddress;
-        callback(null, null);
-      },
-      function(callback) {
-        request(verificationUrl, function(error, response, body) {
-          body = JSON.parse(body);
-          successBody = body.success;
-          callback(error, null);
-        });
-      },
     ],
     function(err, result) {
       try {
         token = jwt.sign(
-          { id: PARAM_IS_VALID['3rd_id'], user_id: PARAM_IS_VALID.user_id },
+          { username: PARAM_IS_VALID.email, name: PARAM_IS_VALID.fullname },
           jwtprivate,
           {
             expiresIn: '30d', // expires in 30 day
@@ -292,7 +270,12 @@ function registerfb(req, res) {
 
       models.doBatch(queries, function(err) {
         if (err) return res.json({ status: 'error' });
-        else return res.json({ status: 'ok', currentAuthority: currentAuthority });
+        else
+          return res.json({
+            status: 'ok',
+            currentAuthority: currentAuthority,
+            by: PARAM_IS_VALID['3rd_by'],
+          });
       });
     }
   );
@@ -307,6 +290,7 @@ function login(req, res) {
   var msg = '';
   var successBody = false;
   var verificationUrl = '';
+  var userInfo = [];
   async.series(
     [
       function(callback) {
@@ -314,6 +298,18 @@ function login(req, res) {
         PARAM_IS_VALID['password'] = params.password;
         PARAM_IS_VALID['captcha'] = params.captcha;
         callback(null, null);
+      },
+      function(callback) {
+        models.instance.account.find(
+          { username: PARAM_IS_VALID['username'] },
+          { allow_filtering: true },
+          function(err, _user) {
+            if (_user != undefined && _user.length > 0) {
+              userInfo = _user;
+            }
+            callback(err, null);
+          }
+        );
       },
       function(callback) {
         models.instance.account_login.find({ username: PARAM_IS_VALID['username'] }, function(
@@ -341,7 +337,7 @@ function login(req, res) {
       function(callback) {
         if (isLogin) {
           try {
-            token = jwt.sign({ username: user[0].username, user_id: user[0].user_id }, jwtprivate, {
+            token = jwt.sign({ username: user[0].username, name: userInfo[0].name }, jwtprivate, {
               expiresIn: '30d', // expires in 30 day
               algorithm: 'RS256',
             });
@@ -421,8 +417,122 @@ function checkEmail(req, res) {
     }
   );
 }
+function changePass(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var msg = '';
+  var hashPassword = '';
+  var _salt = '';
+  var _hash = '';
+  var saltRounds = 10;
+  var queries = [];
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+    console.log(legit);
+  } catch (e) {
+    return res.send({ status: 'error' });
+  }
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.username = legit.username;
+        PARAM_IS_VALID.password = params.password;
+        PARAM_IS_VALID.newpassword = params.newpassword;
+        callback(null, null);
+      },
+      function(callback) {
+        models.instance.account_login.find({ username: PARAM_IS_VALID['username'] }, function(
+          err,
+          _user
+        ) {
+          if (_user != undefined && _user.length > 0) {
+            _user[0].enabled ? (hashPassword = _user[0].password) : (msg = MESSAGE.USER_HAD_BANNED);
+          } else {
+            msg = MESSAGE.USER_NOT_FOUND;
+          }
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        if (hashPassword != '') {
+          bcrypt.compare(PARAM_IS_VALID['password'], hashPassword, function(err, result) {
+            // res == true
+            if (result == false) {
+              return res.json({ status: 'error', message: 'Mật khẩu cũ không chính xác' });
+            }
+            callback(err, null);
+          });
+        } else callback(null, null);
+      },
+      function(callback) {
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+          _salt = salt;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        bcrypt.hash(params.newpassword, _salt, function(err, hash) {
+          _hash = hash;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        let update_password_object = {
+          password: _hash,
+          password_salt: _salt,
+        };
+        var update_password = () => {
+          let object = update_password_object;
+          let update = models.instance.account_login.update(
+            { username: PARAM_IS_VALID.username },
+            object,
+            { if_exist: true, return_query: true }
+          );
+          return update;
+        };
+        queries.push(update_password());
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error' });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error', message: 'batch' });
+        else {
+          return res.json({
+            status: 'ok',
+            message: 'Thay đổi mật khẩu thành công',
+          });
+        }
+      });
+    }
+  );
+}
+function getInfoUser(req, res) {
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+    console.log(legit);
+  } catch (e) {
+    return res.send({ status: 'error' });
+  }
+  return res.json({ status: 'ok', info: { username: legit.username, name: legit.name } });
+}
 router.post('/register', register);
 router.post('/registerfb', registerfb);
 router.post('/login', login);
 router.post('/checkemail', checkEmail);
+router.post('/changepassword', changePass);
+router.post('/getinfo', getInfoUser);
 module.exports = router;

@@ -1,5 +1,12 @@
 import { query as queryUsers, queryCurrent } from '@/services/user';
-import { Register, Login, RegisterFacebook, CheckEmail } from '@/services/api';
+import {
+  Register,
+  Login,
+  RegisterFacebook,
+  CheckEmail,
+  changePassword,
+  getInfoUser,
+} from '@/services/api';
 
 export default {
   namespace: 'user',
@@ -9,6 +16,10 @@ export default {
     currentUser: {},
     register: undefined,
     check: '',
+    changepass: {},
+    info: {},
+    registerfb: {},
+    login: {},
   },
 
   effects: {
@@ -29,18 +40,23 @@ export default {
     *register({ payload }, { call, put }) {
       const response = yield call(Register, payload);
       if (response.status === 'ok') {
-        sessionStorage.account = JSON.stringify(response);
+        sessionStorage.account = JSON.stringify(response.currentAuthority.token);
+        yield put({
+          type: 'registration',
+          payload: response,
+        });
+      } else {
+        yield put({
+          type: 'registration',
+          payload: {},
+        });
       }
-      yield put({
-        type: 'registration',
-        payload: response,
-      });
     },
     *registerfb({ payload }, { call, put }) {
       const response = yield call(RegisterFacebook, payload);
 
       if (response.status === 'ok') {
-        sessionStorage.account = JSON.stringify(response);
+        sessionStorage.account = JSON.stringify(response.currentAuthority.token);
         yield put({
           type: 'registrationfb',
           payload: response || {},
@@ -50,10 +66,38 @@ export default {
     *login({ payload }, { call, put }) {
       const response = yield call(Login, payload);
       if (response.status === 'ok') {
-        sessionStorage.account = JSON.stringify(response);
+        sessionStorage.account = JSON.stringify(response.currentAuthority.token);
         yield put({
           type: 'loginAuthentication',
           payload: response || {},
+        });
+      } else {
+        yield put({
+          type: 'loginAuthentication',
+          payload: response || {},
+        });
+      }
+    },
+    *info({ payload }, { call, put }) {
+      const response = yield call(getInfoUser, payload);
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'infoAuthentication',
+          payload: response.info || {},
+        });
+      } else {
+        yield put({
+          type: 'infoAuthentication',
+          payload: {},
+        });
+      }
+    },
+    *changepass({ payload }, { call, put }) {
+      const response = yield call(changePassword, payload);
+      if (response) {
+        yield put({
+          type: 'changepassAuthentication',
+          payload: response || '',
         });
       }
     },
@@ -62,12 +106,12 @@ export default {
       if (response.status === 'ok') {
         yield put({
           type: 'checkAuthentication',
-          payload: response.message || '',
+          payload: response || {},
         });
       } else {
         yield put({
           type: 'checkAuthentication',
-          payload: response.message,
+          payload: response,
         });
       }
     },
@@ -98,7 +142,7 @@ export default {
     registration(state, action) {
       return {
         ...state,
-        register: action.payload.status,
+        register: action.payload,
       };
     },
     registrationfb(state, action) {
@@ -111,12 +155,25 @@ export default {
       return {
         ...state,
         login: action.payload,
+        registerfb: {},
       };
     },
     checkAuthentication(state, action) {
       return {
         ...state,
         check: action.payload,
+      };
+    },
+    changepassAuthentication(state, action) {
+      return {
+        ...state,
+        changepass: action.payload,
+      };
+    },
+    infoAuthentication(state, action) {
+      return {
+        ...state,
+        info: action.payload,
       };
     },
   },

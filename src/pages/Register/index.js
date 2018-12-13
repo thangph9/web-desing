@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/no-unused-state */
 /* eslint-disable no-underscore-dangle */
@@ -111,16 +112,14 @@ class Register extends PureComponent {
       help: '',
       prefix: '84',
       rule: 'member',
+      validateStt: '',
+      help_pass: '',
     };
     this._reCaptchaRef = React.createRef();
     this.responseFacebook = this.responseFacebook.bind(this);
   }
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({ load: true });
-    }, DELAY);
-  }
+  componentDidMount() {}
   getPasswordStatus = () => {
     const { form } = this.props;
     const value = form.getFieldValue('password');
@@ -308,7 +307,7 @@ class Register extends PureComponent {
                       <Input
                         size="large"
                         placeholder="Email"
-                        onBlur={e => this.validEmailSync(e, user.check)}
+                        onBlur={e => this.validEmailSync(e)}
                       />
                     )}
                   </FormItem>
