@@ -108,13 +108,13 @@ class Checkout extends PureComponent {
     var { listArr } = this.props.list;
     var total = 0;
     for (var i = 0; i < listArr.length; i++) {
-      total = total + listArr[i].length;
+      total = total + listArr[i][1];
     }
     var { modal } = this.props.list;
     var sale_price = 0;
     if (listArr && listArr.length > 0) {
       listArr.forEach(v => {
-        sale_price = sale_price + v[0].sale_price * v.length;
+        sale_price = sale_price + v[0].sale_price * v[1];
       });
     }
 
@@ -250,7 +250,7 @@ class Checkout extends PureComponent {
                     return (
                       <div key={i} className={styles['order-details__card-block___3EZL6']}>
                         <h4 className={styles['order-details__card-title___1HHwX']}>
-                          <span>Đơn hàng của bạn ({v.length} Sản phẩm)</span>
+                          <span>Đơn hàng của bạn ({v[1]} Sản phẩm)</span>
                           <div className={styles['order-details__actions___3Vtxn']}>
                             <a onClick={() => this.handleClickEditProduct()}>Sửa</a>
                           </div>
@@ -269,7 +269,7 @@ class Checkout extends PureComponent {
                                 {v[0].title}
                               </div>
                               <div className={styles['order-details__desc___3xcNy']}>
-                                Số lượng: 1
+                                Số lượng: {v[1]}
                               </div>
                               <div className={styles['order-details__desc___3xcNy']}>
                                 Giá:{' '}
@@ -334,6 +334,7 @@ class Checkout extends PureComponent {
                         </div>
                       </div>
                       <div
+                        style={{ display: 'none' }}
                         className={
                           styles['cc__option___2-tQJ'] + ' ' + styles['cc__credit-card___23cnt']
                         }

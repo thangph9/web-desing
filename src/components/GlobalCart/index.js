@@ -49,94 +49,22 @@ class CartItem extends PureComponent {
     };
   }
   handleChange(event, id, index) {
-    var listArr = [];
-    if (id.length - 1 >= Number(event.target.value)) {
-      var authorityString = '';
-      this.setState({
-        [id[0].title]: Number(event.target.value),
-      });
-      for (var i = 0, len = localStorage.length; i < len; ++i) {
-        if (localStorage.key(i) == 'Information') {
-          continue;
-        }
-        if (i == index) {
-          authorityString = localStorage.getItem(localStorage.key(i))
-            ? localStorage
-                .getItem(localStorage.key(i))
-                .split('|')
-                .splice(0, Number(event.target.value))
-            : '';
-          var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
-          var b = arr.map(v => JSON.stringify(v));
-          localStorage.setItem(localStorage.key(i), b.join('|'));
-          listArr.push(arr);
-        } else {
-          authorityString = localStorage.getItem(localStorage.key(i))
-            ? localStorage.getItem(localStorage.key(i)).split('|')
-            : '';
-          var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
-          listArr.push(arr);
-        }
-      }
-      var a = this.props.list.listArr[index];
-      var b = this.props.list.listArr;
-      a.splice(0, a.length - Number(event.target.value));
-    } else {
-      this.setState({
-        [id[0].title]: Number(event.target.value),
-      });
-      var a = this.props.list.listArr[index];
-      var number = Number(event.target.value) - id.length;
-
-      var i = 0;
-      while (i < number) {
-        a.push(a[0]);
-        i++;
-      }
-      for (var i = 0, len = localStorage.length; i < len; ++i) {
-        if (localStorage.key(i) == 'Information') {
-          continue;
-        }
-        if (i == index) {
-          authorityString = localStorage.getItem(localStorage.key(i))
-            ? localStorage.getItem(localStorage.key(i)).split('|')
-            : '';
-          var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
-          var b = a.map(v => JSON.stringify(v));
-          localStorage.setItem(localStorage.key(i), b.join('|'));
-
-          listArr.push(a);
-        } else {
-          authorityString = localStorage.getItem(localStorage.key(i))
-            ? localStorage.getItem(localStorage.key(i)).split('|')
-            : '';
-          var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
-          listArr.push(arr);
-        }
-      }
-    }
+    var localCart = JSON.parse(localStorage.getItem('cart'));
+    localCart[index][1] = Number(event.target.value);
+    console.log(localCart);
+    localStorage.setItem('cart', JSON.stringify(localCart));
     this.props.dispatch({
       type: 'list/local',
-      payload: listArr,
+      payload: JSON.parse(localStorage.getItem('cart')),
     });
   }
   handleRemoveItem(item) {
-    var listArr = [];
-    var authorityString = '';
-    localStorage.removeItem(item);
-    for (var i = 0, len = localStorage.length; i < len; ++i) {
-      if (localStorage.key(i) == 'Information') {
-        continue;
-      }
-      authorityString = localStorage.getItem(localStorage.key(i))
-        ? localStorage.getItem(localStorage.key(i)).split('|')
-        : '';
-      var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
-      listArr.push(arr);
-    }
+    var localCart = JSON.parse(localStorage.getItem('cart'));
+    var arr = localCart.filter((v, i) => v[0].productid != item.productid);
+    localStorage.setItem('cart', JSON.stringify(arr));
     this.props.dispatch({
       type: 'list/local',
-      payload: listArr,
+      payload: JSON.parse(localStorage.getItem('cart')),
     });
   }
   render() {
@@ -168,7 +96,7 @@ class CartItem extends PureComponent {
                   }
                 >
                   <select
-                    value={data.length}
+                    value={data[1]}
                     onChange={e => this.handleChange(e, data, index)}
                     className={
                       styles['cart__form-control___3g0tc'] +
@@ -218,7 +146,7 @@ class CartItem extends PureComponent {
                 </span>
               </div>
               <a
-                onClick={() => this.handleRemoveItem(dataCart.seo_link)}
+                onClick={() => this.handleRemoveItem(dataCart)}
                 className={styles['cart__btn-remove___3IkR9']}
                 href="javascript:void(0)"
               >
@@ -268,8 +196,8 @@ class GlobalCart extends PureComponent {
     var sale_price = 0;
     if (listArr && listArr.length > 0) {
       listArr.forEach((v, i) => {
-        price = price + v[0].price * v.length;
-        sale_price = sale_price + v[0].sale_price * v.length;
+        price = price + v[0].price * v[1];
+        sale_price = sale_price + v[0].sale_price * v[1];
       });
     }
     obj.price = price;
@@ -291,7 +219,7 @@ class GlobalCart extends PureComponent {
     var { listArr } = this.props.list;
     var total = 0;
     for (var i = 0; i < listArr.length; i++) {
-      total = total + listArr[i].length;
+      total = total + listArr[i][1];
     }
     var { modal } = this.props.list;
     return (

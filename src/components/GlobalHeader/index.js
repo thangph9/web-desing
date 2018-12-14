@@ -49,7 +49,7 @@ class GlobalHeader extends PureComponent {
     var { listArr } = this.props.list;
     var total = 0;
     for (var i = 0; i < listArr.length; i++) {
-      total = total + listArr[i].length;
+      total = total + listArr[i][1];
     }
     return (
       <div className={`${styles.header__header___1t3MH}`}>

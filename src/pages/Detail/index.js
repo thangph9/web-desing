@@ -1,3 +1,4 @@
+/* eslint-disable operator-assignment */
 /* eslint-disable no-continue */
 /* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable react/no-access-state-in-setstate */
@@ -125,53 +126,35 @@ class Detail extends PureComponent {
       payload: true,
     });
     var productDetail = product;
-    var local = localStorage.getItem(product.seo_link);
+    var cart = localStorage.getItem('cart');
+
+    if (cart) {
+      var localCart = JSON.parse(localStorage.getItem('cart'));
+      var arr = [];
+      var check = false;
+      for (var i = 0; i < localCart.length; i++) {
+        if (localCart[i][0].productid == product.productid) {
+          check = true;
+          var length = localCart[i][1];
+          arr.push([product, length + 1]);
+        } else {
+          arr.push(localCart[i]);
+        }
+      }
+      if (check == false) {
+        arr.push([product, 1]);
+      }
+      localStorage.setItem('cart', JSON.stringify(arr));
+    } else {
+      localStorage.setItem('cart', JSON.stringify([[product, 1]]));
+    }
     this.setState({
       total: !this.state.total,
     });
-    var listArr = [];
-    var authorityString = '';
 
-    if (local != null) {
-      var Listarr = local.split('|');
-      if (Listarr.length >= 20) return;
-      localStorage.setItem(product.seo_link, local + '|' + JSON.stringify(productDetail));
-      for (var i = 0, len = localStorage.length; i < len; ++i) {
-        if (localStorage.key(i) == 'Information') {
-          continue;
-        }
-        authorityString = localStorage.getItem(localStorage.key(i))
-          ? localStorage.getItem(localStorage.key(i)).split('|')
-          : '';
-        var arr =
-          authorityString != ''
-            ? authorityString.map(v => {
-                return JSON.parse(v);
-              })
-            : [];
-        listArr.push(arr);
-      }
-    } else {
-      localStorage.setItem(product.seo_link, JSON.stringify(productDetail));
-      for (var i = 0, len = localStorage.length; i < len; ++i) {
-        if (localStorage.key(i) == 'Information') {
-          continue;
-        }
-        authorityString = localStorage.getItem(localStorage.key(i))
-          ? localStorage.getItem(localStorage.key(i)).split('|')
-          : '';
-        var arr =
-          authorityString != ''
-            ? authorityString.map(v => {
-                return JSON.parse(v);
-              })
-            : [];
-        listArr.push(arr);
-      }
-    }
     this.props.dispatch({
       type: 'list/local',
-      payload: listArr,
+      payload: JSON.parse(localStorage.getItem('cart')),
     });
     this.props.dispatch({
       type: 'list/value',

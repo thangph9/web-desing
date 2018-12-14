@@ -439,7 +439,6 @@ function changePass(req, res) {
   var legit = {};
   try {
     legit = jwt.verify(token, jwtpublic, verifyOptions);
-    console.log(legit);
   } catch (e) {
     return res.send({ status: 'error' });
   }
