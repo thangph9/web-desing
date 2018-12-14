@@ -125,7 +125,7 @@ class ConfirmOtp extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      if (!err && this.state.value) {
+      if (!err && this.state.value.length > 0) {
         values['captcha'] = this.state.value;
         values['username'] = sessionStorage.email
           ? JSON.parse(sessionStorage.getItem('email'))
