@@ -533,10 +533,224 @@ function getInfoUser(req, res) {
   }
   return res.json({ status: 'ok', info: { username: legit.username, name: legit.name } });
 }
+function forgotPassword(req, res) {
+  var param = req.body;
+  var PARAM_IS_VALID = {};
+  var mailOptions = {};
+  var transporter = {};
+  var otpRandom = Math.floor(100000 + Math.random() * 900000);
+  var queries = [];
+  var info = '';
+  var successBody = {};
+  var verificationUrl = '';
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.username = param.username;
+        PARAM_IS_VALID['createat'] = new Date().getTime() + 300 * 1000;
+        PARAM_IS_VALID['captcha'] = params.captcha;
+        callback(null, null);
+      },
+      function(callback) {
+        if (!params.captcha) {
+          return res.json({ status: 'error', message: 'captcha chưa đúng!' });
+        }
+        verificationUrl =
+          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
+          params.captcha +
+          '&remoteip=' +
+          req.connection.remoteAddress;
+        callback(null, null);
+      },
+      function(callback) {
+        request(verificationUrl, function(error, response, body) {
+          successBody = JSON.parse(body);
+          if (successBody.success == false) {
+            return res.json({ status: 'error', message: 'Sai captcha!' });
+          }
+          callback(error, null);
+        });
+      },
+      function(callback) {
+        models.instance.account_login.find({ username: PARAM_IS_VALID['username'] }, function(
+          err,
+          _user
+        ) {
+          if (_user == undefined || _user.length == 0) {
+            return res.json({ status: 'error', message: 'Tài khoản không đúng' });
+          }
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        let otp_object = {
+          username: PARAM_IS_VALID.username,
+          otp: otpRandom,
+          time: PARAM_IS_VALID['createat'],
+        };
+        const otp = () => {
+          let object = otp_object;
+          let instance = new models.instance.user_by_otp(object);
+          let save = instance.save({ if_exist: true, return_query: true });
+          return save;
+        };
+        queries.push(otp());
+        callback(null, null);
+      },
+      function(callback) {
+        transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'trjvjp1997@gmail.com',
+            pass: 'concho1234',
+          },
+        });
+        callback(null, null);
+      },
+      function(callback) {
+        mailOptions = {
+          from: 'trjvjp1997@gmail.com',
+          to: PARAM_IS_VALID.username,
+          subject: 'Confirm OTP',
+          text: otpRandom + '',
+        };
+        callback(null, null);
+      },
+      function(callback) {
+        transporter.sendMail(mailOptions, function(error, info) {
+          if (error) {
+            console.log(error);
+            callback(error, null);
+          } else {
+            info = info.response;
+            callback(null, null);
+          }
+        });
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error' });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error' });
+        else {
+          return res.json({ status: 'ok', info: info });
+        }
+      });
+    }
+  );
+}
+function confirmOtp(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var checkOtp = false;
+  var _salt = '';
+  var _hash = '';
+  var queries = [];
+  var saltRounds = 10;
+  var successBody = {};
+  var verificationUrl = '';
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.username = params.username;
+        PARAM_IS_VALID.otp = params.otp;
+        PARAM_IS_VALID.newpassword = params.newpassword;
+        PARAM_IS_VALID.createat = new Date().getTime();
+        PARAM_IS_VALID['captcha'] = params.captcha;
+        callback(null, null);
+      },
+      function(callback) {
+        if (!params.captcha) {
+          return res.json({ status: 'error', message: 'captcha chưa đúng!' });
+        }
+        verificationUrl =
+          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
+          params.captcha +
+          '&remoteip=' +
+          req.connection.remoteAddress;
+        callback(null, null);
+      },
+      function(callback) {
+        request(verificationUrl, function(error, response, body) {
+          successBody = JSON.parse(body);
+          if (successBody.success == false) {
+            return res.json({ status: 'error', message: 'Sai captcha!' });
+          }
+          callback(error, null);
+        });
+      },
+      function(callback) {
+        models.instance.user_by_otp.find(
+          { username: PARAM_IS_VALID['username'] },
+          { allow_filtering: true },
+          function(err, _user) {
+            if (_user != undefined && _user.length > 0) {
+              let timeOtp = Date.parse(_user[0].time);
+              let timenow = PARAM_IS_VALID.createat;
+              let valueOtpByUser = _user[0].otp;
+              let valueOtp = Number(PARAM_IS_VALID.otp);
+              if (timeOtp - timenow > 0 && valueOtpByUser == valueOtp) checkOtp = true;
+            } else {
+              return res.json({
+                status: 'error',
+                message: 'Vui lòng nhập lại email để thực hiện chức năng này!',
+              });
+            }
+            callback(err, null);
+          }
+        );
+      },
+      function(callback) {
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+          _salt = salt;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        bcrypt.hash(params.newpassword, _salt, function(err, hash) {
+          _hash = hash;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        if (checkOtp == true) {
+          let update_password_object = {
+            password: _hash,
+            password_salt: _salt,
+          };
+          var update_password = () => {
+            let object = update_password_object;
+            let update = models.instance.account_login.update(
+              { username: PARAM_IS_VALID.username },
+              object,
+              { if_exist: true, return_query: true }
+            );
+            return update;
+          };
+          queries.push(update_password());
+        }
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error', err: err });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error', batch: err });
+        else {
+          checkOtp == true
+            ? res.json({ status: 'ok', message: 'Đổi mật khẩu thành công' })
+            : res.json({ status: 'error', message: 'Mã OTP không đúng hoặc hết hạn' });
+        }
+      });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/registerfb', registerfb);
 router.post('/login', login);
 router.post('/checkemail', checkEmail);
 router.post('/changepassword', changePass);
 router.post('/getinfo', getInfoUser);
+router.post('/forgotpassword', forgotPassword);
+router.post('/confirmotp', confirmOtp);
 module.exports = router;

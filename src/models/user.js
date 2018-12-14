@@ -6,6 +6,8 @@ import {
   CheckEmail,
   changePassword,
   getInfoUser,
+  ForgotPassword,
+  ConfirmOtp,
 } from '@/services/api';
 
 export default {
@@ -20,6 +22,8 @@ export default {
     info: {},
     registerfb: {},
     login: {},
+    forgot: {},
+    confirm: {},
   },
 
   effects: {
@@ -77,6 +81,20 @@ export default {
           payload: response || {},
         });
       }
+    },
+    *forgot({ payload }, { call, put }) {
+      const response = yield call(ForgotPassword, payload);
+      yield put({
+        type: 'forgotAuthentication',
+        payload: response || {},
+      });
+    },
+    *confirm({ payload }, { call, put }) {
+      const response = yield call(ConfirmOtp, payload);
+      yield put({
+        type: 'confirmAuthentication',
+        payload: response || {},
+      });
     },
     *info({ payload }, { call, put }) {
       const response = yield call(getInfoUser, payload);
@@ -174,6 +192,18 @@ export default {
       return {
         ...state,
         info: action.payload,
+      };
+    },
+    forgotAuthentication(state, action) {
+      return {
+        ...state,
+        forgot: action.payload,
+      };
+    },
+    confirmAuthentication(state, action) {
+      return {
+        ...state,
+        confirm: action.payload,
       };
     },
   },

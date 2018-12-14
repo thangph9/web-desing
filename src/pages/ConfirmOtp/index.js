@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable no-return-assign */
 /* eslint-disable camelcase */
 /* eslint-disable import/no-extraneous-dependencies */
@@ -66,6 +67,8 @@ import {
   Checkbox,
   Skeleton,
   Cascader,
+  Popover,
+  Progress,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import FacebookLogin from 'react-facebook-login';
@@ -80,101 +83,162 @@ const RadioGroup = Radio.Group;
 const DELAY = 1500;
 let rerenders = 0;
 let recaptchaInstance;
+const passwordStatusMap = {
+  ok: <div className={styles.success}>Mức độ：Mạnh</div>,
+  pass: <div className={styles.warning}>Mức độ：Vừa</div>,
+  poor: <div className={styles.error}>Mức độ：Yếu</div>,
+};
+const passwordProgressMap = {
+  ok: 'success',
+  pass: 'normal',
+  poor: 'exception',
+};
 @connect(({ loading, user }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   loading,
   user,
 }))
 @Form.create()
-class Login extends PureComponent {
+class ConfirmOtp extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      redirectOtp: '',
       load: false,
       fireRerender: rerenders,
       callback: 'not fired',
       value: '',
       loadpage: false,
       expired: 'false',
-      click: false,
-      help_pass: '',
+      count: 0,
+      confirmDirty: false,
+      visible: false,
+      help: '',
+      prefix: '84',
+      rule: 'member',
+      form_pass: false,
       validateStt: '',
+      help_pass: '',
     };
-    this._reCaptchaRef = React.createRef();
-    this.responseFacebook = this.responseFacebook.bind(this);
   }
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({ load: true });
-    }, DELAY);
-    if (sessionStorage.email) sessionStorage.removeItem('email');
-  }
+  componentDidMount() {}
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err && this.state.value) {
         values['captcha'] = this.state.value;
+        values['username'] = sessionStorage.email
+          ? JSON.parse(sessionStorage.getItem('email'))
+          : '';
         this.props.dispatch({
-          type: 'user/login',
+          type: 'user/confirm',
           payload: values,
         });
       }
     });
-    this.setState({
-      loadpage: !this.state.load,
-      click: false,
-    });
+    setTimeout(() => {
+      this.setState({
+        click: false,
+      });
+      sessionStorage.removeItem('email');
+    }, 2000);
     this.resetRecaptcha();
   };
-  handleChange = value => {
-    this.setState({ value });
+  renderPasswordProgress = () => {
+    const { form } = this.props;
+    const value = form.getFieldValue('newpassword');
+    const passwordStatus = this.getPasswordStatus();
+    return value && value.length ? (
+      <div className={styles[`progress-${passwordStatus}`]}>
+        <Progress
+          status={passwordProgressMap[passwordStatus]}
+          className={styles.progress}
+          strokeWidth={6}
+          percent={value.length * 10 > 100 ? 100 : value.length * 10}
+          showInfo={false}
+        />
+      </div>
+    ) : null;
   };
-
-  asyncScriptOnLoad = () => {
-    this.setState({ callback: 'called!' });
-  };
-  handleExpired = () => {
-    this.setState({ expired: 'true' });
-  };
-  handleExpired2 = () => {
-    this.setState({ expired2: 'true' });
-  };
-  responseFacebook(res) {
-    const { dispatch } = this.props;
-    if (res) {
-      const { id, email, name, accessToken, picture } = res;
-      let dataObject = {
-        accessToken,
-        fullname: name,
-        picture: picture.data ? picture.data.url : null,
-        bypage: 'facebook',
-      };
-      dispatch({
-        type: 'user/registerfb',
-        payload: {
-          with3rd: {
-            id,
-            email,
-            dataObject,
-          },
-        },
-      });
+  getPasswordStatus = () => {
+    const { form } = this.props;
+    const value = form.getFieldValue('newpassword');
+    if (value && value.length > 9) {
+      return 'ok';
     }
+    if (value && value.length > 5) {
+      return 'pass';
+    }
+    return 'poor';
+  };
+  handleClickChangePass() {
     this.setState({
-      loadpage: !this.state.load,
+      validateStt: '',
+      help_pass: '',
+      visible: false,
+      form_pass: !this.state.form_pass,
     });
   }
-  handleChangeEmail() {
+  checkPassword = (rule, value, callback) => {
+    const { visible, confirmDirty } = this.state;
+    this.setState({
+      click: true,
+    });
+    if (!value) {
+      setTimeout(() => {
+        this.setState({
+          help: 'Nhập mật khẩu！',
+          visible: !!value,
+        });
+      }, 1000);
+      callback('error');
+    } else {
+      this.setState({
+        help: '',
+      });
+      if (!visible) {
+        this.setState({
+          visible: !!value,
+        });
+      }
+      if (value.length < 6) {
+        callback('error');
+      } else {
+        const { form } = this.props;
+        if (value && confirmDirty) {
+          form.validateFields(['confirm'], { force: true });
+        }
+        callback();
+      }
+    }
+  };
+  resetRecaptcha = () => {
+    recaptchaInstance.reset();
+  };
+  handleChangeCaptcha = value => {
+    this.setState({ value });
+  };
+  handleChange() {
     this.setState({
       click: true,
     });
   }
-  resetRecaptcha = () => {
-    recaptchaInstance.reset();
-  };
   render() {
+    const { count, prefix, help, visible, rule } = this.state;
+    const tailFormItemLayout = {};
+    const { getFieldDecorator } = this.props.form;
+    const { user } = this.props;
+    var validateStt = '';
+    var help_pass = '';
+    if (user.confirm.status == 'error') {
+      validateStt = 'error';
+      help_pass = user.confirm.message;
+    } else {
+      validateStt = '';
+      help_pass = user.confirm.message;
+    }
     const meta = {
-      title: 'Đăng Nhập',
+      title: 'Quên mật khẩu',
       description: null,
       canonical: 'http://example.com/path/to/page',
       meta: {
@@ -184,22 +248,6 @@ class Login extends PureComponent {
         },
       },
     };
-    var { user } = this.props;
-    var validateStt = '';
-    var help_pass = '';
-    if (user.login.status == 'error') {
-      validateStt = 'error';
-      help_pass = user.login.message;
-    } else {
-      validateStt = '';
-      help_pass = '';
-    }
-    const tailFormItemLayout = {};
-    const { getFieldDecorator } = this.props.form;
-    if (sessionStorage.account) {
-      var obj = JSON.parse(sessionStorage.account);
-    }
-
     if (sessionStorage.account) {
       return <Redirect to={`/`} />;
     }
@@ -215,65 +263,66 @@ class Login extends PureComponent {
               styles['register__register___BuPHZ']
             }
           >
-            <h3 className={styles['auth__title___2xOb7']}>Đăng nhập</h3>
+            <h3 className={styles['auth__title___2xOb7']}>Xác nhận mật khẩu</h3>
             <div className={styles['container__container___1fvX0']}>
               <div className={styles['register-form__registerContainer___2J6fH']}>
                 <Form onSubmit={this.handleSubmit}>
-                  <FacebookLogin
-                    appId="287241238592791"
-                    autoLoad={false}
-                    textButton="Đăng nhập với Facebook"
-                    language="vi_VN"
-                    size="medium"
-                    icon="fa-facebook"
-                    fields="name,email,picture"
-                    callback={this.responseFacebook}
-                  />
                   <FormItem>
-                    {getFieldDecorator('username', {
-                      rules: [
-                        {
-                          type: 'email',
-                          message: 'Sai định dạng email',
-                        },
-                      ],
-                    })(
-                      <Input
-                        size="large"
-                        placeholder="Tên đăng nhập"
-                        onChange={() => this.handleChangeEmail()}
-                      />
-                    )}
-                  </FormItem>
-                  <FormItem>
-                    {getFieldDecorator('password', {
+                    {getFieldDecorator('otp', {
                       rules: [
                         {
                           required: true,
-                          message: 'Vui lòng nhập mật khẩu!',
+                          message: 'Vui lòng nhập otp',
                         },
                       ],
-                    })(<Input type="password" size="large" placeholder="Mật khẩu" />)}
+                    })(
+                      <Input size="large" placeholder="OTP" onChange={() => this.handleChange()} />
+                    )}
                   </FormItem>
-                  <FormItem>
-                    <ReCAPTCHA
-                      ref={e => (recaptchaInstance = e)}
-                      sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
-                      onChange={this.handleChange}
-                    />
+                  <FormItem help={help}>
+                    <Popover
+                      content={
+                        <div style={{ padding: '4px 0' }}>
+                          {passwordStatusMap[this.getPasswordStatus()]}
+                          {this.renderPasswordProgress()}
+                          <div style={{ marginTop: 10 }}>Mât khẩu lớn hơn 6 ký tự</div>
+                        </div>
+                      }
+                      overlayStyle={{ width: 240 }}
+                      placement="right"
+                      visible={visible}
+                    >
+                      {getFieldDecorator('newpassword', {
+                        rules: [
+                          {
+                            validator: this.checkPassword,
+                          },
+                        ],
+                      })(<Input size="large" type="password" placeholder="Mật khẩu mới" />)}
+                    </Popover>
                   </FormItem>
-                  <Link to={`/forgotpassword`} style={{ position: 'absolute', right: '45px' }}>
-                    Quên mật khẩu?
-                  </Link>
+                  <ReCAPTCHA
+                    style={{ marginBottom: '15px' }}
+                    ref={e => (recaptchaInstance = e)}
+                    sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
+                    onChange={this.handleChangeCaptcha}
+                  />
+
                   <FormItem
                     validateStatus={
                       this.state.click == false ? validateStt : this.state.validateStt
                     }
                     help={this.state.click == false ? help_pass : this.state.help_pass}
                   />
+                  <Link
+                    style={{ bottom: '10px', right: '45px', position: 'absolute' }}
+                    to={`/login`}
+                  >
+                    Quay về trang đăng nhập!
+                  </Link>
                   <FormItem>
                     <Button type="primary" htmlType="submit" block>
-                      Đăng nhập
+                      Đổi mật khẩu
                     </Button>
                   </FormItem>
                 </Form>
@@ -286,4 +335,4 @@ class Login extends PureComponent {
   }
 }
 
-export default Login;
+export default ConfirmOtp;

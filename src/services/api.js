@@ -172,6 +172,18 @@ export async function Login(params) {
     body: params,
   });
 }
+export async function ForgotPassword(params) {
+  return request('/api/authentication/forgotpassword', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function ConfirmOtp(params) {
+  return request('/api/authentication/confirmotp', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function getInfoUser(params) {
   return request('/api/authentication/getinfo', {
     method: 'POST',

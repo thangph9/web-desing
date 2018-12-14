@@ -362,7 +362,7 @@ class GlobalCart extends PureComponent {
               ) : (
                 <div className={styles['cart__cart-empty___2VwBC']}>
                   <div className={styles['cart__icon___DWUE4']}>
-                    <img src="https://www.leflair.vn/images/empty-bag.jpg" />
+                    <img src="https://www.leflair.vn/_next/static/images/c9c00ac7062ff11dd9aced7375a01771.jpg" />
                   </div>
                   <div>Giỏ hàng của bạn còn trống</div>
                   <div>
