@@ -552,12 +552,12 @@ function forgotPassword(req, res) {
         callback(null, null);
       },
       function(callback) {
-        if (!params.captcha) {
+        if (!param.captcha) {
           return res.json({ status: 'error', message: 'captcha chưa đúng!' });
         }
         verificationUrl =
           'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
-          params.captcha +
+          param.captcha +
           '&remoteip=' +
           req.connection.remoteAddress;
         callback(null, null);
