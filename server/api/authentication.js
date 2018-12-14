@@ -37,6 +37,7 @@ const fs = require('fs');
 var express = require('express');
 var bodyParser = require('body-parser');
 const sharp = require('sharp');
+var nodemailer = require('nodemailer');
 const Uuid = require('cassandra-driver').types.Uuid;
 const bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
