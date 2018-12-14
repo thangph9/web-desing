@@ -548,7 +548,7 @@ function forgotPassword(req, res) {
       function(callback) {
         PARAM_IS_VALID.username = param.username;
         PARAM_IS_VALID['createat'] = new Date().getTime() + 300 * 1000;
-        PARAM_IS_VALID['captcha'] = params.captcha;
+        PARAM_IS_VALID['captcha'] = param.captcha;
         callback(null, null);
       },
       function(callback) {

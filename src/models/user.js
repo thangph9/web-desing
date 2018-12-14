@@ -25,7 +25,6 @@ export default {
     forgot: {},
     confirm: {},
   },
-
   effects: {
     *fetch(_, { call, put }) {
       const response = yield call(queryUsers);
