@@ -262,7 +262,10 @@ class Login extends PureComponent {
                       onChange={this.handleChange}
                     />
                   </FormItem>
-                  <Link to={`/forgotpassword`} style={{ position: 'absolute', right: '45px' }}>
+                  <Link
+                    to={`/forgotpassword`}
+                    style={{ position: 'absolute', right: '45px', bottom: '10px' }}
+                  >
                     Quên mật khẩu?
                   </Link>
                   <FormItem
