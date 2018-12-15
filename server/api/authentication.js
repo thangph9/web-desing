@@ -163,7 +163,12 @@ function register(req, res) {
       if (err) res.json({ status: 'error' });
       try {
         token = jwt.sign(
-          { username: PARAM_IS_VALID.email, name: PARAM_IS_VALID.fullname },
+          {
+            username: PARAM_IS_VALID.email,
+            name: PARAM_IS_VALID.fullname,
+            phone: PARAM_IS_VALID.phone,
+            address: PARAM_IS_VALID.address,
+          },
           jwtprivate,
           {
             expiresIn: '30d', // expires in 30 day
@@ -342,10 +347,19 @@ function login(req, res) {
       function(callback) {
         if (isLogin) {
           try {
-            token = jwt.sign({ username: user[0].username, name: userInfo[0].name }, jwtprivate, {
-              expiresIn: '30d', // expires in 30 day
-              algorithm: 'RS256',
-            });
+            token = jwt.sign(
+              {
+                username: user[0].username,
+                name: userInfo[0].name,
+                phone: userInfo[0].phone,
+                address: userInfo[0].address,
+              },
+              jwtprivate,
+              {
+                expiresIn: '30d', // expires in 30 day
+                algorithm: 'RS256',
+              }
+            );
           } catch (e) {
             console.log(e);
           }
@@ -531,7 +545,15 @@ function getInfoUser(req, res) {
   } catch (e) {
     return res.send({ status: 'error' });
   }
-  return res.json({ status: 'ok', info: { username: legit.username, name: legit.name } });
+  return res.json({
+    status: 'ok',
+    info: {
+      username: legit.username,
+      name: legit.name,
+      phone: legit.phone,
+      address: legit.address,
+    },
+  });
 }
 function forgotPassword(req, res) {
   var param = req.body;

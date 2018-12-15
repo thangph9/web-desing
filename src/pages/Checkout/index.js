@@ -1,3 +1,7 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable react/no-access-state-in-setstate */
+/* eslint-disable no-return-assign */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react/sort-comp */
 /* eslint-disable react/destructuring-assignment */
@@ -39,6 +43,8 @@ import { connect } from 'dva';
 import { Link, Redirect } from 'react-router-dom';
 import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi/locale';
+import ReCAPTCHA from 'react-google-recaptcha';
+import FacebookLogin from 'react-facebook-login';
 import {
   Form,
   Input,
@@ -62,15 +68,167 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
-@connect(({ list }) => ({
+let recaptchaInstance;
+let rerenders = 0;
+@connect(({ list, user }) => ({
   list,
+  user,
+}))
+@Form.create()
+class LoginItem extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      confirmDirty: false,
+      autoCompleteResult: [],
+      load: false,
+      fireRerender: rerenders,
+      callback: 'not fired',
+      value: '',
+      loadpage: false,
+      expired: 'false',
+      click: false,
+      help_pass: '',
+      validateStt: '',
+      loginEmai: false,
+    };
+    this._reCaptchaRef = React.createRef();
+  }
+  resetRecaptcha = () => {
+    recaptchaInstance.reset();
+  };
+  handleChange = value => {
+    this.setState({ value });
+  };
+  handleClickLoginEmail() {
+    this.setState({
+      loginEmai: true,
+    });
+  }
+  handleSubmitEmail = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err && this.state.value.length > 0) {
+        values['captcha'] = this.state.value;
+        this.props.dispatch({
+          type: 'user/login',
+          payload: values,
+        });
+      }
+    });
+    this.setState({
+      loadpage: !this.state.load,
+      click: false,
+    });
+    this.resetRecaptcha();
+  };
+  handleChangeEmail() {
+    this.setState({
+      click: true,
+    });
+  }
+  render() {
+    const { getFieldDecorator } = this.props.form;
+    var { user } = this.props;
+    var validateStt = '';
+    var help_pass = '';
+    if (user.login.status == 'error') {
+      validateStt = 'error';
+      help_pass = user.login.message;
+    } else {
+      validateStt = '';
+      help_pass = '';
+    }
+    if (this.state.loginEmai == false) {
+      return (
+        <Button
+          onClick={() => this.handleClickLoginEmail()}
+          type="primary"
+          htmlType="submit"
+          size="large"
+          block
+        >
+          Đăng nhập bằng email
+        </Button>
+      );
+    }
+    return (
+      <Form onSubmit={e => this.handleSubmitEmail(e)}>
+        <FormItem>
+          {getFieldDecorator('username', {
+            rules: [
+              {
+                type: 'email',
+                message: 'Sai định dạng email',
+              },
+            ],
+          })(
+            <Input
+              size="large"
+              placeholder="Tên đăng nhập"
+              onChange={() => this.handleChangeEmail()}
+            />
+          )}
+        </FormItem>
+        <FormItem>
+          {getFieldDecorator('password', {
+            rules: [
+              {
+                required: true,
+                message: 'Vui lòng nhập mật khẩu!',
+              },
+            ],
+          })(<Input type="password" size="large" placeholder="Mật khẩu" />)}
+        </FormItem>
+        <FormItem>
+          <ReCAPTCHA
+            ref={e => (recaptchaInstance = e)}
+            sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
+            onChange={this.handleChange}
+          />
+        </FormItem>
+        <Link to={`/forgotpassword`} style={{ position: 'absolute', right: '45px' }}>
+          Quên mật khẩu?
+        </Link>
+        <FormItem
+          validateStatus={this.state.click == false ? validateStt : this.state.validateStt}
+          help={this.state.click == false ? help_pass : this.state.help_pass}
+        />
+        <FormItem>
+          <Button type="primary" htmlType="submit" size="large" block>
+            Đăng nhập
+          </Button>
+        </FormItem>
+      </Form>
+    );
+  }
+}
+@connect(({ list, user }) => ({
+  list,
+  user,
 }))
 @Form.create()
 class Checkout extends PureComponent {
-  state = {
-    confirmDirty: false,
-    autoCompleteResult: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      confirmDirty: false,
+      autoCompleteResult: [],
+      load: false,
+      fireRerender: rerenders,
+      callback: 'not fired',
+      value: '',
+      loadpage: false,
+      expired: 'false',
+      click: false,
+      help_pass: '',
+      validateStt: '',
+      loginEmai: false,
+    };
+    this._reCaptchaRef = React.createRef();
+    this.responseFacebook = this.responseFacebook.bind(this);
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -86,6 +244,32 @@ class Checkout extends PureComponent {
       payload: false,
     });
   }
+  responseFacebook(res) {
+    const { dispatch } = this.props;
+    if (res) {
+      const { id, email, name, accessToken, picture } = res;
+      let dataObject = {
+        accessToken,
+        fullname: name,
+        picture: picture.data ? picture.data.url : null,
+        bypage: 'facebook',
+      };
+      dispatch({
+        type: 'user/registerfb',
+        payload: {
+          with3rd: {
+            id,
+            email,
+            dataObject,
+          },
+        },
+      });
+    }
+    this.setState({
+      loadpage: !this.state.load,
+    });
+  }
+
   render() {
     const Information = JSON.parse(localStorage.getItem('Information'));
     const { getFieldDecorator } = this.props.form;
@@ -106,8 +290,7 @@ class Checkout extends PureComponent {
         <Option value="84">+84</Option>
       </Select>
     );
-    const tailFormItemLayout = {};
-    if (Information != null) {
+    if (Information || sessionStorage.account) {
       return <Redirect to="/checkout/paycomplete" />;
     } else {
       return (
@@ -148,38 +331,17 @@ class Checkout extends PureComponent {
             <p className={styles['continue__text-desc___ukUpu']}>
               Đăng nhập để thanh toán nhanh và theo dõi đơn hàng.
             </p>
-            <p>
-              <a
-                href="/api/v2/account/facebook?redirect=https://www.leflair.vn/checkout "
-                id="btn-facebook-signin-checkout"
-                className={
-                  styles['facebook-sign-in-button__btn___8j_B7'] +
-                  ' ' +
-                  styles['facebook-sign-in-button__btn-primary___mzij6'] +
-                  ' ' +
-                  styles['facebook-sign-in-button__btn-block___2iNzn'] +
-                  ' ' +
-                  styles['facebook-sign-in-button__btnFacebookSignIn___Pymre']
-                }
-              >
-                <i className={styles['ic-facebook']} />
-                Đăng nhập bằng Facebook
-              </a>
-            </p>
-            <p className={styles['continue__btn-email___1nv9z']}>
-              <button
-                id="btn-email-signin-checkout"
-                className={
-                  styles['continue__btn___1ZlRu'] +
-                  ' ' +
-                  styles['continue__btn-primary___2Rtms'] +
-                  ' ' +
-                  styles['continue__btn-block___3jiI1']
-                }
-              >
-                Đăng nhập bằng email
-              </button>
-            </p>
+            <FacebookLogin
+              appId="287241238592791"
+              autoLoad={false}
+              textButton="Đăng nhập với Facebook"
+              language="vi_VN"
+              size="medium"
+              icon="fa-facebook"
+              fields="name,email,picture"
+              callback={this.responseFacebook}
+            />
+            <LoginItem />
             <div className={styles['continue__separator___3gsgK']}>
               <hr />
             </div>
@@ -235,17 +397,8 @@ class Checkout extends PureComponent {
                   rules: [{ required: true, message: 'Vui lòng nhập số điện thoại!' }],
                 })(<Input addonBefore={prefixSelector} style={{ width: '100%' }} />)}
               </FormItem>
-              <FormItem {...tailFormItemLayout}>
-                {getFieldDecorator('agreement', {
-                  valuePropName: 'checked',
-                })(
-                  <Checkbox>
-                    I have read the <a href="">agreement</a>
-                  </Checkbox>
-                )}
-              </FormItem>
-              <FormItem {...tailFormItemLayout}>
-                <Button type="primary" htmlType="submit">
+              <FormItem>
+                <Button type="primary" htmlType="submit" size="large" block>
                   Xác nhận thanh toán
                 </Button>
               </FormItem>

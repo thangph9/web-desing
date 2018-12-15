@@ -72,8 +72,9 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
-@connect(({ list }) => ({
+@connect(({ list, user }) => ({
   list,
+  user,
 }))
 @Form.create()
 class Checkout extends PureComponent {
@@ -101,7 +102,11 @@ class Checkout extends PureComponent {
       type: 'list/modal',
       payload: false,
     });
+    this.props.dispatch({
+      type: 'user/info',
+    });
   }
+
   render() {
     const Information = JSON.parse(localStorage.getItem('Information'));
 
@@ -110,6 +115,8 @@ class Checkout extends PureComponent {
     for (var i = 0; i < listArr.length; i++) {
       total = total + listArr[i][1];
     }
+    var { user } = this.props;
+    console.log(user.info);
     var { modal } = this.props.list;
     var sale_price = 0;
     if (listArr && listArr.length > 0) {
@@ -118,7 +125,7 @@ class Checkout extends PureComponent {
       });
     }
 
-    if (Information != null) {
+    if (Information || sessionStorage.account) {
       return (
         <div className={styles['container__container___1fvX0']}>
           <div className={styles['process-indicator__indicator-section___Z-6r8']}>
@@ -234,14 +241,28 @@ class Checkout extends PureComponent {
                           <a href="/checkout/addresses/shipping">Sửa</a>
                         </div>
                       </h4>
-                      <div>
-                        <div>
-                          <span>{Information.lastname + ' ' + Information.firstname}</span>
-                          <span className={styles['an-address__dot-seperator___1_vim']}>•</span>
-                          <span>+{Information.prefix + '' + Information.phone}</span>
-                        </div>
-                        <div>{Information.address}</div>
-                      </div>
+                      {Information &&
+                        !sessionStorage.account && (
+                          <div>
+                            <div>
+                              <span>{Information.lastname + ' ' + Information.firstname}</span>
+                              <span className={styles['an-address__dot-seperator___1_vim']}>•</span>
+                              <span>+{Information.prefix + '' + Information.phone}</span>
+                            </div>
+                            <div>{Information.address}</div>
+                          </div>
+                        )}
+                      {!Information &&
+                        sessionStorage.account && (
+                          <div>
+                            <div>
+                              <span>{user.info.name && user.info.name}</span>
+                              <span className={styles['an-address__dot-seperator___1_vim']}>•</span>
+                              <span>{user.info.phone && user.info.phone}</span>
+                            </div>
+                            <div>{user.info.address}</div>
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
