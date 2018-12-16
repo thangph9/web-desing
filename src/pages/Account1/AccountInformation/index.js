@@ -93,7 +93,7 @@ class ChangeInfo extends PureComponent {
         var valueInfo = {};
         valueInfo.fullname = values.fullname ? values.fullname : user.info.name;
         valueInfo.phone = values.phone ? values.phone : user.info.phone;
-        valueInfo.address = values.address ? values.fullname : user.info.address;
+        valueInfo.address = values.address ? values.address : user.info.address;
         this.props.dispatch({
           type: 'user/changeinfo',
           payload: valueInfo,
@@ -208,9 +208,7 @@ class ChangeInfo extends PureComponent {
               }
             >
               <FormItem style={{ padding: 0, margin: 0 }}>
-                {getFieldDecorator('fullname', {
-                  rules: [{}],
-                })(
+                {getFieldDecorator('fullname', {})(
                   <Input
                     style={{ width: '50%' }}
                     size="small"
@@ -240,9 +238,7 @@ class ChangeInfo extends PureComponent {
               }
             >
               <FormItem style={{ padding: 0, margin: 0 }}>
-                {getFieldDecorator('phone', {
-                  rules: [{}],
-                })(
+                {getFieldDecorator('phone', {})(
                   <Input
                     style={{ width: '50%' }}
                     size="small"
@@ -262,9 +258,7 @@ class ChangeInfo extends PureComponent {
               }
             >
               <FormItem style={{ padding: 0, margin: 0 }}>
-                {getFieldDecorator('address', {
-                  rules: [{}],
-                })(
+                {getFieldDecorator('address', {})(
                   <Input
                     style={{ width: '50%' }}
                     size="small"
@@ -471,12 +465,12 @@ class AccountInformation extends PureComponent {
                     </div>
                     <div data-tab-idx={1} className={styles['tab-item-wrap']}>
                       <Link className={styles['text-no-underline']} to={`/order`}>
-                        Quản lý đơn hàng
+                        Deal sốc
                       </Link>
                     </div>
                     <div data-tab-idx={2} className={styles['tab-item-wrap']}>
                       <Link className={styles['text-no-underline']} to={`accountaddress`}>
-                        Địa chỉ của tôi
+                        Mua Hộ
                       </Link>
                     </div>
                   </div>

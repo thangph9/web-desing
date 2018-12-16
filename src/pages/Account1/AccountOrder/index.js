@@ -85,12 +85,12 @@ class AccountOrder extends PureComponent {
                       className={styles['text-no-underline']}
                       to={`/order`}
                     >
-                      Quản lý đơn hàng
+                      Deal sốc
                     </Link>
                   </div>
                   <div data-tab-idx={2} className={styles['tab-item-wrap']}>
                     <Link className={styles['text-no-underline']} to={`accountaddress`}>
-                      Địa chỉ của tôi
+                      Mua Hộ
                     </Link>
                   </div>
                 </div>

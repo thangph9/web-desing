@@ -96,24 +96,16 @@ class GlobalHeader extends PureComponent {
                 }`}
               >
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link to={`/amazon`} className={`${styles['header__nav-link___3W4sc']}`}>
-                    Amazon
-                  </Link>
+                  <Link to={`/amazon`} className={`${styles['header__nav-link___3W4sc']}`} />
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link to={`/ebay`} className={`${styles['header__nav-link___3W4sc']}`}>
-                    Ebay
-                  </Link>
+                  <Link to={`/ebay`} className={`${styles['header__nav-link___3W4sc']}`} />
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link to={`/adidas`} className={`${styles['header__nav-link___3W4sc']}`}>
-                    Adidas
-                  </Link>
+                  <Link to={`/adidas`} className={`${styles['header__nav-link___3W4sc']}`} />
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link to={`/nike`} className={`${styles['header__nav-link___3W4sc']}`}>
-                    Nike
-                  </Link>
+                  <Link to={`/nike`} className={`${styles['header__nav-link___3W4sc']}`} />
                 </li>
               </ul>
               <ul
