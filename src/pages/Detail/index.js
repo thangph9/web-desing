@@ -680,7 +680,7 @@ class Detail extends PureComponent {
                             Kích cỡ:{' '}
                             <Select
                               value={size.length > 0 ? size[0] : ''}
-                              style={{ width: 50 }}
+                              style={{ width: 70 }}
                               onSelect={(v, o) => this.selectSize(v, o)}
                               onChange={e => this.handleChangeSelectSize(e)}
                             >
