@@ -38,11 +38,17 @@ class GlobalHeader extends PureComponent {
       () => {}
     );
   }
+  hanldeInfomation() {
+    sessionStorage.account
+      ? this.props.history.push('/accountinformation')
+      : this.props.history.push('/login');
+  }
   handleClickOut() {
     sessionStorage.removeItem('account');
     this.setState({
       open: false,
     });
+    this.props.history.push('/login');
   }
   render() {
     const { collapsed, isMobile, logo } = this.props;
@@ -67,7 +73,7 @@ class GlobalHeader extends PureComponent {
               className={`${styles['hidden-md-up']} ${styles['header__my-navbar-toggler___2PiaS']}`}
             >
               <button className={`${styles['header__btn-icon___17D-i']}`} type="button">
-                <i className={`${styles['ic-ic-user']}`} />
+                <i onClick={() => this.hanldeInfomation()} className={`${styles['ic-ic-user']}`} />
               </button>
             </div>
             <Link to={`/home`} className={`${styles['header__navbar-brand___SzzgD']}`}>

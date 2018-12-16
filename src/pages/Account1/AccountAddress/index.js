@@ -70,30 +70,28 @@ class AccountAddress extends PureComponent {
           <div className={styles['jsx-3523037850'] + ' ' + styles['row']}>
             <div className={styles['jsx-3523037850'] + ' ' + styles['col-md-3']}>
               <div>
-                <div className={styles['jsx-2268964773']}>
+                <div className={styles['jsx-2268964773'] + ' ' + styles['horizontal']}>
+                  <div data-tab-idx={0} className={styles['tab-item-wrap']}>
+                    <Link className={styles['text-no-underline']} to={`/accountinformation`}>
+                      Thông tin tài khoản
+                    </Link>
+                  </div>
+                  <div data-tab-idx={1} className={styles['tab-item-wrap']}>
+                    <Link className={styles['text-no-underline']} to={`/order`}>
+                      Quản lý đơn hàng
+                    </Link>
+                  </div>
                   <div
-                    className={
-                      styles['jsx-3706293093'] + ' ' + styles['tabs'] + ' ' + styles['vertical']
-                    }
+                    data-tab-idx={2}
+                    className={styles['tab-item-wrap'] + ' ' + styles['active']}
                   >
-                    <div data-tab-idx={0} className={styles['tab-item-wrap']}>
-                      <Link className={styles['text-no-underline']} to={`/accountinformation`}>
-                        Thông tin tài khoản
-                      </Link>
-                    </div>
-                    <div data-tab-idx={1} className={styles['tab-item-wrap']}>
-                      <Link className={styles['text-no-underline']} to={`/order`}>
-                        Quản lý đơn hàng
-                      </Link>
-                    </div>
-                    <div
-                      data-tab-idx={2}
-                      className={styles['tab-item-wrap'] + ' ' + styles['active']}
+                    <Link
+                      style={{ color: 'rgb(22, 172, 207)' }}
+                      className={styles['text-no-underline']}
+                      to={`accountaddress`}
                     >
-                      <Link className={styles['text-no-underline']} to={`accountaddress`}>
-                        Địa chỉ của tôi
-                      </Link>
-                    </div>
+                      Địa chỉ của tôi
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -191,6 +191,13 @@ export async function getInfoUser(params) {
     headers: { 'X-Access-Token': JSON.parse(sessionStorage.getItem('account')) },
   });
 }
+export async function changeInfo(params) {
+  return request('/api/authentication/changeInfo', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(sessionStorage.getItem('account')) },
+  });
+}
 export async function getCategoryProduct(nodeid) {
   return request('/api/product/LC', {
     method: 'POST',

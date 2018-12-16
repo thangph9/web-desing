@@ -331,16 +331,6 @@ class Checkout extends PureComponent {
             <p className={styles['continue__text-desc___ukUpu']}>
               Đăng nhập để thanh toán nhanh và theo dõi đơn hàng.
             </p>
-            <FacebookLogin
-              appId="287241238592791"
-              autoLoad={false}
-              textButton="Đăng nhập với Facebook"
-              language="vi_VN"
-              size="medium"
-              icon="fa-facebook"
-              fields="name,email,picture"
-              callback={this.responseFacebook}
-            />
             <LoginItem />
             <div className={styles['continue__separator___3gsgK']}>
               <hr />

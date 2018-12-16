@@ -164,6 +164,7 @@ function register(req, res) {
       try {
         token = jwt.sign(
           {
+            userid: PARAM_IS_VALID.user_id,
             username: PARAM_IS_VALID.email,
             name: PARAM_IS_VALID.fullname,
             phone: PARAM_IS_VALID.phone,
@@ -349,6 +350,7 @@ function login(req, res) {
           try {
             token = jwt.sign(
               {
+                userid: user[0].user_id,
                 username: user[0].username,
                 name: userInfo[0].name,
                 phone: userInfo[0].phone,
@@ -541,7 +543,6 @@ function getInfoUser(req, res) {
   var legit = {};
   try {
     legit = jwt.verify(token, jwtpublic, verifyOptions);
-    console.log(legit);
   } catch (e) {
     return res.send({ status: 'error' });
   }
@@ -767,6 +768,93 @@ function confirmOtp(req, res) {
     }
   );
 }
+function changeInfo(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var queries = [];
+  var uuid = undefined;
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+  } catch (e) {
+    return res.send({ status: 'error' });
+  }
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.userid = legit.userid;
+        PARAM_IS_VALID.username = legit.username;
+        PARAM_IS_VALID.address = params.address;
+        PARAM_IS_VALID.fullname = params.fullname;
+        PARAM_IS_VALID.phone = params.phone;
+        callback(null, null);
+      },
+      function(callback) {
+        let update_info_object = {
+          address: PARAM_IS_VALID.address,
+          phone: PARAM_IS_VALID.phone,
+          name: PARAM_IS_VALID.fullname,
+          updateat: new Date().getTime(),
+        };
+
+        var update_info = () => {
+          let object = update_info_object;
+          uuid = models.uuidFromString(PARAM_IS_VALID.userid);
+          let update = models.instance.account.update({ user_id: uuid }, object, {
+            if_exist: true,
+            return_query: true,
+            allow_filtering: true,
+          });
+          return update;
+        };
+        queries.push(update_info());
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error' });
+      try {
+        token = jwt.sign(
+          {
+            userid: uuid,
+            username: PARAM_IS_VALID.username,
+            name: PARAM_IS_VALID.fullname,
+            phone: PARAM_IS_VALID.phone,
+            address: PARAM_IS_VALID.address,
+          },
+          jwtprivate,
+          {
+            expiresIn: '30d', // expires in 30 day
+            algorithm: 'RS256',
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
+      let isLogin = false;
+      if (token != undefined) {
+        isLogin = true;
+      }
+      let currentAuthority = { auth: isLogin, token: token };
+      models.doBatch(queries, function(err) {
+        if (err) {
+          console.log(err);
+          return res.json({ status: 'error' });
+        } else {
+          return res.json({
+            status: 'ok',
+            currentAuthority: currentAuthority,
+          });
+        }
+      });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/registerfb', registerfb);
 router.post('/login', login);
@@ -775,4 +863,5 @@ router.post('/changepassword', changePass);
 router.post('/getinfo', getInfoUser);
 router.post('/forgotpassword', forgotPassword);
 router.post('/confirmotp', confirmOtp);
+router.post('/changeInfo', changeInfo);
 module.exports = router;

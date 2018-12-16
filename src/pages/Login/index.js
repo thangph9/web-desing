@@ -112,12 +112,14 @@ class Login extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      if (!err && this.state.value.length > 0) {
-        values['captcha'] = this.state.value;
-        this.props.dispatch({
-          type: 'user/login',
-          payload: values,
-        });
+      if (this.state.value.length > 0) {
+        if (!err) {
+          values['captcha'] = this.state.value;
+          this.props.dispatch({
+            type: 'user/login',
+            payload: values,
+          });
+        }
       }
     });
     this.setState({
@@ -201,7 +203,7 @@ class Login extends PureComponent {
     }
 
     if (sessionStorage.account) {
-      return <Redirect to={`/`} />;
+      return <Redirect to={`/accountinformation`} />;
     }
     return (
       <DocumentMeta {...meta}>
@@ -219,16 +221,6 @@ class Login extends PureComponent {
             <div className={styles['container__container___1fvX0']}>
               <div className={styles['register-form__registerContainer___2J6fH']}>
                 <Form onSubmit={this.handleSubmit}>
-                  <FacebookLogin
-                    appId="287241238592791"
-                    autoLoad={false}
-                    textButton="Đăng nhập với Facebook"
-                    language="vi_VN"
-                    size="medium"
-                    icon="fa-facebook"
-                    fields="name,email,picture"
-                    callback={this.responseFacebook}
-                  />
                   <FormItem>
                     {getFieldDecorator('username', {
                       rules: [

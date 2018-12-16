@@ -1,3 +1,5 @@
+/* eslint-disable vars-on-top */
+/* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react/sort-comp */
@@ -73,6 +75,210 @@ const passwordProgressMap = {
   pass: 'normal',
   poor: 'exception',
 };
+@connect(({ list, user }) => ({
+  list,
+  user,
+}))
+@Form.create()
+class ChangeInfo extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  handleSubmitInfo = e => {
+    e.preventDefault();
+    var { user } = this.props;
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        var valueInfo = {};
+        valueInfo.fullname = values.fullname ? values.fullname : user.info.name;
+        valueInfo.phone = values.phone ? values.phone : user.info.phone;
+        valueInfo.address = values.address ? values.fullname : user.info.address;
+        this.props.dispatch({
+          type: 'user/changeinfo',
+          payload: valueInfo,
+        });
+      }
+      setTimeout(() => {
+        this.props.dispatch({
+          type: 'user/info',
+        });
+      }, 500);
+    });
+    this.setState({
+      changeInfo: !this.state.changeInfo,
+    });
+  };
+  handleClickChangeInfo() {
+    this.setState({
+      changeInfo: !this.state.changeInfo,
+    });
+  }
+  render() {
+    var { user } = this.props;
+    const { getFieldDecorator } = this.props.form;
+    if (!this.state.changeInfo) {
+      return (
+        <div className={styles['jsx-4204020708'] + ' ' + styles['user-settigs-section']}>
+          <div className={styles['jsx-4204020708']}>
+            <div className={styles['jsx-3824923981']}>
+              <h4 className={styles['jsx-3824923981']}>Thông tin cá nhân</h4>
+              <span className={styles['jsx-3824923981']}>
+                <span onClick={() => this.handleClickChangeInfo()} className={styles['link-style']}>
+                  Sửa
+                </span>
+              </span>
+            </div>
+          </div>
+          <div className={styles['row'] + ' ' + styles['mb-2']}>
+            <div className={styles['col-4']}>Họ tên</div>
+            <div
+              className={
+                styles['col-8'] + ' ' + styles['text-right'] + ' ' + styles['text-truncate']
+              }
+            >
+              {user.info.name && user.info.name}
+            </div>
+          </div>
+          <div className={styles['row'] + ' ' + styles['mb-2']}>
+            <div className={styles['col-4']}>Địa chỉ email</div>
+            <div
+              className={
+                styles['col-8'] + ' ' + styles['text-right'] + ' ' + styles['text-truncate']
+              }
+            >
+              {user.info.username && user.info.username}
+            </div>
+          </div>
+          <div className={styles['row'] + ' ' + styles['mb-2']}>
+            <div className={styles['col-4']}>Số điện thoại</div>
+            <div
+              className={
+                styles['col-8'] + ' ' + styles['text-right'] + ' ' + styles['text-truncate']
+              }
+            >
+              {user.info.phone && user.info.phone}
+            </div>
+          </div>
+          <div className={styles['row'] + ' ' + styles['mb-2']}>
+            <div className={styles['col-4']}>Địa chỉ</div>
+            <div
+              className={
+                styles['col-8'] + ' ' + styles['text-right'] + ' ' + styles['text-truncate']
+              }
+            >
+              {user.info.address && user.info.address}
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className={styles['jsx-4204020708'] + ' ' + styles['user-settigs-section']}>
+        <Form
+          onSubmit={e => this.handleSubmitInfo(e)}
+          style={{
+            fontSize: '16px',
+            fontWeight: 400,
+            fontFamily:
+              '-apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, Arial, sans-serif',
+          }}
+        >
+          <div className={styles['jsx-4204020708']}>
+            <div className={styles['jsx-3824923981']}>
+              <h4 className={styles['jsx-3824923981']}>Thông tin cá nhân</h4>
+              <span className={styles['jsx-3824923981']}>
+                <Button
+                  style={{ border: 'none', backgroundColor: '#fff', boxShadow: 'none' }}
+                  htmlType="submit"
+                  className={styles['link-style']}
+                >
+                  Hoàn tất
+                </Button>
+              </span>
+            </div>
+          </div>
+          <div className={styles['row'] + ' ' + styles['mb-2']}>
+            <div style={{ lineHeight: '39px' }} className={styles['col-4']}>
+              Họ tên
+            </div>
+            <div
+              className={
+                styles['col-8'] + ' ' + styles['text-right'] + ' ' + styles['text-truncate']
+              }
+            >
+              <FormItem style={{ padding: 0, margin: 0 }}>
+                {getFieldDecorator('fullname', {
+                  rules: [{}],
+                })(
+                  <Input
+                    style={{ width: '50%' }}
+                    size="small"
+                    placeholder={user.info.name && user.info.name}
+                  />
+                )}
+              </FormItem>
+            </div>
+          </div>
+          <div className={styles['row'] + ' ' + styles['mb-2']}>
+            <div className={styles['col-4']}>Địa chỉ email</div>
+            <div
+              className={
+                styles['col-8'] + ' ' + styles['text-right'] + ' ' + styles['text-truncate']
+              }
+            >
+              {user.info.username && user.info.username}
+            </div>
+          </div>
+          <div className={styles['row'] + ' ' + styles['mb-2']}>
+            <div style={{ lineHeight: '39px' }} className={styles['col-4']}>
+              Số điện thoại
+            </div>
+            <div
+              className={
+                styles['col-8'] + ' ' + styles['text-right'] + ' ' + styles['text-truncate']
+              }
+            >
+              <FormItem style={{ padding: 0, margin: 0 }}>
+                {getFieldDecorator('phone', {
+                  rules: [{}],
+                })(
+                  <Input
+                    style={{ width: '50%' }}
+                    size="small"
+                    placeholder={user.info.phone && user.info.phone}
+                  />
+                )}
+              </FormItem>
+            </div>
+          </div>
+          <div className={styles['row'] + ' ' + styles['mb-2']}>
+            <div style={{ lineHeight: '39px' }} className={styles['col-4']}>
+              Địa chỉ
+            </div>
+            <div
+              className={
+                styles['col-8'] + ' ' + styles['text-right'] + ' ' + styles['text-truncate']
+              }
+            >
+              <FormItem style={{ padding: 0, margin: 0 }}>
+                {getFieldDecorator('address', {
+                  rules: [{}],
+                })(
+                  <Input
+                    style={{ width: '50%' }}
+                    size="small"
+                    placeholder={user.info.address && user.info.address}
+                  />
+                )}
+              </FormItem>
+            </div>
+          </div>
+        </Form>
+      </div>
+    );
+  }
+}
 @connect(({ list, user }) => ({
   list,
   user,
@@ -157,29 +363,38 @@ class AccountInformation extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      if (!err) {
-        this.props.dispatch({
-          type: 'user/changepass',
-          payload: {
-            password: values.password,
-            newpassword: values.newpassword,
+      if (values.newpassword == values.repassword) {
+        if (!err) {
+          this.props.dispatch({
+            type: 'user/changepass',
+            payload: {
+              password: values.password,
+              newpassword: values.newpassword,
+            },
+          });
+        }
+        setTimeout(() => {
+          if (this.props.user.changepass.status == 'ok') {
+            this.setState({
+              validateStt: '',
+              help_pass: this.props.user.changepass.message,
+            });
+          } else {
+            this.setState({
+              validateStt: 'error',
+              help_pass: this.props.user.changepass.message,
+            });
+          }
+        }, 1000);
+      } else {
+        this.props.form.setFields({
+          repassword: {
+            value: values.email,
+            errors: [new Error('Nhập lại mật khẩu sai vui lòng kiểm tra lại!')],
           },
         });
       }
     });
-    setTimeout(() => {
-      if (this.props.user.changepass.status == 'ok') {
-        this.setState({
-          validateStt: '',
-          help_pass: this.props.user.changepass.message,
-        });
-      } else {
-        this.setState({
-          validateStt: 'error',
-          help_pass: this.props.user.changepass.message,
-        });
-      }
-    }, 1000);
   };
   getPasswordStatus = () => {
     const { form } = this.props;
@@ -218,6 +433,7 @@ class AccountInformation extends PureComponent {
   };
   render() {
     const info = JSON.parse(sessionStorage.getItem('account'));
+    var root = document.getElementById('root');
     const { count, prefix, help, visible, rule } = this.state;
     const { getFieldDecorator } = this.props.form;
     var { user } = this.props;
@@ -230,90 +446,45 @@ class AccountInformation extends PureComponent {
             <div className={styles['jsx-3523037850'] + ' ' + styles['row']}>
               <div className={styles['jsx-3523037850'] + ' ' + styles['col-md-3']}>
                 <div>
-                  <div className={styles['jsx-2268964773']}>
+                  <div className={styles['jsx-2268964773'] + ' ' + styles['horizontal']}>
                     <div
-                      className={
-                        styles['jsx-3706293093'] + ' ' + styles['tabs'] + ' ' + styles['vertical']
-                      }
+                      data-tab-idx={0}
+                      className={styles['tab-item-wrap'] + ' ' + styles['active']}
                     >
-                      <div
-                        data-tab-idx={0}
-                        className={styles['tab-item-wrap'] + ' ' + styles['active']}
-                      >
-                        <Link className={styles['text-no-underline']} to={`/accountinformation`}>
+                      {root.clientWidth && root.clientWidth > 768 ? (
+                        <Link
+                          style={{ color: 'rgb(22, 172, 207)' }}
+                          className={styles['text-no-underline']}
+                          to={`/accountinformation`}
+                        >
                           Thông tin tài khoản
                         </Link>
-                      </div>
-                      <div data-tab-idx={1} className={styles['tab-item-wrap']}>
-                        <Link className={styles['text-no-underline']} to={`/order`}>
-                          Quản lý đơn hàng
+                      ) : (
+                        <Link
+                          style={{ color: 'rgb(22, 172, 207)' }}
+                          className={styles['text-no-underline']}
+                          to={`/accountinformation`}
+                        >
+                          Tài khoản
                         </Link>
-                      </div>
-                      <div data-tab-idx={2} className={styles['tab-item-wrap']}>
-                        <Link className={styles['text-no-underline']} to={`accountaddress`}>
-                          Địa chỉ của tôi
-                        </Link>
-                      </div>
+                      )}
+                    </div>
+                    <div data-tab-idx={1} className={styles['tab-item-wrap']}>
+                      <Link className={styles['text-no-underline']} to={`/order`}>
+                        Quản lý đơn hàng
+                      </Link>
+                    </div>
+                    <div data-tab-idx={2} className={styles['tab-item-wrap']}>
+                      <Link className={styles['text-no-underline']} to={`accountaddress`}>
+                        Địa chỉ của tôi
+                      </Link>
                     </div>
                   </div>
                 </div>
               </div>
               <div className={styles['jsx-3523037850'] + ' ' + styles['col-md-9']}>
                 <div className={styles['jsx-1038892047'] + ' ' + styles['user-account-settings']}>
-                  <h1 className={styles['jsx-1038892047'] + ' ' + styles['title-account']}>
-                    Tài khoản
-                  </h1>
-                  <div className={styles['jsx-4204020708'] + ' ' + styles['user-settigs-section']}>
-                    <div className={styles['jsx-4204020708']}>
-                      <div className={styles['jsx-3824923981']}>
-                        <h4 className={styles['jsx-3824923981']}>Số dư</h4>
-                        <span className={styles['jsx-3824923981']}>
-                          <span style={{ fontSize: '20px' }}>
-                            <span>0₫</span>
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                    <p>Bạn có thể dùng số dư này để thanh toán cho những đơn hàng sau</p>
-                  </div>
-                  <div className={styles['jsx-4204020708'] + ' ' + styles['user-settigs-section']}>
-                    <div className={styles['jsx-4204020708']}>
-                      <div className={styles['jsx-3824923981']}>
-                        <h4 className={styles['jsx-3824923981']}>Thông tin cá nhân</h4>
-                        <span className={styles['jsx-3824923981']} style={{ display: 'none' }}>
-                          <span className={styles['link-style']}>Sửa</span>
-                        </span>
-                      </div>
-                    </div>
-                    <div className={styles['row'] + ' ' + styles['mb-2']}>
-                      <div className={styles['col-4']}>Họ tên</div>
-                      <div
-                        className={
-                          styles['col-8'] +
-                          ' ' +
-                          styles['text-right'] +
-                          ' ' +
-                          styles['text-truncate']
-                        }
-                      >
-                        {user.info.name && user.info.name}
-                      </div>
-                    </div>
-                    <div className={styles['row']}>
-                      <div className={styles['col-4']}>Địa chỉ email</div>
-                      <div
-                        className={
-                          styles['col-8'] +
-                          ' ' +
-                          styles['text-right'] +
-                          ' ' +
-                          styles['text-truncate']
-                        }
-                      >
-                        {user.info.username && user.info.username}
-                      </div>
-                    </div>
-                  </div>
+                  <ChangeInfo />
                   <div className={styles['jsx-4204020708'] + ' ' + styles['user-settigs-section']}>
                     <div className={styles['jsx-4204020708']}>
                       {user.registerfb && user.registerfb.by == 'facebook' ? (
@@ -335,9 +506,11 @@ class AccountInformation extends PureComponent {
                     {this.state.form_pass == true ? (
                       <div className={styles['jsx-2403114882'] + ' ' + styles['form-box']}>
                         <div className={styles['jsx-2403114882'] + ' ' + styles['form-container']}>
-                          <Form onSubmit={this.handleSubmit}>
+                          <Form
+                            style={{ width: '50%', margin: '0 auto' }}
+                            onSubmit={this.handleSubmit}
+                          >
                             <FormItem
-                              style={{ width: '50%', color: 'red' }}
                               validateStatus={this.state.validateStt}
                               help={this.state.help_pass}
                             >
@@ -357,7 +530,7 @@ class AccountInformation extends PureComponent {
                                 />
                               )}
                             </FormItem>
-                            <FormItem help={help} style={{ width: '50%' }}>
+                            <FormItem help={help}>
                               <Popover
                                 content={
                                   <div style={{ padding: '4px 0' }}>
@@ -382,16 +555,24 @@ class AccountInformation extends PureComponent {
                               </Popover>
                             </FormItem>
                             <FormItem>
-                              <Button type="primary" htmlType="submit">
+                              {getFieldDecorator('repassword', {
+                                rules: [
+                                  {
+                                    required: true,
+                                    message: 'Nhập lại mật khẩu!',
+                                  },
+                                ],
+                              })(
+                                <Input
+                                  size="large"
+                                  type="password"
+                                  placeholder="Nhập lại mật khẩu mới"
+                                />
+                              )}
+                            </FormItem>
+                            <FormItem>
+                              <Button block type="primary" htmlType="submit">
                                 Thay đổi mật khẩu
-                              </Button>
-
-                              <Button
-                                onClick={() => this.handleClickChangePass()}
-                                type="default"
-                                style={{ marginLeft: '20px', width: '100px' }}
-                              >
-                                Hủy
                               </Button>
                             </FormItem>
                           </Form>

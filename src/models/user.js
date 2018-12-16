@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import { query as queryUsers, queryCurrent } from '@/services/user';
 import {
   Register,
@@ -8,6 +9,7 @@ import {
   getInfoUser,
   ForgotPassword,
   ConfirmOtp,
+  changeInfo,
 } from '@/services/api';
 
 export default {
@@ -118,6 +120,17 @@ export default {
         });
       }
     },
+    *changeinfo({ payload }, { call, put }) {
+      const response = yield call(changeInfo, payload);
+      if (response) {
+        if (response.status === 'ok')
+          sessionStorage.account = JSON.stringify(response.currentAuthority.token);
+        yield put({
+          type: 'changeinfoAuthentication',
+          payload: response || '',
+        });
+      }
+    },
     *check({ payload }, { call, put }) {
       const response = yield call(CheckEmail, payload);
       if (response.status === 'ok') {
@@ -185,6 +198,12 @@ export default {
       return {
         ...state,
         changepass: action.payload,
+      };
+    },
+    changeinfoAuthentication(state, action) {
+      return {
+        ...state,
+        changeinfo: action.payload,
       };
     },
     infoAuthentication(state, action) {

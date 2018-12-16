@@ -125,15 +125,26 @@ class ConfirmOtp extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      if (!err && this.state.value.length > 0) {
-        values['captcha'] = this.state.value;
-        values['username'] = sessionStorage.email
-          ? JSON.parse(sessionStorage.getItem('email'))
-          : '';
-        this.props.dispatch({
-          type: 'user/confirm',
-          payload: values,
-        });
+      if (this.state.value.length > 0) {
+        if (values.newpassword == values.repassword) {
+          if (!err) {
+            values['captcha'] = this.state.value;
+            values['username'] = sessionStorage.email
+              ? JSON.parse(sessionStorage.getItem('email'))
+              : '';
+            this.props.dispatch({
+              type: 'user/confirm',
+              payload: values,
+            });
+          }
+        } else {
+          this.props.form.setFields({
+            repassword: {
+              value: values.email,
+              errors: [new Error('Nhập lại mật khẩu sai vui lòng kiểm tra lại!')],
+            },
+          });
+        }
       }
     });
     setTimeout(() => {
@@ -300,6 +311,15 @@ class ConfirmOtp extends PureComponent {
                         ],
                       })(<Input size="large" type="password" placeholder="Mật khẩu mới" />)}
                     </Popover>
+                  </FormItem>
+                  <FormItem help={help}>
+                    {getFieldDecorator('repassword', {
+                      rules: [
+                        {
+                          validator: this.checkPassword,
+                        },
+                      ],
+                    })(<Input size="large" type="password" placeholder="Nhập lại mật khẩu mới" />)}
                   </FormItem>
                   <ReCAPTCHA
                     style={{ marginBottom: '15px' }}
