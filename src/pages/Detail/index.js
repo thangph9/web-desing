@@ -1,3 +1,4 @@
+/* eslint-disable react/sort-comp */
 /* eslint-disable operator-assignment */
 /* eslint-disable no-continue */
 /* eslint-disable react/jsx-no-duplicate-props */
@@ -91,6 +92,8 @@ function fixedZero(val) {
 class Detail extends PureComponent {
   state = {
     index: 0,
+    indexSize: 0,
+    indexColor: 0,
   };
 
   // eslint-disable-next-line react/sort-comp
@@ -133,7 +136,11 @@ class Detail extends PureComponent {
       var arr = [];
       var check = false;
       for (var i = 0; i < localCart.length; i++) {
-        if (localCart[i][0].productid == product.productid) {
+        if (
+          localCart[i][0].productid == product.productid &&
+          localCart[i][0].size == product.size &&
+          localCart[i][0].color == product.color
+        ) {
           check = true;
           var length = localCart[i][1];
           arr.push([product, length + 1]);
@@ -164,17 +171,7 @@ class Detail extends PureComponent {
   getAuthority() {
     const authorityString = localStorage.getItem('detail-product');
   }
-  componentDidMount() {
-    const { dispatch, match } = this.props;
-    let productid = '';
-    try {
-      productid = match.params.productid;
-    } catch (e) {}
-    dispatch({
-      type: 'product/detail',
-      payload: { productid },
-    });
-  }
+
   handleChangeImage = (e, i) => {
     this.setState({
       index: i,
@@ -237,22 +234,19 @@ class Detail extends PureComponent {
       </div>
     );
   };
+  handleChangeSelectSize(event) {}
+  handleChangeSelectColor(event) {}
   renderBreadcrumb() {
     const {
       product: { detail },
     } = this.props;
-    const {
-      product: {
-        detail: { breadcrumb },
-      },
-    } = this.props;
     let nodeid = '';
     let seoTitle = '';
     var dataBreadcrumb = [];
-    if (breadcrumb) {
-      dataBreadcrumb = Array.isArray(breadcrumb) ? breadcrumb : [];
-      nodeid = dataBreadcrumb[1].nodeid ? dataBreadcrumb[1].nodeid.replace(/\-/g, '') : 'null';
-      seoTitle = dataBreadcrumb[1].seo_link + '/' + nodeid;
+    if (detail.breadcrumb) {
+      dataBreadcrumb = Array.isArray(detail.breadcrumb) ? detail.breadcrumb : [];
+      nodeid = dataBreadcrumb[2].nodeid ? dataBreadcrumb[2].nodeid.replace(/\-/g, '') : 'null';
+      seoTitle = dataBreadcrumb[2].seo_link + '/' + nodeid;
     }
 
     return (
@@ -275,7 +269,7 @@ class Detail extends PureComponent {
                     `}
           >
             <Link to={`/category/${seoTitle}`}>
-              {dataBreadcrumb.length > 0 ? dataBreadcrumb[1].title : ''}
+              {dataBreadcrumb.length > 0 ? dataBreadcrumb[2].title : ''}
             </Link>
           </li>
         )}
@@ -422,7 +416,27 @@ class Detail extends PureComponent {
       </div>
     );
   }
-
+  componentDidMount() {
+    const { dispatch, match } = this.props;
+    let productid = '';
+    try {
+      productid = match.params.productid;
+    } catch (e) {}
+    dispatch({
+      type: 'product/detail',
+      payload: { productid },
+    });
+  }
+  selectSize(v, o) {
+    this.setState({
+      indexSize: o.key,
+    });
+  }
+  selectColor(v, o) {
+    this.setState({
+      indexColor: o.key,
+    });
+  }
   render() {
     const {
       product: { detail },
@@ -449,6 +463,8 @@ class Detail extends PureComponent {
     };
     const infomation = [];
     const info = detail.infomation ? detail.infomation : {};
+    var size = data.size ? data.size.split(',') : [];
+    var color = data.color ? data.color.split('/') : [];
     if (info instanceof Object) {
       if (info.dimensions) {
         const dimensions = (
@@ -476,6 +492,8 @@ class Detail extends PureComponent {
       detailCookie.sale_price = detail['_sale_price'];
       detailCookie.title = detail.title;
       detailCookie['seo_link'] = detail.seo_link;
+      if (data.color) detailCookie.color = color[this.state.indexColor];
+      if (data.size) detailCookie.size = size[this.state.indexSize];
     }
     return (
       <DocumentMeta {...meta}>
@@ -537,12 +555,29 @@ class Detail extends PureComponent {
                       </div>
                     </div>
                     <div className={styles['product__colors___3jFbL']}>
-                      <h5 className={styles['color-variations__heading___3tZSD']}>
-                        Màu sắc:{' '}
-                        <span className={styles['color-variations__color-selected___2V-Kh']}>
-                          REGATTA BLUE/SHELL WHITE
-                        </span>{' '}
-                      </h5>
+                      {data.color ? (
+                        <h5 className={styles['color-variations__heading___3tZSD']}>
+                          Màu sắc:{' '}
+                          <Select
+                            value={color.length > 0 ? color[0] : ''}
+                            onSelect={(v, o) => this.selectColor(v, o)}
+                            style={{ width: 180 }}
+                            onChange={e => this.handleChangeSelectColor(e)}
+                          >
+                            {color.length > 0
+                              ? color.map((v, i) => {
+                                  return (
+                                    <Option key={i} value={v}>
+                                      {v}
+                                    </Option>
+                                  );
+                                })
+                              : ''}
+                          </Select>
+                        </h5>
+                      ) : (
+                        ''
+                      )}
                       <button
                         type="button"
                         className={
@@ -598,448 +633,30 @@ class Detail extends PureComponent {
                           styles['size-variations__clearfix___1lHkH']
                         }
                       >
-                        <h5 className={styles['size-variations__heading___1xG0s']}>Kích cỡ</h5>
-                        <a
-                          className={styles['size-variations__size-table-link___3cNVi']}
-                          href="javascript:void(0)"
-                        >
-                          Xem bảng kích cỡ
-                        </a>
+                        {data.color ? (
+                          <h5 className={styles['size-variations__heading___1xG0s']}>
+                            Kích cỡ:{' '}
+                            <Select
+                              value={size.length > 0 ? size[0] : ''}
+                              style={{ width: 50 }}
+                              onSelect={(v, o) => this.selectColor(v, o)}
+                              onChange={e => this.handleChangeSelectSize(e)}
+                            >
+                              {size.length > 0
+                                ? size.map((v, i) => {
+                                    return (
+                                      <Option key={i} value={v}>
+                                        {v}
+                                      </Option>
+                                    );
+                                  })
+                                : ''}
+                            </Select>
+                          </h5>
+                        ) : (
+                          ''
+                        )}
                       </div>
-                      <button
-                        type="button"
-                        className={
-                          styles['size-variations__btn___2VUX6'] +
-                          ' ' +
-                          styles['size-variations__btn-secondary___2TpvG'] +
-                          ' ' +
-                          styles['size-variations__btn-size___1OFXU'] +
-                          ' ' +
-                          styles['size-variations__totally-empty___9vuCj']
-                        }
-                      >
-                        6W8
-                        <div className={styles['size-variations__lines___3ety3']} />
-                        <div
-                          className={
-                            styles['size-variations__tooltip___1AmQU'] +
-                            ' ' +
-                            styles['size-variations__tooltip-top___2T8ah']
-                          }
-                          role="tooltip"
-                        >
-                          <div className={styles['size-variations__tooltip-inner____a0Ww']}>
-                            <h4
-                              className={
-                                styles['size-variations__tooltip-title___2o3V3'] +
-                                ' ' +
-                                styles['size-variations__hide-separator___GwHh6']
-                              }
-                            >
-                              Rất tiếc! Size này đã hết hàng
-                            </h4>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        type="button"
-                        className={
-                          styles['size-variations__btn___2VUX6'] +
-                          ' ' +
-                          styles['size-variations__btn-secondary___2TpvG'] +
-                          ' ' +
-                          styles['size-variations__btn-size___1OFXU'] +
-                          ' ' +
-                          styles['size-variations__not-empty___aMbkq']
-                        }
-                      >
-                        7W9
-                        <div className={styles['size-variations__lines___3ety3']} />
-                        <div
-                          className={
-                            styles['size-variations__tooltip___1AmQU'] +
-                            ' ' +
-                            styles['size-variations__tooltip-top___2T8ah']
-                          }
-                          role="tooltip"
-                        >
-                          <div className={styles['size-variations__tooltip-inner____a0Ww']}>
-                            <div>
-                              <h4 className={styles['size-variations__tooltip-title___2o3V3']}>
-                                Tương đương với
-                              </h4>
-                              <table className={styles['size-variations__table___32-RD']}>
-                                <tbody>
-                                  <tr>
-                                    <td>Size Mỹ (Men)</td>
-                                    <td>10</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Size Mỹ (Women)</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Size Anh</td>
-                                    <td>9</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Size EU</td>
-                                    <td>41.5</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Chiều dài chân (cm)</td>
-                                    <td>27.9</td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        type="button"
-                        className={
-                          styles['size-variations__btn___2VUX6'] +
-                          ' ' +
-                          styles['size-variations__btn-secondary___2TpvG'] +
-                          ' ' +
-                          styles['size-variations__btn-size___1OFXU'] +
-                          ' ' +
-                          styles['size-variations__not-empty___aMbkq']
-                        }
-                      >
-                        8W10
-                        <div className={styles['size-variations__lines___3ety3']} />
-                        <div
-                          className={
-                            styles['size-variations__tooltip___1AmQU'] +
-                            ' ' +
-                            styles['size-variations__tooltip-top___2T8ah']
-                          }
-                          role="tooltip"
-                        >
-                          <div className={styles['size-variations__tooltip-inner____a0Ww']}>
-                            <div>
-                              <h4 className={styles['size-variations__tooltip-title___2o3V3']}>
-                                Tương đương với
-                              </h4>
-                              <table className={styles['size-variations__table___32-RD']}>
-                                <tbody>
-                                  <tr>
-                                    <td>Size Mỹ (Men)</td>
-                                    <td>11</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Size Mỹ (Women)</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Size Anh</td>
-                                    <td>10</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Size EU</td>
-                                    <td>42.5</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Chiều dài chân (cm)</td>
-                                    <td>29</td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        type="button"
-                        className={
-                          styles['size-variations__btn___2VUX6'] +
-                          ' ' +
-                          styles['size-variations__btn-secondary___2TpvG'] +
-                          ' ' +
-                          styles['size-variations__btn-size___1OFXU'] +
-                          ' ' +
-                          styles['']
-                        }
-                      >
-                        6.5W8.5
-                        <div className={styles['size-variations__lines___3ety3']} />
-                        <div
-                          className={
-                            styles['size-variations__tooltip___1AmQU'] +
-                            ' ' +
-                            styles['size-variations__tooltip-top___2T8ah']
-                          }
-                          role="tooltip"
-                        >
-                          <div className={styles['size-variations__tooltip-inner____a0Ww']}>
-                            <div>
-                              <h4 className={styles['size-variations__tooltip-title___2o3V3']}>
-                                Tương đương với
-                              </h4>
-                              <table className={styles['size-variations__table___32-RD']}>
-                                <tbody>
-                                  <tr>
-                                    <td>Size Mỹ (Men)</td>
-                                    <td>13</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Size Mỹ (Women)</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Size Anh</td>
-                                    <td>12</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Size EU</td>
-                                    <td>44</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Chiều dài chân (cm)</td>
-                                    <td>31</td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        type="button"
-                        className={
-                          styles['size-variations__btn___2VUX6'] +
-                          ' ' +
-                          styles['size-variations__btn-secondary___2TpvG'] +
-                          ' ' +
-                          styles['size-variations__btn-size___1OFXU'] +
-                          ' ' +
-                          styles['size-variations__totally-empty___9vuCj']
-                        }
-                      >
-                        9<div className={styles['size-variations__lines___3ety3']} />
-                        <div
-                          className={
-                            styles['size-variations__tooltip___1AmQU'] +
-                            ' ' +
-                            styles['size-variations__tooltip-top___2T8ah']
-                          }
-                          role="tooltip"
-                        >
-                          <div className={styles['size-variations__tooltip-inner____a0Ww']}>
-                            <h4
-                              className={
-                                styles['size-variations__tooltip-title___2o3V3'] +
-                                ' ' +
-                                styles['size-variations__hide-separator___GwHh6']
-                              }
-                            >
-                              Rất tiếc! Size này đã hết hàng
-                            </h4>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        type="button"
-                        className={
-                          styles['size-variations__btn___2VUX6'] +
-                          ' ' +
-                          styles['size-variations__btn-secondary___2TpvG'] +
-                          ' ' +
-                          styles['size-variations__btn-size___1OFXU'] +
-                          ' ' +
-                          styles['']
-                        }
-                      >
-                        10
-                        <div className={styles['size-variations__lines___3ety3']} />
-                        <div
-                          className={
-                            styles['size-variations__tooltip___1AmQU'] +
-                            ' ' +
-                            styles['size-variations__tooltip-top___2T8ah']
-                          }
-                          role="tooltip"
-                        >
-                          <div className={styles['size-variations__tooltip-inner____a0Ww']}>
-                            <div>
-                              <h4 className={styles['size-variations__tooltip-title___2o3V3']}>
-                                Tương đương với
-                              </h4>
-                              <table className={styles['size-variations__table___32-RD']}>
-                                <tbody>
-                                  <tr>
-                                    <td>Size Mỹ (Men)</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Size Mỹ (Women)</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Size Anh</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Size EU</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Chiều dài chân (cm)</td>
-                                    <td />
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        type="button"
-                        className={
-                          styles['size-variations__btn___2VUX6'] +
-                          ' ' +
-                          styles['size-variations__btn-secondary___2TpvG'] +
-                          ' ' +
-                          styles['size-variations__btn-size___1OFXU'] +
-                          ' ' +
-                          styles['']
-                        }
-                      >
-                        11
-                        <div className={styles['size-variations__lines___3ety3']} />
-                        <div
-                          className={
-                            styles['size-variations__tooltip___1AmQU'] +
-                            ' ' +
-                            styles['size-variations__tooltip-top___2T8ah']
-                          }
-                          role="tooltip"
-                        >
-                          <div className={styles['size-variations__tooltip-inner____a0Ww']}>
-                            <div>
-                              <h4 className={styles['size-variations__tooltip-title___2o3V3']}>
-                                Tương đương với
-                              </h4>
-                              <table className={styles['size-variations__table___32-RD']}>
-                                <tbody>
-                                  <tr>
-                                    <td>Size Mỹ (Men)</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Size Mỹ (Women)</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Size Anh</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Size EU</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Chiều dài chân (cm)</td>
-                                    <td />
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        type="button"
-                        className={
-                          styles['size-variations__btn___2VUX6'] +
-                          ' ' +
-                          styles['size-variations__btn-secondary___2TpvG'] +
-                          ' ' +
-                          styles['size-variations__btn-size___1OFXU'] +
-                          ' ' +
-                          styles['size-variations__not-empty___aMbkq']
-                        }
-                      >
-                        13
-                        <div className={styles['size-variations__lines___3ety3']} />
-                        <div
-                          className={
-                            styles['size-variations__tooltip___1AmQU'] +
-                            ' ' +
-                            styles['size-variations__tooltip-top___2T8ah']
-                          }
-                          role="tooltip"
-                        >
-                          <div className={styles['size-variations__tooltip-inner____a0Ww']}>
-                            <div>
-                              <h4 className={styles['size-variations__tooltip-title___2o3V3']}>
-                                Tương đương với
-                              </h4>
-                              <table className={styles['size-variations__table___32-RD']}>
-                                <tbody>
-                                  <tr>
-                                    <td>Size Mỹ (Men)</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Size Mỹ (Women)</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Size Anh</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Size EU</td>
-                                    <td />
-                                  </tr>
-                                  <tr>
-                                    <td>Chiều dài chân (cm)</td>
-                                    <td />
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-                      </button>
-                      <button
-                        type="button"
-                        className={
-                          styles['size-variations__btn___2VUX6'] +
-                          ' ' +
-                          styles['size-variations__btn-secondary___2TpvG'] +
-                          ' ' +
-                          styles['size-variations__btn-size___1OFXU'] +
-                          ' ' +
-                          styles['size-variations__totally-empty___9vuCj']
-                        }
-                      >
-                        7.5W9.5
-                        <div className={styles['size-variations__lines___3ety3']} />
-                        <div
-                          className={
-                            styles['size-variations__tooltip___1AmQU'] +
-                            ' ' +
-                            styles['size-variations__tooltip-top___2T8ah']
-                          }
-                          role="tooltip"
-                        >
-                          <div className={styles['size-variations__tooltip-inner____a0Ww']}>
-                            <h4
-                              className={
-                                styles['size-variations__tooltip-title___2o3V3'] +
-                                ' ' +
-                                styles['size-variations__hide-separator___GwHh6']
-                              }
-                            >
-                              Rất tiếc! Size này đã hết hàng
-                            </h4>
-                          </div>
-                        </div>
-                      </button>
                     </div>
 
                     <p className={`${styles['product__few-items-notify___1Q8z3']}`}>

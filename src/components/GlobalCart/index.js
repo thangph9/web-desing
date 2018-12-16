@@ -84,7 +84,11 @@ class CartItem extends PureComponent {
           </div>
           <div className={styles['row__row___2roCA']}>
             <div
-              className={styles['cart__col-6___7l1MC'] + ' ' + styles['cart__form-group___1AIXC']}
+              className={
+                styles['subscription-form__col-7___1XUwT'] +
+                ' ' +
+                styles['cart__form-group___1AIXC']
+              }
             >
               <div>
                 <label className={styles['cart__quantity___1ZH6d']}>Số lượng:</label>
@@ -127,12 +131,30 @@ class CartItem extends PureComponent {
                   </select>
                 </span>
               </div>
+              <div style={{ marginTop: '10px' }}>
+                {dataCart.color ? (
+                  <label className={styles['cart__quantity___1ZH6d']}>
+                    Màu sắc:
+                    {' ' + dataCart.color}
+                  </label>
+                ) : (
+                  ''
+                )}
+                {dataCart.size ? (
+                  <label className={styles['cart__quantity___1ZH6d']}>
+                    Kích cỡ:
+                    {' ' + dataCart.size}
+                  </label>
+                ) : (
+                  ''
+                )}
+              </div>
             </div>
             <div
               className={
                 styles['text-right'] +
                 ' ' +
-                styles['cart__col-6___7l1MC'] +
+                styles['subscription-form__col-5___hlhS3'] +
                 ' ' +
                 styles['cart__price-wrap___2GHWx']
               }
