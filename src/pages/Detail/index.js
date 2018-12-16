@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/sort-comp */
 /* eslint-disable operator-assignment */
 /* eslint-disable no-continue */
@@ -426,16 +427,50 @@ class Detail extends PureComponent {
       type: 'product/detail',
       payload: { productid },
     });
+    if (this.props.location.query.color) {
+      this.setState({
+        color: this.props.location.query.color.toUpperCase().replace(/-/g, ' '),
+      });
+    }
+    if (this.props.location.query.size) {
+      this.setState({
+        size: this.props.location.query.size.toUpperCase().replace(/-/g, ' '),
+      });
+    }
   }
   selectSize(v, o) {
     this.setState({
       indexSize: o.key,
+      size: v,
     });
+    const pathname = this.props.location.pathname;
+    if (this.props.location.query.color) {
+      this.props.history.push({
+        pathname,
+        search: `?color=${this.state.color
+          .toLowerCase()
+          .replace(/ /g, '-')}&size=${v.toLowerCase().replace(/ /g, '-')}`,
+      });
+    } else {
+      this.props.history.push({ pathname, search: `?size=${v.toLowerCase().replace(/ /g, '-')}` });
+    }
   }
   selectColor(v, o) {
     this.setState({
       indexColor: o.key,
+      color: v,
     });
+    const pathname = this.props.location.pathname;
+    if (this.props.location.query.size) {
+      this.props.history.push({
+        pathname,
+        search: `?color=${v
+          .toLowerCase()
+          .replace(/ /g, '-')}&size=${this.state.size.toLowerCase().replace(/ /g, '-')}`,
+      });
+    } else {
+      this.props.history.push({ pathname, search: `?color=${v.toLowerCase().replace(/ /g, '-')}` });
+    }
   }
   render() {
     const {
@@ -495,6 +530,7 @@ class Detail extends PureComponent {
       if (data.color) detailCookie.color = color[this.state.indexColor];
       if (data.size) detailCookie.size = size[this.state.indexSize];
     }
+    console.log(this.props);
     return (
       <DocumentMeta {...meta}>
         <div id="app__body___3NlTJ">
@@ -559,7 +595,13 @@ class Detail extends PureComponent {
                         <h5 className={styles['color-variations__heading___3tZSD']}>
                           Màu sắc:{' '}
                           <Select
-                            value={color.length > 0 ? color[0] : ''}
+                            value={
+                              color.length > 0
+                                ? !this.state.color
+                                  ? color[0]
+                                  : this.state.color
+                                : ''
+                            }
                             onSelect={(v, o) => this.selectColor(v, o)}
                             style={{ width: 180 }}
                             onChange={e => this.handleChangeSelectColor(e)}
@@ -639,7 +681,7 @@ class Detail extends PureComponent {
                             <Select
                               value={size.length > 0 ? size[0] : ''}
                               style={{ width: 50 }}
-                              onSelect={(v, o) => this.selectColor(v, o)}
+                              onSelect={(v, o) => this.selectSize(v, o)}
                               onChange={e => this.handleChangeSelectSize(e)}
                             >
                               {size.length > 0
