@@ -626,52 +626,6 @@ class Detail extends PureComponent {
                       ) : (
                         ''
                       )}
-                      <button
-                        type="button"
-                        className={
-                          styles['color-variations__btn___2nwHA'] +
-                          ' ' +
-                          styles['color-variations__btn-secondary___gcalX'] +
-                          ' ' +
-                          styles['color-variations__btn-color___2GOWg'] +
-                          ' ' +
-                          styles['color-variations__not-empty___3DJm-'] +
-                          ' ' +
-                          styles['color-variations__selected___dTYUt']
-                        }
-                      >
-                        &nbsp;
-                        <div className={styles['color-variations__lines___t_Dvl']}>
-                          <img
-                            src="https://images.leflair.vn/w90/q85/5947ce7cacdf221000401bed.jpg"
-                            srcSet="https://images.leflair.vn/w90/q85/5947ce7cacdf221000401bed.jpg 90w"
-                            style={{ width: '100%' }}
-                          />
-                          <div className={styles['color-variations__sold-out-overlay___1Vo_c']} />
-                        </div>
-                      </button>
-                      <button
-                        type="button"
-                        className={
-                          styles['color-variations__btn___2nwHA'] +
-                          ' ' +
-                          styles['color-variations__btn-secondary___gcalX'] +
-                          ' ' +
-                          styles['color-variations__btn-color___2GOWg'] +
-                          ' ' +
-                          styles['color-variations__not-empty___3DJm-']
-                        }
-                      >
-                        &nbsp;
-                        <div className={styles['color-variations__lines___t_Dvl']}>
-                          <img
-                            src="https://images.leflair.vn/w90/q85/5b76b0c5d6fe7d0001c469c3.jpg"
-                            srcSet="https://images.leflair.vn/w90/q85/5b76b0c5d6fe7d0001c469c3.jpg 90w"
-                            style={{ width: '100%' }}
-                          />
-                          <div className={styles['color-variations__sold-out-overlay___1Vo_c']} />
-                        </div>
-                      </button>
                     </div>
                     <div className={styles['product__sizes___27zL9']}>
                       <div
@@ -685,7 +639,13 @@ class Detail extends PureComponent {
                           <h5 className={styles['size-variations__heading___1xG0s']}>
                             Kích cỡ:{' '}
                             <Select
-                              value={size.length > 0 ? size[0] : ''}
+                              value={
+                                size.length > 0
+                                  ? !this.state.size
+                                    ? size[0]
+                                    : this.state.size
+                                  : ''
+                              }
                               style={{ width: 70 }}
                               onSelect={(v, o) => this.selectSize(v, o)}
                               onChange={e => this.handleChangeSelectSize(e)}

@@ -197,6 +197,32 @@ export async function getInfoUser(params) {
     headers: { 'X-Access-Token': JSON.parse(sessionStorage.getItem('account')) },
   });
 }
+export async function getHelpBuy(params) {
+  return request('/api/authentication/gethelpbuy', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(sessionStorage.getItem('account')) },
+  });
+}
+export async function addHelpBuy(params) {
+  return request('/api/authentication/addhelpbuy', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(sessionStorage.getItem('account')) },
+  });
+}
+export async function setHelpBuy(params) {
+  return request('/api/authentication/sethelpbuy', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function deleteHelpBuy(params) {
+  return request('/api/authentication/deletehelpbuy', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function changeInfo(params) {
   return request('/api/authentication/changeInfo', {
     method: 'POST',

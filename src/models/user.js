@@ -11,6 +11,10 @@ import {
   ConfirmOtp,
   changeInfo,
   getOTP,
+  getHelpBuy,
+  addHelpBuy,
+  setHelpBuy,
+  deleteHelpBuy,
 } from '@/services/api';
 
 export default {
@@ -27,6 +31,10 @@ export default {
     login: {},
     forgot: {},
     confirm: {},
+    gethelpbuy: [],
+    addhelpbuy: {},
+    sethelpbuy: {},
+    deletehelpbuy: {},
   },
   effects: {
     *fetch(_, { call, put }) {
@@ -116,6 +124,62 @@ export default {
         yield put({
           type: 'infoAuthentication',
           payload: {},
+        });
+      }
+    },
+    *gethelpbuy({ payload }, { call, put }) {
+      const response = yield call(getHelpBuy, payload);
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'gethelpbuyAuthentication',
+          payload: response.data || {},
+        });
+      } else {
+        yield put({
+          type: 'gethelpbuyAuthentication',
+          payload: response.data || {},
+        });
+      }
+    },
+    *deletehelpbuy({ payload }, { call, put }) {
+      const response = yield call(deleteHelpBuy, payload);
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'deletehelpbuyAuthentication',
+          payload: response || {},
+        });
+      } else {
+        yield put({
+          type: 'deletehelpbuyAuthentication',
+          payload: response || {},
+        });
+      }
+    },
+    *sethelpbuy({ payload }, { call, put }) {
+      const response = yield call(setHelpBuy, payload);
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'sethelpbuyAuthentication',
+          payload: response || {},
+        });
+      } else {
+        yield put({
+          type: 'sethelpbuyAuthentication',
+          payload: response || {},
+        });
+      }
+    },
+    *addhelpbuy({ payload }, { call, put }) {
+      const response = yield call(addHelpBuy, payload);
+      if (response && response.status === 'ok') {
+        yield put({
+          type: 'addhelpbuyAuthentication',
+          payload: response || {},
+        });
+      } else {
+        yield put({
+          type: 'addhelpbuyAuthentication',
+          payload: response || {},
         });
       }
     },
@@ -218,6 +282,30 @@ export default {
       return {
         ...state,
         info: action.payload,
+      };
+    },
+    gethelpbuyAuthentication(state, action) {
+      return {
+        ...state,
+        gethelpbuy: action.payload,
+      };
+    },
+    sethelpbuyAuthentication(state, action) {
+      return {
+        ...state,
+        sethelpbuy: action.payload,
+      };
+    },
+    deletehelpbuyAuthentication(state, action) {
+      return {
+        ...state,
+        deletehelpbuy: action.payload,
+      };
+    },
+    addhelpbuyAuthentication(state, action) {
+      return {
+        ...state,
+        addhelpbuy: action.payload,
       };
     },
     forgotAuthentication(state, action) {

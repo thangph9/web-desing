@@ -945,6 +945,195 @@ function getOTP(req, res) {
     }
   );
 }
+function getHelpBuy(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  var product = [];
+
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+  } catch (e) {
+    return res.send({ status: 'error' });
+  }
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.username = legit.username;
+        callback(null, null);
+      },
+      function(callback) {
+        models.instance.help_buy_by_user.find(
+          { username: PARAM_IS_VALID['username'] },
+          { allow_filtering: true },
+          function(err, result) {
+            if (result != undefined && result.length > 0) {
+              product = result;
+            }
+            if (err) console.log(err);
+            callback(err, null);
+          }
+        );
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error', message1: err });
+      return res.json({ status: 'ok', data: product });
+    }
+  );
+}
+function addHelpBuy(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var queries = [];
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+  } catch (e) {
+    return res.send({ status: 'error' });
+  }
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.username = legit.username;
+        PARAM_IS_VALID.fullname = legit.name;
+        PARAM_IS_VALID.phone = legit.phone;
+        PARAM_IS_VALID.nameproduct = params.name;
+        PARAM_IS_VALID.link = params.link;
+        PARAM_IS_VALID.note = params.note;
+        PARAM_IS_VALID.total = Number(params.count);
+        PARAM_IS_VALID.createat = new Date().getTime();
+        PARAM_IS_VALID.status = 'waiting';
+        callback(null, null);
+      },
+      function(callback) {
+        models.instance.help_buy_by_user.find({ link: PARAM_IS_VALID['link'] }, function(
+          err,
+          result
+        ) {
+          if (result != undefined && result.length > 0) {
+            return res.json({ status: 'error', message: 'Sản phẩm đã được đăng ký' });
+          }
+          if (err) console.log(err);
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        let help_buy_by_user_object = {
+          link: PARAM_IS_VALID['link'],
+          nameproduct: PARAM_IS_VALID['nameproduct'],
+          username: PARAM_IS_VALID['username'],
+          createat: PARAM_IS_VALID['createat'],
+          fullname: PARAM_IS_VALID['fullname'],
+          phone: PARAM_IS_VALID['phone'],
+          note: PARAM_IS_VALID['note'],
+          total: PARAM_IS_VALID['total'],
+          status: PARAM_IS_VALID['status'],
+        };
+        const help_buy_by_user = () => {
+          let object = help_buy_by_user_object;
+          let instance = new models.instance.help_buy_by_user(object);
+          let save = instance.save({ if_exist: true, return_query: true });
+          return save;
+        };
+        queries.push(help_buy_by_user());
+
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error', message1: err });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error', message2: err });
+        else return res.json({ status: 'ok' });
+      });
+    }
+  );
+}
+function setHelpBuy(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var queries = [];
+
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.nameproduct = params.name;
+        PARAM_IS_VALID.link = params.link;
+        PARAM_IS_VALID.note = params.note;
+        PARAM_IS_VALID.total = Number(params.total);
+        callback(null, null);
+      },
+      function(callback) {
+        let help_buy_by_user_object = {
+          nameproduct: PARAM_IS_VALID['nameproduct'],
+          note: PARAM_IS_VALID['note'],
+          total: PARAM_IS_VALID['total'],
+        };
+        const help_buy_by_user = () => {
+          let object = help_buy_by_user_object;
+          let update = models.instance.help_buy_by_user.update(
+            { link: PARAM_IS_VALID['link'] },
+            object,
+            { if_exist: true, return_query: true, allow_filtering: true }
+          );
+          return update;
+        };
+        queries.push(help_buy_by_user());
+
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error', message1: err });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error', message2: err });
+        else return res.json({ status: 'ok' });
+      });
+    }
+  );
+}
+function deleteHelpBuy(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var queries = [];
+
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.link = params.link;
+        callback(null, null);
+      },
+      function(callback) {
+        const help_buy_by_user = () => {
+          let remove = models.instance.help_buy_by_user.delete({ link: PARAM_IS_VALID['link'] });
+          return remove;
+        };
+        queries.push(help_buy_by_user());
+
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error', message1: err });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error', message2: err });
+        else return res.json({ status: 'ok' });
+      });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/registerfb', registerfb);
 router.post('/login', login);
@@ -955,4 +1144,8 @@ router.post('/forgotpassword', forgotPassword);
 router.post('/confirmotp', confirmOtp);
 router.post('/changeInfo', changeInfo);
 router.post('/getotp', getOTP);
+router.post('/gethelpbuy', getHelpBuy);
+router.post('addhelpbuy', addHelpBuy);
+router.post('/sethelpbuy', setHelpBuy);
+router.post('/deletehelpbuy', deleteHelpBuy);
 module.exports = router;
