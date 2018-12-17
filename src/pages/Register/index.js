@@ -145,22 +145,22 @@ class Register extends PureComponent {
     const { form, user } = this.props;
 
     this.props.form.validateFields((err, values) => {
-      // if (this.state.value.length > 0) {
-      if (values.password == values.repassword) {
-        if (!err && user.check.length == 0) {
-          // values['captcha'] = this.state.value;
-          this.props.dispatch({
-            type: 'user/register',
-            payload: values,
-          });
-        } else if (user.check.length > 0) {
-          this.props.form.setFields({
-            email: {
-              value: values.email,
-              errors: [new Error(user.check)],
-            },
-          });
-          // }
+      if (this.state.value.length > 0) {
+        if (values.password == values.repassword) {
+          if (!err && user.check.length == 0) {
+            values['captcha'] = this.state.value;
+            this.props.dispatch({
+              type: 'user/register',
+              payload: values,
+            });
+          } else if (user.check.length > 0) {
+            this.props.form.setFields({
+              email: {
+                value: values.email,
+                errors: [new Error(user.check)],
+              },
+            });
+          }
         } else {
           this.props.form.setFields({
             repassword: {
