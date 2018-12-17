@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-return-assign */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-param-reassign */
@@ -87,21 +88,12 @@ const passwordStatusMap = {
   pass: <div className={styles.warning}>Mức độ：Vừa</div>,
   poor: <div className={styles.error}>Mức độ：Yếu</div>,
 };
-const repasswordStatusMap = {
-  ok: <div className={styles.success}>Mức độ：Mạnh</div>,
-  pass: <div className={styles.warning}>Mức độ：Vừa</div>,
-  poor: <div className={styles.error}>Mức độ：Yếu</div>,
-};
 const passwordProgressMap = {
   ok: 'success',
   pass: 'normal',
   poor: 'exception',
 };
-const passwordReProgressMap = {
-  ok: 'success',
-  pass: 'normal',
-  poor: 'exception',
-};
+
 @connect(({ loading, user }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   loading,
@@ -128,6 +120,8 @@ class Register extends PureComponent {
       rule: 'member',
       validateStt: '',
       help_pass: '',
+      help_otp: '',
+      click: false,
     };
     this._reCaptchaRef = React.createRef();
     this.responseFacebook = this.responseFacebook.bind(this);
@@ -145,38 +139,28 @@ class Register extends PureComponent {
     }
     return 'poor';
   };
-  getRePasswordStatus = () => {
-    const { form } = this.props;
-    const value = form.getFieldValue('repassword');
-    if (value && value.length > 9) {
-      return 'ok';
-    }
-    if (value && value.length > 5) {
-      return 'pass';
-    }
-    return 'poor';
-  };
+
   handleSubmit = e => {
     e.preventDefault();
     const { form, user } = this.props;
 
     this.props.form.validateFields((err, values) => {
-      if (this.state.value.length > 0) {
-        if (values.password == values.repassword) {
-          if (!err && user.check.length == 0) {
-            // values['captcha'] = this.state.value;
-            this.props.dispatch({
-              type: 'user/register',
-              payload: values,
-            });
-          } else if (user.check.length > 0) {
-            this.props.form.setFields({
-              email: {
-                value: values.email,
-                errors: [new Error(user.check)],
-              },
-            });
-          }
+      // if (this.state.value.length > 0) {
+      if (values.password == values.repassword) {
+        if (!err && user.check.length == 0) {
+          // values['captcha'] = this.state.value;
+          this.props.dispatch({
+            type: 'user/register',
+            payload: values,
+          });
+        } else if (user.check.length > 0) {
+          this.props.form.setFields({
+            email: {
+              value: values.email,
+              errors: [new Error(user.check)],
+            },
+          });
+          // }
         } else {
           this.props.form.setFields({
             repassword: {
@@ -212,34 +196,6 @@ class Register extends PureComponent {
       if (!visible) {
         this.setState({
           visible: !!value,
-        });
-      }
-      if (value.length < 6) {
-        callback('error');
-      } else {
-        const { form } = this.props;
-        if (value && confirmDirty) {
-          form.validateFields(['confirm'], { force: true });
-        }
-        callback();
-      }
-    }
-  };
-  checkRePassword = (rule, value, callback) => {
-    const { revisible, confirmDirty } = this.state;
-    if (!value) {
-      this.setState({
-        rehelp: 'Nhập lại mật khẩu！',
-        revisible: !!value,
-      });
-      callback('error');
-    } else {
-      this.setState({
-        rehelp: '',
-      });
-      if (!revisible) {
-        this.setState({
-          revisible: !!value,
         });
       }
       if (value.length < 6) {
@@ -307,22 +263,7 @@ class Register extends PureComponent {
       </div>
     ) : null;
   };
-  renderRePasswordProgress = () => {
-    const { form } = this.props;
-    const value = form.getFieldValue('repassword');
-    const passwordStatus = this.getRePasswordStatus();
-    return value && value.length ? (
-      <div className={styles[`progress-${passwordStatus}`]}>
-        <Progress
-          status={passwordReProgressMap[passwordStatus]}
-          className={styles.progress}
-          strokeWidth={6}
-          percent={value.length * 10 > 100 ? 100 : value.length * 10}
-          showInfo={false}
-        />
-      </div>
-    ) : null;
-  };
+
   validEmailSync = e => {
     const { value } = e.target;
     const { form, dispatch, user } = this.props;
@@ -336,9 +277,46 @@ class Register extends PureComponent {
       }
     });
   };
+  handleClickOTP() {
+    if (this.props.form.getFieldValue('email')) {
+      this.props.dispatch({
+        type: 'user/getotp',
+        payload: {
+          username: this.props.form.getFieldValue('email'),
+        },
+      });
+    } else {
+      this.props.form.setFields({
+        email: {
+          errors: [new Error('Vui lòng nhập email!')],
+        },
+      });
+    }
+    this.setState({
+      click: true,
+      help_otp: 'OTP vừa được gửi về email. Vui lòng kiểm tra!',
+    });
+  }
+  handleChangeOTP() {
+    this.setState({
+      help_otp: '',
+    });
+  }
+
   render() {
     const { count, prefix, help, visible, rule, revisible, rehelp } = this.state;
     var { user } = this.props;
+    var validateStt = '';
+    var help_pass = '';
+    if (user.register) {
+      if (user.register.status == 'error') {
+        validateStt = 'error';
+        help_pass = user.register.message;
+      } else {
+        validateStt = '';
+        help_pass = '';
+      }
+    }
     const meta = {
       title: 'Đăng ký',
       description: null,
@@ -350,6 +328,7 @@ class Register extends PureComponent {
         },
       },
     };
+
     const tailFormItemLayout = {};
     const { getFieldDecorator } = this.props.form;
     if (sessionStorage.account) {
@@ -444,9 +423,27 @@ class Register extends PureComponent {
                       ],
                     })(<Input size="large" placeholder="Số điện thoại" />)}
                   </FormItem>
-
                   <FormItem>
                     {getFieldDecorator('address', {})(<Input size="large" placeholder="Địa chỉ" />)}
+                  </FormItem>
+                  <FormItem help={this.state.help_otp}>
+                    {getFieldDecorator('otp', {
+                      rules: [{ required: true, message: 'Vui lòng nhập OTP!' }],
+                    })(
+                      <Input
+                        onChange={() => this.handleChangeOTP()}
+                        style={{ width: '70%' }}
+                        size="large"
+                        placeholder="OTP"
+                      />
+                    )}
+                    <Button
+                      onClick={() => this.handleClickOTP()}
+                      size="large"
+                      style={{ width: '25%', float: 'right' }}
+                    >
+                      Nhận OTP
+                    </Button>
                   </FormItem>
                   <FormItem>
                     <ReCAPTCHA
@@ -455,6 +452,12 @@ class Register extends PureComponent {
                       onChange={this.handleChange}
                     />
                   </FormItem>
+                  <FormItem
+                    validateStatus={
+                      this.state.click == false ? validateStt : this.state.validateStt
+                    }
+                    help={this.state.click == false ? help_pass : this.state.help_pass}
+                  />
                   <FormItem>
                     <Button type="primary" htmlType="submit" size="large" block>
                       Đăng ký

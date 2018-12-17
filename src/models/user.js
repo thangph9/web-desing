@@ -10,6 +10,7 @@ import {
   ForgotPassword,
   ConfirmOtp,
   changeInfo,
+  getOTP,
 } from '@/services/api';
 
 export default {
@@ -53,7 +54,7 @@ export default {
       } else {
         yield put({
           type: 'registration',
-          payload: {},
+          payload: response,
         });
       }
     },
@@ -94,6 +95,13 @@ export default {
       const response = yield call(ConfirmOtp, payload);
       yield put({
         type: 'confirmAuthentication',
+        payload: response || {},
+      });
+    },
+    *getotp({ payload }, { call, put }) {
+      const response = yield call(getOTP, payload);
+      yield put({
+        type: 'getotpAuthentication',
         payload: response || {},
       });
     },
@@ -222,6 +230,12 @@ export default {
       return {
         ...state,
         confirm: action.payload,
+      };
+    },
+    getotpAuthentication(state, action) {
+      return {
+        ...state,
+        getotp: action.payload,
       };
     },
   },

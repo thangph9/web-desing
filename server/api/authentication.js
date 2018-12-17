@@ -72,6 +72,7 @@ function register(req, res) {
       function(callback) {
         PARAM_IS_VALID['phone'] = params.phone;
         PARAM_IS_VALID['email'] = params.email;
+        PARAM_IS_VALID['otp'] = params.otp;
         PARAM_IS_VALID['fullname'] = params.fullname;
         PARAM_IS_VALID['username'] = params.email;
         PARAM_IS_VALID['address'] = params.address;
@@ -80,6 +81,24 @@ function register(req, res) {
         PARAM_IS_VALID['enabled'] = true;
         PARAM_IS_VALID['createat'] = new Date().getTime();
         callback(null, null);
+      },
+      function(callback) {
+        models.instance.user_by_otp.find(
+          { username: PARAM_IS_VALID['username'] },
+          { allow_filtering: true },
+          function(err, _user) {
+            if (_user != undefined && _user.length > 0) {
+              let timeOtp = Date.parse(_user[0].time);
+              let timenow = PARAM_IS_VALID.createat;
+              let valueOtpByUser = _user[0].otp;
+              let valueOtp = Number(PARAM_IS_VALID.otp);
+              if (timeOtp - timenow < 0 || valueOtpByUser != valueOtp) {
+                return res.json({ status: 'error', message: 'Sai OTP hoặc OTP hết hạn!' });
+              }
+            }
+            callback(err, null);
+          }
+        );
       },
       function(callback) {
         bcrypt.genSalt(saltRounds, function(err, salt) {
@@ -855,6 +874,77 @@ function changeInfo(req, res) {
     }
   );
 }
+function getOTP(req, res) {
+  var param = req.body;
+  var PARAM_IS_VALID = {};
+  var mailOptions = {};
+  var transporter = {};
+  var otpRandom = Math.floor(100000 + Math.random() * 900000);
+  var queries = [];
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.username = param.username;
+        PARAM_IS_VALID['createat'] = new Date().getTime() + 300000;
+        callback(null, null);
+      },
+      function(callback) {
+        let otp_object = {
+          username: PARAM_IS_VALID.username,
+          otp: otpRandom,
+          time: PARAM_IS_VALID['createat'],
+        };
+        const otp = () => {
+          let object = otp_object;
+          let instance = new models.instance.user_by_otp(object);
+          let save = instance.save({ if_exist: true, return_query: true });
+          return save;
+        };
+        queries.push(otp());
+        callback(null, null);
+      },
+      function(callback) {
+        transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'trjvjp1997@gmail.com',
+            pass: 'concho1234',
+          },
+        });
+        callback(null, null);
+      },
+      function(callback) {
+        mailOptions = {
+          from: 'trjvjp1997@gmail.com',
+          to: PARAM_IS_VALID.username,
+          subject: 'OTP Register',
+          text: otpRandom + '',
+        };
+        callback(null, null);
+      },
+      function(callback) {
+        transporter.sendMail(mailOptions, function(error, info) {
+          if (error) {
+            console.log(error);
+            callback(error, null);
+          } else {
+            info = info.response;
+            callback(null, null);
+          }
+        });
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error' });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error' });
+        else {
+          return res.json({ status: 'ok' });
+        }
+      });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/registerfb', registerfb);
 router.post('/login', login);
@@ -864,4 +954,5 @@ router.post('/getinfo', getInfoUser);
 router.post('/forgotpassword', forgotPassword);
 router.post('/confirmotp', confirmOtp);
 router.post('/changeInfo', changeInfo);
+router.post('/getotp', getOTP);
 module.exports = router;

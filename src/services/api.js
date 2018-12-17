@@ -184,6 +184,12 @@ export async function ConfirmOtp(params) {
     body: params,
   });
 }
+export async function getOTP(params) {
+  return request('/api/authentication/getotp', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function getInfoUser(params) {
   return request('/api/authentication/getinfo', {
     method: 'POST',
