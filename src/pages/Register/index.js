@@ -173,6 +173,7 @@ class Register extends PureComponent {
     });
     this.setState({
       load: !this.state.load,
+      click: false,
     });
     this.resetRecaptcha();
   };
