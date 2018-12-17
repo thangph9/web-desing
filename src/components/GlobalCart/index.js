@@ -1,3 +1,5 @@
+/* eslint-disable arrow-body-style */
+/* eslint-disable array-callback-return */
 /* eslint-disable import/order */
 /* eslint-disable no-continue */
 /* eslint-disable no-redeclare */
@@ -59,8 +61,11 @@ class CartItem extends PureComponent {
     });
   }
   handleRemoveItem(item) {
+    console.log(item);
     var localCart = JSON.parse(localStorage.getItem('cart'));
-    var arr = localCart.filter((v, i) => v[0].productid != item.productid);
+    var arr = localCart.filter((v, i) => {
+      return v[0].productid != item.productid || v[0].size != item.size || v[0].color != item.color;
+    });
     localStorage.setItem('cart', JSON.stringify(arr));
     this.props.dispatch({
       type: 'list/local',

@@ -527,8 +527,14 @@ class Detail extends PureComponent {
       detailCookie.sale_price = detail['_sale_price'];
       detailCookie.title = detail.title;
       detailCookie['seo_link'] = detail.seo_link;
-      if (data.color) detailCookie.color = color[this.state.indexColor];
-      if (data.size) detailCookie.size = size[this.state.indexSize];
+      if (data.color)
+        detailCookie.color = !this.props.location.query.color
+          ? color[this.state.indexColor]
+          : this.props.location.query.color.toUpperCase().replace(/-/g, ' ');
+      if (data.size)
+        detailCookie.size = !this.props.location.query.size
+          ? size[this.state.indexSize]
+          : this.props.location.query.size.toUpperCase().replace(/-/g, ' ');
     }
     console.log(this.props);
     return (
