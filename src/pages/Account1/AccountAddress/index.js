@@ -46,6 +46,7 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import {
   Form,
   Input,
+  message,
   DatePicker,
   Select,
   Button,
@@ -84,6 +85,10 @@ class ChangeHelpBuy extends PureComponent {
       [link]: !this.state[link],
     });
     var { user } = this.props;
+    if (this.props.form.getFieldValue('count') && this.props.form.getFieldValue('count') < 1) {
+      message.error('Số lượng không hợp lệ!');
+      return;
+    }
     this.props.form.validateFields((err, values) => {
       if (!err) {
         var valueChange = {};
@@ -91,7 +96,6 @@ class ChangeHelpBuy extends PureComponent {
         valueChange.name = values.name ? values.name : user.gethelpbuy[i].nameproduct;
         valueChange.total = values.count ? values.count : user.gethelpbuy[i].total;
         valueChange.note = values.note ? values.note : user.gethelpbuy[i].note;
-        console.log(valueChange);
         this.props.dispatch({
           type: 'user/sethelpbuy',
           payload: valueChange,
@@ -130,6 +134,7 @@ class ChangeHelpBuy extends PureComponent {
   render() {
     var { v, i } = this.props;
     const { getFieldDecorator } = this.props.form;
+    var root = document.getElementById('root');
     var { user } = this.props;
     if (!this.state[v.link]) {
       return (
@@ -307,6 +312,10 @@ class AccountAddress extends PureComponent {
   }
   handleSubmit = e => {
     e.preventDefault();
+    if (this.props.form.getFieldValue('count') && this.props.form.getFieldValue('count') < 1) {
+      message.error('Số lượng không hợp lệ!');
+      return;
+    }
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.props.dispatch({
@@ -338,9 +347,23 @@ class AccountAddress extends PureComponent {
               <div>
                 <div className={styles['jsx-2268964773'] + ' ' + styles['horizontal']}>
                   <div data-tab-idx={0} className={styles['tab-item-wrap']}>
-                    <Link className={styles['text-no-underline']} to={`/accountinformation`}>
-                      Thông tin tài khoản
-                    </Link>
+                    {root.clientWidth && root.clientWidth > 768 ? (
+                      <Link
+                        style={{ color: 'rgb(22, 172, 207)' }}
+                        className={styles['text-no-underline']}
+                        to={`/accountinformation`}
+                      >
+                        Thông tin tài khoản
+                      </Link>
+                    ) : (
+                      <Link
+                        style={{ color: 'rgb(22, 172, 207)' }}
+                        className={styles['text-no-underline']}
+                        to={`/accountinformation`}
+                      >
+                        Tài khoản
+                      </Link>
+                    )}
                   </div>
                   <div data-tab-idx={1} className={styles['tab-item-wrap']}>
                     <Link className={styles['text-no-underline']} to={`/order`}>

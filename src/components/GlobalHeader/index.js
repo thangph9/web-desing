@@ -224,7 +224,7 @@ class GlobalHeader extends PureComponent {
                             styles['item-login']
                           }
                         >
-                          Quản lý đơn hàng
+                          Deal sốc trong ngày
                         </Link>
                         <Link
                           to={`/accountaddress`}
@@ -238,7 +238,7 @@ class GlobalHeader extends PureComponent {
                           }
                           href="/vn/account/addresses"
                         >
-                          Địa chỉ của tôi
+                          Mua hộ
                         </Link>
 
                         <hr />
