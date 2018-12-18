@@ -39,12 +39,12 @@ class GlobalHeader extends PureComponent {
     );
   }
   hanldeInfomation() {
-    sessionStorage.account
+    localStorage.account
       ? this.props.history.push('/accountinformation')
       : this.props.history.push('/login');
   }
   handleClickOut() {
-    sessionStorage.removeItem('account');
+    localStorage.removeItem('account');
     this.setState({
       open: false,
     });
@@ -151,7 +151,7 @@ class GlobalHeader extends PureComponent {
                 {this.state.open ? (
                   <li className={`${styles['header__nav-item___MQLXP']}`}>
                     <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                      {sessionStorage.account ? (
+                      {localStorage.account ? (
                         <span
                           style={{ cursor: 'pointer' }}
                           onClick={() => this.handleOpenAccount('open')}
@@ -175,7 +175,7 @@ class GlobalHeader extends PureComponent {
                           Đăng nhập
                         </Link>
                       )}
-                      {!sessionStorage.account && (
+                      {!localStorage.account && (
                         <Link
                           to={'/register'}
                           className={`${styles['auth-buttons__nav-link___1DCMU']} ${
@@ -262,7 +262,7 @@ class GlobalHeader extends PureComponent {
                 ) : (
                   <li className={`${styles['header__nav-item___MQLXP']}`}>
                     <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                      {sessionStorage.account ? (
+                      {localStorage.account ? (
                         <span
                           style={{ cursor: 'pointer' }}
                           onClick={() => this.handleOpenAccount('open')}
@@ -286,7 +286,7 @@ class GlobalHeader extends PureComponent {
                           Đăng nhập
                         </Link>
                       )}
-                      {!sessionStorage.account && (
+                      {!localStorage.account && (
                         <Link
                           to={'/register'}
                           className={`${styles['auth-buttons__nav-link___1DCMU']} ${

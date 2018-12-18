@@ -157,7 +157,7 @@ export async function changePassword(params) {
   return request('/api/authentication/changepassword', {
     method: 'POST',
     body: params,
-    headers: { 'X-Access-Token': JSON.parse(sessionStorage.getItem('account')) },
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('account')) },
   });
 }
 export async function RegisterFacebook(params) {
@@ -194,21 +194,21 @@ export async function getInfoUser(params) {
   return request('/api/authentication/getinfo', {
     method: 'POST',
     body: params,
-    headers: { 'X-Access-Token': JSON.parse(sessionStorage.getItem('account')) },
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('account')) },
   });
 }
 export async function getHelpBuy(params) {
   return request('/api/authentication/gethelpbuy', {
     method: 'POST',
     body: params,
-    headers: { 'X-Access-Token': JSON.parse(sessionStorage.getItem('account')) },
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('account')) },
   });
 }
 export async function addHelpBuy(params) {
   return request('/api/authentication/addhelpbuy', {
     method: 'POST',
     body: params,
-    headers: { 'X-Access-Token': JSON.parse(sessionStorage.getItem('account')) },
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('account')) },
   });
 }
 export async function setHelpBuy(params) {
@@ -227,7 +227,7 @@ export async function changeInfo(params) {
   return request('/api/authentication/changeInfo', {
     method: 'POST',
     body: params,
-    headers: { 'X-Access-Token': JSON.parse(sessionStorage.getItem('account')) },
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('account')) },
   });
 }
 export async function getCategoryProduct(nodeid) {

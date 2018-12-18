@@ -290,7 +290,7 @@ class Checkout extends PureComponent {
         <Option value="84">+84</Option>
       </Select>
     );
-    if (Information || sessionStorage.account) {
+    if (Information || localStorage.account) {
       return <Redirect to="/checkout/paycomplete" />;
     } else {
       return (

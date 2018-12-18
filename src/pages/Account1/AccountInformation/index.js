@@ -308,7 +308,7 @@ class AccountInformation extends PureComponent {
         this.props.dispatch({
           type: 'user/checkpass',
           payload: {
-            username: JSON.parse(sessionStorage.getItem('account')).email,
+            username: JSON.parse(localStorage.getItem('account')).email,
             password: values.password,
           },
         });
@@ -426,7 +426,7 @@ class AccountInformation extends PureComponent {
     ) : null;
   };
   render() {
-    const info = JSON.parse(sessionStorage.getItem('account'));
+    const info = JSON.parse(localStorage.getItem('account'));
     var root = document.getElementById('root');
     const { count, prefix, help, visible, rule } = this.state;
     const { getFieldDecorator } = this.props.form;

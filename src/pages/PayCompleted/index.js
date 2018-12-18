@@ -125,7 +125,7 @@ class Checkout extends PureComponent {
       });
     }
 
-    if (Information || sessionStorage.account) {
+    if (Information || localStorage.account) {
       return (
         <div className={styles['container__container___1fvX0']}>
           <div className={styles['process-indicator__indicator-section___Z-6r8']}>
@@ -242,7 +242,7 @@ class Checkout extends PureComponent {
                         </div>
                       </h4>
                       {Information &&
-                        !sessionStorage.account && (
+                        !localStorage.account && (
                           <div>
                             <div>
                               <span>{Information.lastname + ' ' + Information.firstname}</span>
@@ -253,7 +253,7 @@ class Checkout extends PureComponent {
                           </div>
                         )}
                       {!Information &&
-                        sessionStorage.account && (
+                        localStorage.account && (
                           <div>
                             <div>
                               <span>{user.info.name && user.info.name}</span>

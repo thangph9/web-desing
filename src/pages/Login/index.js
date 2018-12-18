@@ -107,19 +107,19 @@ class Login extends PureComponent {
     setTimeout(() => {
       this.setState({ load: true });
     }, DELAY);
-    if (sessionStorage.email) sessionStorage.removeItem('email');
+    if (localStorage.email) localStorage.removeItem('email');
   }
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      if (this.state.value.length > 0) {
-        if (!err) {
-          values['captcha'] = this.state.value;
-          this.props.dispatch({
-            type: 'user/login',
-            payload: values,
-          });
-        }
+      // if (this.state.value.length > 0) {
+      if (!err) {
+        values['captcha'] = this.state.value;
+        this.props.dispatch({
+          type: 'user/login',
+          payload: values,
+        });
+        //  }
       }
     });
     this.setState({
@@ -198,11 +198,11 @@ class Login extends PureComponent {
     }
     const tailFormItemLayout = {};
     const { getFieldDecorator } = this.props.form;
-    if (sessionStorage.account) {
-      var obj = JSON.parse(sessionStorage.account);
+    if (localStorage.account) {
+      var obj = JSON.parse(localStorage.account);
     }
 
-    if (sessionStorage.account) {
+    if (localStorage.account) {
       return <Redirect to={`/accountinformation`} />;
     }
     return (

@@ -420,10 +420,15 @@ class AccountAddress extends PureComponent {
                 ) : (
                   <div className={styles['jsx-4204020708'] + ' ' + styles['user-settigs-section']}>
                     <div className={styles['jsx-4204020708']}>
-                      {user.gethelpbuy.length > 0 &&
+                      {user.gethelpbuy.length > 0 ? (
                         user.gethelpbuy.map((v, i) => {
                           return <ChangeHelpBuy key={i} v={v} i={i} />;
-                        })}
+                        })
+                      ) : (
+                        <div className={styles['jsx-3824923981']}>
+                          <h2 className={styles['jsx-3824923981']}>Bạn có sản phẩm nào</h2>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

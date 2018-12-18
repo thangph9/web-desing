@@ -119,7 +119,7 @@ class ForgotPassword extends PureComponent {
           payload: values,
         });
       }
-      sessionStorage.email = JSON.stringify(values.username);
+      localStorage.email = JSON.stringify(values.username);
     });
     this.setState({
       redirectOtp: '/confirmotp',
@@ -161,10 +161,10 @@ class ForgotPassword extends PureComponent {
         },
       },
     };
-    if (sessionStorage.account) {
+    if (localStorage.account) {
       return <Redirect to={`/`} />;
     }
-    if (sessionStorage.email && user.forgot.status == 'ok' && this.state.click == false) {
+    if (localStorage.email && user.forgot.status == 'ok' && this.state.click == false) {
       return <Redirect to={`/confirmotp`} />;
     }
     return (

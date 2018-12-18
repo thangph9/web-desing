@@ -54,7 +54,7 @@ export default {
     *register({ payload }, { call, put }) {
       const response = yield call(Register, payload);
       if (response.status === 'ok') {
-        sessionStorage.account = JSON.stringify(response.currentAuthority.token);
+        localStorage.account = JSON.stringify(response.currentAuthority.token);
         yield put({
           type: 'registration',
           payload: response,
@@ -70,7 +70,7 @@ export default {
       const response = yield call(RegisterFacebook, payload);
 
       if (response.status === 'ok') {
-        sessionStorage.account = JSON.stringify(response.currentAuthority.token);
+        localStorage.account = JSON.stringify(response.currentAuthority.token);
         yield put({
           type: 'registrationfb',
           payload: response || {},
@@ -80,7 +80,7 @@ export default {
     *login({ payload }, { call, put }) {
       const response = yield call(Login, payload);
       if (response.status === 'ok') {
-        sessionStorage.account = JSON.stringify(response.currentAuthority.token);
+        localStorage.account = JSON.stringify(response.currentAuthority.token);
         yield put({
           type: 'loginAuthentication',
           payload: response || {},
@@ -196,7 +196,7 @@ export default {
       const response = yield call(changeInfo, payload);
       if (response) {
         if (response.status === 'ok')
-          sessionStorage.account = JSON.stringify(response.currentAuthority.token);
+          localStorage.account = JSON.stringify(response.currentAuthority.token);
         yield put({
           type: 'changeinfoAuthentication',
           payload: response || '',

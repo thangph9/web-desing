@@ -129,8 +129,8 @@ class ConfirmOtp extends PureComponent {
         if (values.newpassword == values.repassword) {
           if (!err) {
             values['captcha'] = this.state.value;
-            values['username'] = sessionStorage.email
-              ? JSON.parse(sessionStorage.getItem('email'))
+            values['username'] = localStorage.email
+              ? JSON.parse(localStorage.getItem('email'))
               : '';
             this.props.dispatch({
               type: 'user/confirm',
@@ -151,7 +151,7 @@ class ConfirmOtp extends PureComponent {
       this.setState({
         click: false,
       });
-      sessionStorage.removeItem('email');
+      localStorage.removeItem('email');
     }, 2000);
     this.resetRecaptcha();
   };
@@ -259,7 +259,7 @@ class ConfirmOtp extends PureComponent {
         },
       },
     };
-    if (sessionStorage.account) {
+    if (localStorage.account) {
       return <Redirect to={`/`} />;
     }
     return (

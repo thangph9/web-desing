@@ -122,6 +122,7 @@ class Register extends PureComponent {
       help_pass: '',
       help_otp: '',
       click: false,
+      stt_otp: '',
     };
     this._reCaptchaRef = React.createRef();
     this.responseFacebook = this.responseFacebook.bind(this);
@@ -143,7 +144,12 @@ class Register extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form, user } = this.props;
-
+    if (!this.props.form.getFieldValue('otp')) {
+      this.setState({
+        stt_otp: 'error',
+        help_otp: 'Vui lòng nhập OTP!',
+      });
+    }
     this.props.form.validateFields((err, values) => {
       if (this.state.value.length > 0) {
         if (values.password == values.repassword) {
@@ -301,6 +307,7 @@ class Register extends PureComponent {
   handleChangeOTP() {
     this.setState({
       help_otp: '',
+      stt_otp: '',
     });
   }
 
@@ -332,7 +339,7 @@ class Register extends PureComponent {
 
     const tailFormItemLayout = {};
     const { getFieldDecorator } = this.props.form;
-    if (sessionStorage.account) {
+    if (localStorage.account) {
       return <Redirect to={`/accountinformation`} />;
     }
     return (
@@ -425,9 +432,16 @@ class Register extends PureComponent {
                     })(<Input size="large" placeholder="Số điện thoại" />)}
                   </FormItem>
                   <FormItem>
-                    {getFieldDecorator('address', {})(<Input size="large" placeholder="Địa chỉ" />)}
+                    {getFieldDecorator('address', {
+                      rules: [
+                        {
+                          required: true,
+                          message: 'Yêu cầu nhập địa chỉ',
+                        },
+                      ],
+                    })(<Input size="large" placeholder="Địa chỉ" />)}
                   </FormItem>
-                  <FormItem help={this.state.help_otp}>
+                  <FormItem help={this.state.help_otp} validateStatus={this.state.stt_otp}>
                     {getFieldDecorator('otp', {
                       rules: [{ required: true, message: 'Vui lòng nhập OTP!' }],
                     })(
