@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable no-return-assign */
 /* eslint-disable camelcase */
 /* eslint-disable import/no-extraneous-dependencies */
@@ -77,96 +78,27 @@ const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
+let recaptchaInstance;
 const DELAY = 1500;
 let rerenders = 0;
-let recaptchaInstance;
 @connect(({ loading, user }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   loading,
   user,
 }))
 @Form.create()
-class Login extends PureComponent {
+class ForgotPassword extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      load: false,
-      fireRerender: rerenders,
-      callback: 'not fired',
-      value: '',
-      loadpage: false,
-      expired: 'false',
+      redirectOtp: '',
       click: false,
-      help_pass: '',
       validateStt: '',
+      help_pass: '',
+      value: '',
     };
-    this._reCaptchaRef = React.createRef();
-    this.responseFacebook = this.responseFacebook.bind(this);
   }
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({ load: true });
-    }, DELAY);
-    if (localStorage.email) localStorage.removeItem('email');
-  }
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      // if (this.state.value.length > 0) {
-      if (!err) {
-        values['captcha'] = this.state.value;
-        this.props.dispatch({
-          type: 'user/login',
-          payload: values,
-        });
-        //  }
-      }
-    });
-    this.setState({
-      loadpage: !this.state.load,
-      click: false,
-    });
-    this.resetRecaptcha();
-  };
-  handleChange = value => {
-    this.setState({ value });
-  };
-
-  asyncScriptOnLoad = () => {
-    this.setState({ callback: 'called!' });
-  };
-  handleExpired = () => {
-    this.setState({ expired: 'true' });
-  };
-  handleExpired2 = () => {
-    this.setState({ expired2: 'true' });
-  };
-  responseFacebook(res) {
-    const { dispatch } = this.props;
-    if (res) {
-      const { id, email, name, accessToken, picture } = res;
-      let dataObject = {
-        accessToken,
-        fullname: name,
-        picture: picture.data ? picture.data.url : null,
-        bypage: 'facebook',
-      };
-      dispatch({
-        type: 'user/registerfb',
-        payload: {
-          with3rd: {
-            id,
-            email,
-            dataObject,
-          },
-        },
-      });
-    }
-    this.setState({
-      loadpage: !this.state.load,
-    });
-  }
-  handleChangeEmail() {
+  componentWillMount() {
     this.setState({
       click: true,
     });
@@ -174,9 +106,52 @@ class Login extends PureComponent {
   resetRecaptcha = () => {
     recaptchaInstance.reset();
   };
+  handleChangeCaptcha = value => {
+    this.setState({ value });
+  };
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err && this.state.value.length > 0) {
+        values['captcha'] = this.state.value;
+        this.props.dispatch({
+          type: 'user/forgot',
+          payload: values,
+        });
+      }
+      localStorage.email = JSON.stringify(values.username);
+    });
+    this.setState({
+      redirectOtp: '/confirmotp',
+      loadpage: !this.state.load,
+    });
+    setTimeout(() => {
+      this.setState({
+        click: false,
+      });
+    }, 5000);
+    this.resetRecaptcha();
+  };
+  handleChangeEmail() {
+    this.setState({
+      click: true,
+    });
+  }
   render() {
+    const tailFormItemLayout = {};
+    const { getFieldDecorator } = this.props.form;
+    var { user } = this.props;
+    var validateStt = '';
+    var help_pass = '';
+    if (user.forgot.status == 'error') {
+      validateStt = 'error';
+      help_pass = user.forgot.message;
+    } else {
+      validateStt = '';
+      help_pass = '';
+    }
     const meta = {
-      title: 'Đăng Nhập',
+      title: 'Quên mật khẩu',
       description: null,
       canonical: 'http://example.com/path/to/page',
       meta: {
@@ -186,24 +161,11 @@ class Login extends PureComponent {
         },
       },
     };
-    var { user } = this.props;
-    var validateStt = '';
-    var help_pass = '';
-    if (user.login.status == 'error') {
-      validateStt = 'error';
-      help_pass = user.login.message;
-    } else {
-      validateStt = '';
-      help_pass = '';
-    }
-    const tailFormItemLayout = {};
-    const { getFieldDecorator } = this.props.form;
     if (localStorage.account) {
-      var obj = JSON.parse(localStorage.account);
+      return <Redirect to={`/`} />;
     }
-
-    if (localStorage.account) {
-      return <Redirect to={`/accountinformation`} />;
+    if (localStorage.email && user.forgot.status == 'ok' && this.state.click == false) {
+      return <Redirect to={`/confirmotp`} />;
     }
     return (
       <DocumentMeta {...meta}>
@@ -217,7 +179,7 @@ class Login extends PureComponent {
               styles['register__register___BuPHZ']
             }
           >
-            <h3 className={styles['auth__title___2xOb7']}>Đăng nhập</h3>
+            <h3 className={styles['auth__title___2xOb7']}>Quên mật khẩu</h3>
             <div className={styles['container__container___1fvX0']}>
               <div className={styles['register-form__registerContainer___2J6fH']}>
                 <Form onSubmit={this.handleSubmit}>
@@ -237,29 +199,14 @@ class Login extends PureComponent {
                       />
                     )}
                   </FormItem>
-                  <FormItem>
-                    {getFieldDecorator('password', {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Vui lòng nhập mật khẩu!',
-                        },
-                      ],
-                    })(<Input type="password" size="large" placeholder="Mật khẩu" />)}
-                  </FormItem>
-                  <FormItem>
-                    <ReCAPTCHA
-                      ref={e => (recaptchaInstance = e)}
-                      sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
-                      onChange={this.handleChange}
-                    />
-                  </FormItem>
-                  <Link
-                    to={`/forgotpassword`}
-                    style={{ position: 'absolute', right: '45px', bottom: '10px' }}
-                  >
-                    Quên mật khẩu?
-                  </Link>
+
+                  <ReCAPTCHA
+                    style={{ marginBottom: '15px' }}
+                    ref={e => (recaptchaInstance = e)}
+                    sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
+                    onChange={this.handleChangeCaptcha}
+                  />
+
                   <FormItem
                     validateStatus={
                       this.state.click == false ? validateStt : this.state.validateStt
@@ -268,7 +215,7 @@ class Login extends PureComponent {
                   />
                   <FormItem>
                     <Button type="primary" htmlType="submit" block>
-                      Đăng nhập
+                      Lấy lại mật khẩu
                     </Button>
                   </FormItem>
                 </Form>
@@ -281,4 +228,4 @@ class Login extends PureComponent {
   }
 }
 
-export default Login;
+export default ForgotPassword;

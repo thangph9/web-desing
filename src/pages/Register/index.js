@@ -1,3 +1,6 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-return-assign */
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/no-unused-state */
 /* eslint-disable no-underscore-dangle */
@@ -79,6 +82,7 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const DELAY = 1500;
 let rerenders = 0;
+let recaptchaInstance;
 const passwordStatusMap = {
   ok: <div className={styles.success}>Mức độ：Mạnh</div>,
   pass: <div className={styles.warning}>Mức độ：Vừa</div>,
@@ -89,6 +93,7 @@ const passwordProgressMap = {
   pass: 'normal',
   poor: 'exception',
 };
+
 @connect(({ loading, user }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   loading,
@@ -108,19 +113,22 @@ class Register extends PureComponent {
       count: 0,
       confirmDirty: false,
       visible: false,
+      revisible: false,
       help: '',
-      prefix: '84',
+      rehelp: '',
+      prefix: '+84',
       rule: 'member',
+      validateStt: '',
+      help_pass: '',
+      help_otp: '',
+      click: false,
+      stt_otp: '',
     };
     this._reCaptchaRef = React.createRef();
     this.responseFacebook = this.responseFacebook.bind(this);
   }
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({ load: true });
-    }, DELAY);
-  }
+  componentDidMount() {}
   getPasswordStatus = () => {
     const { form } = this.props;
     const value = form.getFieldValue('password');
@@ -132,29 +140,54 @@ class Register extends PureComponent {
     }
     return 'poor';
   };
+
   handleSubmit = e => {
     e.preventDefault();
     const { form, user } = this.props;
+    if (!this.props.form.getFieldValue('otp')) {
+      this.setState({
+        stt_otp: 'error',
+        help_otp: 'Vui lòng nhập OTP!',
+      });
+    }
     this.props.form.validateFields((err, values) => {
-      if (!err && user.check.length == 0 && this.state.value.length > 0) {
-        values['captcha'] = this.state.value;
-        this.props.dispatch({
-          type: 'user/register',
-          payload: values,
-        });
-      } else {
-        this.props.form.setFields({
-          email: {
-            value: values.email,
-            errors: [new Error(user.check)],
-          },
-        });
+      if (this.state.value.length > 0) {
+        if (values.password == values.repassword) {
+          if (!err && user.check.length == 0) {
+            values['captcha'] = this.state.value;
+            this.props.dispatch({
+              type: 'user/register',
+              payload: values,
+            });
+          } else if (user.check.length > 0) {
+            this.props.form.setFields({
+              email: {
+                value: values.email,
+                errors: [new Error(user.check)],
+              },
+            });
+          }
+        } else {
+          this.props.form.setFields({
+            repassword: {
+              value: values.email,
+              errors: [new Error('Nhập lại mật khẩu sai vui lòng kiểm tra lại!')],
+            },
+          });
+        }
       }
     });
     this.setState({
       load: !this.state.load,
+      click: false,
     });
+    this.resetRecaptcha();
   };
+
+  resetRecaptcha = () => {
+    recaptchaInstance.reset();
+  };
+
   checkPassword = (rule, value, callback) => {
     const { visible, confirmDirty } = this.state;
     if (!value) {
@@ -237,6 +270,7 @@ class Register extends PureComponent {
       </div>
     ) : null;
   };
+
   validEmailSync = e => {
     const { value } = e.target;
     const { form, dispatch, user } = this.props;
@@ -250,10 +284,47 @@ class Register extends PureComponent {
       }
     });
   };
+  handleClickOTP() {
+    if (this.props.form.getFieldValue('email')) {
+      this.props.dispatch({
+        type: 'user/getotp',
+        payload: {
+          username: this.props.form.getFieldValue('email'),
+        },
+      });
+    } else {
+      this.props.form.setFields({
+        email: {
+          errors: [new Error('Vui lòng nhập email!')],
+        },
+      });
+    }
+    this.setState({
+      click: true,
+      help_otp: 'OTP vừa được gửi về email. Vui lòng kiểm tra!',
+    });
+  }
+  handleChangeOTP() {
+    this.setState({
+      help_otp: '',
+      stt_otp: '',
+    });
+  }
+
   render() {
-    const { count, prefix, help, visible, rule } = this.state;
+    const { count, prefix, help, visible, rule, revisible, rehelp } = this.state;
     var { user } = this.props;
-    console.log(user);
+    var validateStt = '';
+    var help_pass = '';
+    if (user.register) {
+      if (user.register.status == 'error') {
+        validateStt = 'error';
+        help_pass = user.register.message;
+      } else {
+        validateStt = '';
+        help_pass = '';
+      }
+    }
     const meta = {
       title: 'Đăng ký',
       description: null,
@@ -265,10 +336,11 @@ class Register extends PureComponent {
         },
       },
     };
+
     const tailFormItemLayout = {};
     const { getFieldDecorator } = this.props.form;
-    if (sessionStorage.account) {
-      return <Redirect to={`/`} />;
+    if (localStorage.account) {
+      return <Redirect to={`/accountinformation`} />;
     }
     return (
       <DocumentMeta {...meta}>
@@ -286,20 +358,21 @@ class Register extends PureComponent {
             <div className={styles['container__container___1fvX0']}>
               <div className={styles['register-form__registerContainer___2J6fH']}>
                 <Form onSubmit={this.handleSubmit}>
-                  <FacebookLogin
-                    appId="287241238592791"
-                    autoLoad={false}
-                    textButton="Đăng nhập với Facebook"
-                    language="vi_VN"
-                    size="medium"
-                    icon="fa-facebook"
-                    fields="name,email,picture"
-                    callback={this.responseFacebook}
-                  />
+                  <FormItem>
+                    {getFieldDecorator('fullname', {
+                      rules: [
+                        {
+                          required: true,
+                          message: 'Nhập họ tên',
+                        },
+                      ],
+                    })(<Input size="large" placeholder="Họ tên" />)}
+                  </FormItem>
                   <FormItem>
                     {getFieldDecorator('email', {
                       rules: [
                         {
+                          required: true,
                           type: 'email',
                           message: 'Sai định dạng email',
                         },
@@ -308,33 +381,9 @@ class Register extends PureComponent {
                       <Input
                         size="large"
                         placeholder="Email"
-                        onBlur={e => this.validEmailSync(e, user.check)}
+                        onBlur={e => this.validEmailSync(e)}
                       />
                     )}
-                  </FormItem>
-                  <FormItem>
-                    <InputGroup compact>
-                      <Select
-                        size="large"
-                        value={prefix}
-                        onChange={this.changePrefix}
-                        style={{ width: '20%' }}
-                      >
-                        <Option value="84">+84</Option>
-                      </Select>
-                      {getFieldDecorator('phone', {
-                        rules: [
-                          {
-                            required: true,
-                            message: 'Yêu cầu nhập số điện thoại',
-                          },
-                          {
-                            pattern: /\d{9}$/,
-                            message: 'Nhập sai định dạng hoặc chưa đủ chữ số！',
-                          },
-                        ],
-                      })(<Input size="large" style={{ width: '80%' }} placeholder="  " />)}
-                    </InputGroup>
                   </FormItem>
                   <FormItem help={help}>
                     <Popover
@@ -358,29 +407,74 @@ class Register extends PureComponent {
                       })(<Input size="large" type="password" placeholder="Mật khẩu" />)}
                     </Popover>
                   </FormItem>
-
                   <FormItem>
-                    {getFieldDecorator('fullname', {
+                    {getFieldDecorator('repassword', {
                       rules: [
                         {
                           required: true,
-                          message: 'Nhập họ tên',
+                          message: 'Nhập lại mật khẩu!',
                         },
                       ],
-                    })(<Input size="large" placeholder="Họ tên" />)}
+                    })(<Input size="large" type="password" placeholder="Nhập lại mật khẩu" />)}
                   </FormItem>
                   <FormItem>
-                    {getFieldDecorator('address', {})(<Input size="large" placeholder="Địa chỉ" />)}
+                    {getFieldDecorator('phone', {
+                      rules: [
+                        {
+                          required: true,
+                          message: 'Yêu cầu nhập số điện thoại',
+                        },
+                        {
+                          pattern: /\d{9}$/,
+                          message: 'Nhập sai định dạng hoặc chưa đủ chữ số！',
+                        },
+                      ],
+                    })(<Input size="large" placeholder="Số điện thoại" />)}
+                  </FormItem>
+                  <FormItem>
+                    {getFieldDecorator('address', {
+                      rules: [
+                        {
+                          required: true,
+                          message: 'Yêu cầu nhập địa chỉ',
+                        },
+                      ],
+                    })(<Input size="large" placeholder="Địa chỉ" />)}
+                  </FormItem>
+                  <FormItem help={this.state.help_otp} validateStatus={this.state.stt_otp}>
+                    {getFieldDecorator('otp', {
+                      rules: [{ required: true, message: 'Vui lòng nhập OTP!' }],
+                    })(
+                      <Input
+                        onChange={() => this.handleChangeOTP()}
+                        style={{ width: '70%' }}
+                        size="large"
+                        placeholder="OTP"
+                      />
+                    )}
+                    <Button
+                      onClick={() => this.handleClickOTP()}
+                      size="large"
+                      style={{ width: '25%', float: 'right' }}
+                    >
+                      Nhận OTP
+                    </Button>
                   </FormItem>
                   <FormItem>
                     <ReCAPTCHA
-                      ref={this._reCaptchaRef}
+                      ref={e => (recaptchaInstance = e)}
                       sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
                       onChange={this.handleChange}
                     />
                   </FormItem>
+                  <FormItem
+                    validateStatus={
+                      this.state.click == false ? validateStt : this.state.validateStt
+                    }
+                    help={this.state.click == false ? help_pass : this.state.help_pass}
+                  />
                   <FormItem>
-                    <Button type="primary" htmlType="submit" block>
+                    <Button type="primary" htmlType="submit" size="large" block>
                       Đăng ký
                     </Button>
                   </FormItem>

@@ -7,31 +7,26 @@
 /* eslint-disable no-var */
 /* eslint-disable object-shorthand */
 import { queryFakeList, removeFakeList, addFakeList, updateFakeList } from '@/services/api';
-var listArr = [];
-var authorityString = '';
-try {
-  for (var i = 0, len = localStorage.length; i < len; ++i) {
-    if (localStorage.key(i) == 'Information') {
-      continue;
+/*
+  try {
+  if(cart){
+    var arrKey=Object.keys(JSON.parse(cart));
+    for(var i=0;i<arrKey.length;i++){
+      authorityString=JSON.parse(localStorage.getItem('cart'))[arrKey[i]];
+      listArr.push(authorityString);
     }
-    authorityString = localStorage.getItem(localStorage.key(i))
-      ? localStorage.getItem(localStorage.key(i)).split('|')
-      : '';
-    var arr =
-      (authorityString && authorityString) != '' ? authorityString.map(v => JSON.parse(v)) : [];
-    listArr.push(arr);
   }
-} catch (e) {
-  console.log(e);
+} catch (error) {
+  console.log(error)
 }
-
+*/
 export default {
   namespace: 'list',
 
   state: {
     list: [],
     value: 0,
-    listArr: listArr,
+    listArr: localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [],
     modal: false,
   },
   effects: {

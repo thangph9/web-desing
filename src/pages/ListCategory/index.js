@@ -388,7 +388,6 @@ class ListCategory extends PureComponent {
     });
 
     if (result.length == 0) {
-      console.log('ok');
       this.setState(
         {
           category: filter == 'category' ? [...this.state.category, title] : this.state.category,
@@ -399,7 +398,6 @@ class ListCategory extends PureComponent {
         () => {}
       );
     } else {
-      console.log('ok1');
       var arr = this.state[filter].filter(v => {
         return v != title;
       });
@@ -878,7 +876,7 @@ class ListCategory extends PureComponent {
   }
   render() {
     var { filter, test } = this.state;
-    console.log(this.props);
+
     var {
       category: { list },
     } = this.props;

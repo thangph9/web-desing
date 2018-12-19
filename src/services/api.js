@@ -158,6 +158,13 @@ export async function CheckEmail(params) {
     body: params,
   });
 }
+export async function changePassword(params) {
+  return request('/api/authentication/changepassword', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('account')) },
+  });
+}
 export async function RegisterFacebook(params) {
   return request('/api/authentication/registerfb', {
     method: 'POST',
@@ -168,6 +175,64 @@ export async function Login(params) {
   return request('/api/authentication/login', {
     method: 'POST',
     body: params,
+  });
+}
+export async function ForgotPassword(params) {
+  return request('/api/authentication/forgotpassword', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function ConfirmOtp(params) {
+  return request('/api/authentication/confirmotp', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getOTP(params) {
+  return request('/api/authentication/getotp', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getInfoUser(params) {
+  return request('/api/authentication/getinfo', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('account')) },
+  });
+}
+export async function getHelpBuy(params) {
+  return request('/api/authentication/gethelpbuy', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('account')) },
+  });
+}
+export async function addHelpBuy(params) {
+  return request('/api/authentication/addhelpbuy', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('account')) },
+  });
+}
+export async function setHelpBuy(params) {
+  return request('/api/authentication/sethelpbuy', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function deleteHelpBuy(params) {
+  return request('/api/authentication/deletehelpbuy', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function changeInfo(params) {
+  return request('/api/authentication/changeInfo', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('account')) },
   });
 }
 export async function getCategoryProduct(nodeid) {

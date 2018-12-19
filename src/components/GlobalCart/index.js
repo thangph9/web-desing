@@ -1,3 +1,5 @@
+/* eslint-disable arrow-body-style */
+/* eslint-disable array-callback-return */
 /* eslint-disable import/order */
 /* eslint-disable no-continue */
 /* eslint-disable no-redeclare */
@@ -49,94 +51,25 @@ class CartItem extends PureComponent {
     };
   }
   handleChange(event, id, index) {
-    var listArr = [];
-    if (id.length - 1 >= Number(event.target.value)) {
-      var authorityString = '';
-      this.setState({
-        [id[0].title]: Number(event.target.value),
-      });
-      for (var i = 0, len = localStorage.length; i < len; ++i) {
-        if (localStorage.key(i) == 'Information') {
-          continue;
-        }
-        if (i == index) {
-          authorityString = localStorage.getItem(localStorage.key(i))
-            ? localStorage
-                .getItem(localStorage.key(i))
-                .split('|')
-                .splice(0, Number(event.target.value))
-            : '';
-          var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
-          var b = arr.map(v => JSON.stringify(v));
-          localStorage.setItem(localStorage.key(i), b.join('|'));
-          listArr.push(arr);
-        } else {
-          authorityString = localStorage.getItem(localStorage.key(i))
-            ? localStorage.getItem(localStorage.key(i)).split('|')
-            : '';
-          var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
-          listArr.push(arr);
-        }
-      }
-      var a = this.props.list.listArr[index];
-      var b = this.props.list.listArr;
-      a.splice(0, a.length - Number(event.target.value));
-    } else {
-      this.setState({
-        [id[0].title]: Number(event.target.value),
-      });
-      var a = this.props.list.listArr[index];
-      var number = Number(event.target.value) - id.length;
-
-      var i = 0;
-      while (i < number) {
-        a.push(a[0]);
-        i++;
-      }
-      for (var i = 0, len = localStorage.length; i < len; ++i) {
-        if (localStorage.key(i) == 'Information') {
-          continue;
-        }
-        if (i == index) {
-          authorityString = localStorage.getItem(localStorage.key(i))
-            ? localStorage.getItem(localStorage.key(i)).split('|')
-            : '';
-          var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
-          var b = a.map(v => JSON.stringify(v));
-          localStorage.setItem(localStorage.key(i), b.join('|'));
-
-          listArr.push(a);
-        } else {
-          authorityString = localStorage.getItem(localStorage.key(i))
-            ? localStorage.getItem(localStorage.key(i)).split('|')
-            : '';
-          var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
-          listArr.push(arr);
-        }
-      }
-    }
+    var localCart = JSON.parse(localStorage.getItem('cart'));
+    localCart[index][1] = Number(event.target.value);
+    console.log(localCart);
+    localStorage.setItem('cart', JSON.stringify(localCart));
     this.props.dispatch({
       type: 'list/local',
-      payload: listArr,
+      payload: JSON.parse(localStorage.getItem('cart')),
     });
   }
   handleRemoveItem(item) {
-    var listArr = [];
-    var authorityString = '';
-    localStorage.removeItem(item);
-    for (var i = 0, len = localStorage.length; i < len; ++i) {
-      if (localStorage.key(i) == 'Information') {
-        continue;
-      }
-      authorityString = localStorage.getItem(localStorage.key(i))
-        ? localStorage.getItem(localStorage.key(i)).split('|')
-        : '';
-      var arr = authorityString != '' ? authorityString.map(v => JSON.parse(v)) : [];
-      listArr.push(arr);
-    }
+    console.log(item);
+    var localCart = JSON.parse(localStorage.getItem('cart'));
+    var arr = localCart.filter((v, i) => {
+      return v[0].productid != item.productid || v[0].size != item.size || v[0].color != item.color;
+    });
+    localStorage.setItem('cart', JSON.stringify(arr));
     this.props.dispatch({
       type: 'list/local',
-      payload: listArr,
+      payload: JSON.parse(localStorage.getItem('cart')),
     });
   }
   render() {
@@ -156,7 +89,11 @@ class CartItem extends PureComponent {
           </div>
           <div className={styles['row__row___2roCA']}>
             <div
-              className={styles['cart__col-6___7l1MC'] + ' ' + styles['cart__form-group___1AIXC']}
+              className={
+                styles['subscription-form__col-7___1XUwT'] +
+                ' ' +
+                styles['cart__form-group___1AIXC']
+              }
             >
               <div>
                 <label className={styles['cart__quantity___1ZH6d']}>Số lượng:</label>
@@ -168,7 +105,7 @@ class CartItem extends PureComponent {
                   }
                 >
                   <select
-                    value={data.length}
+                    value={data[1]}
                     onChange={e => this.handleChange(e, data, index)}
                     className={
                       styles['cart__form-control___3g0tc'] +
@@ -199,12 +136,30 @@ class CartItem extends PureComponent {
                   </select>
                 </span>
               </div>
+              <div style={{ marginTop: '10px' }}>
+                {dataCart.color ? (
+                  <label className={styles['cart__quantity___1ZH6d']}>
+                    Màu sắc:
+                    {' ' + dataCart.color}
+                  </label>
+                ) : (
+                  ''
+                )}
+                {dataCart.size ? (
+                  <label className={styles['cart__quantity___1ZH6d']}>
+                    Kích cỡ:
+                    {' ' + dataCart.size}
+                  </label>
+                ) : (
+                  ''
+                )}
+              </div>
             </div>
             <div
               className={
                 styles['text-right'] +
                 ' ' +
-                styles['cart__col-6___7l1MC'] +
+                styles['subscription-form__col-5___hlhS3'] +
                 ' ' +
                 styles['cart__price-wrap___2GHWx']
               }
@@ -218,7 +173,7 @@ class CartItem extends PureComponent {
                 </span>
               </div>
               <a
-                onClick={() => this.handleRemoveItem(dataCart.seo_link)}
+                onClick={() => this.handleRemoveItem(dataCart)}
                 className={styles['cart__btn-remove___3IkR9']}
                 href="javascript:void(0)"
               >
@@ -268,8 +223,8 @@ class GlobalCart extends PureComponent {
     var sale_price = 0;
     if (listArr && listArr.length > 0) {
       listArr.forEach((v, i) => {
-        price = price + v[0].price * v.length;
-        sale_price = sale_price + v[0].sale_price * v.length;
+        price = price + v[0].price * v[1];
+        sale_price = sale_price + v[0].sale_price * v[1];
       });
     }
     obj.price = price;
@@ -291,7 +246,7 @@ class GlobalCart extends PureComponent {
     var { listArr } = this.props.list;
     var total = 0;
     for (var i = 0; i < listArr.length; i++) {
-      total = total + listArr[i].length;
+      total = total + listArr[i][1];
     }
     var { modal } = this.props.list;
     return (
@@ -362,7 +317,7 @@ class GlobalCart extends PureComponent {
               ) : (
                 <div className={styles['cart__cart-empty___2VwBC']}>
                   <div className={styles['cart__icon___DWUE4']}>
-                    <img src="https://www.leflair.vn/images/empty-bag.jpg" />
+                    <img src="https://www.leflair.vn/_next/static/images/c9c00ac7062ff11dd9aced7375a01771.jpg" />
                   </div>
                   <div>Giỏ hàng của bạn còn trống</div>
                   <div>

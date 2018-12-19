@@ -38,18 +38,24 @@ class GlobalHeader extends PureComponent {
       () => {}
     );
   }
+  hanldeInfomation() {
+    localStorage.account
+      ? this.props.history.push('/accountinformation')
+      : this.props.history.push('/login');
+  }
   handleClickOut() {
-    sessionStorage.removeItem('account');
+    localStorage.removeItem('account');
     this.setState({
       open: false,
     });
+    this.props.history.push('/login');
   }
   render() {
     const { collapsed, isMobile, logo } = this.props;
     var { listArr } = this.props.list;
     var total = 0;
     for (var i = 0; i < listArr.length; i++) {
-      total = total + listArr[i].length;
+      total = total + listArr[i][1];
     }
     return (
       <div className={`${styles.header__header___1t3MH}`}>
@@ -67,7 +73,7 @@ class GlobalHeader extends PureComponent {
               className={`${styles['hidden-md-up']} ${styles['header__my-navbar-toggler___2PiaS']}`}
             >
               <button className={`${styles['header__btn-icon___17D-i']}`} type="button">
-                <i className={`${styles['ic-ic-user']}`} />
+                <i onClick={() => this.hanldeInfomation()} className={`${styles['ic-ic-user']}`} />
               </button>
             </div>
             <Link to={`/home`} className={`${styles['header__navbar-brand___SzzgD']}`}>
@@ -90,24 +96,16 @@ class GlobalHeader extends PureComponent {
                 }`}
               >
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link to={`/amazon`} className={`${styles['header__nav-link___3W4sc']}`}>
-                    Amazon
-                  </Link>
+                  <Link to={`/amazon`} className={`${styles['header__nav-link___3W4sc']}`} />
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link to={`/ebay`} className={`${styles['header__nav-link___3W4sc']}`}>
-                    Ebay
-                  </Link>
+                  <Link to={`/ebay`} className={`${styles['header__nav-link___3W4sc']}`} />
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link to={`/adidas`} className={`${styles['header__nav-link___3W4sc']}`}>
-                    Adidas
-                  </Link>
+                  <Link to={`/adidas`} className={`${styles['header__nav-link___3W4sc']}`} />
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link to={`/nike`} className={`${styles['header__nav-link___3W4sc']}`}>
-                    Nike
-                  </Link>
+                  <Link to={`/nike`} className={`${styles['header__nav-link___3W4sc']}`} />
                 </li>
               </ul>
               <ul
@@ -153,7 +151,7 @@ class GlobalHeader extends PureComponent {
                 {this.state.open ? (
                   <li className={`${styles['header__nav-item___MQLXP']}`}>
                     <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                      {sessionStorage.account ? (
+                      {localStorage.account ? (
                         <span
                           style={{ cursor: 'pointer' }}
                           onClick={() => this.handleOpenAccount('open')}
@@ -177,7 +175,7 @@ class GlobalHeader extends PureComponent {
                           Đăng nhập
                         </Link>
                       )}
-                      {!sessionStorage.account && (
+                      {!localStorage.account && (
                         <Link
                           to={'/register'}
                           className={`${styles['auth-buttons__nav-link___1DCMU']} ${
@@ -226,7 +224,7 @@ class GlobalHeader extends PureComponent {
                             styles['item-login']
                           }
                         >
-                          Quản lý đơn hàng
+                          Deal sốc trong ngày
                         </Link>
                         <Link
                           to={`/accountaddress`}
@@ -240,7 +238,7 @@ class GlobalHeader extends PureComponent {
                           }
                           href="/vn/account/addresses"
                         >
-                          Địa chỉ của tôi
+                          Mua hộ
                         </Link>
 
                         <hr />
@@ -264,7 +262,7 @@ class GlobalHeader extends PureComponent {
                 ) : (
                   <li className={`${styles['header__nav-item___MQLXP']}`}>
                     <div className={`${styles['auth-buttons__auth___33bfZ']}`}>
-                      {sessionStorage.account ? (
+                      {localStorage.account ? (
                         <span
                           style={{ cursor: 'pointer' }}
                           onClick={() => this.handleOpenAccount('open')}
@@ -288,7 +286,7 @@ class GlobalHeader extends PureComponent {
                           Đăng nhập
                         </Link>
                       )}
-                      {!sessionStorage.account && (
+                      {!localStorage.account && (
                         <Link
                           to={'/register'}
                           className={`${styles['auth-buttons__nav-link___1DCMU']} ${

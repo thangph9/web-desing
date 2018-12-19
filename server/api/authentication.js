@@ -37,6 +37,7 @@ const fs = require('fs');
 var express = require('express');
 var bodyParser = require('body-parser');
 const sharp = require('sharp');
+var nodemailer = require('nodemailer');
 const Uuid = require('cassandra-driver').types.Uuid;
 const bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
@@ -71,6 +72,7 @@ function register(req, res) {
       function(callback) {
         PARAM_IS_VALID['phone'] = params.phone;
         PARAM_IS_VALID['email'] = params.email;
+        PARAM_IS_VALID['otp'] = params.otp;
         PARAM_IS_VALID['fullname'] = params.fullname;
         PARAM_IS_VALID['username'] = params.email;
         PARAM_IS_VALID['address'] = params.address;
@@ -79,6 +81,24 @@ function register(req, res) {
         PARAM_IS_VALID['enabled'] = true;
         PARAM_IS_VALID['createat'] = new Date().getTime();
         callback(null, null);
+      },
+      function(callback) {
+        models.instance.user_by_otp.find(
+          { username: PARAM_IS_VALID['username'] },
+          { allow_filtering: true },
+          function(err, _user) {
+            if (_user != undefined && _user.length > 0) {
+              let timeOtp = Date.parse(_user[0].time);
+              let timenow = PARAM_IS_VALID.createat;
+              let valueOtpByUser = _user[0].otp;
+              let valueOtp = Number(PARAM_IS_VALID.otp);
+              if (timeOtp - timenow < 0 || valueOtpByUser != valueOtp) {
+                return res.json({ status: 'error', message: 'Sai OTP hoặc OTP hết hạn!' });
+              }
+            }
+            callback(err, null);
+          }
+        );
       },
       function(callback) {
         bcrypt.genSalt(saltRounds, function(err, salt) {
@@ -162,7 +182,13 @@ function register(req, res) {
       if (err) res.json({ status: 'error' });
       try {
         token = jwt.sign(
-          { email: PARAM_IS_VALID.username, user_id: PARAM_IS_VALID.user_id },
+          {
+            userid: PARAM_IS_VALID.user_id,
+            username: PARAM_IS_VALID.email,
+            name: PARAM_IS_VALID.fullname,
+            phone: PARAM_IS_VALID.phone,
+            address: PARAM_IS_VALID.address,
+          },
           jwtprivate,
           {
             expiresIn: '30d', // expires in 30 day
@@ -252,29 +278,11 @@ function registerfb(req, res) {
         }
         callback(null, null);
       },
-      function(callback) {
-        if (!params.captcha) {
-          return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
-        }
-        verificationUrl =
-          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
-          params.captcha +
-          '&remoteip=' +
-          req.connection.remoteAddress;
-        callback(null, null);
-      },
-      function(callback) {
-        request(verificationUrl, function(error, response, body) {
-          body = JSON.parse(body);
-          successBody = body.success;
-          callback(error, null);
-        });
-      },
     ],
     function(err, result) {
       try {
         token = jwt.sign(
-          { id: PARAM_IS_VALID['3rd_id'], user_id: PARAM_IS_VALID.user_id },
+          { username: PARAM_IS_VALID.email, name: PARAM_IS_VALID.fullname },
           jwtprivate,
           {
             expiresIn: '30d', // expires in 30 day
@@ -292,7 +300,12 @@ function registerfb(req, res) {
 
       models.doBatch(queries, function(err) {
         if (err) return res.json({ status: 'error' });
-        else return res.json({ status: 'ok', currentAuthority: currentAuthority });
+        else
+          return res.json({
+            status: 'ok',
+            currentAuthority: currentAuthority,
+            by: PARAM_IS_VALID['3rd_by'],
+          });
       });
     }
   );
@@ -307,6 +320,7 @@ function login(req, res) {
   var msg = '';
   var successBody = false;
   var verificationUrl = '';
+  var userInfo = [];
   async.series(
     [
       function(callback) {
@@ -314,6 +328,18 @@ function login(req, res) {
         PARAM_IS_VALID['password'] = params.password;
         PARAM_IS_VALID['captcha'] = params.captcha;
         callback(null, null);
+      },
+      function(callback) {
+        models.instance.account.find(
+          { username: PARAM_IS_VALID['username'] },
+          { allow_filtering: true },
+          function(err, _user) {
+            if (_user != undefined && _user.length > 0) {
+              userInfo = _user;
+            }
+            callback(err, null);
+          }
+        );
       },
       function(callback) {
         models.instance.account_login.find({ username: PARAM_IS_VALID['username'] }, function(
@@ -341,10 +367,20 @@ function login(req, res) {
       function(callback) {
         if (isLogin) {
           try {
-            token = jwt.sign({ username: user[0].username, user_id: user[0].user_id }, jwtprivate, {
-              expiresIn: '30d', // expires in 30 day
-              algorithm: 'RS256',
-            });
+            token = jwt.sign(
+              {
+                userid: user[0].user_id,
+                username: user[0].username,
+                name: userInfo[0].name,
+                phone: userInfo[0].phone,
+                address: userInfo[0].address,
+              },
+              jwtprivate,
+              {
+                expiresIn: '30d', // expires in 30 day
+                algorithm: 'RS256',
+              }
+            );
           } catch (e) {
             console.log(e);
           }
@@ -421,8 +457,695 @@ function checkEmail(req, res) {
     }
   );
 }
+function changePass(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var msg = '';
+  var hashPassword = '';
+  var _salt = '';
+  var _hash = '';
+  var saltRounds = 10;
+  var queries = [];
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+  } catch (e) {
+    return res.send({ status: 'error' });
+  }
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.username = legit.username;
+        PARAM_IS_VALID.password = params.password;
+        PARAM_IS_VALID.newpassword = params.newpassword;
+        callback(null, null);
+      },
+      function(callback) {
+        models.instance.account_login.find({ username: PARAM_IS_VALID['username'] }, function(
+          err,
+          _user
+        ) {
+          if (_user != undefined && _user.length > 0) {
+            _user[0].enabled ? (hashPassword = _user[0].password) : (msg = MESSAGE.USER_HAD_BANNED);
+          } else {
+            msg = MESSAGE.USER_NOT_FOUND;
+          }
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        if (hashPassword != '') {
+          bcrypt.compare(PARAM_IS_VALID['password'], hashPassword, function(err, result) {
+            // res == true
+            if (result == false) {
+              return res.json({ status: 'error', message: 'Mật khẩu cũ không chính xác' });
+            }
+            callback(err, null);
+          });
+        } else callback(null, null);
+      },
+      function(callback) {
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+          _salt = salt;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        bcrypt.hash(params.newpassword, _salt, function(err, hash) {
+          _hash = hash;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        let update_password_object = {
+          password: _hash,
+          password_salt: _salt,
+        };
+        var update_password = () => {
+          let object = update_password_object;
+          let update = models.instance.account_login.update(
+            { username: PARAM_IS_VALID.username },
+            object,
+            { if_exist: true, return_query: true }
+          );
+          return update;
+        };
+        queries.push(update_password());
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error' });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error', message: 'batch' });
+        else {
+          return res.json({
+            status: 'ok',
+            message: 'Thay đổi mật khẩu thành công',
+          });
+        }
+      });
+    }
+  );
+}
+function getInfoUser(req, res) {
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+  } catch (e) {
+    return res.send({ status: 'error' });
+  }
+  return res.json({
+    status: 'ok',
+    info: {
+      username: legit.username,
+      name: legit.name,
+      phone: legit.phone,
+      address: legit.address,
+    },
+  });
+}
+function forgotPassword(req, res) {
+  var param = req.body;
+  var PARAM_IS_VALID = {};
+  var mailOptions = {};
+  var transporter = {};
+  var otpRandom = Math.floor(100000 + Math.random() * 900000);
+  var queries = [];
+  var info = '';
+  var successBody = {};
+  var verificationUrl = '';
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.username = param.username;
+        PARAM_IS_VALID['createat'] = new Date().getTime() + 300 * 1000;
+        PARAM_IS_VALID['captcha'] = param.captcha;
+        callback(null, null);
+      },
+      function(callback) {
+        if (!param.captcha) {
+          return res.json({ status: 'error', message: 'captcha chưa đúng!' });
+        }
+        verificationUrl =
+          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
+          param.captcha +
+          '&remoteip=' +
+          req.connection.remoteAddress;
+        callback(null, null);
+      },
+      function(callback) {
+        request(verificationUrl, function(error, response, body) {
+          successBody = JSON.parse(body);
+          if (successBody.success == false) {
+            return res.json({ status: 'error', message: 'Sai captcha!' });
+          }
+          callback(error, null);
+        });
+      },
+      function(callback) {
+        models.instance.account_login.find({ username: PARAM_IS_VALID['username'] }, function(
+          err,
+          _user
+        ) {
+          if (_user == undefined || _user.length == 0) {
+            return res.json({ status: 'error', message: 'Tài khoản không đúng' });
+          }
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        let otp_object = {
+          username: PARAM_IS_VALID.username,
+          otp: otpRandom,
+          time: PARAM_IS_VALID['createat'],
+        };
+        const otp = () => {
+          let object = otp_object;
+          let instance = new models.instance.user_by_otp(object);
+          let save = instance.save({ if_exist: true, return_query: true });
+          return save;
+        };
+        queries.push(otp());
+        callback(null, null);
+      },
+      function(callback) {
+        transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'trjvjp1997@gmail.com',
+            pass: 'concho1234',
+          },
+        });
+        callback(null, null);
+      },
+      function(callback) {
+        mailOptions = {
+          from: 'trjvjp1997@gmail.com',
+          to: PARAM_IS_VALID.username,
+          subject: 'Confirm OTP',
+          text: otpRandom + '',
+        };
+        callback(null, null);
+      },
+      function(callback) {
+        transporter.sendMail(mailOptions, function(error, info) {
+          if (error) {
+            console.log(error);
+            callback(error, null);
+          } else {
+            info = info.response;
+            callback(null, null);
+          }
+        });
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error' });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error' });
+        else {
+          return res.json({ status: 'ok', info: info });
+        }
+      });
+    }
+  );
+}
+function confirmOtp(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var checkOtp = false;
+  var _salt = '';
+  var _hash = '';
+  var queries = [];
+  var saltRounds = 10;
+  var successBody = {};
+  var verificationUrl = '';
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.username = params.username;
+        PARAM_IS_VALID.otp = params.otp;
+        PARAM_IS_VALID.newpassword = params.newpassword;
+        PARAM_IS_VALID.createat = new Date().getTime();
+        PARAM_IS_VALID['captcha'] = params.captcha;
+        callback(null, null);
+      },
+      function(callback) {
+        if (!params.captcha) {
+          return res.json({ status: 'error', message: 'captcha chưa đúng!' });
+        }
+        verificationUrl =
+          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
+          params.captcha +
+          '&remoteip=' +
+          req.connection.remoteAddress;
+        callback(null, null);
+      },
+      function(callback) {
+        request(verificationUrl, function(error, response, body) {
+          successBody = JSON.parse(body);
+          if (successBody.success == false) {
+            return res.json({ status: 'error', message: 'Sai captcha!' });
+          }
+          callback(error, null);
+        });
+      },
+      function(callback) {
+        models.instance.user_by_otp.find(
+          { username: PARAM_IS_VALID['username'] },
+          { allow_filtering: true },
+          function(err, _user) {
+            if (_user != undefined && _user.length > 0) {
+              let timeOtp = Date.parse(_user[0].time);
+              let timenow = PARAM_IS_VALID.createat;
+              let valueOtpByUser = _user[0].otp;
+              let valueOtp = Number(PARAM_IS_VALID.otp);
+              if (timeOtp - timenow > 0 && valueOtpByUser == valueOtp) checkOtp = true;
+            } else {
+              return res.json({
+                status: 'error',
+                message: 'Vui lòng nhập lại email để thực hiện chức năng này!',
+              });
+            }
+            callback(err, null);
+          }
+        );
+      },
+      function(callback) {
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+          _salt = salt;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        bcrypt.hash(params.newpassword, _salt, function(err, hash) {
+          _hash = hash;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        if (checkOtp == true) {
+          let update_password_object = {
+            password: _hash,
+            password_salt: _salt,
+          };
+          var update_password = () => {
+            let object = update_password_object;
+            let update = models.instance.account_login.update(
+              { username: PARAM_IS_VALID.username },
+              object,
+              { if_exist: true, return_query: true }
+            );
+            return update;
+          };
+          queries.push(update_password());
+        }
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error', err: err });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error', batch: err });
+        else {
+          checkOtp == true
+            ? res.json({ status: 'ok', message: 'Đổi mật khẩu thành công' })
+            : res.json({ status: 'error', message: 'Mã OTP không đúng hoặc hết hạn' });
+        }
+      });
+    }
+  );
+}
+function changeInfo(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var queries = [];
+  var uuid = undefined;
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+  } catch (e) {
+    return res.send({ status: 'error' });
+  }
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.userid = legit.userid;
+        PARAM_IS_VALID.username = legit.username;
+        PARAM_IS_VALID.address = params.address;
+        PARAM_IS_VALID.fullname = params.fullname;
+        PARAM_IS_VALID.phone = params.phone;
+        callback(null, null);
+      },
+      function(callback) {
+        let update_info_object = {
+          address: PARAM_IS_VALID.address,
+          phone: PARAM_IS_VALID.phone,
+          name: PARAM_IS_VALID.fullname,
+          updateat: new Date().getTime(),
+        };
+
+        var update_info = () => {
+          let object = update_info_object;
+          uuid = models.uuidFromString(PARAM_IS_VALID.userid);
+          let update = models.instance.account.update({ user_id: uuid }, object, {
+            if_exist: true,
+            return_query: true,
+            allow_filtering: true,
+          });
+          return update;
+        };
+        queries.push(update_info());
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error' });
+      try {
+        token = jwt.sign(
+          {
+            userid: uuid,
+            username: PARAM_IS_VALID.username,
+            name: PARAM_IS_VALID.fullname,
+            phone: PARAM_IS_VALID.phone,
+            address: PARAM_IS_VALID.address,
+          },
+          jwtprivate,
+          {
+            expiresIn: '30d', // expires in 30 day
+            algorithm: 'RS256',
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
+      let isLogin = false;
+      if (token != undefined) {
+        isLogin = true;
+      }
+      let currentAuthority = { auth: isLogin, token: token };
+      models.doBatch(queries, function(err) {
+        if (err) {
+          console.log(err);
+          return res.json({ status: 'error' });
+        } else {
+          return res.json({
+            status: 'ok',
+            currentAuthority: currentAuthority,
+          });
+        }
+      });
+    }
+  );
+}
+function getOTP(req, res) {
+  var param = req.body;
+  var PARAM_IS_VALID = {};
+  var mailOptions = {};
+  var transporter = {};
+  var otpRandom = Math.floor(100000 + Math.random() * 900000);
+  var queries = [];
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.username = param.username;
+        PARAM_IS_VALID['createat'] = new Date().getTime() + 300000;
+        callback(null, null);
+      },
+      function(callback) {
+        let otp_object = {
+          username: PARAM_IS_VALID.username,
+          otp: otpRandom,
+          time: PARAM_IS_VALID['createat'],
+        };
+        const otp = () => {
+          let object = otp_object;
+          let instance = new models.instance.user_by_otp(object);
+          let save = instance.save({ if_exist: true, return_query: true });
+          return save;
+        };
+        queries.push(otp());
+        callback(null, null);
+      },
+      function(callback) {
+        transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'trjvjp1997@gmail.com',
+            pass: 'concho1234',
+          },
+        });
+        callback(null, null);
+      },
+      function(callback) {
+        mailOptions = {
+          from: 'trjvjp1997@gmail.com',
+          to: PARAM_IS_VALID.username,
+          subject: 'OTP Register',
+          text: otpRandom + '',
+        };
+        callback(null, null);
+      },
+      function(callback) {
+        transporter.sendMail(mailOptions, function(error, info) {
+          if (error) {
+            console.log(error);
+            callback(error, null);
+          } else {
+            info = info.response;
+            callback(null, null);
+          }
+        });
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error' });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error' });
+        else {
+          return res.json({ status: 'ok' });
+        }
+      });
+    }
+  );
+}
+function getHelpBuy(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  var product = [];
+
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+  } catch (e) {
+    return res.send({ status: 'error' });
+  }
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.username = legit.username;
+        callback(null, null);
+      },
+      function(callback) {
+        models.instance.help_buy_by_user.find(
+          { username: PARAM_IS_VALID['username'] },
+          { allow_filtering: true },
+          function(err, result) {
+            if (result != undefined && result.length > 0) {
+              product = result;
+            }
+            if (err) console.log(err);
+            callback(err, null);
+          }
+        );
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error', message1: err });
+      return res.json({ status: 'ok', data: product });
+    }
+  );
+}
+function addHelpBuy(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var queries = [];
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+  } catch (e) {
+    return res.send({ status: 'error' });
+  }
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.username = legit.username;
+        PARAM_IS_VALID.fullname = legit.name;
+        PARAM_IS_VALID.phone = legit.phone;
+        PARAM_IS_VALID.nameproduct = params.name;
+        PARAM_IS_VALID.link = params.link;
+        PARAM_IS_VALID.note = params.note;
+        PARAM_IS_VALID.total = Number(params.count);
+        PARAM_IS_VALID.createat = new Date().getTime();
+        PARAM_IS_VALID.status = 'waiting';
+        callback(null, null);
+      },
+      function(callback) {
+        models.instance.help_buy_by_user.find({ link: PARAM_IS_VALID['link'] }, function(
+          err,
+          result
+        ) {
+          if (result != undefined && result.length > 0) {
+            return res.json({ status: 'error', message: 'Sản phẩm đã được đăng ký' });
+          }
+          if (err) console.log(err);
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        let help_buy_by_user_object = {
+          link: PARAM_IS_VALID['link'],
+          nameproduct: PARAM_IS_VALID['nameproduct'],
+          username: PARAM_IS_VALID['username'],
+          createat: PARAM_IS_VALID['createat'],
+          fullname: PARAM_IS_VALID['fullname'],
+          phone: PARAM_IS_VALID['phone'],
+          note: PARAM_IS_VALID['note'],
+          total: PARAM_IS_VALID['total'],
+          status: PARAM_IS_VALID['status'],
+        };
+        const help_buy_by_user = () => {
+          let object = help_buy_by_user_object;
+          let instance = new models.instance.help_buy_by_user(object);
+          let save = instance.save({ if_exist: true, return_query: true });
+          return save;
+        };
+        queries.push(help_buy_by_user());
+
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error', message1: err });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error', message2: err });
+        else return res.json({ status: 'ok' });
+      });
+    }
+  );
+}
+function setHelpBuy(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var queries = [];
+
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.nameproduct = params.name;
+        PARAM_IS_VALID.link = params.link;
+        PARAM_IS_VALID.note = params.note;
+        PARAM_IS_VALID.total = Number(params.total);
+        callback(null, null);
+      },
+      function(callback) {
+        let help_buy_by_user_object = {
+          nameproduct: PARAM_IS_VALID['nameproduct'],
+          note: PARAM_IS_VALID['note'],
+          total: PARAM_IS_VALID['total'],
+        };
+        const help_buy_by_user = () => {
+          let object = help_buy_by_user_object;
+          let update = models.instance.help_buy_by_user.update(
+            { link: PARAM_IS_VALID['link'] },
+            object,
+            { if_exist: true, return_query: true, allow_filtering: true }
+          );
+          return update;
+        };
+        queries.push(help_buy_by_user());
+
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error', message1: err });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error', message2: err });
+        else return res.json({ status: 'ok' });
+      });
+    }
+  );
+}
+function deleteHelpBuy(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var queries = [];
+
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.link = params.link;
+        callback(null, null);
+      },
+      function(callback) {
+        const help_buy_by_user = () => {
+          let remove = models.instance.help_buy_by_user.delete({ link: PARAM_IS_VALID['link'] });
+          return remove;
+        };
+        queries.push(help_buy_by_user());
+
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error', message1: err });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error', message2: err });
+        else return res.json({ status: 'ok' });
+      });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/registerfb', registerfb);
 router.post('/login', login);
 router.post('/checkemail', checkEmail);
+router.post('/changepassword', changePass);
+router.post('/getinfo', getInfoUser);
+router.post('/forgotpassword', forgotPassword);
+router.post('/confirmotp', confirmOtp);
+router.post('/changeInfo', changeInfo);
+router.post('/getotp', getOTP);
+router.post('/gethelpbuy', getHelpBuy);
+router.post('addhelpbuy', addHelpBuy);
+router.post('/sethelpbuy', setHelpBuy);
+router.post('/deletehelpbuy', deleteHelpBuy);
 module.exports = router;

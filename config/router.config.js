@@ -119,6 +119,16 @@ export default [
         component: './Register/',
       },
       {
+        path: '/forgotpassword',
+        name: 'forgotpass',
+        component: './ForgotPassword/',
+      },
+      {
+        path: '/confirmotp',
+        name: 'confirmotp',
+        component: './ConfirmOtp/',
+      },
+      {
         path: '/login',
         name: 'login',
         component: './Login/',
