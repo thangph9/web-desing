@@ -71,7 +71,7 @@ import {
   Progress,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './index.less';
+import styles from './index1.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
