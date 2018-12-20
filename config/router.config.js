@@ -16,7 +16,13 @@ export default [
     routes: [
       { path: '/checkout', component: './Checkout/' },
       { path: '/checkout/paycomplete', component: './PayCompleted/' },
+      { path: '/verifyemail', component: './Verify/' },
     ],
+  },
+  {
+    path: '/verifyemail',
+    component: '../layouts/CheckoutLayout',
+    routes: [{ path: '/verifyemail', component: './Verify/' }],
   },
   {
     path: '/',
@@ -119,6 +125,11 @@ export default [
         component: './Register/',
       },
       {
+        path: '/helpbuy',
+        name: 'helpbuy',
+        component: './HelpBuy/',
+      },
+      {
         path: '/forgotpassword',
         name: 'forgotpass',
         component: './ForgotPassword/',
@@ -129,10 +140,16 @@ export default [
         component: './ConfirmOtp/',
       },
       {
+        path: '/changepass',
+        name: 'changepass',
+        component: './ChangePassword/',
+      },
+      {
         path: '/login',
         name: 'login',
         component: './Login/',
       },
+
       {
         component: '404',
       },

@@ -75,6 +75,8 @@ import ReactHtmlParser, {
 } from 'react-html-parser';
 import styles from './index.less';
 
+import styles1 from './test.less';
+
 var currencyFormatter = require('currency-formatter');
 
 const FormItem = Form.Item;
@@ -95,6 +97,8 @@ class Detail extends PureComponent {
     index: 0,
     indexSize: 0,
     indexColor: 0,
+    toggle: false,
+    size: undefined,
   };
 
   // eslint-disable-next-line react/sort-comp
@@ -139,8 +143,7 @@ class Detail extends PureComponent {
       for (var i = 0; i < localCart.length; i++) {
         if (
           localCart[i][0].productid == product.productid &&
-          localCart[i][0].size == product.size &&
-          localCart[i][0].color == product.color
+          localCart[i][0].size == product.size
         ) {
           check = true;
           var length = localCart[i][1];
@@ -252,6 +255,7 @@ class Detail extends PureComponent {
 
     return (
       <ol
+        style={{ padding: '0px' }}
         className={`${styles['undefined']} ${styles['breadcrumb__breadcrumb___3F6K8']}
 
                   `}
@@ -427,16 +431,6 @@ class Detail extends PureComponent {
       type: 'product/detail',
       payload: { productid },
     });
-    if (this.props.location.query.color) {
-      this.setState({
-        color: this.props.location.query.color.toUpperCase().replace(/-/g, ' '),
-      });
-    }
-    if (this.props.location.query.size) {
-      this.setState({
-        size: this.props.location.query.size.toUpperCase().replace(/-/g, ' '),
-      });
-    }
   }
   selectSize(v, o) {
     this.setState({
@@ -455,22 +449,16 @@ class Detail extends PureComponent {
       this.props.history.push({ pathname, search: `?size=${v.toLowerCase().replace(/ /g, '-')}` });
     }
   }
-  selectColor(v, o) {
+  handleClickToggle() {
     this.setState({
-      indexColor: o.key,
-      color: v,
+      toggle: !this.state.toggle,
     });
-    const pathname = this.props.location.pathname;
-    if (this.props.location.query.size) {
-      this.props.history.push({
-        pathname,
-        search: `?color=${v
-          .toLowerCase()
-          .replace(/ /g, '-')}&size=${this.state.size.toLowerCase().replace(/ /g, '-')}`,
-      });
-    } else {
-      this.props.history.push({ pathname, search: `?color=${v.toLowerCase().replace(/ /g, '-')}` });
-    }
+  }
+  handleClickSize(value) {
+    this.setState({
+      size: value,
+      toggle: !this.state.toggle,
+    });
   }
   render() {
     const {
@@ -499,7 +487,7 @@ class Detail extends PureComponent {
     const infomation = [];
     const info = detail.infomation ? detail.infomation : {};
     var size = data.size ? data.size.split(',') : [];
-    var color = data.color ? data.color.split('/') : [];
+    var color = data.color ? data.color : '';
     if (info instanceof Object) {
       if (info.dimensions) {
         const dimensions = (
@@ -527,21 +515,16 @@ class Detail extends PureComponent {
       detailCookie.sale_price = detail['_sale_price'];
       detailCookie.title = detail.title;
       detailCookie['seo_link'] = detail.seo_link;
-      if (data.color)
-        detailCookie.color = !this.props.location.query.color
-          ? color[this.state.indexColor]
-          : this.props.location.query.color.toUpperCase().replace(/-/g, ' ');
-      if (data.size)
-        detailCookie.size = !this.props.location.query.size
-          ? size[this.state.indexSize]
-          : this.props.location.query.size.toUpperCase().replace(/-/g, ' ');
+      if (data.size && data.size.length > 0)
+        detailCookie.size = !this.state.size ? data.size[0] : this.state.size;
+      if (color != '') detailCookie.color = color;
     }
-    console.log(this.props);
+    console.log(this.state.togle);
     return (
       <DocumentMeta {...meta}>
         <div id="app__body___3NlTJ">
           <div className={styles['container__container___1fvX0']}>
-            <div className={styles['product__product___2plEK']}>
+            <div style={{ paddingTop: '5px' }} className={styles['product__product___2plEK']}>
               <div className={styles['product__product-header___2yYGL']}>
                 {this.renderBreadcrumb()}
                 <div
@@ -599,29 +582,7 @@ class Detail extends PureComponent {
                     <div className={styles['product__colors___3jFbL']}>
                       {data.color ? (
                         <h5 className={styles['color-variations__heading___3tZSD']}>
-                          Màu sắc:{' '}
-                          <Select
-                            value={
-                              color.length > 0
-                                ? !this.state.color
-                                  ? color[0]
-                                  : this.state.color
-                                : ''
-                            }
-                            onSelect={(v, o) => this.selectColor(v, o)}
-                            style={{ width: 180 }}
-                            onChange={e => this.handleChangeSelectColor(e)}
-                          >
-                            {color.length > 0
-                              ? color.map((v, i) => {
-                                  return (
-                                    <Option key={i} value={v}>
-                                      {v}
-                                    </Option>
-                                  );
-                                })
-                              : ''}
-                          </Select>
+                          Màu sắc: {data.color}
                         </h5>
                       ) : (
                         ''
@@ -635,35 +596,96 @@ class Detail extends PureComponent {
                           styles['size-variations__clearfix___1lHkH']
                         }
                       >
-                        {data.color ? (
-                          <h5 className={styles['size-variations__heading___1xG0s']}>
-                            Kích cỡ:{' '}
-                            <Select
-                              value={
-                                size.length > 0
-                                  ? !this.state.size
-                                    ? size[0]
-                                    : this.state.size
-                                  : ''
+                        {' '}
+                        <h5 className={styles['size-variations__heading___1xG0s']}>Kích cỡ: </h5>
+                        <div
+                          data-auto-id="size-selector"
+                          className={styles1['col-s-9'] + ' ' + styles1['col-product-size___3NjQd']}
+                        >
+                          <div
+                            className={
+                              styles1['gl-form-item'] +
+                              ' ' +
+                              styles1['glass-product-size-dropdown___2jEjW'] +
+                              ' ' +
+                              styles1['gl-vspacing-s']
+                            }
+                            data-auto-id="product-size-dropdown"
+                          >
+                            <div
+                              className={
+                                styles1['gl-dropdown'] + ' ' + styles1['gl-dropdown--no-max-height']
                               }
-                              style={{ width: 70 }}
-                              onSelect={(v, o) => this.selectSize(v, o)}
-                              onChange={e => this.handleChangeSelectSize(e)}
+                              data-auto-id="product-size-dropdown"
                             >
-                              {size.length > 0
-                                ? size.map((v, i) => {
-                                    return (
-                                      <Option key={i} value={v}>
-                                        {v}
-                                      </Option>
-                                    );
-                                  })
-                                : ''}
-                            </Select>
-                          </h5>
-                        ) : (
-                          ''
-                        )}
+                              <div
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => this.handleClickToggle()}
+                                className={
+                                  styles1['gl-dropdown__select'] +
+                                  ' ' +
+                                  styles1['label'] +
+                                  ' ' +
+                                  styles1['dropdown-select']
+                                }
+                                title="Select size"
+                                data-auto-id="label"
+                              >
+                                <span className={styles1['gl-dropdown__select-label']}>
+                                  {size.length > 0 && !this.state.size ? size[0] : this.state.size}
+                                </span>
+                                {!this.state.toggle ? (
+                                  <Icon style={{ fontSize: '18px' }} type="caret-up" />
+                                ) : (
+                                  <Icon style={{ fontSize: '18px' }} type="caret-down" />
+                                )}
+                              </div>
+                              <div
+                                className={
+                                  !this.state.toggle
+                                    ? styles1['gl-dropdown__options'] +
+                                      ' ' +
+                                      styles1['gl-dropdown__options--squared'] +
+                                      ' ' +
+                                      styles1['gl-dropdown__options--with-after']
+                                    : styles1['gl-dropdown__options-open'] +
+                                      ' ' +
+                                      styles1['gl-dropdown__options--squared'] +
+                                      ' ' +
+                                      styles1['gl-dropdown__options--with-after']
+                                }
+                                data-auto-id="item-wrapper"
+                              >
+                                <div className={styles1['square-list']}>
+                                  <ol
+                                    style={{ listStyleType: 'none' }}
+                                    className={
+                                      styles1['gl-square-list'] +
+                                      ' ' +
+                                      styles1['gl-square-list--condensed']
+                                    }
+                                  >
+                                    {size.length > 0 &&
+                                      size.map((v, i) => {
+                                        return (
+                                          <li
+                                            onClick={() => this.handleClickSize(v)}
+                                            key={i}
+                                            className={styles1['gl-square-list__item']}
+                                            title={v}
+                                          >
+                                            <div className={styles1['gl-square-list__cta']}>
+                                              {v}
+                                            </div>
+                                          </li>
+                                        );
+                                      })}
+                                  </ol>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 

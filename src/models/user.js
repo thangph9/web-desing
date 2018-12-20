@@ -15,6 +15,7 @@ import {
   addHelpBuy,
   setHelpBuy,
   deleteHelpBuy,
+  verifyEmailRegister,
 } from '@/services/api';
 
 export default {
@@ -23,7 +24,7 @@ export default {
   state: {
     list: [],
     currentUser: {},
-    register: undefined,
+    register: {},
     check: '',
     changepass: {},
     info: {},
@@ -35,6 +36,7 @@ export default {
     addhelpbuy: {},
     sethelpbuy: {},
     deletehelpbuy: {},
+    verify: {},
   },
   effects: {
     *fetch(_, { call, put }) {
@@ -53,18 +55,21 @@ export default {
     },
     *register({ payload }, { call, put }) {
       const response = yield call(Register, payload);
+      yield put({
+        type: 'registration',
+        payload: response || {},
+      });
+    },
+    *verifyemail({ payload }, { call, put }) {
+      const response = yield call(verifyEmailRegister, payload);
       if (response.status === 'ok') {
         localStorage.account = JSON.stringify(response.currentAuthority.token);
-        yield put({
-          type: 'registration',
-          payload: response,
-        });
-      } else {
-        yield put({
-          type: 'registration',
-          payload: response,
-        });
+        localStorage.removeItem('accountRegister');
       }
+      yield put({
+        type: 'verifyemailauthentication',
+        payload: response,
+      });
     },
     *registerfb({ payload }, { call, put }) {
       const response = yield call(RegisterFacebook, payload);
@@ -226,6 +231,18 @@ export default {
         list: action.payload,
       };
     },
+    verifyAfter(state) {
+      return {
+        ...state,
+        verify: {},
+      };
+    },
+    changepassAfter(state) {
+      return {
+        ...state,
+        changepass: {},
+      };
+    },
     saveCurrentUser(state, action) {
       return {
         ...state,
@@ -278,6 +295,7 @@ export default {
         changeinfo: action.payload,
       };
     },
+
     infoAuthentication(state, action) {
       return {
         ...state,
@@ -294,6 +312,12 @@ export default {
       return {
         ...state,
         sethelpbuy: action.payload,
+      };
+    },
+    verifyemailauthentication(state, action) {
+      return {
+        ...state,
+        verify: action.payload,
       };
     },
     deletehelpbuyAuthentication(state, action) {

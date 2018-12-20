@@ -54,8 +54,136 @@ const MESSAGE = {
   PAYMENT_OTP_OK: 'Xác thực thành công!',
   PAYMENT_OTP_WRONG: 'OTP không chính xác.',
   USER_EXISTS: 'Tài khoản đã được sử dụng',
+  CONFIRM_TOKEN: 'Vui lòng kiểm tra Email của bạn để xác thực tài khoản',
 };
 function register(req, res) {
+  var params = req.body;
+  let user_id = Uuid.random();
+  var mailOptions = {};
+  var transporter = {};
+  var queries = [];
+  var otpRandom = Math.floor(10000000000 + Math.random() * 90000000000);
+  var PARAM_IS_VALID = {};
+  var link = '';
+  var verificationUrl = '';
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID['phone'] = params.phone;
+        PARAM_IS_VALID['email'] = params.email;
+        PARAM_IS_VALID['fullname'] = params.fullname;
+        PARAM_IS_VALID['username'] = params.email;
+        PARAM_IS_VALID['address'] = params.address;
+        PARAM_IS_VALID['password'] = params.password;
+        PARAM_IS_VALID['user_id'] = user_id;
+        PARAM_IS_VALID['enabled'] = true;
+        PARAM_IS_VALID['createat'] = new Date().getTime();
+        PARAM_IS_VALID['createatOTP'] = new Date().getTime() + 2592000000;
+        callback(null, null);
+      },
+      function(callback) {
+        if (!params.captcha) {
+          return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
+        }
+        verificationUrl =
+          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
+          params.captcha +
+          '&remoteip=' +
+          req.connection.remoteAddress;
+        callback(null, null);
+      },
+      function(callback) {
+        request(verificationUrl, function(error, response, body) {
+          body = JSON.parse(body);
+          if (body.success == false) {
+            res.json({ status: 'error', message: 'Captcha không chính xác!' });
+          }
+          callback(error, null);
+        });
+      },
+      function(callback) {
+        models.instance.account_login.find({ username: PARAM_IS_VALID['username'] }, function(
+          err,
+          _user
+        ) {
+          if (_user != undefined && _user.length > 0) {
+            return res.json({ status: 'error', message: 'Tài khoản đã tồn tại!' });
+          }
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        let otp_object = {
+          username: PARAM_IS_VALID.username,
+          tokenverify: otpRandom + '',
+          time: PARAM_IS_VALID['createatOTP'],
+        };
+        const token = () => {
+          try {
+            let object = otp_object;
+            let instance = new models.instance.user_by_tokenverify(object);
+            let save = instance.save({ if_exist: true, return_query: true });
+            return save;
+          } catch (error) {
+            console.log(error);
+          }
+        };
+        queries.push(token());
+        callback(null, null);
+      },
+      function(callback) {
+        link = 'http://localhost:8000/verifyemail?otp=' + otpRandom;
+        callback(null, null);
+      },
+      function(callback) {
+        transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'trjvjp1997@gmail.com',
+            pass: 'concho1234',
+          },
+        });
+        callback(null, null);
+      },
+      function(callback) {
+        mailOptions = {
+          from: 'trjvjp1997@gmail.com',
+          to: PARAM_IS_VALID.username,
+          subject: 'Verify Email',
+          html:
+            'Hello,<br> Please Click on the link to verify your email.<br><a href=' +
+            link +
+            '>Click here to verify</a>',
+        };
+        callback(null, null);
+      },
+      function(callback) {
+        transporter.sendMail(mailOptions, function(error, info) {
+          if (error) {
+            console.log(error);
+            callback(error, null);
+          } else {
+            info = info.response;
+            callback(null, null);
+          }
+        });
+      },
+    ],
+    function(err, result) {
+      if (err) res.json({ status: 'error', message: err + '' });
+      models.doBatch(queries, function(err) {
+        if (err) return res.json({ status: 'error', message: err + '' });
+        else {
+          res.json({
+            status: 'ok',
+            message: MESSAGE.CONFIRM_TOKEN,
+          });
+        }
+      });
+    }
+  );
+}
+/* function register(req, res) {
   var params = req.body;
   let user_id = Uuid.random();
   let saltRounds = 10;
@@ -216,7 +344,7 @@ function register(req, res) {
       });
     }
   );
-}
+}*/
 function registerfb(req, res) {
   var params = req.body;
   let user_id = Uuid.random();
@@ -1134,6 +1262,158 @@ function deleteHelpBuy(req, res) {
     }
   );
 }
+function verifyEmail(req, res) {
+  var params = req.body;
+  let user_id = Uuid.random();
+  let saltRounds = 10;
+  var queries = [];
+  let token = undefined;
+  var _salt = '';
+  var _hash = '';
+  var PARAM_IS_VALID = {};
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID['phone'] = params.phone;
+        PARAM_IS_VALID['email'] = params.email;
+        PARAM_IS_VALID['fullname'] = params.fullname;
+        PARAM_IS_VALID['username'] = params.email;
+        PARAM_IS_VALID['address'] = params.address;
+        PARAM_IS_VALID['password'] = params.password;
+        PARAM_IS_VALID['user_id'] = user_id;
+        PARAM_IS_VALID['tokenverify'] = params.otp;
+        PARAM_IS_VALID['enabled'] = true;
+        PARAM_IS_VALID['createat'] = new Date().getTime();
+        callback(null, null);
+      },
+      function(callback) {
+        models.instance.account_login.find({ username: PARAM_IS_VALID['username'] }, function(
+          err,
+          _user
+        ) {
+          if (_user != undefined && _user.length > 0) {
+            return res.json({ status: 'error', message: 'Tài khoản đã tồn tại!' });
+          }
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        models.instance.user_by_tokenverify.find(
+          { username: PARAM_IS_VALID['username'] },
+          { allow_filtering: true },
+          function(err, _user) {
+            if (_user != undefined && _user.length > 0) {
+              let timeOtp = Date.parse(_user[0].time);
+              let timenow = PARAM_IS_VALID.createat;
+              let valueOtpByUser = _user[0].tokenverify;
+              let valueOtp = Number(PARAM_IS_VALID.tokenverify);
+              if (timeOtp - timenow <= 0 || valueOtpByUser != valueOtp) {
+                return res.json({
+                  status: 'error',
+                  message: 'Mã xác thực không hợp lệ!',
+                });
+              }
+            } else {
+              return res.json({ status: 'error', message: 'Tài khoản xác thực không hợp lệ!' });
+            }
+            callback(err, null);
+          }
+        );
+      },
+      function(callback) {
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+          _salt = salt;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        bcrypt.hash(params.password, _salt, function(err, hash) {
+          _hash = hash;
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        let account_object = {
+          user_id: PARAM_IS_VALID['user_id'],
+          address: PARAM_IS_VALID['address'],
+          email: PARAM_IS_VALID['email'],
+          createat: PARAM_IS_VALID['createat'],
+          name: PARAM_IS_VALID['fullname'],
+          phone: PARAM_IS_VALID['phone'],
+          username: PARAM_IS_VALID['username'],
+        };
+        let account_login_object = {
+          username: PARAM_IS_VALID['username'],
+          enabled: PARAM_IS_VALID['enabled'],
+          password: _hash,
+          password_hash_algorithm: 'bcrypt',
+          password_salt: _salt,
+          user_id: PARAM_IS_VALID.user_id,
+        };
+        const account = () => {
+          let object = account_object;
+          let instance = new models.instance.account(object);
+          let save = instance.save({ if_exist: true, return_query: true });
+          return save;
+        };
+        queries.push(account());
+        const account_login = () => {
+          let object = account_login_object;
+          let instance = new models.instance.account_login(object);
+          let save = instance.save({ if_exist: true, return_query: true });
+          return save;
+        };
+        queries.push(account_login());
+        callback(null, null);
+      },
+      function(callback) {
+        models.instance.user_by_tokenverify.delete({ username: PARAM_IS_VALID.username }, function(
+          err
+        ) {
+          callback(err, null);
+        });
+      },
+    ],
+    function(err, result) {
+      if (err) {
+        console.log(err);
+        res.json({ status: 'error' });
+      }
+      try {
+        token = jwt.sign(
+          {
+            userid: PARAM_IS_VALID.user_id,
+            username: PARAM_IS_VALID.email,
+            name: PARAM_IS_VALID.fullname,
+            phone: PARAM_IS_VALID.phone,
+            address: PARAM_IS_VALID.address,
+          },
+          jwtprivate,
+          {
+            expiresIn: '30d', // expires in 30 day
+            algorithm: 'RS256',
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
+      let isLogin = false;
+      if (token != undefined) {
+        isLogin = true;
+      }
+      let currentAuthority = { auth: isLogin, token: token };
+      models.doBatch(queries, function(err) {
+        if (err) {
+          console.log(err);
+          return res.json({ status: 'error' });
+        } else {
+          return res.json({ status: 'ok', currentAuthority: currentAuthority });
+        }
+      });
+    }
+  );
+}
+
 router.post('/register', register);
 router.post('/registerfb', registerfb);
 router.post('/login', login);
@@ -1148,4 +1428,5 @@ router.post('/gethelpbuy', getHelpBuy);
 router.post('addhelpbuy', addHelpBuy);
 router.post('/sethelpbuy', setHelpBuy);
 router.post('/deletehelpbuy', deleteHelpBuy);
+router.post('/verifyemail', verifyEmail);
 module.exports = router;

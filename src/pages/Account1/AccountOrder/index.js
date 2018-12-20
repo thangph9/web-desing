@@ -55,9 +55,25 @@ import {
   Checkbox,
   Skeleton,
   Cascader,
+  List,
+  Avatar,
 } from 'antd';
 import styles from '../index1.less';
 
+const data = [
+  {
+    title: 'Ant Design Title 1',
+  },
+  {
+    title: 'Ant Design Title 2',
+  },
+  {
+    title: 'Ant Design Title 3',
+  },
+  {
+    title: 'Ant Design Title 4',
+  },
+];
 @connect(({ list }) => ({
   list,
 }))
@@ -74,19 +90,11 @@ class AccountOrder extends PureComponent {
                 <div className={styles['jsx-2268964773'] + ' ' + styles['horizontal']}>
                   <div data-tab-idx={0} className={styles['tab-item-wrap']}>
                     {root.clientWidth && root.clientWidth > 768 ? (
-                      <Link
-                        style={{ color: 'rgb(22, 172, 207)' }}
-                        className={styles['text-no-underline']}
-                        to={`/accountinformation`}
-                      >
+                      <Link className={styles['text-no-underline']} to={`/accountinformation`}>
                         Thông tin tài khoản
                       </Link>
                     ) : (
-                      <Link
-                        style={{ color: 'rgb(22, 172, 207)' }}
-                        className={styles['text-no-underline']}
-                        to={`/accountinformation`}
-                      >
+                      <Link className={styles['text-no-underline']} to={`/accountinformation`}>
                         Tài khoản
                       </Link>
                     )}
@@ -103,55 +111,41 @@ class AccountOrder extends PureComponent {
                       Deal sốc
                     </Link>
                   </div>
-                  <div data-tab-idx={2} className={styles['tab-item-wrap']}>
-                    <Link className={styles['text-no-underline']} to={`accountaddress`}>
-                      Mua Hộ
-                    </Link>
-                  </div>
                 </div>
               </div>
             </div>
             <div className={styles['jsx-3523037850'] + ' ' + styles['col-md-9']}>
               <div className={styles['jsx-1497762630'] + ' ' + styles['orders']}>
-                <h1 className={styles['jsx-1497762630'] + ' ' + styles['title-account']}>
+                <h1
+                  style={{ textAlign: 'center' }}
+                  className={styles['jsx-1497762630'] + ' ' + styles['title-account']}
+                >
                   Deal sốc hôm nay
                 </h1>
                 <div className={styles['jsx-4204020708'] + ' ' + styles['user-settigs-section']}>
-                  <div className={styles['row'] + ' ' + styles['mb-2']}>
-                    <div className={styles['col-4']}>
-                      <a href="http://cafef.vn/bo-chinh-tri-sap-ban-hanh-nghi-quyet-moi-cho-da-nang-20181218094314354.chn">
-                        <img
-                          style={{ width: '100%' }}
-                          src="https://123order.vn/images/f/b855a9f2c2d34bf4a8e8466d910dd9a7"
-                          alt="img"
+                  <List
+                    itemLayout="horizontal"
+                    dataSource={data}
+                    renderItem={item => (
+                      <List.Item
+                        actions={[
+                          <a style={{ color: 'rgb(22, 172, 207)' }}>edit</a>,
+                          <a style={{ color: 'rgb(22, 172, 207)' }}>more</a>,
+                        ]}
+                      >
+                        <List.Item.Meta
+                          avatar={
+                            <Avatar
+                              style={{ width: '48px', height: '48px' }}
+                              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                            />
+                          }
+                          title={<a href="https://ant.design">{item.title}</a>}
+                          description="Ant Design, a design language for background applications, is refined by Ant UED Team"
                         />
-                      </a>
-                    </div>
-                    <div className={styles['col-8']}>
-                      <h4 className={styles['h4-title']} style={{ marginBottom: '2px' }}>
-                        <a
-                          className={styles['title-deal']}
-                          href="http://cafef.vn/bo-chinh-tri-sap-ban-hanh-nghi-quyet-moi-cho-da-nang-20181218094314354.chn"
-                        >
-                          Bộ Chính trị sắp ban hành Nghị quyết mới cho Đà Nẵng
-                        </a>
-                      </h4>
-                      <p style={{ marginBottom: '8px' }}>
-                        <span style={{ color: 'gray' }} href="thoi-su.chn" title="Thời sự">
-                          Thời gian còn lại:
-                        </span>
-                        <span className={styles['ml-1']}>27 phút trước</span>
-                      </p>
-                      <p style={{ marginBottom: '8px' }} className={styles['text-content-deal']}>
-                        Theo Bí thư Thành ủy Đà Nẵng Trương Quang Nghĩa, Bộ Chính trị thống nhất ban
-                        Theo Bí thư Thành ủy Đà Nẵng Trương Quang Nghĩa, Bộ Chính trị thống nhất ban
-                        hTheo Bí thư Thành ủy Đà Nẵng Trương Quang Nghĩa, Bộ Chính trị thống nhất
-                        ban hTheo Bí thư Thành ủy Đà Nẵng Trương Quang Nghĩa, Bộ Chính trị thống
-                        nhất ban hhành một nghị quyết mới về xây dựng và phát triển Đà Nẵng thay thế
-                        Nghị quyết số 33.
-                      </p>
-                    </div>
-                  </div>
+                      </List.Item>
+                    )}
+                  />
                 </div>
               </div>
             </div>

@@ -348,19 +348,11 @@ class AccountAddress extends PureComponent {
                 <div className={styles['jsx-2268964773'] + ' ' + styles['horizontal']}>
                   <div data-tab-idx={0} className={styles['tab-item-wrap']}>
                     {root.clientWidth && root.clientWidth > 768 ? (
-                      <Link
-                        style={{ color: 'rgb(22, 172, 207)' }}
-                        className={styles['text-no-underline']}
-                        to={`/accountinformation`}
-                      >
+                      <Link className={styles['text-no-underline']} to={`/accountinformation`}>
                         Thông tin tài khoản
                       </Link>
                     ) : (
-                      <Link
-                        style={{ color: 'rgb(22, 172, 207)' }}
-                        className={styles['text-no-underline']}
-                        to={`/accountinformation`}
-                      >
+                      <Link className={styles['text-no-underline']} to={`/accountinformation`}>
                         Tài khoản
                       </Link>
                     )}
@@ -368,18 +360,6 @@ class AccountAddress extends PureComponent {
                   <div data-tab-idx={1} className={styles['tab-item-wrap']}>
                     <Link className={styles['text-no-underline']} to={`/order`}>
                       Deal sốc
-                    </Link>
-                  </div>
-                  <div
-                    data-tab-idx={2}
-                    className={styles['tab-item-wrap'] + ' ' + styles['active']}
-                  >
-                    <Link
-                      style={{ color: 'rgb(22, 172, 207)' }}
-                      className={styles['text-no-underline']}
-                      to={`accountaddress`}
-                    >
-                      Mua hộ
                     </Link>
                   </div>
                 </div>

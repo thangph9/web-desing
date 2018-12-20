@@ -128,7 +128,12 @@ export async function getFakeCaptcha(mobile) {
 export async function getProductByCategory(category) {
   return request('/api/product/list');
 }
-
+export async function verifyEmailRegister(params) {
+  return request(`/api/authentication/verifyemail`, {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function getProductDetail(params) {
   return request('/api/product/DT', {
     method: 'POST',

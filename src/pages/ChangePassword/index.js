@@ -1,5 +1,6 @@
-/* eslint-disable camelcase */
+/* eslint-disable import/no-unresolved */
 /* eslint-disable no-return-assign */
+/* eslint-disable camelcase */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/no-unused-state */
@@ -46,6 +47,7 @@
 /* eslint-disable no-unused-vars */
 import React, { PureComponent } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import ReCAPTCHA from 'react-google-recaptcha';
 import DocumentMeta from 'react-document-meta';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
@@ -70,10 +72,8 @@ import {
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import FacebookLogin from 'react-facebook-login';
-import ReCAPTCHA from 'react-google-recaptcha';
 import styles from './index.less';
 
-const InputGroup = Input.Group;
 const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -83,17 +83,6 @@ const RadioGroup = Radio.Group;
 const DELAY = 1500;
 let rerenders = 0;
 let recaptchaInstance;
-const MESSAGE = {
-  USER_NOT_MATCH: 'Tài khoản hoặc mật khẩu không đúng',
-  USER_NOT_FOUND: 'Tài khoản này không tồn tại!',
-  USER_HAD_BANNED: 'Tài khoản đang bị khoá',
-  SYSTEM_BUSY: 'Hệ thống bận!',
-  PAYMENT_NOT_SEND_OTP: 'Bạn chưa nhắn tin xác thực! Hãy nhắn tin tới tổng đài.',
-  PAYMENT_OTP_OK: 'Xác thực thành công!',
-  PAYMENT_OTP_WRONG: 'OTP không chính xác.',
-  USER_EXISTS: 'Tài khoản đã được sử dụng',
-  CONFIRM_TOKEN: 'Vui lòng kiểm tra Email của bạn để xác thực tài khoản',
-};
 const passwordStatusMap = {
   ok: <div className={styles.success}>Mức độ：Mạnh</div>,
   pass: <div className={styles.warning}>Mức độ：Vừa</div>,
@@ -104,17 +93,17 @@ const passwordProgressMap = {
   pass: 'normal',
   poor: 'exception',
 };
-
 @connect(({ loading, user }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   loading,
   user,
 }))
 @Form.create()
-class Register extends PureComponent {
+class ChangePassword extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      redirectOtp: '',
       load: false,
       fireRerender: rerenders,
       callback: 'not fired',
@@ -124,25 +113,62 @@ class Register extends PureComponent {
       count: 0,
       confirmDirty: false,
       visible: false,
-      revisible: false,
       help: '',
-      rehelp: '',
-      prefix: '+84',
+      prefix: '84',
       rule: 'member',
+      form_pass: false,
       validateStt: '',
       help_pass: '',
-      help_otp: '',
       click: false,
-      stt_otp: '',
     };
-    this._reCaptchaRef = React.createRef();
-    this.responseFacebook = this.responseFacebook.bind(this);
   }
 
   componentDidMount() {}
+  handleSubmit = e => {
+    e.preventDefault();
+    this.setState({
+      click: false,
+    });
+    this.props.form.validateFields((err, values) => {
+      if (values.newpassword == values.repassword) {
+        if (!err) {
+          this.props.dispatch({
+            type: 'user/changepass',
+            payload: {
+              password: values.password,
+              newpassword: values.newpassword,
+            },
+          });
+        }
+      } else {
+        this.props.form.setFields({
+          repassword: {
+            value: values.repassword,
+            errors: [new Error('Nhập lại mật khẩu sai vui lòng kiểm tra lại!')],
+          },
+        });
+      }
+    });
+  };
+  renderPasswordProgress = () => {
+    const { form } = this.props;
+    const value = form.getFieldValue('newpassword');
+    const passwordStatus = this.getPasswordStatus();
+    return value && value.length ? (
+      <div className={styles[`progress-${passwordStatus}`]}>
+        <Progress
+          status={passwordProgressMap[passwordStatus]}
+          className={styles.progress}
+          strokeWidth={6}
+          percent={value.length * 10 > 100 ? 100 : value.length * 10}
+          showInfo={false}
+        />
+      </div>
+    ) : null;
+  };
   getPasswordStatus = () => {
     const { form } = this.props;
-    const value = form.getFieldValue('password');
+    const value = form.getFieldValue('newpassword');
     if (value && value.length > 9) {
       return 'ok';
     }
@@ -151,50 +177,26 @@ class Register extends PureComponent {
     }
     return 'poor';
   };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    const { form, user } = this.props;
-    this.props.form.validateFields((err, values) => {
-      // if (this.state.value.length > 0) {
-      if (values.password == values.repassword) {
-        if (!err && user.check.length == 0) {
-          values['captcha'] = this.state.value;
-          this.props.dispatch({
-            type: 'user/register',
-            payload: values,
-          });
-          localStorage.setItem('accountRegister', JSON.stringify(values));
-        } else if (user.check.length > 0) {
-          this.props.form.setFields({
-            email: {
-              value: values.email,
-              errors: [new Error(user.check)],
-            },
-          });
-        }
-      }
-
-      // }
-    });
+  handleClickChangePass() {
     this.setState({
-      load: !this.state.load,
-      click: false,
+      validateStt: '',
+      help_pass: '',
+      visible: false,
+      form_pass: !this.state.form_pass,
     });
-    this.resetRecaptcha();
-  };
-
-  resetRecaptcha = () => {
-    recaptchaInstance.reset();
-  };
-
+  }
   checkPassword = (rule, value, callback) => {
     const { visible, confirmDirty } = this.state;
+    this.setState({
+      click: true,
+    });
     if (!value) {
-      this.setState({
-        help: 'Nhập mật khẩu！',
-        visible: !!value,
-      });
+      setTimeout(() => {
+        this.setState({
+          help: 'Nhập mật khẩu！',
+          visible: !!value,
+        });
+      }, 1000);
       callback('error');
     } else {
       this.setState({
@@ -216,83 +218,15 @@ class Register extends PureComponent {
       }
     }
   };
-  handleChange = value => {
+  resetRecaptcha = () => {
+    recaptchaInstance.reset();
+  };
+  handleChangeCaptcha = value => {
     this.setState({ value });
   };
-
-  asyncScriptOnLoad = () => {
-    this.setState({ callback: 'called!' });
-  };
-  handleExpired = () => {
-    this.setState({ expired: 'true' });
-  };
-  handleExpired2 = () => {
-    this.setState({ expired2: 'true' });
-  };
-  responseFacebook(res) {
-    const { dispatch } = this.props;
-    if (res) {
-      const { id, email, name, accessToken, picture } = res;
-      let dataObject = {
-        accessToken,
-        fullname: name,
-        picture: picture.data ? picture.data.url : null,
-        bypage: 'facebook',
-      };
-      dispatch({
-        type: 'user/registerfb',
-        payload: {
-          with3rd: {
-            id,
-            email,
-            dataObject,
-          },
-        },
-      });
-    }
-    this.setState({
-      loadPage: !this.state.loadPage,
-    });
-  }
-  renderPasswordProgress = () => {
-    const { form } = this.props;
-    const value = form.getFieldValue('password');
-    const passwordStatus = this.getPasswordStatus();
-    return value && value.length ? (
-      <div className={styles[`progress-${passwordStatus}`]}>
-        <Progress
-          status={passwordProgressMap[passwordStatus]}
-          className={styles.progress}
-          strokeWidth={6}
-          percent={value.length * 10 > 100 ? 100 : value.length * 10}
-          showInfo={false}
-        />
-      </div>
-    ) : null;
-  };
-
-  validEmailSync = e => {
-    const { value } = e.target;
-    const { form, dispatch, user } = this.props;
-
-    form.validateFields(['email'], (errors, values) => {
-      if (!errors) {
-        this.props.dispatch({
-          type: 'user/check',
-          payload: values,
-        });
-      }
-    });
-  };
-  handleChangeOTP() {
-    this.setState({
-      help_otp: '',
-      stt_otp: '',
-    });
-  }
-  validRepassword() {
+  CheckRepass() {
     var { form } = this.props;
-    const password = form.getFieldValue('password');
+    const password = form.getFieldValue('newpassword');
     const repassword = form.getFieldValue('repassword');
     if (password != repassword) {
       this.props.form.setFields({
@@ -303,21 +237,28 @@ class Register extends PureComponent {
       });
     }
   }
+  handleChangePassword() {
+    this.setState({
+      click: true,
+    });
+  }
   render() {
-    const { count, prefix, help, visible, rule, revisible, rehelp } = this.state;
-    var { user } = this.props;
+    const { count, prefix, help, visible, rule } = this.state;
+    const tailFormItemLayout = {};
+    const { getFieldDecorator } = this.props.form;
+    const { user } = this.props;
+    console.log(user);
     var validateStt = '';
     var help_pass = '';
-    if (user.register) {
-      if (user.register.status == 'error') {
-        validateStt = 'error';
-        help_pass = user.register.message;
-      } else if (MESSAGE.CONFIRM_TOKEN == user.register.message) {
-        help_pass = MESSAGE.CONFIRM_TOKEN;
-      }
+    if (user.changepass.status == 'error') {
+      validateStt = 'error';
+      help_pass = user.changepass.message;
+    } else {
+      validateStt = '';
+      help_pass = user.changepass.message;
     }
     const meta = {
-      title: 'Đăng ký',
+      title: 'Quên mật khẩu',
       description: null,
       canonical: 'http://example.com/path/to/page',
       meta: {
@@ -327,10 +268,10 @@ class Register extends PureComponent {
         },
       },
     };
-
-    const tailFormItemLayout = {};
-    const { getFieldDecorator } = this.props.form;
-    if (localStorage.account) {
+    if (!localStorage.account) {
+      return <Redirect to={`/login`} />;
+    }
+    if (user.changepass.status == 'ok') {
       return <Redirect to={`/accountinformation`} />;
     }
     return (
@@ -345,34 +286,24 @@ class Register extends PureComponent {
               styles['register__register___BuPHZ']
             }
           >
-            <h3 className={styles['auth__title___2xOb7']}>Tạo tài khoản</h3>
+            <h3 className={styles['auth__title___2xOb7']}>Thay đổi mật khẩu</h3>
             <div className={styles['container__container___1fvX0']}>
               <div className={styles['register-form__registerContainer___2J6fH']}>
                 <Form onSubmit={this.handleSubmit}>
                   <FormItem>
-                    {getFieldDecorator('fullname', {
+                    {getFieldDecorator('password', {
                       rules: [
                         {
                           required: true,
-                          message: 'Nhập họ tên',
-                        },
-                      ],
-                    })(<Input size="large" placeholder="Họ tên" />)}
-                  </FormItem>
-                  <FormItem>
-                    {getFieldDecorator('email', {
-                      rules: [
-                        {
-                          required: true,
-                          type: 'email',
-                          message: 'Sai định dạng email',
+                          message: 'Vui lòng nhập mật khẩu hiện tại!',
                         },
                       ],
                     })(
                       <Input
                         size="large"
-                        placeholder="Email"
-                        onBlur={e => this.validEmailSync(e)}
+                        placeholder="Mật khẩu hiện tại"
+                        type="password"
+                        onChange={() => this.handleChangePassword()}
                       />
                     )}
                   </FormItem>
@@ -389,13 +320,13 @@ class Register extends PureComponent {
                       placement="right"
                       visible={visible}
                     >
-                      {getFieldDecorator('password', {
+                      {getFieldDecorator('newpassword', {
                         rules: [
                           {
                             validator: this.checkPassword,
                           },
                         ],
-                      })(<Input size="large" type="password" placeholder="Mật khẩu" />)}
+                      })(<Input size="large" type="password" placeholder="Mật khẩu mới" />)}
                     </Popover>
                   </FormItem>
                   <FormItem>
@@ -408,44 +339,12 @@ class Register extends PureComponent {
                       ],
                     })(
                       <Input
-                        onBlur={e => this.validRepassword(e)}
                         size="large"
                         type="password"
-                        placeholder="Nhập lại mật khẩu"
+                        placeholder="Nhập lại mật khẩu mới"
+                        onBlur={() => this.CheckRepass()}
                       />
                     )}
-                  </FormItem>
-                  <FormItem>
-                    {getFieldDecorator('phone', {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Yêu cầu nhập số điện thoại',
-                        },
-                        {
-                          pattern: /\d{9}$/,
-                          message: 'Nhập sai định dạng hoặc chưa đủ chữ số！',
-                        },
-                      ],
-                    })(<Input size="large" placeholder="Số điện thoại" />)}
-                  </FormItem>
-                  <FormItem>
-                    {getFieldDecorator('address', {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Yêu cầu nhập địa chỉ',
-                        },
-                      ],
-                    })(<Input size="large" placeholder="Địa chỉ" />)}
-                  </FormItem>
-
-                  <FormItem>
-                    <ReCAPTCHA
-                      ref={e => (recaptchaInstance = e)}
-                      sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
-                      onChange={this.handleChange}
-                    />
                   </FormItem>
                   <FormItem
                     validateStatus={
@@ -454,8 +353,8 @@ class Register extends PureComponent {
                     help={this.state.click == false ? help_pass : this.state.help_pass}
                   />
                   <FormItem>
-                    <Button type="primary" htmlType="submit" size="large" block>
-                      Đăng ký
+                    <Button block type="primary" htmlType="submit">
+                      Thay đổi mật khẩu
                     </Button>
                   </FormItem>
                 </Form>
@@ -468,4 +367,4 @@ class Register extends PureComponent {
   }
 }
 
-export default Register;
+export default ChangePassword;
