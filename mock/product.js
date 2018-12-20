@@ -503,9 +503,137 @@ function categoryProduct(req, res) {
     }
   );
 }
+function productTestDetail(req,res){
+  let results = {};
+  let productid = '';
+  let raito = {};
+  async.series(
+    [
+      function(callback) {
+        try {
+          let rawImage = req.body.productid;
+          let uuid =
+            rawImage.substring(0, 7) +
+            '-' +
+            rawImage.substring(7, 11) +
+            '-' +
+            rawImage.substring(11, 15) +
+            '-' +
+            rawImage.substring(15, 20) +
+            '-' +
+            rawImage.substring(20, 32);
+
+          productid = models.uuidFromString(uuid);
+        } catch (e) {
+          return res.send({ status: 'error_invalid' });
+        }
+        callback(null, null);
+      },
+      function(callback) {
+        models.instance.test_products.find({ productid }, function(err, res) {
+          if (res) {
+            results=res[0];
+          }
+          callback(err, null);
+        });
+        
+      },
+      function(callback) {
+        if (results && results.currency) {
+          models.instance.currency_raito.find({ currency: results.currency }, function(err, items) {
+            if (items) {
+              let n = JSON.stringify(results);
+              results = JSON.parse(n);
+              results['_price'] = items[0].raito * results.price;
+              results['_sale_price'] = items[0].raito * results.sale_price;
+            }
+            callback(err, null);
+          });
+        } else {
+          callback(null, null);
+        }
+      },
+    function(callback){
+        try{
+        }  catch(e){
+                
+        }
+        callback(null,null);    
+    }
+    ],
+    function(err, result) {
+      if (err) return res.send({ status: 'error' });
+      res.send({ status: 'ok', data: results });
+    }
+  );
+}
+
+function productDev(req,res){
+    let results={};
+    let PARAM_IS_VALID={};
+    let productid='';
+    let params=req.body;
+    async.series([
+        function(callback){
+            PARAM_IS_VALID.variantionsid=params.variantionsid;
+            callback(null,null);
+        },
+        function(callback){
+            try{
+                
+                var variantionsid= PARAM_IS_VALID.variantionsid;
+                models.instance.variantions.find({},function(err,items){
+                    if(items && items.length > 0){
+                        results.current=items[0];
+                        productid=items[0].productid;
+                    }
+                    callback(err,null);
+                })
+            }catch(e){
+                return res.send({status: 'error'})
+            }
+        },
+        function(callback){
+            
+            if(productid!=''){
+                models.instance.dev_products.find({productid},function(err,items){
+                    if(items && items.length > 0){
+                        results.basic=items[0];
+                    }
+                    callback(err,null);
+                });
+            }else{
+                return res.send({status: 'invalid_productid'});
+            }
+            
+        },
+        function(callback){
+            models.instance.variantions.find({productid},function(err,items){
+                 results.variants=items;
+                 callback(err,null);
+            });
+        },
+        function(callback){
+             if(results.variants.length > 0){
+                 
+             }
+            callback(null,null);
+        },
+    ],function(err,result){
+        console.log(err);
+        if(err) return res.send({status: 'error'});
+        else res.send({status: 'ok',data: results})
+    })
+}
+
+
+
 export default {
   'GET /api/product/list': productList,
+  'POST /api/product/DEV_DETAIL': productDev,
   'POST /api/product/DT': productDetail,
+  'POST /api/product/DTT': productTestDetail,
+  'POST /api/product/SEARCH': categoryProduct,
   'POST /api/product/LC': categoryProduct,
   'GET /api/product/CT': productCategory,
   'GET /images/f/:imageid': image,
