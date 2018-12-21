@@ -588,106 +588,117 @@ class Detail extends PureComponent {
                         ''
                       )}
                     </div>
-                    <div className={styles['product__sizes___27zL9']}>
-                      <div
-                        className={
-                          styles['size-variations__heading-wrap___1xcPJ'] +
-                          ' ' +
-                          styles['size-variations__clearfix___1lHkH']
-                        }
-                      >
-                        {' '}
-                        <h5 className={styles['size-variations__heading___1xG0s']}>Kích cỡ: </h5>
+
+                    {data && data.size ? (
+                      <div className={styles['product__sizes___27zL9']}>
                         <div
-                          data-auto-id="size-selector"
-                          className={styles1['col-s-9'] + ' ' + styles1['col-product-size___3NjQd']}
+                          className={
+                            styles['size-variations__heading-wrap___1xcPJ'] +
+                            ' ' +
+                            styles['size-variations__clearfix___1lHkH']
+                          }
                         >
+                          {' '}
+                          <h5 className={styles['size-variations__heading___1xG0s']}>Kích cỡ: </h5>
                           <div
+                            data-auto-id="size-selector"
                             className={
-                              styles1['gl-form-item'] +
-                              ' ' +
-                              styles1['glass-product-size-dropdown___2jEjW'] +
-                              ' ' +
-                              styles1['gl-vspacing-s']
+                              styles1['col-s-9'] + ' ' + styles1['col-product-size___3NjQd']
                             }
-                            data-auto-id="product-size-dropdown"
                           >
                             <div
                               className={
-                                styles1['gl-dropdown'] + ' ' + styles1['gl-dropdown--no-max-height']
+                                styles1['gl-form-item'] +
+                                ' ' +
+                                styles1['glass-product-size-dropdown___2jEjW'] +
+                                ' ' +
+                                styles1['gl-vspacing-s']
                               }
                               data-auto-id="product-size-dropdown"
                             >
                               <div
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => this.handleClickToggle()}
                                 className={
-                                  styles1['gl-dropdown__select'] +
+                                  styles1['gl-dropdown'] +
                                   ' ' +
-                                  styles1['label'] +
-                                  ' ' +
-                                  styles1['dropdown-select']
+                                  styles1['gl-dropdown--no-max-height']
                                 }
-                                title="Select size"
-                                data-auto-id="label"
+                                data-auto-id="product-size-dropdown"
                               >
-                                <span className={styles1['gl-dropdown__select-label']}>
-                                  {size.length > 0 && !this.state.size ? size[0] : this.state.size}
-                                </span>
-                                {!this.state.toggle ? (
-                                  <Icon style={{ fontSize: '18px' }} type="caret-up" />
-                                ) : (
-                                  <Icon style={{ fontSize: '18px' }} type="caret-down" />
-                                )}
-                              </div>
-                              <div
-                                className={
-                                  !this.state.toggle
-                                    ? styles1['gl-dropdown__options'] +
-                                      ' ' +
-                                      styles1['gl-dropdown__options--squared'] +
-                                      ' ' +
-                                      styles1['gl-dropdown__options--with-after']
-                                    : styles1['gl-dropdown__options-open'] +
-                                      ' ' +
-                                      styles1['gl-dropdown__options--squared'] +
-                                      ' ' +
-                                      styles1['gl-dropdown__options--with-after']
-                                }
-                                data-auto-id="item-wrapper"
-                              >
-                                <div className={styles1['square-list']}>
-                                  <ol
-                                    style={{ listStyleType: 'none' }}
-                                    className={
-                                      styles1['gl-square-list'] +
-                                      ' ' +
-                                      styles1['gl-square-list--condensed']
-                                    }
-                                  >
-                                    {size.length > 0 &&
-                                      size.map((v, i) => {
-                                        return (
-                                          <li
-                                            onClick={() => this.handleClickSize(v)}
-                                            key={i}
-                                            className={styles1['gl-square-list__item']}
-                                            title={v}
-                                          >
-                                            <div className={styles1['gl-square-list__cta']}>
-                                              {v}
-                                            </div>
-                                          </li>
-                                        );
-                                      })}
-                                  </ol>
+                                <div
+                                  style={{ cursor: 'pointer' }}
+                                  onClick={() => this.handleClickToggle()}
+                                  className={
+                                    styles1['gl-dropdown__select'] +
+                                    ' ' +
+                                    styles1['label'] +
+                                    ' ' +
+                                    styles1['dropdown-select']
+                                  }
+                                  title="Select size"
+                                  data-auto-id="label"
+                                >
+                                  <span className={styles1['gl-dropdown__select-label']}>
+                                    {size.length > 0 && !this.state.size
+                                      ? size[0]
+                                      : this.state.size}
+                                  </span>
+                                  {!this.state.toggle ? (
+                                    <Icon style={{ fontSize: '18px' }} type="caret-up" />
+                                  ) : (
+                                    <Icon style={{ fontSize: '18px' }} type="caret-down" />
+                                  )}
+                                </div>
+                                <div
+                                  className={
+                                    !this.state.toggle
+                                      ? styles1['gl-dropdown__options'] +
+                                        ' ' +
+                                        styles1['gl-dropdown__options--squared'] +
+                                        ' ' +
+                                        styles1['gl-dropdown__options--with-after']
+                                      : styles1['gl-dropdown__options-open'] +
+                                        ' ' +
+                                        styles1['gl-dropdown__options--squared'] +
+                                        ' ' +
+                                        styles1['gl-dropdown__options--with-after']
+                                  }
+                                  data-auto-id="item-wrapper"
+                                >
+                                  <div className={styles1['square-list']}>
+                                    <ol
+                                      style={{ listStyleType: 'none' }}
+                                      className={
+                                        styles1['gl-square-list'] +
+                                        ' ' +
+                                        styles1['gl-square-list--condensed']
+                                      }
+                                    >
+                                      {size.length > 0 &&
+                                        size.map((v, i) => {
+                                          return (
+                                            <li
+                                              onClick={() => this.handleClickSize(v)}
+                                              key={i}
+                                              className={styles1['gl-square-list__item']}
+                                              title={v}
+                                            >
+                                              <div className={styles1['gl-square-list__cta']}>
+                                                {v}
+                                              </div>
+                                            </li>
+                                          );
+                                        })}
+                                    </ol>
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </div>{' '}
                         </div>
                       </div>
-                    </div>
+                    ) : (
+                      ''
+                    )}
 
                     <p className={`${styles['product__few-items-notify___1Q8z3']}`}>
                       {detail.amount ? `Chỉ còn lại ${detail.amount} sản phẩm` : 'Hết hàng'}
