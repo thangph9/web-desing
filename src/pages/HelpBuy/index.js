@@ -126,8 +126,7 @@ class HelpBuy extends PureComponent {
               href="https://weshop.com.vn/about-us.html"
               className={styles['btn'] + ' ' + styles['btn-default']}
             >
-              <span>12 lợi ích khi mua hàng tại Weshop</span>
-              <i className="arrow-ico" />
+              <span>12 lợi ích khi mua hàng tại 123order</span>
             </a>
           </div>
         </div>
@@ -186,36 +185,6 @@ class HelpBuy extends PureComponent {
                   </div>
                 </div>
               </div>
-              <div className={styles['container']} id="guide-pastelink">
-                <div className={styles['row']}>
-                  <div className={styles['col-md-12']}>
-                    <div>
-                      <ul className={styles['nav'] + ' ' + styles['nav-tabs']} role="tablist">
-                        <li role="presentation" className={styles['active']}>
-                          <a href="#home" aria-controls="home" role="tab" data-toggle="tab">
-                            Hướng dẫn chi tiết (dạng tài liệu .pdf)
-                          </a>
-                        </li>
-                      </ul>
-                      <div className={styles['tab-content']} style={{ height: '500px' }}>
-                        <div
-                          role="tabpanel"
-                          className={styles['tab-pane'] + ' ' + styles['active']}
-                          style={{ height: '500px' }}
-                          id={styles['home']}
-                        >
-                          <embed
-                            src="https://drive.google.com/viewerng/viewer?embedded=true&url=https://weshop.com.vn/data/OrderRequestGuideCustomer.pdf"
-                            width="100%"
-                            height="100%"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <hr />
               <p>Paste product link you want to buy to get quote</p>
               <section id={styles['pastelink']}>
                 <div style={{ width: '60%', margin: '0 auto' }} className={styles['container']}>
