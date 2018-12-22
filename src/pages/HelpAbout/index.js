@@ -71,7 +71,7 @@ import {
   Progress,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './index1.less';
+import styles from './index.less';
 
 @connect(({ loading, user }) => ({
   submitting: loading.effects['form/submitRegularForm'],

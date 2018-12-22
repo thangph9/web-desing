@@ -122,12 +122,9 @@ class HelpBuy extends PureComponent {
       <DocumentMeta {...meta}>
         <div className={styles['paste-link-head']}>
           <div className={styles['container'] + ' ' + styles['button-benefit']}>
-            <a
-              href="https://weshop.com.vn/about-us.html"
-              className={styles['btn'] + ' ' + styles['btn-default']}
-            >
+            <Link to={`/help-about`} className={styles['btn'] + ' ' + styles['btn-default']}>
               <span>12 lợi ích khi mua hàng tại 123order</span>
-            </a>
+            </Link>
           </div>
         </div>
         <div className={styles['price-request-box']} id="guide">
