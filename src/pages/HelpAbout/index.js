@@ -125,7 +125,7 @@ class HelpAbout extends PureComponent {
                 styles['text-center'] + ' ' + styles['text-uppercase'] + ' ' + styles['title-box']
               }
             >
-              <strong>Weshop</strong> là gì?
+              <strong>123order</strong> là gì?
             </h3>
             <div
               className={
@@ -162,8 +162,8 @@ class HelpAbout extends PureComponent {
                 <div className={styles['row-text']}>
                   <strong>Thành lập từ 2014 </strong>
                   <p>
-                    Weshop là website hàng đầu và đầu tiên cung cấp dịch vụ mua sắm xuyên biên giới
-                    từ Mỹ, Trung Quốc, Hàn quốc về Đông Nam Á, trong đó có Việt Nam.
+                    123order là website hàng đầu và đầu tiên cung cấp dịch vụ mua sắm xuyên biên
+                    giới từ Mỹ, Trung Quốc, Hàn quốc về Đông Nam Á, trong đó có Việt Nam.
                   </p>
                 </div>
                 <div className={styles['row-text']}>
@@ -174,18 +174,18 @@ class HelpAbout extends PureComponent {
                   </p>
                 </div>
                 <div className={styles['row-text']}>
-                  <strong>Sứ mệnh của Weshop </strong>
+                  <strong>Sứ mệnh của 123order </strong>
                   <p>Giúp mọi cá nhân đều có thể nhập lẻ hàng hoá từ thế giới về Đông Nam Á.</p>
                 </div>
                 <div className={styles['row-text']}>
-                  <strong>Weshop đã có mặt tại 7 quốc gia </strong>
+                  <strong>123order đã có mặt tại 7 quốc gia </strong>
                   <p>
                     Việt Nam, Malaysia, Indonesia, Philippines, Thailand và Singapore và 01 trung
                     tâm kho vận lớn từ Mỹ.
                   </p>
                 </div>
                 <div className={styles['row-text']}>
-                  <strong>Weshop tự hào</strong>
+                  <strong>123order tự hào</strong>
                   <p>Vì đã nhận được sự tin cậy của 200.000 khách hàng trên toàn bộ khu vực.</p>
                 </div>
               </div>
@@ -248,22 +248,14 @@ class HelpAbout extends PureComponent {
                             <div className={styles['text-step']}>
                               <h3>Bước 1</h3>
                               <p>
-                                Bạn mua tại Weshop hoặc gửi link
+                                Bạn mua tại 123order hoặc gửi link
                                 <br />
-                                cho Weshop &amp; thanh toán đơn hàng
+                                cho 123order &amp; thanh toán đơn hàng
                               </p>
                             </div>
                           </div>
                         </li>
-                        <li className={styles['next']}>
-                          <i
-                            className={
-                              styles['fa'] + ' ' + styles['fa-circle'] + ' ' + styles['text-active']
-                            }
-                          />
-                          <i className={styles['fa'] + ' ' + styles['fa-circle']} />
-                          <i className={styles['fa'] + ' ' + styles['fa-circle']} />
-                        </li>
+                        <li className={styles['next']} />
                         <li className={styles['icon']}>
                           <div className={styles['img']}>
                             <span className={styles['shop-icon'] + ' ' + styles['step-2']} />
@@ -272,21 +264,13 @@ class HelpAbout extends PureComponent {
                             <div className={styles['text-step']}>
                               <h3>Bước 2</h3>
                               <p>
-                                Weshop mua hàng <br />
+                                123order mua hàng <br />
                                 theo đơn hàng của bạn
                               </p>
                             </div>
                           </div>
                         </li>
-                        <li className={styles['next']}>
-                          <i className={styles['fa'] + ' ' + styles['fa-circle']} />
-                          <i
-                            className={
-                              styles['fa'] + ' ' + styles['fa-circle'] + ' ' + styles['text-active']
-                            }
-                          />
-                          <i className={styles['fa'] + ' ' + styles['fa-circle']} />
-                        </li>
+                        <li className={styles['next']} />
                         <li className={styles['icon']}>
                           <div className={styles['img']}>
                             <span className={styles['shop-icon'] + ' ' + styles['step-3']} />
@@ -295,22 +279,14 @@ class HelpAbout extends PureComponent {
                             <div className={styles['text-step']}>
                               <h3>Bước 3</h3>
                               <p>
-                                Hàng về kho quốc tế, Weshop kiểm đếm,
+                                Hàng về kho quốc tế, 123order kiểm đếm,
                                 <br />
                                 gói lại ship về &amp; khai quan giúp bạn
                               </p>
                             </div>
                           </div>
                         </li>
-                        <li className={styles['next']}>
-                          <i className={styles['fa'] + ' ' + styles['fa-circle']} />
-                          <i className={styles['fa'] + ' ' + styles['fa-circle']} />
-                          <i
-                            className={
-                              styles['fa'] + ' ' + styles['fa-circle'] + ' ' + styles['text-active']
-                            }
-                          />
-                        </li>
+                        <li className={styles['next']} />
                         <li className={styles['icon']}>
                           <div className={styles['img']}>
                             <span className={styles['shop-icon'] + ' ' + styles['step-4']} />
@@ -345,22 +321,14 @@ class HelpAbout extends PureComponent {
                             <div className={styles['text-step']}>
                               <h3>Bước 1</h3>
                               <p>
-                                Đăng ký tài khoản Weshop.
+                                Đăng ký tài khoản 123order.
                                 <br />
                                 Có ngay địa chỉ riêng tại Mỹ
                               </p>
                             </div>
                           </div>
                         </li>
-                        <li className={styles['next']}>
-                          <i
-                            className={
-                              styles['fa'] + ' ' + styles['fa-circle'] + ' ' + styles['text-active']
-                            }
-                          />
-                          <i className={styles['fa'] + ' ' + styles['fa-circle']} />
-                          <i className={styles['fa'] + ' ' + styles['fa-circle']} />
-                        </li>
+                        <li className={styles['next']} />
                         <li className={styles['icon']}>
                           <div className={styles['img']}>
                             <span className={styles['ship-icon'] + ' ' + styles['step-2']} />
@@ -376,15 +344,7 @@ class HelpAbout extends PureComponent {
                             </div>
                           </div>
                         </li>
-                        <li className={styles['next']}>
-                          <i className={styles['fa'] + ' ' + styles['fa-circle']} />
-                          <i
-                            className={
-                              styles['fa'] + ' ' + styles['fa-circle'] + ' ' + styles['text-active']
-                            }
-                          />
-                          <i className={styles['fa'] + ' ' + styles['fa-circle']} />
-                        </li>
+                        <li className={styles['next']} />
                         <li className={styles['icon']}>
                           <div className={styles['img']}>
                             <span className={styles['ship-icon'] + ' ' + styles['step-3']} />
@@ -400,15 +360,7 @@ class HelpAbout extends PureComponent {
                             </div>
                           </div>
                         </li>
-                        <li className={styles['next']}>
-                          <i className={styles['fa'] + ' ' + styles['fa-circle']} />
-                          <i className={styles['fa'] + ' ' + styles['fa-circle']} />
-                          <i
-                            className={
-                              styles['fa'] + ' ' + styles['fa-circle'] + ' ' + styles['text-active']
-                            }
-                          />
-                        </li>
+
                         <li className={styles['icon']}>
                           <div className={styles['img']}>
                             <span className={styles['ship-icon'] + ' ' + styles['step-4']} />
@@ -417,7 +369,7 @@ class HelpAbout extends PureComponent {
                             <div className={styles['text-step']}>
                               <h3>Bước 4</h3>
                               <p>
-                                Weshop chuyển về
+                                123order chuyển về
                                 <br />
                                 khai quan giao hàng tận tay
                               </p>
@@ -441,7 +393,7 @@ class HelpAbout extends PureComponent {
                   styles['text-center'] + ' ' + styles['text-uppercase'] + ' ' + styles['title-box']
                 }
               >
-                <strong>12 Lợi ích</strong> của Weshop
+                <strong>12 Lợi ích</strong> của 123order
               </h3>
               <div
                 className={
@@ -476,46 +428,18 @@ class HelpAbout extends PureComponent {
                               200 triệu sản phẩm eBay cập nhật realtime, hàng độc, hàng cũ (đến
                               Amazon cũng không thể có)
                             </li>
+                            <li>
+                              Mua sắm từ tất cả các website thương hiệu Mỹ được ưa thích (Victoria
+                              Secret, Ralph Lauren, 6pm, Zappos ...)
+                            </li>
+                            <li>
+                              Mua lẻ, buôn từ Trung quốc, Hàn quốc (Taobao, 1688, Dhgate, Interpark,
+                              Gmarket...)
+                            </li>
                           </ul>
                         </div>
-                        {this.state.indexMore == 1 && (
-                          <div className={styles['benefit-content']}>
-                            <ul>
-                              <li>
-                                Mua sắm từ tất cả các website thương hiệu Mỹ được ưa thích (Victoria
-                                Secret, Ralph Lauren, 6pm, Zappos ...)
-                              </li>
-                              <li>
-                                Mua lẻ, buôn từ Trung quốc, Hàn quốc (Taobao, 1688, Dhgate,
-                                Interpark, Gmarket...)
-                              </li>
-                            </ul>
-                          </div>
-                        )}
-                        <div className={styles['text-right']}>
-                          {this.state.indexMore != 1 ? (
-                            <span
-                              onClick={() => this.handleClickSeeMore(1)}
-                              className={styles['see-more']}
-                            >
-                              Xem thêm
-                            </span>
-                          ) : (
-                            <span
-                              onClick={() => this.handleClickHide()}
-                              style={{
-                                marginTop: 0,
-                                display: 'inherit',
-                                fontSize: '13px',
-                                cursor: 'pointer',
-                                color: '#e67425',
-                                marginTop: '0px',
-                              }}
-                            >
-                              Ẩn
-                            </span>
-                          )}
-                        </div>
+
+                        <div className={styles['text-right']} />
                       </div>
                     </div>
                   </div>
@@ -547,39 +471,11 @@ class HelpAbout extends PureComponent {
                               Tận hưởng chương trình giá shock như: Black Friday, Cyber Monday,
                               Daily deals, Clear stock từ Amazon, eBay, các website chính hãng.
                             </li>
+                            <li>Cắt mọi khâu trung gian nhập khẩu</li>
                           </ul>
                         </div>
-                        {this.state.indexMore == 2 && (
-                          <div className={styles['benefit-content']}>
-                            <ul>
-                              <li>Cắt mọi khâu trung gian nhập khẩu</li>
-                            </ul>
-                          </div>
-                        )}
-                        <div className={styles['text-right']}>
-                          {this.state.indexMore != 2 ? (
-                            <span
-                              onClick={() => this.handleClickSeeMore(2)}
-                              className={styles['see-more']}
-                            >
-                              Xem thêm
-                            </span>
-                          ) : (
-                            <span
-                              onClick={() => this.handleClickHide()}
-                              style={{
-                                marginTop: 0,
-                                display: 'inherit',
-                                fontSize: '13px',
-                                cursor: 'pointer',
-                                color: '#e67425',
-                                marginTop: '0px',
-                              }}
-                            >
-                              Ẩn
-                            </span>
-                          )}
-                        </div>
+
+                        <div className={styles['text-right']} />
                       </div>
                     </div>
                   </div>
@@ -608,44 +504,16 @@ class HelpAbout extends PureComponent {
                         </h5>
                         <div className={styles['benefit-content-2']}>
                           <ul>
-                            <li>Lựa chọn 1: Bạn mua sản phẩm eBay, Amazon ngay tại Weshop</li>
-                            <li>Lựa chọn 2: Bạn tự đi mua hàng, Weshop chuyển về hộ</li>
+                            <li>Lựa chọn 1: Bạn mua sản phẩm eBay, Amazon ngay tại 123order</li>
+                            <li>Lựa chọn 2: Bạn tự đi mua hàng, 123order chuyển về hộ</li>
+                            <li>
+                              Lựa chọn 3: Website bạn muốn mua không hỗ trợ thanh toán thẻ tín dụng
+                              quốc tế, hãy gửi link để 123order mua giúp bạn
+                            </li>
                           </ul>
                         </div>
-                        {this.state.indexMore == 3 && (
-                          <div className={styles['benefit-content']}>
-                            <ul>
-                              <li>
-                                Lựa chọn 3: Website bạn muốn mua không hỗ trợ thanh toán thẻ tín
-                                dụng quốc tế, hãy gửi link để Weshop mua giúp bạn
-                              </li>
-                            </ul>
-                          </div>
-                        )}
-                        <div className={styles['text-right']}>
-                          {this.state.indexMore != 3 ? (
-                            <span
-                              onClick={() => this.handleClickSeeMore(3)}
-                              className={styles['see-more']}
-                            >
-                              Xem thêm
-                            </span>
-                          ) : (
-                            <span
-                              onClick={() => this.handleClickHide()}
-                              style={{
-                                marginTop: 0,
-                                display: 'inherit',
-                                fontSize: '13px',
-                                cursor: 'pointer',
-                                color: '#e67425',
-                                marginTop: '0px',
-                              }}
-                            >
-                              Ẩn
-                            </span>
-                          )}
-                        </div>
+
+                        <div className={styles['text-right']} />
                       </div>
                     </div>
                   </div>
@@ -675,45 +543,17 @@ class HelpAbout extends PureComponent {
                         <div className={styles['benefit-content-2']}>
                           <ul>
                             <li>
-                              Weshop hỗ trợ phần lớn ngân hàng bản địa, thanh toán thẻ tín dụng, ví
-                              Ngân Lượng
+                              123order hỗ trợ phần lớn ngân hàng bản địa, thanh toán thẻ tín dụng,
+                              ví Ngân Lượng
+                            </li>
+                            <li>
+                              123order cũng hỗ trợ thanh toán đặt cọc một phần, giao hàng thu tiền
+                              tận nơi
                             </li>
                           </ul>
                         </div>
-                        {this.state.indexMore == 4 && (
-                          <div className={styles['benefit-content']}>
-                            <ul>
-                              <li>
-                                Weshop cũng hỗ trợ thanh toán đặt cọc một phần, giao hàng thu tiền
-                                tận nơi
-                              </li>
-                            </ul>
-                          </div>
-                        )}
-                        <div className={styles['text-right']}>
-                          {this.state.indexMore != 4 ? (
-                            <span
-                              onClick={() => this.handleClickSeeMore(4)}
-                              className={styles['see-more']}
-                            >
-                              Xem thêm
-                            </span>
-                          ) : (
-                            <span
-                              onClick={() => this.handleClickHide()}
-                              style={{
-                                marginTop: 0,
-                                display: 'inherit',
-                                fontSize: '13px',
-                                cursor: 'pointer',
-                                color: '#e67425',
-                                marginTop: '0px',
-                              }}
-                            >
-                              Ẩn
-                            </span>
-                          )}
-                        </div>
+
+                        <div className={styles['text-right']} />
                       </div>
                     </div>
                   </div>
@@ -741,8 +581,12 @@ class HelpAbout extends PureComponent {
                           KHÔNG LO THỦ TỤC HẢI QUAN WESHOP GIÚP BẠN TỪ A-Z
                         </h5>
                         <div className={styles['benefit-content-2']}>
-                          Weshop kiểm hàng, khai quan, chuyển hàng tới tận tay bạn. Bạn chỉ việc
-                          ngồi nhà chọn mua và thanh toán online tại nhà.
+                          <ul>
+                            <li>
+                              123order kiểm hàng, khai quan, chuyển hàng tới tận tay bạn. Bạn chỉ
+                              việc ngồi nhà chọn mua và thanh toán online tại nhà.
+                            </li>
+                          </ul>
                         </div>
                       </div>
                     </div>
@@ -771,45 +615,17 @@ class HelpAbout extends PureComponent {
                         <div className={styles['benefit-content-2']}>
                           <ul>
                             <li>
-                              Hàng tới kho Weshop, chúng tôi sẽ tiến hành kiểm tra cơ bản, thông tin
-                              tới bạn nếu hàng có vấn đề.
+                              Hàng tới kho 123order, chúng tôi sẽ tiến hành kiểm tra cơ bản, thông
+                              tin tới bạn nếu hàng có vấn đề.
+                            </li>
+                            <li>
+                              123order hỗ trợ gói lại hàng nhằm tăng cường sự bảo vệ và an toàn cho
+                              hàng
                             </li>
                           </ul>
                         </div>
-                        {this.state.indexMore == 5 && (
-                          <div className={styles['benefit-content']}>
-                            <ul>
-                              <li>
-                                Weshop hỗ trợ gói lại hàng nhằm tăng cường sự bảo vệ và an toàn cho
-                                hàng
-                              </li>
-                            </ul>
-                          </div>
-                        )}
-                        <div className={styles['text-right']}>
-                          {this.state.indexMore != 5 ? (
-                            <span
-                              onClick={() => this.handleClickSeeMore(5)}
-                              className={styles['see-more']}
-                            >
-                              Xem thêm
-                            </span>
-                          ) : (
-                            <span
-                              onClick={() => this.handleClickHide()}
-                              style={{
-                                marginTop: 0,
-                                display: 'inherit',
-                                fontSize: '13px',
-                                cursor: 'pointer',
-                                color: '#e67425',
-                                marginTop: '0px',
-                              }}
-                            >
-                              Ẩn
-                            </span>
-                          )}
-                        </div>
+
+                        <div className={styles['text-right']} />
                       </div>
                     </div>
                   </div>
@@ -839,45 +655,17 @@ class HelpAbout extends PureComponent {
                         <div className={styles['benefit-content-2']}>
                           <ul>
                             <li>
-                              Là đại lý vận chuyển lớn của các hãng hàng không, Weshop có chính sách
-                              giá phí vận chuyển tốt nhất.
+                              Là đại lý vận chuyển lớn của các hãng hàng không, 123order có chính
+                              sách giá phí vận chuyển tốt nhất.
+                            </li>
+                            <li>
+                              123order hỗ trợ gom hàng và gói lại kiện hàng giúp bạn tiết kiệm chi
+                              phí vận chuyển hàng cồng kênh hoặc đơn lẻ.
                             </li>
                           </ul>
                         </div>
-                        {this.state.indexMore == 6 && (
-                          <div className={styles['benefit-content']}>
-                            <ul>
-                              <li>
-                                Weshop hỗ trợ gom hàng và gói lại kiện hàng giúp bạn tiết kiệm chi
-                                phí vận chuyển hàng cồng kênh hoặc đơn lẻ.
-                              </li>
-                            </ul>
-                          </div>
-                        )}
-                        <div className={styles['text-right']}>
-                          {this.state.indexMore != 6 ? (
-                            <span
-                              onClick={() => this.handleClickSeeMore(6)}
-                              className={styles['see-more']}
-                            >
-                              Xem thêm
-                            </span>
-                          ) : (
-                            <span
-                              onClick={() => this.handleClickHide()}
-                              style={{
-                                marginTop: 0,
-                                display: 'inherit',
-                                fontSize: '13px',
-                                cursor: 'pointer',
-                                color: '#e67425',
-                                marginTop: '0px',
-                              }}
-                            >
-                              Ẩn
-                            </span>
-                          )}
-                        </div>
+
+                        <div className={styles['text-right']} />
                       </div>
                     </div>
                   </div>
@@ -936,39 +724,11 @@ class HelpAbout extends PureComponent {
                           <ul>
                             <li>Cơ bản: phù hợp cá nhân thỉng thoảng mua </li>
                             <li>Vàng: phù hợp cá nhân hay mua hàng nhập </li>
+                            <li>Kim cương: phù hợp thương nhân</li>
                           </ul>
                         </div>
-                        {this.state.indexMore == 8 && (
-                          <div className={styles['benefit-content']}>
-                            <ul>
-                              <li>Kim cương: phù hợp thương nhân</li>
-                            </ul>
-                          </div>
-                        )}
-                        <div className={styles['text-right']}>
-                          {this.state.indexMore != 8 ? (
-                            <span
-                              onClick={() => this.handleClickSeeMore(8)}
-                              className={styles['see-more']}
-                            >
-                              Xem thêm
-                            </span>
-                          ) : (
-                            <span
-                              onClick={() => this.handleClickHide()}
-                              style={{
-                                marginTop: 0,
-                                display: 'inherit',
-                                fontSize: '13px',
-                                cursor: 'pointer',
-                                color: '#e67425',
-                                marginTop: '0px',
-                              }}
-                            >
-                              Ẩn
-                            </span>
-                          )}
-                        </div>
+
+                        <div className={styles['text-right']} />
                       </div>
                     </div>
                   </div>
@@ -1025,9 +785,13 @@ class HelpAbout extends PureComponent {
                         <h5 className={styles['heading-uppercase']}>KHIẾU NẠI, ĐỔI TRẢ DỄ DÀNG</h5>
                         <div className={styles['benefit-content-2']}>
                           <div>
-                            Nhiều người bán cho phép đổi trả hàng trong thời hạn nhất định, với lợi
-                            thế kho hàng tại Mỹ và kiểm tra hàng hoá cơ bản, Weshop hỗ trợ bạn thực
-                            hiện khiếu nại, đổi trả khi hàng có vấn đề.
+                            <ul>
+                              <li>
+                                Nhiều người bán cho phép đổi trả hàng trong thời hạn nhất định, với
+                                lợi thế kho hàng tại Mỹ và kiểm tra hàng hoá cơ bản, 123order hỗ trợ
+                                bạn thực hiện khiếu nại, đổi trả khi hàng có vấn đề.
+                              </li>
+                            </ul>
                           </div>
                         </div>
                       </div>
@@ -1060,43 +824,15 @@ class HelpAbout extends PureComponent {
                           <ul>
                             <li>Lưu kho hàng: miễn phí tối đa 60 ngày</li>
                             <li>Gom hàng chuyển kiện: Miễn phí</li>
+                            <li>Gói lại hàng: Miễn phí </li>
+                            <li>
+                              Khác: chụp hình sản phẩm trước khi chuyển về, gói quà tặng, gỡ bỏ hoá
+                              đơn của người bán...
+                            </li>
                           </ul>
                         </div>
-                        {this.state.indexMore == 11 && (
-                          <div className={styles['benefit-content']}>
-                            <ul>
-                              <li>Gói lại hàng: Miễn phí </li>
-                              <li>
-                                Khác: chụp hình sản phẩm trước khi chuyển về, gói quà tặng, gỡ bỏ
-                                hoá đơn của người bán...
-                              </li>
-                            </ul>
-                          </div>
-                        )}
-                        <div className={styles['text-right']}>
-                          {this.state.indexMore != 11 ? (
-                            <span
-                              onClick={() => this.handleClickSeeMore(11)}
-                              className={styles['see-more']}
-                            >
-                              Xem thêm
-                            </span>
-                          ) : (
-                            <span
-                              onClick={() => this.handleClickHide()}
-                              style={{
-                                marginTop: 0,
-                                display: 'inherit',
-                                fontSize: '13px',
-                                cursor: 'pointer',
-                                color: '#e67425',
-                                marginTop: '0px',
-                              }}
-                            >
-                              Ẩn
-                            </span>
-                          )}
-                        </div>
+
+                        <div className={styles['text-right']} />
                       </div>
                     </div>
                   </div>
