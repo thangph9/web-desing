@@ -16,7 +16,6 @@ export default [
     routes: [
       { path: '/checkout', component: './Checkout/' },
       { path: '/checkout/paycomplete', component: './PayCompleted/' },
-      { path: '/verifyemail', component: './Verify/' },
     ],
   },
   {
@@ -128,6 +127,11 @@ export default [
         path: '/helpbuy',
         name: 'helpbuy',
         component: './HelpBuy/',
+      },
+      {
+        path: '/help-about',
+        name: 'helpabout',
+        component: './HelpAbout/',
       },
       {
         path: '/forgotpassword',
