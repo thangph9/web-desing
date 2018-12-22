@@ -1351,7 +1351,7 @@ function verifyEmail(req, res) {
               if (timeOtp - timenow <= 0 || valueOtpByUser != valueOtp) {
                 return res.json({
                   status: 'error',
-                  message: 'Mã xác thực không hợp lệ!',
+                  message: 'Mã xác thực không hợp lệ hoặc đã hết hạn!',
                 });
               }
             } else {

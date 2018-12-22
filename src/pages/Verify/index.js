@@ -101,7 +101,7 @@ class Verify extends PureComponent {
     var { user } = this.props;
     if (user.verify.status == 'error') {
       return (
-        <div style={{ textAlign: 'center' }}>Mã xác thực không hợp lệ. Vui lòng kiểm tra lại!</div>
+        <div style={{ textAlign: 'center' }}>{user.verify.message ? user.verify.message : ''}</div>
       );
     }
     return <Redirect to={`/accountinformation`} />;
