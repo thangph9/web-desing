@@ -1368,7 +1368,7 @@ function verifyEmail(req, res) {
         });
       },
       function(callback) {
-        bcrypt.hash(params.password, _salt, function(err, hash) {
+        bcrypt.hash(legit.password, _salt, function(err, hash) {
           _hash = hash;
           callback(err, null);
         });
