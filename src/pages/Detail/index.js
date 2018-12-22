@@ -519,7 +519,7 @@ class Detail extends PureComponent {
         detailCookie.size = !this.state.size ? data.size[0] : this.state.size;
       if (color != '') detailCookie.color = color;
     }
-    console.log(this.state.togle);
+    console.log(detail);
     return (
       <DocumentMeta {...meta}>
         <div id="app__body___3NlTJ">
@@ -915,7 +915,7 @@ class Detail extends PureComponent {
                                 <ul
                                   className={`${styles['product-description__desc-list___3qcUM']}`}
                                 >
-                                  {infomation}
+                                  {ReactHtmlParser(data.desc_detail)}
                                 </ul>
                               </div>
                             </div>

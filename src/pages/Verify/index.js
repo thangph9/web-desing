@@ -88,7 +88,7 @@ class Verify extends PureComponent {
         query: { otp },
       },
     } = this.props;
-    var values = JSON.parse(localStorage.accountRegister);
+    var values = {};
     if (otp) {
       values.otp = otp;
     }

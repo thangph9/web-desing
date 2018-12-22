@@ -66,6 +66,7 @@ function register(req, res) {
   var PARAM_IS_VALID = {};
   var link = '';
   var verificationUrl = '';
+  var tokenVerify = '';
   async.series(
     [
       function(callback) {
@@ -113,6 +114,29 @@ function register(req, res) {
         });
       },
       function(callback) {
+        try {
+          tokenVerify = jwt.sign(
+            {
+              username: PARAM_IS_VALID.username,
+              tokenVerify: otpRandom + '',
+              phone: PARAM_IS_VALID['phone'],
+              email: PARAM_IS_VALID['email'],
+              fullname: PARAM_IS_VALID['fullname'],
+              address: PARAM_IS_VALID['address'],
+              password: PARAM_IS_VALID['password'],
+            },
+            jwtprivate,
+            {
+              expiresIn: '30d', // expires in 30 day
+              algorithm: 'RS256',
+            }
+          );
+        } catch (e) {
+          console.log(e);
+        }
+        callback(null, null);
+      },
+      function(callback) {
         let otp_object = {
           username: PARAM_IS_VALID.username,
           tokenverify: otpRandom + '',
@@ -132,7 +156,7 @@ function register(req, res) {
         callback(null, null);
       },
       function(callback) {
-        link = 'http://localhost:8000/verifyemail?otp=' + otpRandom;
+        link = 'https://123order.vn/verifyemail?otp=' + tokenVerify;
         callback(null, null);
       },
       function(callback) {
@@ -151,9 +175,9 @@ function register(req, res) {
           to: PARAM_IS_VALID.username,
           subject: 'Verify Email',
           html:
-            'Hello,<br> Please Click on the link to verify your email.<br><a href=' +
+            '<table border="0" cellspacing="0" cellpadding="0" style="max-width:600px"><tbody><tr><td><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td align="left"><img width="92" height="32" src="https://ci4.googleusercontent.com/proxy/2Aq8EEZmur-HMDuHJac8keX3JRh-9ErM47lWIV3YoWn3QXPh0iftgqzcV1V6YC9G0-VCfMKXocE6LfU0aybfJzQukHYc-PEOK7BSzcLfCA1yPmIxyLaCEXbWsKyafaASD2LIdcFL=s0-d-e1-ft#https://ssl.gstatic.com/images/branding/googlelogo/2x/googlelogo_color_188x64dp.png" style="display:block;width:92px;height:32px" class="CToWUd"></td><td align="right"><img width="32" height="32" style="display:block;width:32px;height:32px" src="https://ci3.googleusercontent.com/proxy/12rTzUTfWWCBJcvBcXJwQVKJIoKWWntqD08OrTXdjt7fq1-LLHD4oI_HQpgdZC1Gx7dX6vqHiGVE_VTOkZWq_yGhaViaMBlMd9o=s0-d-e1-ft#https://ssl.gstatic.com/accountalerts/email/keyhole.png" class="CToWUd"></td></tr></tbody></table></td></tr><tr height="16"></tr><tr><td><table bgcolor="#4184F3" width="100%" border="0" cellspacing="0" cellpadding="0" style="min-width:332px;max-width:600px;border:1px solid #e0e0e0;border-bottom:0;border-top-left-radius:3px;border-top-right-radius:3px"><tbody><tr><td height="72px" colspan="3"></td></tr><tr><td width="32px"></td><td style="font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:24px;color:#ffffff;line-height:1.25">Google Verification Email</td><td width="32px"></td></tr><tr><td height="18px" colspan="3"></td></tr></tbody></table></td></tr><tr><td><table bgcolor="#FAFAFA" width="100%" border="0" cellspacing="0" cellpadding="0" style="min-width:332px;max-width:600px;border:1px solid #f0f0f0;border-bottom:1px solid #c0c0c0;border-top:0;border-bottom-left-radius:3px;border-bottom-right-radius:3px"><tbody><tr height="16px"><td width="32px" rowspan="3"></td><td></td><td width="32px" rowspan="3"></td></tr><tr><td><p>Xác thực tài khoản Email<span style="color:#659cef" dir="ltr"><a href="' +
             link +
-            '>Click here to verify</a>',
+            '" target="_blank">Click vào đây</a></span>để xác thực tài khoản của bạn.</p><p></p><p></p></td></tr><tr height="32px"></tr></tbody></table></td></tr><tr height="16"></tr><tr><td style="max-width:600px;font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:10px;color:#bcbcbc;line-height:1.5"></td></tr><tr><td><table style="font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:10px;color:#666666;line-height:18px;padding-bottom:10px"></table></td></tr></tbody></table>',
         };
         callback(null, null);
       },
@@ -1271,17 +1295,34 @@ function verifyEmail(req, res) {
   var _salt = '';
   var _hash = '';
   var PARAM_IS_VALID = {};
+  var legit = {};
   async.series(
     [
       function(callback) {
-        PARAM_IS_VALID['phone'] = params.phone;
-        PARAM_IS_VALID['email'] = params.email;
-        PARAM_IS_VALID['fullname'] = params.fullname;
-        PARAM_IS_VALID['username'] = params.email;
-        PARAM_IS_VALID['address'] = params.address;
-        PARAM_IS_VALID['password'] = params.password;
-        PARAM_IS_VALID['user_id'] = user_id;
         PARAM_IS_VALID['tokenverify'] = params.otp;
+        callback(null, null);
+      },
+      function(callback) {
+        var verifyOptions = {
+          expiresIn: '30d',
+          algorithm: ['RS256'],
+        };
+        try {
+          legit = jwt.verify(PARAM_IS_VALID['tokenverify'], jwtpublic, verifyOptions);
+          console.log(legit);
+        } catch (e) {
+          return res.send({ status: 'error', message: 'Sai token' });
+        }
+        callback(null, null);
+      },
+      function(callback) {
+        PARAM_IS_VALID['phone'] = legit.phone;
+        PARAM_IS_VALID['email'] = legit.email;
+        PARAM_IS_VALID['fullname'] = legit.fullname;
+        PARAM_IS_VALID['username'] = legit.email;
+        PARAM_IS_VALID['address'] = legit.address;
+        PARAM_IS_VALID['password'] = legit.password;
+        PARAM_IS_VALID['user_id'] = user_id;
         PARAM_IS_VALID['enabled'] = true;
         PARAM_IS_VALID['createat'] = new Date().getTime();
         callback(null, null);
@@ -1306,7 +1347,7 @@ function verifyEmail(req, res) {
               let timeOtp = Date.parse(_user[0].time);
               let timenow = PARAM_IS_VALID.createat;
               let valueOtpByUser = _user[0].tokenverify;
-              let valueOtp = Number(PARAM_IS_VALID.tokenverify);
+              let valueOtp = Number(legit.tokenVerify);
               if (timeOtp - timenow <= 0 || valueOtpByUser != valueOtp) {
                 return res.json({
                   status: 'error',
