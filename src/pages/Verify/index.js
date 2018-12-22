@@ -99,7 +99,7 @@ class Verify extends PureComponent {
   }
   render() {
     var { user } = this.props;
-    if (user.verify.status == 'error' || localStorage.accountRegister) {
+    if (user.verify.status == 'error') {
       return (
         <div style={{ textAlign: 'center' }}>Mã xác thực không hợp lệ. Vui lòng kiểm tra lại!</div>
       );
