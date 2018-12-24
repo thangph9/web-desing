@@ -139,7 +139,12 @@ function productDetail(req, res) {
           if (res && res.length >0) {
             results = res[0];
             if(nodeid==''){
-                  nodeid=res[0].nodeid[0];
+                try{
+                    nodeid=res[0].nodeid[0];
+                }catch(e){
+                    
+                }
+                  
             }  
           }
           callback(err, null);
