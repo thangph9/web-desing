@@ -46,7 +46,7 @@ function productList(req,res){
             })
         },
         function(callback){
-             models.instance.category.find({$solr_query:'{"q": "category: *08ecb1e-cabf-4328-9ddc-011ca55a156d*"}'},{select: ['title','thumbnail','seo_link','nodeid','death_clock']},function(err,res){
+             models.instance.category.find({$solr_query:'{"q": "category: *07081437-d862-48d0-9987-4f656bd2de30*"}'},{select: ['title','thumbnail','seo_link','nodeid','death_clock']},function(err,res){
                 if(res){
                     results['hotnew']=res;
                 }
@@ -54,7 +54,7 @@ function productList(req,res){
             })
         },
         function(callback){
-             models.instance.category.find({$solr_query:'{"q": "category: *07081437-d862-48d0-9987-4f656bd2de30*"}'},{select: ['title','thumbnail','seo_link','nodeid','death_clock']},function(err,res){
+             models.instance.category.find({$solr_query:'{"q": "category: *08ecb1e-cabf-4328-9ddc-011ca55a156d*"}'},{select: ['title','thumbnail','seo_link','nodeid','death_clock']},function(err,res){
                 if(res){
                     results['bestSeller']=res;
                 }
