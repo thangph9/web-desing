@@ -536,16 +536,14 @@ function productSearch(req,res){
         });
       },
       function(callback) {
-       
           models.instance.currency_raito.find({}, function(err, items) {
             if (items && items.length > 0) {
               results.raito=items;
-              
             }
             callback(err, null);
           });
       },    
-      function(callback){
+      function(callback) {
           renderFilter(results.items,function(err,r){
               filterMap=r;
               callback(err,null);
@@ -586,7 +584,6 @@ function generateMap(category,nodeid){
     }
     return parent.reverse();
 }
-
 function renderFilter(result,callback){
     let filterMap={};
     filterMap.style=[];
@@ -596,23 +593,26 @@ function renderFilter(result,callback){
     filterMap.type=[];
     async.series([
         function(callback){
-            result.map(e=>{
-                if(e.style && e.style.length > 0 ){
-                    filterMap.style.push(e.style);  
-                }
-                if(e.color && e.color.length > 0){
-                    filterMap.color.push(e.color);   
-                }
-                if(e.size && e.size.length > 0){
-                    filterMap.size.push(e.size);   
-                }
-                if(e.brand && e.brand.length > 0){
-                    filterMap.brand.push(e.brand);   
-                }
-                if(e.type && e.type.length > 0){
-                    filterMap.type.push(e.type);   
-                }
-            })
+            if(result && result.length > 0){
+                result.map(e=>{
+                    if(e.style && e.style.length > 0 ){
+                        filterMap.style.push(e.style);  
+                    }
+                    if(e.color && e.color.length > 0){
+                        filterMap.color.push(e.color);   
+                    }
+                    if(e.size && e.size.length > 0){
+                        filterMap.size.push(e.size);   
+                    }
+                    if(e.brand && e.brand.length > 0){
+                        filterMap.brand.push(e.brand);   
+                    }
+                    if(e.type && e.type.length > 0){
+                        filterMap.type.push(e.type);   
+                    }
+                })
+            }
+            
             callback(null,null)
         },
         function(callback){
@@ -640,7 +640,6 @@ function renderFilter(result,callback){
     
     
 }
-
 function treeMapBreadCumb(category,nodeid,callback){
     let treeMap=[];
     let parent={};
