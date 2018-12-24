@@ -140,6 +140,12 @@ export async function getProductDetail(params) {
     body: params,
   });
 }
+export async function getDealSock(params) {
+  return request('/api/authentication/dealsock', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function getDEVDETAIL(params) {
   return request('/api/product/DEV_DETAIL', {
     method: 'POST',
@@ -230,6 +236,12 @@ export async function setHelpBuy(params) {
 }
 export async function deleteHelpBuy(params) {
   return request('/api/authentication/deletehelpbuy', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getProductFilter(params) {
+  return request('/api/product/filterproduct', {
     method: 'POST',
     body: params,
   });

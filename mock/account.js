@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+/* eslint-disable no-params-reassign */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-undef-init */
 /* eslint-disable no-underscore-dangle */
@@ -34,17 +35,14 @@
 const async = require('async');
 const models = require('../settings');
 const fs = require('fs');
-var express = require('express');
-var bodyParser = require('body-parser');
 const sharp = require('sharp');
-var nodemailer = require('nodemailer');
 const Uuid = require('cassandra-driver').types.Uuid;
 const bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
-var router = express.Router();
+var nodemailer = require('nodemailer');
 var jwtpublic = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
 var jwtprivate = fs.readFileSync('./ssl/jwtprivate.pem', 'utf8');
-var request = require('request');
+
 const MESSAGE = {
   USER_NOT_MATCH: 'Tài khoản hoặc mật khẩu không đúng',
   USER_NOT_FOUND: 'Tài khoản này không tồn tại!',
@@ -56,16 +54,18 @@ const MESSAGE = {
   USER_EXISTS: 'Tài khoản đã được sử dụng',
   CONFIRM_TOKEN: 'Vui lòng kiểm tra Email của bạn để xác thực tài khoản',
 };
-/*function register(req, res) {
+function register(req, res) {
   var params = req.body;
   let user_id = Uuid.random();
+  let saltRounds = 10;
   var mailOptions = {};
   var transporter = {};
+  var _salt = '';
+  var _hash = '';
   var queries = [];
   var otpRandom = Math.floor(10000000000 + Math.random() * 90000000000);
   var PARAM_IS_VALID = {};
   var link = '';
-  var verificationUrl = '';
   var tokenVerify = '';
   async.series(
     [
@@ -83,26 +83,7 @@ const MESSAGE = {
         callback(null, null);
       },
       function(callback) {
-        if (!params.captcha) {
-          return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
-        }
-        verificationUrl =
-          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
-          params.captcha +
-          '&remoteip=' +
-          req.connection.remoteAddress;
-        callback(null, null);
-      },
-      function(callback) {
-        request(verificationUrl, function(error, response, body) {
-          body = JSON.parse(body);
-          if (body.success == false) {
-            res.json({ status: 'error', message: 'Captcha không chính xác!' });
-          }
-          callback(error, null);
-        });
-      },
-      function(callback) {
+        console.log(PARAM_IS_VALID);
         models.instance.account_login.find({ username: PARAM_IS_VALID['username'] }, function(
           err,
           _user
@@ -113,18 +94,11 @@ const MESSAGE = {
           callback(err, null);
         });
       },
-      function(callback) {
+      /*
+        function (callback) {
         try {
           tokenVerify = jwt.sign(
-            {
-              username: PARAM_IS_VALID.username,
-              tokenVerify: otpRandom + '',
-              phone: PARAM_IS_VALID['phone'],
-              email: PARAM_IS_VALID['email'],
-              fullname: PARAM_IS_VALID['fullname'],
-              address: PARAM_IS_VALID['address'],
-              password: PARAM_IS_VALID['password'],
-            },
+            { username: PARAM_IS_VALID.username, tokenVerify: otpRandom + '', phone: PARAM_IS_VALID['phone'], email: PARAM_IS_VALID['email'], fullname: PARAM_IS_VALID['fullname'], address: PARAM_IS_VALID['address'], password: PARAM_IS_VALID['password'], },
             jwtprivate,
             {
               expiresIn: '30d', // expires in 30 day
@@ -134,13 +108,13 @@ const MESSAGE = {
         } catch (e) {
           console.log(e);
         }
-        callback(null, null);
+        callback(null, null)
       },
-      function(callback) {
+      function (callback) {
         let otp_object = {
           username: PARAM_IS_VALID.username,
           tokenverify: otpRandom + '',
-          time: PARAM_IS_VALID['createatOTP'],
+          time: PARAM_IS_VALID['createatOTP']
         };
         const token = () => {
           try {
@@ -149,89 +123,49 @@ const MESSAGE = {
             let save = instance.save({ if_exist: true, return_query: true });
             return save;
           } catch (error) {
-            console.log(error);
+            console.log(error)
           }
         };
         queries.push(token());
+        callback(null, null)
+      },
+      function (callback) {
+
+        link = "http://localhost:8000/verifyemail?otp=" + tokenVerify;
         callback(null, null);
       },
-      function(callback) {
-        link = 'https://123order.vn/verifyemail?otp=' + tokenVerify;
-        callback(null, null);
-      },
-      function(callback) {
+      function (callback) {
         transporter = nodemailer.createTransport({
           service: 'gmail',
           auth: {
             user: 'trjvjp1997@gmail.com',
-            pass: 'concho1234',
-          },
+            pass: 'concho1234'
+          }
         });
-        callback(null, null);
+        callback(null, null)
       },
-      function(callback) {
+      function (callback) {
         mailOptions = {
           from: 'trjvjp1997@gmail.com',
           to: PARAM_IS_VALID.username,
           subject: 'Verify Email',
-          html:
-            '<table border="0" cellspacing="0" cellpadding="0" style="max-width:600px"><tbody><tr><td><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td align="left"><img width="92" height="32" src="https://ci4.googleusercontent.com/proxy/2Aq8EEZmur-HMDuHJac8keX3JRh-9ErM47lWIV3YoWn3QXPh0iftgqzcV1V6YC9G0-VCfMKXocE6LfU0aybfJzQukHYc-PEOK7BSzcLfCA1yPmIxyLaCEXbWsKyafaASD2LIdcFL=s0-d-e1-ft#https://ssl.gstatic.com/images/branding/googlelogo/2x/googlelogo_color_188x64dp.png" style="display:block;width:92px;height:32px" class="CToWUd"></td><td align="right"><img width="32" height="32" style="display:block;width:32px;height:32px" src="https://ci3.googleusercontent.com/proxy/12rTzUTfWWCBJcvBcXJwQVKJIoKWWntqD08OrTXdjt7fq1-LLHD4oI_HQpgdZC1Gx7dX6vqHiGVE_VTOkZWq_yGhaViaMBlMd9o=s0-d-e1-ft#https://ssl.gstatic.com/accountalerts/email/keyhole.png" class="CToWUd"></td></tr></tbody></table></td></tr><tr height="16"></tr><tr><td><table bgcolor="#4184F3" width="100%" border="0" cellspacing="0" cellpadding="0" style="min-width:332px;max-width:600px;border:1px solid #e0e0e0;border-bottom:0;border-top-left-radius:3px;border-top-right-radius:3px"><tbody><tr><td height="72px" colspan="3"></td></tr><tr><td width="32px"></td><td style="font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:24px;color:#ffffff;line-height:1.25">Google Verification Email</td><td width="32px"></td></tr><tr><td height="18px" colspan="3"></td></tr></tbody></table></td></tr><tr><td><table bgcolor="#FAFAFA" width="100%" border="0" cellspacing="0" cellpadding="0" style="min-width:332px;max-width:600px;border:1px solid #f0f0f0;border-bottom:1px solid #c0c0c0;border-top:0;border-bottom-left-radius:3px;border-bottom-right-radius:3px"><tbody><tr height="16px"><td width="32px" rowspan="3"></td><td></td><td width="32px" rowspan="3"></td></tr><tr><td><p>Xác thực tài khoản Email<span style="color:#659cef" dir="ltr"><a href="' +
-            link +
-            '" target="_blank">Click vào đây</a></span>để xác thực tài khoản của bạn.</p><p></p><p></p></td></tr><tr height="32px"></tr></tbody></table></td></tr><tr height="16"></tr><tr><td style="max-width:600px;font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:10px;color:#bcbcbc;line-height:1.5"></td></tr><tr><td><table style="font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:10px;color:#666666;line-height:18px;padding-bottom:10px"></table></td></tr></tbody></table>',
+          html: '<table border="0" cellspacing="0" cellpadding="0" style="max-width:600px"><tbody><tr><td><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td align="left"><img width="92" height="32" src="https://ci4.googleusercontent.com/proxy/2Aq8EEZmur-HMDuHJac8keX3JRh-9ErM47lWIV3YoWn3QXPh0iftgqzcV1V6YC9G0-VCfMKXocE6LfU0aybfJzQukHYc-PEOK7BSzcLfCA1yPmIxyLaCEXbWsKyafaASD2LIdcFL=s0-d-e1-ft#https://ssl.gstatic.com/images/branding/googlelogo/2x/googlelogo_color_188x64dp.png" style="display:block;width:92px;height:32px" class="CToWUd"></td><td align="right"><img width="32" height="32" style="display:block;width:32px;height:32px" src="https://ci3.googleusercontent.com/proxy/12rTzUTfWWCBJcvBcXJwQVKJIoKWWntqD08OrTXdjt7fq1-LLHD4oI_HQpgdZC1Gx7dX6vqHiGVE_VTOkZWq_yGhaViaMBlMd9o=s0-d-e1-ft#https://ssl.gstatic.com/accountalerts/email/keyhole.png" class="CToWUd"></td></tr></tbody></table></td></tr><tr height="16"></tr><tr><td><table bgcolor="#4184F3" width="100%" border="0" cellspacing="0" cellpadding="0" style="min-width:332px;max-width:600px;border:1px solid #e0e0e0;border-bottom:0;border-top-left-radius:3px;border-top-right-radius:3px"><tbody><tr><td height="72px" colspan="3"></td></tr><tr><td width="32px"></td><td style="font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:24px;color:#ffffff;line-height:1.25">Google Verification Email</td><td width="32px"></td></tr><tr><td height="18px" colspan="3"></td></tr></tbody></table></td></tr><tr><td><table bgcolor="#FAFAFA" width="100%" border="0" cellspacing="0" cellpadding="0" style="min-width:332px;max-width:600px;border:1px solid #f0f0f0;border-bottom:1px solid #c0c0c0;border-top:0;border-bottom-left-radius:3px;border-bottom-right-radius:3px"><tbody><tr height="16px"><td width="32px" rowspan="3"></td><td></td><td width="32px" rowspan="3"></td></tr><tr><td><p>Xác thực tài khoản Email<span style="color:#659cef" dir="ltr"><a href="' + link + '" target="_blank">Click vào đây</a></span>để xác thực tài khoản của bạn.</p><p></p><p></p></td></tr><tr height="32px"></tr></tbody></table></td></tr><tr height="16"></tr><tr><td style="max-width:600px;font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:10px;color:#bcbcbc;line-height:1.5"></td></tr><tr><td><table style="font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:10px;color:#666666;line-height:18px;padding-bottom:10px"></table></td></tr></tbody></table>'
         };
-        callback(null, null);
+        callback(null, null)
       },
-      function(callback) {
-        transporter.sendMail(mailOptions, function(error, info) {
+      function (callback) {
+        transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
-            console.log(error);
-            callback(error, null);
-          } else {
+            console.log(error)
+            callback(error, null)
+          }
+          else {
             info = info.response;
-            callback(null, null);
+            callback(null, null)
           }
         });
       },
-    ],
-    function(err, result) {
-      if (err) res.json({ status: 'error', message: err + '' });
-      models.doBatch(queries, function(err) {
-        if (err) return res.json({ status: 'error', message: err + '' });
-        else {
-          res.json({
-            status: 'ok',
-            message: MESSAGE.CONFIRM_TOKEN,
-          });
-        }
-      });
-    }
-  );
-}*/
-function register(req, res) {
-  var params = req.body;
-  let user_id = Uuid.random();
-  let saltRounds = 10;
-  var queries = [];
-  var _salt = '';
-  var _hash = '';
-  var msg = '';
-  var PARAM_IS_VALID = {};
-  var verificationUrl = '';
-  async.series(
-    [
-      function(callback) {
-        PARAM_IS_VALID['phone'] = params.phone;
-        PARAM_IS_VALID['email'] = params.email;
-        PARAM_IS_VALID['otp'] = params.otp;
-        PARAM_IS_VALID['fullname'] = params.fullname;
-        PARAM_IS_VALID['username'] = params.email;
-        PARAM_IS_VALID['address'] = params.address;
-        PARAM_IS_VALID['password'] = params.password;
-        PARAM_IS_VALID['user_id'] = user_id;
-        PARAM_IS_VALID['enabled'] = true;
-        PARAM_IS_VALID['createat'] = new Date().getTime();
-        callback(null, null);
-      },
+      */
       function(callback) {
         bcrypt.genSalt(saltRounds, function(err, salt) {
           _salt = salt;
@@ -242,43 +176,6 @@ function register(req, res) {
         bcrypt.hash(params.password, _salt, function(err, hash) {
           _hash = hash;
           callback(err, null);
-        });
-      },
-      function(callback) {
-        models.instance.account_login.find({ username: PARAM_IS_VALID['username'] }, function(
-          err,
-          _user
-        ) {
-          if (_user != undefined && _user.length > 0) {
-            return res.json({
-              status: 'error',
-              message: 'Tài khoản đã tồn tại!',
-            });
-          }
-          callback(err, null);
-        });
-      },
-      function(callback) {
-        if (!params.captcha) {
-          return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
-        }
-        verificationUrl =
-          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
-          params.captcha +
-          '&remoteip=' +
-          req.connection.remoteAddress;
-        callback(null, null);
-      },
-      function(callback) {
-        request(verificationUrl, function(error, response, body) {
-          body = JSON.parse(body);
-          if (body.success == false) {
-            return res.json({
-              status: 'error',
-              message: 'Sai captcha',
-            });
-          }
-          callback(error, null);
         });
       },
       function(callback) {
@@ -299,33 +196,31 @@ function register(req, res) {
           password_salt: _salt,
           user_id: PARAM_IS_VALID.user_id,
         };
-        if (msg.length == 0) {
-          const account = () => {
-            let object = account_object;
-            let instance = new models.instance.account(object);
-            let save = instance.save({ if_exist: true, return_query: true });
-            return save;
-          };
-          queries.push(account());
-          const account_login = () => {
-            let object = account_login_object;
-            let instance = new models.instance.account_login(object);
-            let save = instance.save({ if_exist: true, return_query: true });
-            return save;
-          };
-          queries.push(account_login());
-        }
+        const account = () => {
+          let object = account_object;
+          let instance = new models.instance.account(object);
+          let save = instance.save({ if_exist: true, return_query: true });
+          return save;
+        };
+        queries.push(account());
+        const account_login = () => {
+          let object = account_login_object;
+          let instance = new models.instance.account_login(object);
+          let save = instance.save({ if_exist: true, return_query: true });
+          return save;
+        };
+        queries.push(account_login());
         callback(null, null);
       },
     ],
     function(err, result) {
-      if (err) res.json({ status: 'error' });
+      if (err) res.json({ status: 'error', message: err + '' });
       models.doBatch(queries, function(err) {
-        if (err) return res.json({ status: false });
+        if (err) return res.json({ status: 'error', message: err + '' });
         else {
           res.json({
             status: 'ok',
-            message: 'Đăng ký thành công!',
+            message: 'Đăng ký tài khoản thành công! Vui lòng đăng nhập!',
           });
         }
       });
@@ -433,15 +328,14 @@ function login(req, res) {
   var isLogin = false;
   var token = '';
   var msg = '';
+  var userInfo = [];
   var successBody = false;
   var verificationUrl = '';
-  var userInfo = [];
   async.series(
     [
       function(callback) {
         PARAM_IS_VALID['username'] = params.username;
         PARAM_IS_VALID['password'] = params.password;
-        PARAM_IS_VALID['captcha'] = params.captcha;
         callback(null, null);
       },
       function(callback) {
@@ -474,6 +368,7 @@ function login(req, res) {
         if (hashPassword != '') {
           bcrypt.compare(PARAM_IS_VALID['password'], hashPassword, function(err, result) {
             // res == true
+
             result ? (isLogin = result) : (msg = MESSAGE.USER_NOT_MATCH);
             callback(err, null);
           });
@@ -502,7 +397,8 @@ function login(req, res) {
         }
         callback(null, null);
       },
-      function(callback) {
+      /*
+        function(callback) {
         if (!params.captcha) {
           return res.json({ responseCode: 1, responseDesc: 'Please select captcha' });
         }
@@ -513,23 +409,19 @@ function login(req, res) {
           req.connection.remoteAddress;
         callback(null, null);
       },
+      */
     ],
     function(err, result) {
       let currentAuthority = { auth: isLogin, token: token };
       if (err) {
         res.json({ status: 'error', message: msg });
       } else {
-        request(verificationUrl, function(error, response, body) {
-          body = JSON.parse(body);
-          msg != '' || body.success == false
-            ? res.json({ status: 'error', message: msg, success: body.success })
-            : res.json({
-                status: 'ok',
-                currentAuthority: currentAuthority,
-                username: user[0].username,
-                success: body.success,
-              });
-        });
+        msg != ''
+          ? res.json({ status: 'error', message: msg })
+          : res.json({
+              status: 'ok',
+              currentAuthority: currentAuthority,
+            });
       }
     }
   );
@@ -581,17 +473,6 @@ function changePass(req, res) {
   var _hash = '';
   var saltRounds = 10;
   var queries = [];
-  var token = req.headers['x-access-token'];
-  var verifyOptions = {
-    expiresIn: '30d',
-    algorithm: ['RS256'],
-  };
-  var legit = {};
-  try {
-    legit = jwt.verify(token, jwtpublic, verifyOptions);
-  } catch (e) {
-    return res.send({ status: 'error' });
-  }
   async.series(
     [
       function(callback) {
@@ -657,7 +538,7 @@ function changePass(req, res) {
     function(err, result) {
       if (err) return res.json({ status: 'error' });
       models.doBatch(queries, function(err) {
-        if (err) return res.json({ status: 'error', message: 'batch' });
+        if (err) return res.json({ status: 'error' });
         else {
           return res.json({
             status: 'ok',
@@ -691,42 +572,19 @@ function getInfoUser(req, res) {
   });
 }
 function forgotPassword(req, res) {
-  var param = req.body;
+  var params = req.body;
   var PARAM_IS_VALID = {};
   var mailOptions = {};
   var transporter = {};
   var otpRandom = Math.floor(100000 + Math.random() * 900000);
   var queries = [];
   var info = '';
-  var successBody = {};
-  var verificationUrl = '';
   async.series(
     [
       function(callback) {
-        PARAM_IS_VALID.username = param.username;
+        PARAM_IS_VALID.username = params.username;
         PARAM_IS_VALID['createat'] = new Date().getTime() + 300 * 1000;
-        PARAM_IS_VALID['captcha'] = param.captcha;
         callback(null, null);
-      },
-      function(callback) {
-        if (!param.captcha) {
-          return res.json({ status: 'error', message: 'captcha chưa đúng!' });
-        }
-        verificationUrl =
-          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
-          param.captcha +
-          '&remoteip=' +
-          req.connection.remoteAddress;
-        callback(null, null);
-      },
-      function(callback) {
-        request(verificationUrl, function(error, response, body) {
-          successBody = JSON.parse(body);
-          if (successBody.success == false) {
-            return res.json({ status: 'error', message: 'Sai captcha!' });
-          }
-          callback(error, null);
-        });
       },
       function(callback) {
         models.instance.account_login.find({ username: PARAM_IS_VALID['username'] }, function(
@@ -804,8 +662,6 @@ function confirmOtp(req, res) {
   var _hash = '';
   var queries = [];
   var saltRounds = 10;
-  var successBody = {};
-  var verificationUrl = '';
   async.series(
     [
       function(callback) {
@@ -813,28 +669,7 @@ function confirmOtp(req, res) {
         PARAM_IS_VALID.otp = params.otp;
         PARAM_IS_VALID.newpassword = params.newpassword;
         PARAM_IS_VALID.createat = new Date().getTime();
-        PARAM_IS_VALID['captcha'] = params.captcha;
         callback(null, null);
-      },
-      function(callback) {
-        if (!params.captcha) {
-          return res.json({ status: 'error', message: 'captcha chưa đúng!' });
-        }
-        verificationUrl =
-          'https://www.google.com/recaptcha/api/siteverify?secret=6Ld1534UAAAAAFF8A3KCBEAfcfjS6COX9obBJrWV&response=' +
-          params.captcha +
-          '&remoteip=' +
-          req.connection.remoteAddress;
-        callback(null, null);
-      },
-      function(callback) {
-        request(verificationUrl, function(error, response, body) {
-          successBody = JSON.parse(body);
-          if (successBody.success == false) {
-            return res.json({ status: 'error', message: 'Sai captcha!' });
-          }
-          callback(error, null);
-        });
       },
       function(callback) {
         models.instance.user_by_otp.find(
@@ -990,7 +825,7 @@ function changeInfo(req, res) {
   );
 }
 function getOTP(req, res) {
-  var param = req.body;
+  var params = req.body;
   var PARAM_IS_VALID = {};
   var mailOptions = {};
   var transporter = {};
@@ -999,7 +834,7 @@ function getOTP(req, res) {
   async.series(
     [
       function(callback) {
-        PARAM_IS_VALID.username = param.username;
+        PARAM_IS_VALID.username = params.username;
         PARAM_IS_VALID['createat'] = new Date().getTime() + 300000;
         callback(null, null);
       },
@@ -1307,6 +1142,7 @@ function verifyEmail(req, res) {
           callback(err, null);
         });
       },
+
       function(callback) {
         models.instance.user_by_tokenverify.find(
           { username: PARAM_IS_VALID['username'] },
@@ -1320,7 +1156,7 @@ function verifyEmail(req, res) {
               if (timeOtp - timenow <= 0 || valueOtpByUser != valueOtp) {
                 return res.json({
                   status: 'error',
-                  message: 'Mã xác thực không hợp lệ hoặc đã hết hạn!',
+                  message: 'Mã xác thực không hợp lệ!',
                 });
               }
             } else {
@@ -1443,20 +1279,21 @@ function getDealSock(req, res) {
     }
   );
 }
-router.post('/register', register);
-router.post('/registerfb', registerfb);
-router.post('/login', login);
-router.post('/checkemail', checkEmail);
-router.post('/changepassword', changePass);
-router.post('/getinfo', getInfoUser);
-router.post('/forgotpassword', forgotPassword);
-router.post('/confirmotp', confirmOtp);
-router.post('/changeInfo', changeInfo);
-router.post('/getotp', getOTP);
-router.post('/gethelpbuy', getHelpBuy);
-router.post('addhelpbuy', addHelpBuy);
-router.post('/sethelpbuy', setHelpBuy);
-router.post('/deletehelpbuy', deleteHelpBuy);
-router.post('/verifyemail', verifyEmail);
-router.post('/dealsock', getDealSock);
-module.exports = router;
+export default {
+  'POST /api/authentication/register': register,
+  'POST /api/authentication/registerfb': registerfb,
+  'POST /api/authentication/login': login,
+  'POST /api/authentication/checkemail': checkEmail,
+  'POST /api/authentication/changepassword': changePass,
+  'POST /api/authentication/getinfo': getInfoUser,
+  'POST /api/authentication/forgotpassword': forgotPassword,
+  'POST /api/authentication/confirmotp': confirmOtp,
+  'POST /api/authentication/changeInfo': changeInfo,
+  'POST /api/authentication/getotp': getOTP,
+  'POST /api/authentication/gethelpbuy': getHelpBuy,
+  'POST /api/authentication/addhelpbuy': addHelpBuy,
+  'POST /api/authentication/sethelpbuy': setHelpBuy,
+  'POST /api/authentication/deletehelpbuy': deleteHelpBuy,
+  'POST /api/authentication/verifyemail': verifyEmail,
+  'POST /api/authentication/dealsock': getDealSock,
+};

@@ -16,6 +16,7 @@ import {
   setHelpBuy,
   deleteHelpBuy,
   verifyEmailRegister,
+  getDealSock,
 } from '@/services/api';
 
 export default {
@@ -37,6 +38,7 @@ export default {
     sethelpbuy: {},
     deletehelpbuy: {},
     verify: {},
+    dealSock: {},
   },
   effects: {
     *fetch(_, { call, put }) {
@@ -101,6 +103,13 @@ export default {
       const response = yield call(ForgotPassword, payload);
       yield put({
         type: 'forgotAuthentication',
+        payload: response || {},
+      });
+    },
+    *getdeal({ payload }, { call, put }) {
+      const response = yield call(getDealSock, payload);
+      yield put({
+        type: 'getdealsock',
         payload: response || {},
       });
     },
@@ -258,10 +267,22 @@ export default {
         },
       };
     },
+    getdealsock(state, action) {
+      return {
+        ...state,
+        getdealsock: action.payload,
+      };
+    },
     registration(state, action) {
       return {
         ...state,
         register: action.payload,
+      };
+    },
+    afterRegister(state) {
+      return {
+        ...state,
+        register: {},
       };
     },
     registrationfb(state, action) {

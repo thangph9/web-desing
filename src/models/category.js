@@ -5,7 +5,7 @@ export default {
   state: {
     list: [],
     breadcrumb: {},
-    sort: {},
+    search: {},
   },
 
   effects: {
@@ -34,29 +34,17 @@ export default {
         });
       }
     },
-    *sort({ payload }, { call, put }) {
+    *search({ payload }, { call, put }) {
       const response = yield call(getSearchSortProduct, payload);
       try {
         if (response.status === 'ok') {
           yield put({
-            type: 'querySort',
-            payload: typeof response.data.filterMap === 'object' ? response.data.filterMap : {},
-            breadcrumb:
-              typeof response.data.breadcrumb === 'object' ? response.data.breadcrumb : {},
-          });
-        } else {
-          yield put({
-            type: 'querySort',
-            payload: [],
-            breadcrumb: {},
+            type: 'querySearch',
+            payload: response.data,
           });
         }
       } catch (e) {
-        yield put({
-          type: 'querySort',
-          payload: [],
-          breadcrumb: {},
-        });
+        console.log(e);
       }
     },
     *detail({ payload }, { call, put }) {
@@ -90,11 +78,10 @@ export default {
         breadcrumb: action.breadcrumb,
       };
     },
-    querySort(state, action) {
+    querySearch(state, action) {
       return {
         ...state,
-        sort: action.payload,
-        breadcrumb: action.breadcrumb,
+        search: action.payload,
       };
     },
     queryDetail(state, action) {

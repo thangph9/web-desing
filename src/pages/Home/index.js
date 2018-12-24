@@ -1,3 +1,4 @@
+/* eslint-disable vars-on-top */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-redeclare */
 /* eslint-disable react/jsx-props-no-multi-spaces */
@@ -61,33 +62,15 @@ class ProductItem extends PureComponent {
     let nodeid = data.nodeid ? data.nodeid.replace(/\-/g, '') : 'null';
     let seoTitle = data.seo_link + '/' + nodeid;
     let thumbnail = data.thumbnail ? data.thumbnail.replace(/\-/g, '') : 'false';
-    let timeline = '';
-    let start, end;
-    let isDeath = false;
+    let timeline = 0;
+    var endHour = 0;
+    let start;
     if (data.death_clock) {
-      isDeath = true;
-      start = new Date().getTime();
-      end = new Date(data.death_clock.end).getTime();
-      let tmpTime = (end - start) / 1000;
+      start = new Date().getTime() / 1000;
+      var endTime = (Date.parse(data.death_clock.end) / 1000 - start) / 86400;
 
-      let day = '';
-      let hours = '';
-      let munite = '';
-      if (tmpTime > 2629743) {
-        timeline = Math.round(tmpTime / 2629743) + ' Tháng';
-      }
-      if (tmpTime > 604800 && tmpTime < 2629743) {
-        timeline = Math.round(tmpTime / 604800) + ' Tuần';
-      }
-      if (tmpTime > 86400 && tmpTime < 604800) {
-        timeline = Math.round(tmpTime / 86400) + ' Ngày ';
-      }
-      if (tmpTime > 3600 && tmpTime < 86400) {
-        timeline = Math.round(tmpTime / 3600) + ' Giờ ';
-      }
-      if (tmpTime > 60 && tmpTime < 3600) {
-        timeline = Math.round(tmpTime / 60) + ' Phút ';
-      }
+      timeline = Math.floor(endTime);
+      endHour = Math.floor((endTime - timeline) * 24);
     }
 
     return (
@@ -108,14 +91,36 @@ class ProductItem extends PureComponent {
             <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
               {`${data.title}`}
             </div>
-            {isDeath && (
+            {timeline > 0 ? (
               <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
                 <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
                   <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
                   <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>
-                  <span className={`${styles['end-time__timer___LMsIT']}`}>{timeline}</span>
+                  <span className={`${styles['end-time__timer___LMsIT']}`}>
+                    {timeline + ' Ngày '}
+                  </span>
+                  {endHour > 0 && (
+                    <span className={`${styles['end-time__timer___LMsIT']}`}>
+                      {endHour + ' Giờ'}
+                    </span>
+                  )}
                 </span>
               </div>
+            ) : (
+              timeline == 0 &&
+              endHour > 0 && (
+                <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
+                  <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
+                    <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
+                    <span className={`${styles['end-time__text___1A-sx']}`}> Còn </span>
+                    {endHour > 0 && (
+                      <span className={`${styles['end-time__timer___LMsIT']}`}>
+                        {endHour + ' Giờ'}
+                      </span>
+                    )}
+                  </span>
+                </div>
+              )
             )}
           </div>
         </div>

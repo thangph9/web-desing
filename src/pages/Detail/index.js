@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-computed-key */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/sort-comp */
 /* eslint-disable operator-assignment */
@@ -105,15 +106,31 @@ class Detail extends PureComponent {
   handleClickDesciption(idDetail) {
     var body = document.getElementById('app__body___3NlTJ');
     var width = body.offsetWidth;
-    if (width < 767) {
+    if (width <= 767) {
       var element = document.getElementById(idDetail);
       if (element.style.display == 'block') {
         element.style.display = 'none';
+        this.setState({
+          [idDetail]: !this.state[idDetail],
+        });
       } else {
         var collapselow = document.getElementsByClassName('collapselow');
         for (var i = 0; i < collapselow.length; i++) {
           collapselow[i].style.display = 'none';
         }
+        this.setState(
+          {
+            ['info-product']: false,
+            ['material']: false,
+            ['size-table']: false,
+            ['info-brand']: false,
+          },
+          () => {
+            this.setState({
+              [idDetail]: true,
+            });
+          }
+        );
         element.style.display = 'block';
       }
     } else {
@@ -123,10 +140,10 @@ class Detail extends PureComponent {
       } else {
         element.style.display = 'block';
       }
+      this.setState({
+        [idDetail]: !this.state[idDetail],
+      });
     }
-    this.setState({
-      [idDetail]: !this.state[idDetail],
-    });
   }
   setCookieDetail(product) {
     this.props.dispatch({
@@ -915,7 +932,7 @@ class Detail extends PureComponent {
                                 <ul
                                   className={`${styles['product-description__desc-list___3qcUM']}`}
                                 >
-                                  {ReactHtmlParser(data.desc_detail)}
+                                  {ReactHtmlParser(data.size_desc)}
                                 </ul>
                               </div>
                             </div>
@@ -985,16 +1002,7 @@ class Detail extends PureComponent {
                                 styles['product-description__about-the-brand___3lT4W']
                               }`}
                             >
-                              <h4 className={`${styles['product-description__heading___Mrl6O']}`}>
-                                "Đem đến cho bạn nhiều điều bình an"
-                              </h4>
-                              <div className={`${styles['product-description__desc___Pym2G']}`}>
-                                Trang sức đá tự nhiên không chỉ là nguồn thu hút những năng lượng
-                                tốt mà còn để làm"điệu". J Natural Stones® ra đời với giá cả cạnh
-                                tranh, chế tác tinh xảo, sản phẩm kiểm định nguồn gốc rõ ràng sẽ là
-                                phụ kiện tạo được điểm nhấn làm nổi bật cá tính riêng biệt trong mỗi
-                                người.
-                              </div>
+                              {ReactHtmlParser(data.desc_detail)}
                             </div>
                           </div>
                         </div>
