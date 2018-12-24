@@ -552,8 +552,14 @@ function productSearch(req,res){
       }    
     ],
     function(err, result) {
+        var total=1;
+        var rs=[];
+    if(results.items && results.items.length > 0){
+        total=results.items.length;
+        rs=results.items
+    }  
       if (err) return res.send({ status: 'error' });
-      res.send({ status: 'ok', data:{list: results.items,pagination: {total : results.items.length,current: current} , filterMap: filterMap,raito: results.raito}});
+      res.send({ status: 'ok', data:{list: rs,pagination: {total : total,current: current} , filterMap: filterMap,raito: results.raito}});
     }
   );
 }
