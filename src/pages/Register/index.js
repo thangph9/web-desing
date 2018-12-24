@@ -312,8 +312,8 @@ class Register extends PureComponent {
       if (user.register.status == 'error') {
         validateStt = 'error';
         help_pass = user.register.message;
-      } else if (MESSAGE.CONFIRM_TOKEN == user.register.message) {
-        help_pass = MESSAGE.CONFIRM_TOKEN;
+      } else {
+        help_pass = user.register.message;
       }
     }
     const meta = {
@@ -330,8 +330,8 @@ class Register extends PureComponent {
 
     const tailFormItemLayout = {};
     const { getFieldDecorator } = this.props.form;
-    if (localStorage.account) {
-      return <Redirect to={`/accountinformation`} />;
+    if (user.register.status == 'ok') {
+      return <Redirect to={`/login`} />;
     }
     return (
       <DocumentMeta {...meta}>

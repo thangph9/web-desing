@@ -55,6 +55,7 @@ import {
   Input,
   DatePicker,
   Select,
+  message,
   Button,
   Card,
   InputNumber,
@@ -108,6 +109,12 @@ class Login extends PureComponent {
       this.setState({ load: true });
     }, DELAY);
     if (localStorage.email) localStorage.removeItem('email');
+    if (this.props.user.register.status == 'ok') {
+      message.success('Đăng ký tài khoản thành công! Vui lòng đăng nhập!', 5);
+    }
+    this.props.dispatch({
+      type: 'user/afterRegister',
+    });
   }
   handleSubmit = e => {
     e.preventDefault();

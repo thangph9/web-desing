@@ -47,8 +47,14 @@ class GlobalHeader extends PureComponent {
     localStorage.removeItem('account');
     this.setState({
       open: false,
+      openHelp: false,
     });
     this.props.history.push('/login');
+  }
+  handleClickOpenHelp() {
+    this.setState({
+      openHelp: !this.state.openHelp,
+    });
   }
   render() {
     const { collapsed, isMobile, logo } = this.props;
@@ -105,13 +111,59 @@ class GlobalHeader extends PureComponent {
                   </Link>
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link
+                  <a
+                    onClick={() => this.handleClickOpenHelp()}
                     style={{ textDecoration: 'none' }}
-                    to={`/helpbuy`}
-                    className={`${styles['header__nav-link___3W4sc']}`}
+                    className={`${styles['header__nav-link___3W4sc'] +
+                      ' ' +
+                      styles['language-dropdown__dropdown-toggle___3DM4H']}`}
                   >
                     Mua hộ
-                  </Link>
+                  </a>
+                  {this.state.openHelp ? (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '29px',
+                        left: '0px',
+                        boxShadow: 'rgba(78, 89, 93, 0.15) 0px 8px 11px 0px',
+                        zIndex: 10,
+                        background: 'rgb(255, 255, 255)',
+                        padding: '9px 0px',
+                      }}
+                    >
+                      <div style={{ minWidth: '159px' }}>
+                        <Link
+                          to={`/helpbuy`}
+                          onClick={() => this.handleClickOpenHelp()}
+                          className={
+                            styles['jsx-2989784357'] +
+                            ' ' +
+                            styles['dropdown-item'] +
+                            ' ' +
+                            styles['item-login']
+                          }
+                        >
+                          Đăng ký mua sản phẩm
+                        </Link>
+                        <Link
+                          to={`/list-helpbuy`}
+                          onClick={() => this.handleClickOpenHelp()}
+                          className={
+                            styles['jsx-2989784357'] +
+                            ' ' +
+                            styles['dropdown-item'] +
+                            ' ' +
+                            styles['item-login']
+                          }
+                        >
+                          Danh sách sản phẩm đã đăng ký
+                        </Link>
+                      </div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
                   <Link to={`/adidas`} className={`${styles['header__nav-link___3W4sc']}`} />
@@ -172,7 +224,6 @@ class GlobalHeader extends PureComponent {
                           ] +
                             ' ' +
                             styles['language-dropdown__dropdown-toggle___3DM4H']}`}
-                          href="/auth/signin?redirect=/"
                         >
                           Tài khoản
                         </span>
@@ -182,7 +233,6 @@ class GlobalHeader extends PureComponent {
                           className={`${styles['auth-buttons__nav-link___1DCMU']} ${
                             styles['auth-buttons__btn-sign-in___1nV-O']
                           }`}
-                          href="/auth/signin?redirect=/"
                         >
                           Đăng nhập
                         </Link>

@@ -129,6 +129,11 @@ export default [
         component: './HelpBuy/',
       },
       {
+        path: '/list-helpbuy',
+        name: 'listhelpbuy',
+        component: './ListHelpBuy/',
+      },
+      {
         path: '/help-about',
         name: 'helpabout',
         component: './HelpAbout/',

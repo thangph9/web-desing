@@ -56,7 +56,7 @@ const MESSAGE = {
   USER_EXISTS: 'Tài khoản đã được sử dụng',
   CONFIRM_TOKEN: 'Vui lòng kiểm tra Email của bạn để xác thực tài khoản',
 };
-function register(req, res) {
+/*function register(req, res) {
   var params = req.body;
   let user_id = Uuid.random();
   var mailOptions = {};
@@ -206,18 +206,16 @@ function register(req, res) {
       });
     }
   );
-}
-/* function register(req, res) {
+}*/
+function register(req, res) {
   var params = req.body;
   let user_id = Uuid.random();
   let saltRounds = 10;
   var queries = [];
-  let token = undefined;
   var _salt = '';
   var _hash = '';
   var msg = '';
   var PARAM_IS_VALID = {};
-  var successBody = false;
   var verificationUrl = '';
   async.series(
     [
@@ -233,24 +231,6 @@ function register(req, res) {
         PARAM_IS_VALID['enabled'] = true;
         PARAM_IS_VALID['createat'] = new Date().getTime();
         callback(null, null);
-      },
-      function(callback) {
-        models.instance.user_by_otp.find(
-          { username: PARAM_IS_VALID['username'] },
-          { allow_filtering: true },
-          function(err, _user) {
-            if (_user != undefined && _user.length > 0) {
-              let timeOtp = Date.parse(_user[0].time);
-              let timenow = PARAM_IS_VALID.createat;
-              let valueOtpByUser = _user[0].otp;
-              let valueOtp = Number(PARAM_IS_VALID.otp);
-              if (timeOtp - timenow < 0 || valueOtpByUser != valueOtp) {
-                return res.json({ status: 'error', message: 'Sai OTP hoặc OTP hết hạn!' });
-              }
-            }
-            callback(err, null);
-          }
-        );
       },
       function(callback) {
         bcrypt.genSalt(saltRounds, function(err, salt) {
@@ -270,7 +250,10 @@ function register(req, res) {
           _user
         ) {
           if (_user != undefined && _user.length > 0) {
-            msg = MESSAGE.USER_EXISTS;
+            return res.json({
+              status: 'error',
+              message: 'Tài khoản đã tồn tại!',
+            });
           }
           callback(err, null);
         });
@@ -289,7 +272,12 @@ function register(req, res) {
       function(callback) {
         request(verificationUrl, function(error, response, body) {
           body = JSON.parse(body);
-          successBody = body.success;
+          if (body.success == false) {
+            return res.json({
+              status: 'error',
+              message: 'Sai captcha',
+            });
+          }
           callback(error, null);
         });
       },
@@ -332,43 +320,18 @@ function register(req, res) {
     ],
     function(err, result) {
       if (err) res.json({ status: 'error' });
-      try {
-        token = jwt.sign(
-          {
-            userid: PARAM_IS_VALID.user_id,
-            username: PARAM_IS_VALID.email,
-            name: PARAM_IS_VALID.fullname,
-            phone: PARAM_IS_VALID.phone,
-            address: PARAM_IS_VALID.address,
-          },
-          jwtprivate,
-          {
-            expiresIn: '30d', // expires in 30 day
-            algorithm: 'RS256',
-          }
-        );
-      } catch (e) {
-        console.log(e);
-      }
-      let isLogin = false;
-      if (token != undefined) {
-        isLogin = true;
-      }
-      let currentAuthority = { auth: isLogin, token: token };
       models.doBatch(queries, function(err) {
         if (err) return res.json({ status: false });
         else {
-          msg.length > 0 || successBody == false
-            ? res.json({ status: 'error', message: msg })
-            : res.json({
-                status: 'ok',
-                currentAuthority: currentAuthority,
-              });
+          res.json({
+            status: 'ok',
+            message: 'Đăng ký thành công!',
+          });
         }
       });
     }
   );
-}*/
+}
 function registerfb(req, res) {
   var params = req.body;
   let user_id = Uuid.random();
@@ -1164,9 +1127,11 @@ function addHelpBuy(req, res) {
         PARAM_IS_VALID.nameproduct = params.name;
         PARAM_IS_VALID.link = params.link;
         PARAM_IS_VALID.note = params.note;
+        PARAM_IS_VALID.color = params.color;
+        PARAM_IS_VALID.size = params.size;
         PARAM_IS_VALID.total = Number(params.count);
         PARAM_IS_VALID.createat = new Date().getTime();
-        PARAM_IS_VALID.status = 'waiting';
+        PARAM_IS_VALID.status = false;
         callback(null, null);
       },
       function(callback) {
@@ -1191,6 +1156,8 @@ function addHelpBuy(req, res) {
           phone: PARAM_IS_VALID['phone'],
           note: PARAM_IS_VALID['note'],
           total: PARAM_IS_VALID['total'],
+          size: PARAM_IS_VALID['size'],
+          color: PARAM_IS_VALID['color'],
           status: PARAM_IS_VALID['status'],
         };
         const help_buy_by_user = () => {
@@ -1221,17 +1188,19 @@ function setHelpBuy(req, res) {
   async.series(
     [
       function(callback) {
-        PARAM_IS_VALID.nameproduct = params.name;
+        PARAM_IS_VALID.nameproduct = params.nameproduct;
         PARAM_IS_VALID.link = params.link;
-        PARAM_IS_VALID.note = params.note;
+        PARAM_IS_VALID.size = params.size;
+        PARAM_IS_VALID.color = params.color;
         PARAM_IS_VALID.total = Number(params.total);
         callback(null, null);
       },
       function(callback) {
         let help_buy_by_user_object = {
           nameproduct: PARAM_IS_VALID['nameproduct'],
-          note: PARAM_IS_VALID['note'],
           total: PARAM_IS_VALID['total'],
+          color: PARAM_IS_VALID['color'],
+          size: PARAM_IS_VALID['size'],
         };
         const help_buy_by_user = () => {
           let object = help_buy_by_user_object;

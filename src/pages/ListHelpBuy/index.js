@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-return-assign */
 /* eslint-disable camelcase */
@@ -58,7 +59,7 @@ import {
   Select,
   Button,
   Card,
-  message,
+  Table,
   InputNumber,
   Radio,
   Icon,
@@ -70,16 +71,60 @@ import {
   Cascader,
   Popover,
   Progress,
+  Popconfirm,
+  message,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import styles from './index1.less';
+import styles from './index.less';
 
 const FormItem = Form.Item;
-const { Option } = Select;
-const { RangePicker } = DatePicker;
-const { TextArea } = Input;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
+const EditableContext = React.createContext();
+
+const EditableRow = ({ form, index, ...props }) => (
+  <EditableContext.Provider value={form}>
+    <tr {...props} />
+  </EditableContext.Provider>
+);
+const EditableFormRow = Form.create()(EditableRow);
+
+class EditableCell extends React.Component {
+  render() {
+    const { editing, dataIndex, title, inputType, record, index, ...restProps } = this.props;
+    console.log(dataIndex);
+    return (
+      <EditableContext.Consumer>
+        {form => {
+          const { getFieldDecorator } = form;
+          return (
+            <td {...restProps}>
+              {editing ? (
+                <FormItem style={{ margin: 0 }}>
+                  {getFieldDecorator(dataIndex, {
+                    rules: [
+                      {
+                        required: true,
+                        message: `Vui lòng nhập ${title}!`,
+                      },
+                    ],
+                    initialValue: record[dataIndex],
+                  })(
+                    <Input
+                      disabled={dataIndex === 'link' && true}
+                      type={dataIndex === 'total' ? 'number' : undefined}
+                      min={dataIndex === 'total' ? '1' : undefined}
+                    />
+                  )}
+                </FormItem>
+              ) : (
+                restProps.children
+              )}
+            </td>
+          );
+        }}
+      </EditableContext.Consumer>
+    );
+  }
+}
 
 @connect(({ loading, user }) => ({
   submitting: loading.effects['form/submitRegularForm'],
@@ -87,23 +132,153 @@ const RadioGroup = Radio.Group;
   user,
 }))
 @Form.create()
-class HelpBuy extends PureComponent {
+class ListHelpBuy extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      editingKey: '',
+    };
+    this.columns = [
+      {
+        title: 'STT',
+        dataIndex: 'index',
+        key: 'index',
+        width: '5%',
+        align: 'center',
+      },
+      {
+        title: 'Ngày mua',
+        dataIndex: 'date',
+        key: 'date',
+        width: '10%',
+        align: 'center',
+      },
+      {
+        title: 'Tên sản phẩm',
+        dataIndex: 'nameproduct',
+        key: 'nameproduct',
+        width: '15%',
+        editable: true,
+        align: 'center',
+      },
+      {
+        title: 'Địa chỉ link sản phẩm',
+        dataIndex: 'link',
+        key: 'link',
+        width: '20%',
+        align: 'center',
+        editable: true,
+      },
+      {
+        title: 'Màu sắc',
+        dataIndex: 'color',
+        key: 'color',
+        width: '10%',
+        editable: true,
+        align: 'center',
+      },
+      {
+        title: 'Kích cỡ',
+        dataIndex: 'size',
+        key: 'size',
+        width: '10%',
+        editable: true,
+        align: 'center',
+      },
+      {
+        title: 'Số lượng',
+        dataIndex: 'total',
+        key: 'total',
+        width: '10%',
+        editable: true,
+        align: 'center',
+      },
+      {
+        title: 'Trạng thái',
+        dataIndex: 'status',
+        key: 'status',
+        width: '10%',
+        align: 'center',
+      },
+      {
+        title: 'Chỉnh sửa',
+        align: 'center',
+        dataIndex: 'operation',
+        width: '10%',
+        render: (text, record, index) => {
+          const editable = this.isEditing(record);
+          console.log(this.props.user.gethelpbuy);
+          return (
+            <div>
+              {this.props.user.gethelpbuy &&
+              this.props.user.gethelpbuy.length > 0 &&
+              this.props.user.gethelpbuy[index].status == true ? (
+                <span />
+              ) : editable ? (
+                <span>
+                  <EditableContext.Consumer>
+                    {form => (
+                      <a
+                        onClick={() => this.save(form, record.key)}
+                        style={{ marginRight: 8, color: '#16accf' }}
+                      >
+                        Lưu lại
+                      </a>
+                    )}
+                  </EditableContext.Consumer>
+                  <Popconfirm
+                    title="Bạn có chắc muốn thoát?"
+                    onConfirm={() => this.cancel(record.key)}
+                  >
+                    <a style={{ marginRight: 8, color: 'red' }}>Hủy</a>
+                  </Popconfirm>
+                </span>
+              ) : (
+                <a style={{ color: '#16accf' }} onClick={() => this.edit(record.key)}>
+                  Chỉnh sửa
+                </a>
+              )}
+            </div>
+          );
+        },
+      },
+    ];
+  }
+  isEditing = record => record.key === this.state.editingKey;
+  cancel = () => {
+    this.setState({ editingKey: '' });
+  };
+  save(form, key) {
+    form.validateFields((error, row) => {
+      if (error) {
+        return;
+      }
+      this.props.dispatch({
+        type: 'user/sethelpbuy',
+        payload: row,
+      });
+      setTimeout(() => {
+        this.props.dispatch({
+          type: 'user/gethelpbuy',
+        });
+      }, 500);
+    });
+    this.setState({ editingKey: '' });
   }
 
+  edit(key) {
+    this.setState({ editingKey: key });
+  }
   componentDidMount() {
+    this.props.dispatch({
+      type: 'user/gethelpbuy',
+    });
     if (!localStorage.account) {
-      message.warning('Vui lòng đăng nhập để thực hiện chức năng này!', 5);
+      message.warning('Vui lòng đăng nhập để xem thông tin đã đăng ký!', 5);
     }
   }
   handleSubmit = e => {
     e.preventDefault();
-    if (!localStorage.account) {
-      message.warning('Vui lòng đăng nhập để thực hiện chức năng này!', 5);
-      return;
-    }
     if (this.props.form.getFieldValue('count') && this.props.form.getFieldValue('count') < 1) {
       message.error('Số lượng không hợp lệ!');
       return;
@@ -118,6 +293,27 @@ class HelpBuy extends PureComponent {
     });
   };
   render() {
+    const components = {
+      body: {
+        row: EditableFormRow,
+        cell: EditableCell,
+      },
+    };
+    const columns = this.columns.map(col => {
+      if (!col.editable) {
+        return col;
+      }
+      return {
+        ...col,
+        onCell: record => ({
+          record,
+          inputType: col.dataIndex === 'total' ? 'number' : 'text',
+          dataIndex: col.dataIndex,
+          title: col.title,
+          editing: this.isEditing(record),
+        }),
+      };
+    });
     const tailFormItemLayout = {};
     const { getFieldDecorator } = this.props.form;
     const { user } = this.props;
@@ -141,6 +337,29 @@ class HelpBuy extends PureComponent {
         },
       },
     };
+    var dataTable = [];
+    if (this.props.user.gethelpbuy && this.props.user.gethelpbuy.length > 0) {
+      this.props.user.gethelpbuy.forEach((v, i) => {
+        var timeCreate = new Date(v.createat);
+        var stringTime =
+          timeCreate.getDate() +
+          '/' +
+          Number(timeCreate.getMonth() + 1) +
+          '/' +
+          timeCreate.getFullYear();
+        var productTable = {};
+        productTable.key = i + '';
+        productTable.index = i + 1;
+        productTable.date = stringTime;
+        productTable.nameproduct = v.nameproduct;
+        productTable.link = v.link;
+        productTable.total = v.total;
+        productTable.color = v.color;
+        productTable.size = v.size;
+        productTable.status = v.status ? 'Đã mua' : 'Đang chờ';
+        dataTable.push(productTable);
+      });
+    }
     return (
       <DocumentMeta {...meta}>
         <div className={styles['paste-link-head']}>
@@ -205,63 +424,18 @@ class HelpBuy extends PureComponent {
                   </div>
                 </div>
               </div>
-              <p>Paste product link you want to buy to get quote</p>
+
               <section id={styles['pastelink']}>
-                <div style={{ width: '60%', margin: '0 auto' }} className={styles['container']}>
+                <div style={{ margin: '0 auto' }} className={styles['container']}>
                   <div className={styles['row']}>
                     <div className={styles['col-xs-12']}>
-                      <Form onSubmit={this.handleSubmit}>
-                        <FormItem>
-                          {getFieldDecorator('name', {
-                            rules: [
-                              {
-                                required: true,
-                                message: 'Vui lòng nhập tên sản phẩm!',
-                              },
-                            ],
-                          })(<Input size="large" placeholder="Tên sản phẩm" />)}
-                        </FormItem>
-                        <FormItem>
-                          {getFieldDecorator('link', {
-                            rules: [
-                              {
-                                required: true,
-                                message: 'Vui lòng nhập link sản phẩm!',
-                              },
-                            ],
-                          })(<Input size="large" placeholder="Link sản phẩm" />)}
-                        </FormItem>
-                        <FormItem>
-                          {getFieldDecorator('count', {
-                            rules: [
-                              {
-                                required: true,
-                                message: 'Vui lòng nhập số lượng sản phẩm!',
-                              },
-                            ],
-                          })(<Input size="large" type="number" placeholder="Số lượng" />)}
-                        </FormItem>
-                        <FormItem>
-                          {getFieldDecorator('color', {
-                            rules: [{}],
-                          })(<Input size="large" placeholder="Màu sắc" />)}
-                        </FormItem>
-                        <FormItem>
-                          {getFieldDecorator('size', {
-                            rules: [{}],
-                          })(<Input size="large" placeholder="Kích cỡ" />)}
-                        </FormItem>
-                        <FormItem>
-                          {getFieldDecorator('note', {
-                            rules: [{}],
-                          })(<TextArea placeholder="Ghi chú" rows={4} />)}
-                        </FormItem>
-                        <FormItem>
-                          <Button type="primary" block htmlType="submit" size="large">
-                            Yêu cầu
-                          </Button>
-                        </FormItem>
-                      </Form>
+                      <Table
+                        components={components}
+                        style={{ marginTop: '30px' }}
+                        columns={columns}
+                        dataSource={dataTable}
+                        bordered
+                      />
                     </div>
                   </div>
                 </div>
@@ -274,4 +448,4 @@ class HelpBuy extends PureComponent {
   }
 }
 
-export default HelpBuy;
+export default ListHelpBuy;
