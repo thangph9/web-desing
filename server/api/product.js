@@ -30,7 +30,7 @@ function productList(req,res){
             callback(null,null);    
         },
         function(callback){
-            models.instance.category.find({$solr_query:'{"q": "category: *ef4a584e-3497-4b55-8991-55146d5a4757*"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+            models.instance.category.find({$solr_query:'{"q": "category: *ef4a584e-3497-4b55-8991-55146d5a4757*"}'},{select: ['title','thumbnail','seo_link','nodeid','death_clock']},function(err,res){
                 if(res){
                     results['news']=res;
                 }
@@ -38,7 +38,7 @@ function productList(req,res){
             })
         },
         function(callback){
-            models.instance.category.find({$solr_query:'{"q": "category: *af739c5a-fa25-44bf-bc83-56fadcb1967f*"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+            models.instance.category.find({$solr_query:'{"q": "category: *af739c5a-fa25-44bf-bc83-56fadcb1967f*"}'},{select: ['title','thumbnail','seo_link','nodeid','death_clock']},function(err,res){
                 if(res){
                     results['days']=res;
                 }
@@ -46,7 +46,7 @@ function productList(req,res){
             })
         },
         function(callback){
-             models.instance.category.find({$solr_query:'{"q": "category: *08ecb1e-cabf-4328-9ddc-011ca55a156d*"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+             models.instance.category.find({$solr_query:'{"q": "category: *08ecb1e-cabf-4328-9ddc-011ca55a156d*"}'},{select: ['title','thumbnail','seo_link','nodeid','death_clock']},function(err,res){
                 if(res){
                     results['hotnew']=res;
                 }
@@ -54,7 +54,7 @@ function productList(req,res){
             })
         },
         function(callback){
-             models.instance.category.find({$solr_query:'{"q": "category: *07081437-d862-48d0-9987-4f656bd2de30*"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+             models.instance.category.find({$solr_query:'{"q": "category: *07081437-d862-48d0-9987-4f656bd2de30*"}'},{select: ['title','thumbnail','seo_link','nodeid','death_clock']},function(err,res){
                 if(res){
                     results['bestSeller']=res;
                 }
@@ -95,6 +95,7 @@ function productDetail(req, res) {
   let raito = {};
   let nodeid='';
   let breadcrumb=[];
+  var category=[];
   async.series(
     [
       function(callback) {
@@ -191,6 +192,7 @@ function productCategory(req, res) {
   let results = {};
   let PARAMS_IS_VALID = {};
   const params = req.body;
+  var currency=[];
   async.series(
     [
       function(callback) {
@@ -229,9 +231,15 @@ function productCategory(req, res) {
               callback(err,null);
           })
       },
-      function(callback){
-          callback(null,null);
-      }
+        
+      function(callback) {
+          models.instance.currency_raito.find({}, function(err, items) {
+            if (items && items.length > 0) {
+              results['raito']=items;
+            }
+            callback(err, null);
+          });
+      },  
     ],
     function(err, result) {
       if (err) return res.send({ status: 'error' });
@@ -521,14 +529,24 @@ function productSearch(req,res){
       },
       function(callback) {
         models.instance.product_detail.find({$solr_query: query}, function(err, res) {
-          if (res) {
-            results = res;
+          if (res && res.length > 0) {
+            results.items = res;
           }
           callback(err, null);
         });
       },
+      function(callback) {
+       
+          models.instance.currency_raito.find({}, function(err, items) {
+            if (items && items.length > 0) {
+              results.raito=items;
+              
+            }
+            callback(err, null);
+          });
+      },    
       function(callback){
-          renderFilter(results,function(err,r){
+          renderFilter(results.items,function(err,r){
               filterMap=r;
               callback(err,null);
           });
@@ -537,7 +555,7 @@ function productSearch(req,res){
     ],
     function(err, result) {
       if (err) return res.send({ status: 'error' });
-      res.send({ status: 'ok', data:{list: results,pagination: {total : results.length,current: current} , filterMap: filterMap}});
+      res.send({ status: 'ok', data:{list: results.items,pagination: {total : results.items.length,current: current} , filterMap: filterMap}});
     }
   );
 }
