@@ -244,6 +244,7 @@ class ListHelpBuy extends PureComponent {
       },
     ];
   }
+
   isEditing = record => record.key === this.state.editingKey;
   cancel = () => {
     this.setState({ editingKey: '' });
@@ -292,6 +293,7 @@ class ListHelpBuy extends PureComponent {
       }
     });
   };
+
   render() {
     const components = {
       body: {
@@ -435,6 +437,7 @@ class ListHelpBuy extends PureComponent {
                         columns={columns}
                         dataSource={dataTable}
                         bordered
+                        pagination={{ pageSize: 1 }}
                       />
                     </div>
                   </div>
