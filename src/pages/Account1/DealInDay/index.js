@@ -48,7 +48,6 @@ import ReactHtmlParser, {
   convertNodeToElement,
   htmlparser2,
 } from 'react-html-parser';
-import { formatMessage, FormattedMessage } from 'umi/locale';
 import {
   Form,
   Input,
