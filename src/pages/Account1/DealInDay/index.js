@@ -208,20 +208,24 @@ class DealInDay extends PureComponent {
                             </div>
                           }
                           title={
-                            <Link to={`/deal-about`} className={styles['title-eclipsis']}>
-                              {item.title}
+                            <Link to={`/account/about-deal`} className={styles['title-eclipsis']}>
+                              {item.title ? item.title : ''}
                             </Link>
                           }
                           description={
                             <div style={{ position: 'relative' }}>
                               <div className={styles['short-desc-eclipses']}>{item.short_desc}</div>
                               <br />
-                              <span>Ngày bắt đầu: {this.formatTime(item.expired.start)} </span>
+                              <span>
+                                Ngày bắt đầu: {item.expired && this.formatTime(item.expired.start)}{' '}
+                              </span>
                               <br />
-                              <span>Ngày Kết thúc: {this.formatTime(item.expired.end)} </span>
+                              <span>
+                                Ngày Kết thúc: {item.expired && this.formatTime(item.expired.end)}{' '}
+                              </span>
                               <br />
                               <div className={styles['list-extra']}>
-                                <span>{this.statusTime(item.expired.end)}</span>
+                                <span>{item.expired && this.statusTime(item.expired.end)}</span>
                               </div>
                             </div>
                           }
