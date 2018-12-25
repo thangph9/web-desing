@@ -11,6 +11,17 @@ export default [
     ],
   },
   {
+    path: '/account',
+    component: '../layouts/AccountLayout',
+    routes: [
+      { path: '/account/accountinformation', component: './Account1/AccountInformation/' },
+      { path: '/account/helpbuy', component: './HelpBuy/' },
+      { path: '/account/helpbuylist', component: './ListHelpBuy/' },
+      { path: '/account/dealinday', component: './Account1/DealInday/' },
+      { path: '/account/about-deal', component: './AboutDeal' },
+    ],
+  },
+  {
     path: '/checkout',
     component: '../layouts/CheckoutLayout',
     routes: [
@@ -74,7 +85,7 @@ export default [
         component: './Detail/',
       },
       {
-        path: '/ebay',
+        path: '/Ebay',
         name: 'ebay',
         component: './Ebay/',
       },
@@ -104,34 +115,9 @@ export default [
         component: './ListCategory/',
       },
       {
-        path: '/accountinformation',
-        name: 'accountinformation',
-        component: './Account1/AccountInformation/',
-      },
-      {
-        path: '/order',
-        name: 'accountinorder',
-        component: './Account1/AccountOrder/',
-      },
-      {
-        path: '/accountaddress',
-        name: 'accountaddress',
-        component: './Account1/AccountAddress/',
-      },
-      {
         path: '/register',
         name: 'register',
         component: './Register/',
-      },
-      {
-        path: '/helpbuy',
-        name: 'helpbuy',
-        component: './HelpBuy/',
-      },
-      {
-        path: '/list-helpbuy',
-        name: 'listhelpbuy',
-        component: './ListHelpBuy/',
       },
       {
         path: '/help-about',

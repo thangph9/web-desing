@@ -1,3 +1,4 @@
+/* eslint-disable no-sequences */
 /* eslint-disable no-fallthrough */
 /* eslint-disable default-case */
 /* eslint-disable react/jsx-no-duplicate-props */
@@ -162,8 +163,9 @@ class ListCategory extends PureComponent {
         body: 'HIGH_PRICE',
       },
       search: '',
-      category: [],
+      color: [],
       size: [],
+      style: [],
       type: [],
       brand: [],
       sortState: ['RECOMMEND'],
@@ -177,7 +179,7 @@ class ListCategory extends PureComponent {
       sort.style.display = 'none';
     } else sort.style.display = 'block';
   }
-  handleScroll() {
+  /* handleScroll() {
     var screen = document.getElementById('screen');
     var scroll = document.documentElement.scrollTop;
     var scrollHeight = window.document.body.scrollHeight;
@@ -204,7 +206,9 @@ class ListCategory extends PureComponent {
         saleFilter != null
       ) {
         filterDiv = document.getElementById('transform-fixed');
-        saleFilter.classList.add('order-pages-list-category-index-sale__fixed-position___P7XwH');
+        saleFilter.classList.add(
+          'order-pages-list-category-index-sale__fixed-position___P7XwH'
+        );
         filterDiv.classList.remove(
           'order-pages-list-category-index-sale__position-absolute___1tZOO'
         );
@@ -224,7 +228,9 @@ class ListCategory extends PureComponent {
         }
       }
       if (scroll < 115 && idFix != null && saleFilter != null) {
-        saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
+        saleFilter.classList.remove(
+          'order-pages-list-category-index-sale__fixed-position___P7XwH'
+        );
         rowFilter.removeChild(idFix);
         filterDiv = document.getElementById('transform-fixed');
         filterDiv.classList.remove(
@@ -234,24 +240,61 @@ class ListCategory extends PureComponent {
         filterDiv.style.transition = 'transform 0.5s ease';
       }
       if (scroll >= screen.clientHeight - 1184 && idFix != null) {
-        saleFilter.classList.remove('order-pages-list-category-index-sale__fixed-position___P7XwH');
+        saleFilter.classList.remove(
+          'order-pages-list-category-index-sale__fixed-position___P7XwH'
+        );
         filterDiv = document.getElementById('transform-fixed');
         rowFilter.removeChild(idFix);
-        filterDiv.classList.add('order-pages-list-category-index-sale__position-absolute___1tZOO');
+        filterDiv.classList.add(
+          'order-pages-list-category-index-sale__position-absolute___1tZOO'
+        );
       }
     }
-  }
+  } */
   componentDidMount() {
     var { dispatch, match } = this.props;
     var sort = this.props.location.query.sort;
     if (this.props.location.query.brand) {
       this.setState({
-        brand: [...this.state.brand, this.props.location.query.brand],
+        brand: this.props.location.query.brand.split(','),
+      });
+    }
+    if (this.props.location.query.style) {
+      this.setState({
+        style: this.props.location.query.style.split(','),
+      });
+    }
+    if (this.props.location.query.type) {
+      this.setState({
+        type: this.props.location.query.type.split(','),
+      });
+    }
+    if (this.props.location.query.size) {
+      this.setState({
+        size: this.props.location.query.size.split(','),
+      });
+    }
+    if (this.props.location.query.color) {
+      this.setState({
+        color: this.props.location.query.color.split(','),
+      });
+    }
+    var query = this.props.location.query;
+    if (Object.getOwnPropertyNames(query).length === 0) {
+      dispatch({
+        type: 'category/list',
+        payload: match.params.nodeid,
+      });
+    } else {
+      query.nodeid = match.params.nodeid;
+      dispatch({
+        type: 'product/filter',
+        payload: query,
       });
     }
     dispatch({
-      type: 'category/list',
-      payload: match.params.nodeid,
+      type: 'product/filter',
+      payload: this.props.location.query,
     });
     dispatch({
       type: 'category/sort',
@@ -266,7 +309,7 @@ class ListCategory extends PureComponent {
         nodeid: match.params.nodeid,
       },
     });
-    window.addEventListener('scroll', this.handleScroll.bind(this));
+    // window.addEventListener('scroll', this.handleScroll.bind(this));
     var btnSoft = document.getElementsByClassName(
       'order-pages-list-category-index-sort__btn-text___1mPct'
     )[0];
@@ -283,7 +326,7 @@ class ListCategory extends PureComponent {
     liSort.classList.add('order-pages-list-category-index-sort__active___3DNgx');
   }
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
+    // window.removeEventListener('scroll', this.handleScroll);
   }
   handleClickButtonFilter() {
     this.setState({
@@ -390,10 +433,11 @@ class ListCategory extends PureComponent {
     if (result.length == 0) {
       this.setState(
         {
-          category: filter == 'category' ? [...this.state.category, title] : this.state.category,
+          color: filter == 'color' ? [...this.state.color, title] : this.state.color,
           size: filter == 'size' ? [...this.state.size, title] : this.state.size,
           type: filter == 'type' ? [...this.state.type, title] : this.state.type,
           brand: filter == 'brand' ? [...this.state.brand, title] : this.state.brand,
+          style: filter == 'style' ? [...this.state.style, title] : this.state.style,
         },
         () => {}
       );
@@ -403,10 +447,11 @@ class ListCategory extends PureComponent {
       });
       this.setState(
         {
-          category: filter == 'category' ? arr : this.state.category,
+          color: filter == 'color' ? arr : this.state.color,
           size: filter == 'size' ? arr : this.state.size,
           type: filter == 'type' ? arr : this.state.type,
           brand: filter == 'brand' ? arr : this.state.brand,
+          style: filter == 'style' ? arr : this.state.style,
         },
         () => {}
       );
@@ -414,8 +459,8 @@ class ListCategory extends PureComponent {
     this.setState({}, () => {
       var search1 = '';
       var ques = '?';
-      if (this.state.category.length > 0) {
-        search1 = search1 + 'category=' + this.state.category.toString() + '&';
+      if (this.state.color.length > 0) {
+        search1 = search1 + 'color=' + this.state.color.toString() + '&';
       }
       if (this.state.size.length > 0) {
         search1 = search1 + 'size=' + this.state.size.toString() + '&';
@@ -425,6 +470,9 @@ class ListCategory extends PureComponent {
       }
       if (this.state.type.length > 0) {
         search1 = search1 + 'type=' + this.state.type.toString() + '&';
+      }
+      if (this.state.style.length > 0) {
+        search1 = search1 + 'style=' + this.state.style.toString() + '&';
       }
       search1 = search1 + 'sort=' + this.state.sortState + '&';
       this.setState(
@@ -438,7 +486,15 @@ class ListCategory extends PureComponent {
       );
     });
   }
-
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.location.query !== this.props.location.query) {
+      console.log(this.props.location.query);
+      this.props.dispatch({
+        type: 'product/filter',
+        payload: nextProps.location.query,
+      });
+    }
+  }
   handleClickFilter(value, value1) {
     var rowFilter = document.getElementById(value);
     if (rowFilter.style.display == 'block') {
@@ -541,7 +597,46 @@ class ListCategory extends PureComponent {
       </div>
     );
   }
-
+  handleClickButtonFilterClear() {
+    this.setState({
+      filter: !this.state.filter,
+    });
+    var defautLayout = document.getElementsByClassName(
+      'order-layouts-home-layout-default-layout__container___13v1V'
+    )[0];
+    defautLayout.classList.toggle('order-pages-list-category-index-filters-expanded');
+    var buttonFilter = document.getElementById('button-filter');
+    buttonFilter.classList.toggle('order-pages-list-category-index-sale__filter-btn___30Ofp');
+    buttonFilter.classList.toggle('order-pages-list-category-index-sale__btn-block___O8koG');
+    var headerFilter = document.getElementById('header-filter');
+    headerFilter.classList.toggle('order-pages-list-category-index-sale__d-t___1Trp4');
+    var listProduct = document.getElementById('list-product');
+    listProduct.classList.toggle('order-pages-list-category-index-sale__col-md-8___34B6S');
+    listProduct.classList.toggle('order-pages-list-category-index-sale__col-lg-9___2qXAs');
+    listProduct.classList.toggle('order-pages-list-category-index-sale__col-12___82vEz');
+    var proudctItem = document.getElementsByClassName('product-items');
+    for (var i = 0; i < proudctItem.length; i++) {
+      proudctItem[i].classList.toggle('order-pages-list-category-index-sale__col-md-4___UhAyk');
+      proudctItem[i].classList.toggle('order-pages-list-category-index-sale__col-md-6___3wB0o');
+    }
+    var titleFilter = document.getElementById('title-filter');
+    this.setState({
+      color: [],
+      size: [],
+      type: [],
+      brand: [],
+      style: [],
+    });
+    let pathname = this.props.location.pathname;
+    this.props.history.push({ pathname });
+  }
+  checkStateUrl(arr, value) {
+    var check = arr.filter((v, i) => {
+      return v == value;
+    });
+    if (check.length > 0) return true;
+    return false;
+  }
   renderFilterList(filter) {
     let data_filter = [
       { id: 'a-1', title: 'a-1' },
@@ -570,12 +665,15 @@ class ListCategory extends PureComponent {
         >
           <div className={styles['hidden-md-up'] + ' ' + styles['sale__filters-header___1Q-j0']}>
             <a
-              onClick={() => this.handleClickButtonFilter()}
+              onClick={() => this.handleClickButtonFilterClear()}
               className={styles['sale__btn-clearall___1YCDn']}
             >
-              Xoá bộ lọc
+              Xóa bộ lọc
             </a>
-            <a className={styles['sale__btn-done___2Y14U']}>
+            <a
+              onClick={() => this.handleClickButtonFilter()}
+              className={styles['sale__btn-done___2Y14U']}
+            >
               <i className={styles['fa'] + ' ' + styles['fa-caret-left'] + ' ' + styles['fa-fw']} />
               Xong
             </a>
@@ -591,18 +689,18 @@ class ListCategory extends PureComponent {
             <div className={styles['filter__filter-container___1hLIM']}>
               <div className={styles['filter__filter-header___3I6RP']}>
                 <h5
-                  id="phan-loai"
-                  onClick={() => this.handleClickFilter('phan-loai-row', 'icon-phan-loai')}
+                  id="style"
+                  onClick={() => this.handleClickFilter('style-row', 'icon-style')}
                   className={styles['clearfix']}
                 >
                   <a
                     className={styles['clearfix'] + ' ' + styles['d-block']}
                     href="javascript:void(0)"
-                    id="category"
+                    id="style"
                   >
-                    <span className={styles['float-left']}>Phân loại</span>
+                    <span className={styles['float-left']}>Style</span>
                     <i
-                      id="icon-phan-loai"
+                      id="icon-style"
                       className={
                         styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
                       }
@@ -610,7 +708,7 @@ class ListCategory extends PureComponent {
                   </a>
                 </h5>
               </div>
-              <div id="phan-loai-row" style={{ display: 'block' }}>
+              <div id="style-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
                   {sort.style && sort.style.length > 0
                     ? sort.style.map((e, i) => {
@@ -619,10 +717,10 @@ class ListCategory extends PureComponent {
                           <div key={i} className={styles['grid__col-12___39hfZ']}>
                             <div className={styles['filter-option__filter-option___3Xmf0']}>
                               <button
-                                onClick={() => this.handleCheckFilter('category', v)}
+                                onClick={() => this.handleCheckFilter('style', v)}
                                 type="button"
                                 className={
-                                  !this.state[v] && this.props.location.query.brand != v
+                                  this.checkStateUrl(this.state.style, v) == false
                                     ? styles['filter-option__btn___2u45i'] +
                                       ' ' +
                                       styles['filter-option__btn-secondary___1DPfK'] +
@@ -637,7 +735,7 @@ class ListCategory extends PureComponent {
                                       styles['filter-option__active___1HV6C']
                                 }
                               >
-                                {(this.state[v] || this.props.location.query.brand == v) && (
+                                {this.checkStateUrl(this.state.style, v) == true && (
                                   <span
                                     className={
                                       styles['filter-option__icon___1wxyY'] +
@@ -681,24 +779,40 @@ class ListCategory extends PureComponent {
               <div id="kich-co-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
                   {sort.size && sort.size.length > 0
-                    ? sort.size.map((e, i) => {
+                    ? sort.size[0].split(',').map((e, i) => {
                         var v = e.replace(/ /g, '');
-
                         return (
-                          <div key={i} className={styles['grid__col-6___211BX']}>
+                          <div key={i} className={styles['grid__col-12___39hfZ']}>
                             <div className={styles['filter-option__filter-option___3Xmf0']}>
                               <button
                                 onClick={() => this.handleCheckFilter('size', v)}
                                 type="button"
                                 className={
-                                  styles['filter-option__btn___2u45i'] +
-                                  ' ' +
-                                  styles['filter-option__btn-secondary___1DPfK'] +
-                                  ' ' +
-                                  styles['filter-option__btn-block___1tZOy']
+                                  this.checkStateUrl(this.state.size, v) == false
+                                    ? styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy']
+                                    : styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy'] +
+                                      ' ' +
+                                      styles['filter-option__active___1HV6C']
                                 }
                               >
-                                e
+                                {this.checkStateUrl(this.state.size, v) == true && (
+                                  <span
+                                    className={
+                                      styles['filter-option__icon___1wxyY'] +
+                                      ' ' +
+                                      styles['ic-ic-close']
+                                    }
+                                  />
+                                )}
+                                {e}
                               </button>
                             </div>
                           </div>
@@ -735,6 +849,7 @@ class ListCategory extends PureComponent {
                   {sort.brand && sort.brand.length > 0
                     ? sort.brand.map((e, i) => {
                         var v = e.replace(/ /g, '');
+                        console.log(v);
                         return (
                           <div key={i} className={styles['grid__col-12___39hfZ']}>
                             <div className={styles['filter-option__filter-option___3Xmf0']}>
@@ -742,7 +857,7 @@ class ListCategory extends PureComponent {
                                 onClick={() => this.handleCheckFilter('brand', v)}
                                 type="button"
                                 className={
-                                  this.props.location.query.brand != v
+                                  this.checkStateUrl(this.state.brand, v) == false
                                     ? styles['filter-option__btn___2u45i'] +
                                       ' ' +
                                       styles['filter-option__btn-secondary___1DPfK'] +
@@ -757,7 +872,7 @@ class ListCategory extends PureComponent {
                                       styles['filter-option__active___1HV6C']
                                 }
                               >
-                                {this.props.location.query.brand == v && (
+                                {this.checkStateUrl(this.state.brand, v) == true && (
                                   <span
                                     className={
                                       styles['filter-option__icon___1wxyY'] +
@@ -810,7 +925,7 @@ class ListCategory extends PureComponent {
                                 onClick={() => this.handleCheckFilter('type', v)}
                                 type="button"
                                 className={
-                                  !this.state[v] && this.props.location.query.brand != v
+                                  this.checkStateUrl(this.state.type, v) == false
                                     ? styles['filter-option__btn___2u45i'] +
                                       ' ' +
                                       styles['filter-option__btn-secondary___1DPfK'] +
@@ -825,7 +940,75 @@ class ListCategory extends PureComponent {
                                       styles['filter-option__active___1HV6C']
                                 }
                               >
-                                {(this.state[v] || this.props.location.query.brand == v) && (
+                                {this.checkStateUrl(this.state.type, v) == true && (
+                                  <span
+                                    className={
+                                      styles['filter-option__icon___1wxyY'] +
+                                      ' ' +
+                                      styles['ic-ic-close']
+                                    }
+                                  />
+                                )}
+                                {e}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                    : ''}
+                </div>
+              </div>
+            </div>
+            <div className={styles['filter__filter-container___1hLIM']}>
+              <div className={styles['filter__filter-header___3I6RP']}>
+                <h5
+                  id="color"
+                  onClick={() => this.handleClickFilter('color-row', 'icon-color')}
+                  className={styles['clearfix']}
+                >
+                  <a
+                    className={styles['clearfix'] + ' ' + styles['d-block']}
+                    href="javascript:void(0)"
+                    id="type"
+                  >
+                    <span className={styles['float-left']}>Màu sắc</span>
+                    <i
+                      id="icon-color"
+                      className={
+                        styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                      }
+                    />
+                  </a>
+                </h5>
+              </div>
+              <div id="color-row" style={{ display: 'block' }}>
+                <div className={styles['row__row___2roCA']}>
+                  {sort.color && sort.color.length > 0
+                    ? sort.color.map((e, i) => {
+                        var v = e.replace(/ /g, '');
+                        return (
+                          <div key={i} className={styles['grid__col-12___39hfZ']}>
+                            <div className={styles['filter-option__filter-option___3Xmf0']}>
+                              <button
+                                onClick={() => this.handleCheckFilter('color', v)}
+                                type="button"
+                                className={
+                                  this.checkStateUrl(this.state.color, v) == false
+                                    ? styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy']
+                                    : styles['filter-option__btn___2u45i'] +
+                                      ' ' +
+                                      styles['filter-option__btn-secondary___1DPfK'] +
+                                      ' ' +
+                                      styles['filter-option__btn-block___1tZOy'] +
+                                      ' ' +
+                                      styles['filter-option__active___1HV6C']
+                                }
+                              >
+                                {this.checkStateUrl(this.state.color, v) == true && (
                                   <span
                                     className={
                                       styles['filter-option__icon___1wxyY'] +
@@ -876,7 +1059,7 @@ class ListCategory extends PureComponent {
   }
   render() {
     var { filter, test } = this.state;
-
+    console.log(this.props);
     var {
       category: { list },
     } = this.props;

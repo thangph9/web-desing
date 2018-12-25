@@ -1,29 +1,112 @@
-import React, { PureComponent } from 'react';
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable react/jsx-curly-brace-presence */
+/* eslint-disable operator-assignment */
+/* eslint-disable no-plusplus */
+/* eslint-disable no-shadow */
+/* eslint-disable no-unused-expressions */
+/* eslint-disable react/no-access-state-in-setstate */
+/* eslint-disable react/no-multi-comp */
+/* eslint-disable react/prefer-stateless-function */
+/* eslint-disable vars-on-top */
+/* eslint-disable no-var */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable lines-between-class-members */
+/* eslint-disable react/sort-comp */
+/* eslint-disable dot-notation */
+/* eslint-disable prefer-template */
+/* eslint-disable import/newline-after-import */
+/* eslint-disable react/jsx-tag-spacing */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable no-unused-vars */
+import React from 'react';
+import { Layout } from 'antd';
+import DocumentTitle from 'react-document-title';
+import isEqual from 'lodash/isEqual';
+import memoizeOne from 'memoize-one';
+import { connect } from 'dva';
+import { ContainerQuery } from 'react-container-query';
+import classNames from 'classnames';
+import pathToRegexp from 'path-to-regexp';
+import { enquireScreen, unenquireScreen } from 'enquire-js';
+import { formatMessage } from 'umi/locale';
+// eslint-disable-next-line no-unused-vars
+import SiderMenu from '@/components/SiderMenu';
+import Authorized from '@/utils/Authorized';
+import SettingDrawer from '@/components/SettingDrawer';
 import { Link } from 'react-router-dom';
-import Debounce from 'lodash-decorators/debounce';
-import styles from './styles.less';
+import logo from '../assets/logo.svg';
+import Context from './MenuContext';
+import Exception403 from '../pages/Exception/403';
+import styles from './AccountLayout.less';
+import Footer from './Footer';
+import GlobalCart from '@/components/GlobalCart';
+const { Content } = Layout;
 
-// eslint-disable-next-line no-undef
+// Conversion router to menu.
+function formatter(data, parentAuthority, parentName) {
+  return data
+    .map(item => {
+      if (!item.name || !item.path) {
+        return null;
+      }
 
-class GlobalHeader extends PureComponent {
+      let locale = 'menu';
+      if (parentName) {
+        locale = `${parentName}.${item.name}`;
+      } else {
+        locale = `menu.${item.name}`;
+      }
+
+      const result = {
+        ...item,
+        name: formatMessage({ id: locale, defaultMessage: item.name }),
+        locale,
+        authority: item.authority || parentAuthority,
+      };
+      if (item.routes) {
+        const children = formatter(item.routes, item.authority, locale);
+        // Reduce memory usage
+        result.children = children;
+      }
+      delete result.routes;
+      return result;
+    })
+    .filter(item => item);
+}
+
+const memoizeOneFormatter = memoizeOne(formatter, isEqual);
+
+const query = {
+  'screen-xs': {
+    maxWidth: 575,
+  },
+  'screen-sm': {
+    minWidth: 576,
+    maxWidth: 767,
+  },
+  'screen-md': {
+    minWidth: 768,
+    maxWidth: 991,
+  },
+  'screen-lg': {
+    minWidth: 992,
+    maxWidth: 1199,
+  },
+  'screen-xl': {
+    minWidth: 1200,
+    maxWidth: 1599,
+  },
+  'screen-xxl': {
+    minWidth: 1600,
+  },
+};
+
+@connect(({ list }) => ({
+  list,
+}))
+class Header extends React.Component {
   state = {};
 
-  componentWillUnmount() {
-    this.triggerResizeEvent.cancel();
-  }
-  /* eslint-disable*/
-  @Debounce(600)
-  triggerResizeEvent() {
-    // eslint-disable-line
-    const event = document.createEvent('HTMLEvents');
-    event.initEvent('resize', true, false);
-    window.dispatchEvent(event);
-  }
-  toggle = () => {
-    const { collapsed, onCollapse } = this.props;
-    onCollapse(!collapsed);
-    this.triggerResizeEvent();
-  };
   handleClickButtonCart() {
     this.props.dispatch({
       type: 'list/modal',
@@ -40,7 +123,7 @@ class GlobalHeader extends PureComponent {
   }
   hanldeInfomation() {
     localStorage.account
-      ? this.props.history.push('/accountinformation')
+      ? this.props.history.push('/account/accountinformation')
       : this.props.history.push('/login');
   }
   handleClickOut() {
@@ -104,38 +187,72 @@ class GlobalHeader extends PureComponent {
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
                   <Link
                     style={{ textDecoration: 'none' }}
-                    to={`/Amazon`}
+                    to={`/account/dealinday`}
                     className={`${styles['header__nav-link___3W4sc']}`}
                   >
-                    Amazon
+                    Deal Sốc
                   </Link>
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link
+                  <a
+                    onClick={() => this.handleClickOpenHelp()}
                     style={{ textDecoration: 'none' }}
-                    to={`/Ebay  `}
-                    className={`${styles['header__nav-link___3W4sc']}`}
+                    className={`${styles['header__nav-link___3W4sc'] +
+                      ' ' +
+                      styles['language-dropdown__dropdown-toggle___3DM4H']}`}
                   >
-                    Ebay
-                  </Link>
+                    Mua hộ
+                  </a>
+                  {this.state.openHelp ? (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '29px',
+                        left: '0px',
+                        boxShadow: 'rgba(78, 89, 93, 0.15) 0px 8px 11px 0px',
+                        zIndex: 10,
+                        background: 'rgb(255, 255, 255)',
+                        padding: '9px 0px',
+                      }}
+                    >
+                      <div style={{ minWidth: '159px' }}>
+                        <Link
+                          to={`/account/helpbuy`}
+                          onClick={() => this.handleClickOpenHelp()}
+                          className={
+                            styles['jsx-2989784357'] +
+                            ' ' +
+                            styles['dropdown-item'] +
+                            ' ' +
+                            styles['item-login']
+                          }
+                        >
+                          Đăng ký mua sản phẩm
+                        </Link>
+                        <Link
+                          to={`/account/helpbuylist`}
+                          onClick={() => this.handleClickOpenHelp()}
+                          className={
+                            styles['jsx-2989784357'] +
+                            ' ' +
+                            styles['dropdown-item'] +
+                            ' ' +
+                            styles['item-login']
+                          }
+                        >
+                          Danh sách sản phẩm đã đăng ký
+                        </Link>
+                      </div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link
-                    style={{ textDecoration: 'none' }}
-                    to={`/adidas`}
-                    className={`${styles['header__nav-link___3W4sc']}`}
-                  >
-                    Adidas
-                  </Link>
+                  <Link to={`/adidas`} className={`${styles['header__nav-link___3W4sc']}`} />
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
-                  <Link
-                    style={{ textDecoration: 'none' }}
-                    to={`/nike`}
-                    className={`${styles['header__nav-link___3W4sc']}`}
-                  >
-                    Nike
-                  </Link>
+                  <Link to={`/nike`} className={`${styles['header__nav-link___3W4sc']}`} />
                 </li>
               </ul>
               <ul
@@ -209,7 +326,6 @@ class GlobalHeader extends PureComponent {
                           className={`${styles['auth-buttons__nav-link___1DCMU']} ${
                             styles['auth-buttons__btn-register___3sIO1']
                           }`}
-                          href="/auth/register"
                         >
                           Tạo tài khoản
                         </Link>
@@ -254,21 +370,6 @@ class GlobalHeader extends PureComponent {
                         >
                           Deal sốc trong ngày
                         </Link>
-                        <Link
-                          to={`/account/helpbuy`}
-                          onClick={() => this.handleOpenAccount('open')}
-                          className={
-                            styles['jsx-2989784357'] +
-                            ' ' +
-                            styles['dropdown-item'] +
-                            ' ' +
-                            styles['item-login']
-                          }
-                          href="/vn/account/addresses"
-                        >
-                          Mua hộ
-                        </Link>
-
                         <hr />
                         <div>
                           <div
@@ -356,23 +457,21 @@ class GlobalHeader extends PureComponent {
           >
             <ul className={`${styles['header__mobile-nav-cat___1wJ9O']}`}>
               <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Link to={`/amazon`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Amazon
+                <Link to={`/account/dealinday`} className={`${styles['header__nav-link___3W4sc']}`}>
+                  Deal Sốc
                 </Link>
               </li>
               <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Link to={`/ebay`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Ebay
+                <Link to={`/acoount/helpbuy`} className={`${styles['header__nav-link___3W4sc']}`}>
+                  Mua hộ
                 </Link>
               </li>
               <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Link to={`/adidas`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Adidas
-                </Link>
-              </li>
-              <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Link to={`/nike`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Nike
+                <Link
+                  to={`/account/helpbuylist`}
+                  className={`${styles['header__nav-link___3W4sc']}`}
+                >
+                  Danh sách đặt mua
                 </Link>
               </li>
             </ul>
@@ -383,4 +482,223 @@ class GlobalHeader extends PureComponent {
     );
   }
 }
-export default GlobalHeader;
+
+@connect(({ list }) => ({
+  list,
+}))
+class HomeLayout extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.getPageTitle = memoizeOne(this.getPageTitle);
+    this.getBreadcrumbNameMap = memoizeOne(this.getBreadcrumbNameMap, isEqual);
+    this.breadcrumbNameMap = this.getBreadcrumbNameMap();
+    this.matchParamsPath = memoizeOne(this.matchParamsPath, isEqual);
+  }
+
+  state = {
+    rendering: true,
+    isMobile: false,
+    menuData: this.getMenuData(),
+  };
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'user/fetchCurrent',
+    });
+    dispatch({
+      type: 'setting/getSetting',
+    });
+    this.renderRef = requestAnimationFrame(() => {
+      this.setState({
+        rendering: false,
+      });
+    });
+    this.enquireHandler = enquireScreen(mobile => {
+      const { isMobile } = this.state;
+      if (isMobile !== mobile) {
+        this.setState({
+          isMobile: mobile,
+        });
+      }
+    });
+    window.onpopstate = e => {
+      this.props.dispatch({
+        type: 'list/modal',
+        payload: false,
+      });
+    };
+  }
+
+  componentDidUpdate(preProps) {
+    // After changing to phone mode,
+    // if collapsed is true, you need to click twice to display
+    this.breadcrumbNameMap = this.getBreadcrumbNameMap();
+    const { isMobile } = this.state;
+    const { collapsed } = this.props;
+    if (isMobile && !preProps.isMobile && !collapsed) {
+      this.handleMenuCollapse(false);
+    }
+    if (this.props.location.pathname !== preProps.location.pathname) {
+      window.scrollTo(0, 0);
+    }
+  }
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this.renderRef);
+    unenquireScreen(this.enquireHandler);
+  }
+
+  getContext() {
+    const { location } = this.props;
+    return {
+      location,
+      breadcrumbNameMap: this.breadcrumbNameMap,
+    };
+  }
+
+  getMenuData() {
+    const {
+      route: { routes },
+    } = this.props;
+    return memoizeOneFormatter(routes);
+  }
+
+  /**
+   * Get breadcrumb mapping
+   * @param {Object} menuData Menu configuration
+   */
+  getBreadcrumbNameMap() {
+    const routerMap = {};
+    const mergeMenuAndRouter = data => {
+      data.forEach(menuItem => {
+        if (menuItem.children) {
+          mergeMenuAndRouter(menuItem.children);
+        }
+        // Reduce memory usage
+        routerMap[menuItem.path] = menuItem;
+      });
+    };
+    mergeMenuAndRouter(this.getMenuData());
+    return routerMap;
+  }
+
+  matchParamsPath = pathname => {
+    const pathKey = Object.keys(this.breadcrumbNameMap).find(key =>
+      pathToRegexp(key).test(pathname)
+    );
+    return this.breadcrumbNameMap[pathKey];
+  };
+
+  getPageTitle = pathname => {
+    const currRouterData = this.matchParamsPath(pathname);
+
+    if (!currRouterData) {
+      return '123order ';
+    }
+    const message = formatMessage({
+      id: currRouterData.locale || currRouterData.name,
+      defaultMessage: currRouterData.name,
+    });
+    return `${message} - 123Order`;
+  };
+
+  getLayoutStyle = () => {
+    const { isMobile } = this.state;
+    const { fixSiderbar, collapsed, layout } = this.props;
+    if (fixSiderbar && layout !== 'topmenu' && !isMobile) {
+      return {
+        paddingLeft: collapsed ? '80px' : '256px',
+      };
+    }
+    return null;
+  };
+
+  getContentStyle = () => {
+    const { fixedHeader } = this.props;
+    return {
+      margin: '24px 24px 0',
+      paddingTop: fixedHeader ? 64 : 0,
+    };
+  };
+
+  handleMenuCollapse = collapsed => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'global/changeLayoutCollapsed',
+      payload: collapsed,
+    });
+  };
+
+  renderSettingDrawer() {
+    // Do not render SettingDrawer in production
+    // unless it is deployed in preview.pro.ant.design as demo
+    const { rendering } = this.state;
+    if ((rendering || process.env.NODE_ENV === 'production') && APP_TYPE !== 'site') {
+      return null;
+    }
+    return <SettingDrawer />;
+  }
+  handleClick() {
+    this.props.dispatch({
+      type: 'list/modal',
+      payload: false,
+    });
+  }
+  render() {
+    var { modal } = this.props.list;
+
+    const {
+      // eslint-disable-next-line no-unused-vars
+      navTheme,
+      layout: PropsLayout,
+      children,
+      location: { pathname },
+    } = this.props;
+    const { isMobile, menuData } = this.state;
+    // eslint-disable-next-line no-unused-vars
+    const isTop = PropsLayout === 'topmenu';
+    const routerConfig = this.matchParamsPath(pathname);
+    const layout = (
+      <div
+        className={`${styles['default-layout__container___13v1V']} ${
+          styles.home__defaultLayout___Q6Udu
+        }`}
+      >
+        <div
+          id="body-modals"
+          onClick={() => this.handleClick()}
+          className={
+            modal === false
+              ? styles['backdrop__body-backdrop___1rvky']
+              : styles['backdrop__body-backdrop___1rvky'] + ' ' + styles['backdrop__active___3kejv']
+          }
+        />
+        <Header />
+        {children}
+        <Footer />
+        <GlobalCart />
+      </div>
+    );
+    return (
+      <React.Fragment>
+        <DocumentTitle title={this.getPageTitle(pathname)}>
+          <ContainerQuery query={query}>
+            {params => (
+              <Context.Provider value={this.getContext()}>
+                <div id="screen" className={classNames(params)}>
+                  {layout}
+                </div>
+              </Context.Provider>
+            )}
+          </ContainerQuery>
+        </DocumentTitle>
+      </React.Fragment>
+    );
+  }
+}
+
+export default connect(({ global, setting }) => ({
+  collapsed: global.collapsed,
+  layout: setting.layout,
+  ...setting,
+}))(HomeLayout);

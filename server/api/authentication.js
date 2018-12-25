@@ -1423,7 +1423,26 @@ function verifyEmail(req, res) {
     }
   );
 }
+function getDealSock(req, res) {
+  let results = {};
 
+  async.series(
+    [
+      function(callback) {
+        models.instance.articles.find({}, function(err, res) {
+          if (res) {
+            results = res;
+          }
+          callback(err, null);
+        });
+      },
+    ],
+    function(err, result) {
+      if (err) return res.send({ status: 'error' });
+      res.send({ status: 'ok', data: results });
+    }
+  );
+}
 router.post('/register', register);
 router.post('/registerfb', registerfb);
 router.post('/login', login);
@@ -1439,4 +1458,5 @@ router.post('addhelpbuy', addHelpBuy);
 router.post('/sethelpbuy', setHelpBuy);
 router.post('/deletehelpbuy', deleteHelpBuy);
 router.post('/verifyemail', verifyEmail);
+router.post('/dealsock', getDealSock);
 module.exports = router;

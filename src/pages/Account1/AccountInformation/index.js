@@ -156,7 +156,6 @@ class AccountInformation extends PureComponent {
     const { count, prefix, help, visible, rule } = this.state;
     const { getFieldDecorator } = this.props.form;
     var { user } = this.props;
-    console.log(user);
     var validateStt = '';
     var help_pass = '';
     if (info) {
@@ -176,7 +175,7 @@ class AccountInformation extends PureComponent {
                           onClick={() => this.handleClickInfomation()}
                           style={{ color: 'rgb(22, 172, 207)' }}
                           className={styles['text-no-underline']}
-                          to={`/accountinformation`}
+                          to={`/account/accountinformation`}
                         >
                           Thông tin tài khoản
                         </Link>
@@ -184,14 +183,14 @@ class AccountInformation extends PureComponent {
                         <Link
                           style={{ color: 'rgb(22, 172, 207)' }}
                           className={styles['text-no-underline']}
-                          to={`/accountinformation`}
+                          to={`/account/accountinformation`}
                         >
                           Tài khoản
                         </Link>
                       )}
                     </div>
                     <div data-tab-idx={1} className={styles['tab-item-wrap']}>
-                      <Link className={styles['text-no-underline']} to={`/order`}>
+                      <Link className={styles['text-no-underline']} to={`/account/dealinday`}>
                         Deal sốc
                       </Link>
                     </div>

@@ -2519,9 +2519,27 @@ mark {
   width: 100%;
   min-height: 1px;
   padding-right: 16px;
-  padding-left: 16px;
   flex: 0 0 33.33333%;
   max-width: 33.33333%;
+}
+.title-eclipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 60%;
+}
+.list-extra {
+  position: absolute;
+  right: 0.00001px;
+  top: 1px;
+}
+
+.short-desc-eclipses {
+  overflow: hidden;
+  height: 48px;
+  text-overflow: ellipsis;
+  white-space: normal;
+  width: 75%;
 }
 .col-5 {
   position: relative;
@@ -5327,7 +5345,6 @@ button.jsx-2022393571 {
 .content.jsx-157584619 {
   z-index: 3;
   background: #fff;
-  min-height: 100vh;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -7970,6 +7987,14 @@ div.jsx-3824923981 {
     > .table-bordered {
       border: 0;
     }
+  }
+  .col-4 {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 16px;
+    flex: 0 0 33.33333%;
+    max-width: 33.33333%;
   }
 }
 @media (max-width: 767.98px) {

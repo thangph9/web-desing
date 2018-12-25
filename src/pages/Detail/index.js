@@ -915,7 +915,7 @@ class Detail extends PureComponent {
                                 <ul
                                   className={`${styles['product-description__desc-list___3qcUM']}`}
                                 >
-                                  {ReactHtmlParser(data.desc_detail)}
+                                  {ReactHtmlParser(data.size_desc)}
                                 </ul>
                               </div>
                             </div>
