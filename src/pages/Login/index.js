@@ -210,7 +210,7 @@ class Login extends PureComponent {
     }
 
     if (localStorage.account) {
-      return <Redirect to={`/accountinformation`} />;
+      return <Redirect to={`/accoount/accountinformation`} />;
     }
     return (
       <DocumentMeta {...meta}>
