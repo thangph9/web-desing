@@ -155,6 +155,11 @@ class Register extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form, user } = this.props;
+    var email = this.props.form.getFieldValue('email');
+    var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if (!filter.test(email)) {
+      return;
+    }
     this.props.form.validateFields((err, values) => {
       // if (this.state.value.length > 0) {
       if (values.password == values.repassword) {
@@ -272,17 +277,26 @@ class Register extends PureComponent {
   };
 
   validEmailSync = e => {
-    const { value } = e.target;
     const { form, dispatch, user } = this.props;
-
-    form.validateFields(['email'], (errors, values) => {
-      if (!errors) {
-        this.props.dispatch({
-          type: 'user/check',
-          payload: values,
-        });
-      }
-    });
+    var email = e.target.value;
+    var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if (!filter.test(email)) {
+      this.props.form.setFields({
+        email: {
+          value: email,
+          errors: [new Error('Sai định dạng Email! Vui lòng kiểm tra lại')],
+        },
+      });
+    } else {
+      form.validateFields(['email'], (errors, values) => {
+        if (!errors) {
+          this.props.dispatch({
+            type: 'user/check',
+            payload: values,
+          });
+        }
+      });
+    }
   };
   handleChangeOTP() {
     this.setState({
@@ -364,12 +378,13 @@ class Register extends PureComponent {
                       rules: [
                         {
                           required: true,
-                          type: 'email',
+
                           message: 'Sai định dạng email',
                         },
                       ],
                     })(
                       <Input
+                        type="text"
                         size="large"
                         placeholder="Email"
                         onBlur={e => this.validEmailSync(e)}

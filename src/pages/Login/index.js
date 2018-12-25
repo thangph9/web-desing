@@ -118,8 +118,14 @@ class Login extends PureComponent {
   }
   handleSubmit = e => {
     e.preventDefault();
+    var email = this.props.form.getFieldValue('username');
+    var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if (!filter.test(email)) {
+      return;
+    }
     this.props.form.validateFields((err, values) => {
       // if (this.state.value.length > 0) {
+
       if (!err) {
         values['captcha'] = this.state.value;
         this.props.dispatch({
@@ -181,6 +187,18 @@ class Login extends PureComponent {
   resetRecaptcha = () => {
     recaptchaInstance.reset();
   };
+  handleBlurEmail(e) {
+    var email = e.target.value;
+    var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if (!filter.test(email)) {
+      this.props.form.setFields({
+        username: {
+          value: email,
+          errors: [new Error('Sai định dạng Email! Vui lòng kiểm tra lại')],
+        },
+      });
+    }
+  }
   render() {
     const meta = {
       title: 'Đăng Nhập',
@@ -210,7 +228,7 @@ class Login extends PureComponent {
     }
 
     if (localStorage.account) {
-      return <Redirect to={`/accoount/accountinformation`} />;
+      return <Redirect to={`/account/accountinformation`} />;
     }
     return (
       <DocumentMeta {...meta}>
@@ -232,8 +250,8 @@ class Login extends PureComponent {
                     {getFieldDecorator('username', {
                       rules: [
                         {
-                          type: 'email',
-                          message: 'Sai định dạng email',
+                          required: true,
+                          message: 'Vui lòng nhập Email!',
                         },
                       ],
                     })(
@@ -241,6 +259,7 @@ class Login extends PureComponent {
                         size="large"
                         placeholder="Tên đăng nhập"
                         onChange={() => this.handleChangeEmail()}
+                        onBlur={e => this.handleBlurEmail(e)}
                       />
                     )}
                   </FormItem>

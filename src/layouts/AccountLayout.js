@@ -34,6 +34,7 @@ import SiderMenu from '@/components/SiderMenu';
 import Authorized from '@/utils/Authorized';
 import SettingDrawer from '@/components/SettingDrawer';
 import { Link } from 'react-router-dom';
+import router from 'umi/router';
 import logo from '../assets/logo.svg';
 import Context from './MenuContext';
 import Exception403 from '../pages/Exception/403';
@@ -101,7 +102,12 @@ const query = {
   },
 };
 
-@connect(({ list }) => ({
+@connect(({ user, global, setting, loading, list }) => ({
+  currentUser: user.currentUser,
+  collapsed: global.collapsed,
+  fetchingNotices: loading.effects['global/fetchNotices'],
+  notices: global.notices,
+  setting,
   list,
 }))
 class Header extends React.Component {
@@ -122,9 +128,7 @@ class Header extends React.Component {
     );
   }
   hanldeInfomation() {
-    localStorage.account
-      ? this.props.history.push('/account/accountinformation')
-      : this.props.history.push('/login');
+    localStorage.account ? router.push('/account/accountinformation') : router.push('/login');
   }
   handleClickOut() {
     localStorage.removeItem('account');
@@ -132,7 +136,7 @@ class Header extends React.Component {
       open: false,
       openHelp: false,
     });
-    this.props.history.push('/login');
+    router.push('/login');
   }
   handleClickOpenHelp() {
     this.setState({
@@ -146,6 +150,7 @@ class Header extends React.Component {
     for (var i = 0; i < listArr.length; i++) {
       total = total + listArr[i][1];
     }
+    console.log(this.props);
     return (
       <div className={`${styles.header__header___1t3MH}`}>
         <nav
