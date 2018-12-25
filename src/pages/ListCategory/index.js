@@ -293,10 +293,6 @@ class ListCategory extends PureComponent {
       });
     }
     dispatch({
-      type: 'product/filter',
-      payload: this.props.location.query,
-    });
-    dispatch({
       type: 'category/sort',
       payload: {
         nodeid: this.props.match.params.nodeid,
