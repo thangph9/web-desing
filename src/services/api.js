@@ -274,7 +274,7 @@ export async function getListProductAdidas(params) {
   return request('/api/product/AD');
 }
 export async function getSearchSortProduct(params) {
-  return request(`/api/category/SEARCH?ref=${new Date().getTime()}`, {
+  return request(`/api/product/SEARCH?ref=${new Date().getTime()}`, {
     method: 'POST',
     body: params,
   });
