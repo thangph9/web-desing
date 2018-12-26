@@ -280,24 +280,10 @@ class ListCategory extends PureComponent {
       });
     }
     var query = this.props.location.query;
-    if (Object.getOwnPropertyNames(query).length === 0) {
-      dispatch({
-        type: 'category/list',
-        payload: match.params.nodeid,
-      });
-    } else {
-      query.nodeid = match.params.nodeid;
-      dispatch({
-        type: 'product/filter',
-        payload: query,
-      });
-    }
+    query.nodeid = match.params.nodeid;
     dispatch({
-      type: 'category/sort',
-      payload: {
-        nodeid: this.props.match.params.nodeid,
-        sort,
-      },
+      type: 'category/search',
+      payload: query,
     });
     dispatch({
       type: 'category/detail',
@@ -305,6 +291,17 @@ class ListCategory extends PureComponent {
         nodeid: match.params.nodeid,
       },
     });
+
+    /*
+
+    dispatch({
+      type: 'category/detail',
+      payload: {
+        nodeid: match.params.nodeid,
+      },
+    });
+    */
+
     // window.addEventListener('scroll', this.handleScroll.bind(this));
     var btnSoft = document.getElementsByClassName(
       'order-pages-list-category-index-sort__btn-text___1mPct'
@@ -484,10 +481,12 @@ class ListCategory extends PureComponent {
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.query !== this.props.location.query) {
-      console.log(this.props.location.query);
+      var values = nextProps.location.query;
+      values.nodeid = nextProps.match.params.nodeid;
+      console.log('da vao day');
       this.props.dispatch({
-        type: 'product/filter',
-        payload: nextProps.location.query,
+        type: 'category/search',
+        payload: values,
       });
     }
   }
@@ -634,18 +633,12 @@ class ListCategory extends PureComponent {
     return false;
   }
   renderFilterList(filter) {
-    let data_filter = [
-      { id: 'a-1', title: 'a-1' },
-      { id: 'a-2', title: 'a-2' },
-      { id: 'a-3', title: 'a-3' },
-      { id: 'a-4', title: 'a-4' },
-      { id: 'a-5', title: 'a-5' },
-      { id: 'a-6', title: 'a-6' },
-    ];
     var { filter } = this.state;
-    var { sort } = this.props.category;
+    var { search } = this.props.category;
     var {
-      category: { list },
+      category: {
+        search: { filterMap },
+      },
     } = this.props;
     if (filter == true) {
       return (
@@ -678,7 +671,7 @@ class ListCategory extends PureComponent {
                 styles['sale__total-items___u7EoB'] + ' ' + styles['total-items__text___1TBmn']
               }
             >
-              {list.length} Sản phẩm
+              {filterMap.length} Sản phẩm
             </div>
           </div>
           <div id="transform-fixed" className={styles['sale__fitlers-content-wrap___pU5ed']}>
@@ -706,8 +699,8 @@ class ListCategory extends PureComponent {
               </div>
               <div id="style-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
-                  {sort.style && sort.style.length > 0
-                    ? sort.style.map((e, i) => {
+                  {filterMap.style && filterMap.style.length > 0
+                    ? filterMap.style.map((e, i) => {
                         var v = e.replace(/ /g, '');
                         return (
                           <div key={i} className={styles['grid__col-12___39hfZ']}>
@@ -774,8 +767,8 @@ class ListCategory extends PureComponent {
               </div>
               <div id="kich-co-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
-                  {sort.size && sort.size.length > 0
-                    ? sort.size[0].split(',').map((e, i) => {
+                  {filterMap.size && filterMap.size.length > 0
+                    ? filterMap.size[0].split(',').map((e, i) => {
                         var v = e.replace(/ /g, '');
                         return (
                           <div key={i} className={styles['grid__col-12___39hfZ']}>
@@ -842,8 +835,8 @@ class ListCategory extends PureComponent {
               </div>
               <div id="thuong-hieu-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
-                  {sort.brand && sort.brand.length > 0
-                    ? sort.brand.map((e, i) => {
+                  {filterMap.brand && filterMap.brand.length > 0
+                    ? filterMap.brand.map((e, i) => {
                         var v = e.replace(/ /g, '');
                         console.log(v);
                         return (
@@ -911,8 +904,8 @@ class ListCategory extends PureComponent {
               </div>
               <div id="type-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
-                  {sort.type && sort.type.length > 0
-                    ? sort.type.map((e, i) => {
+                  {filterMap.type && filterMap.type.length > 0
+                    ? filterMap.type.map((e, i) => {
                         var v = e.replace(/ /g, '');
                         return (
                           <div key={i} className={styles['grid__col-12___39hfZ']}>
@@ -979,8 +972,8 @@ class ListCategory extends PureComponent {
               </div>
               <div id="color-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
-                  {sort.color && sort.color.length > 0
-                    ? sort.color.map((e, i) => {
+                  {filterMap.color && filterMap.color.length > 0
+                    ? filterMap.color.map((e, i) => {
                         var v = e.replace(/ /g, '');
                         return (
                           <div key={i} className={styles['grid__col-12___39hfZ']}>
@@ -1031,7 +1024,9 @@ class ListCategory extends PureComponent {
   renderTotalProduct() {
     var { filter } = this.state;
     var {
-      category: { list },
+      category: {
+        search: { list },
+      },
     } = this.props;
     return (
       <div
@@ -1048,7 +1043,7 @@ class ListCategory extends PureComponent {
             styles['sale__total-items___u7EoB'] + ' ' + styles['total-items__text___1TBmn']
           }
         >
-          {list.length} Sản phẩm
+          {list && list.length} Sản phẩm
         </div>
       </div>
     );
@@ -1057,7 +1052,9 @@ class ListCategory extends PureComponent {
     var { filter, test } = this.state;
     console.log(this.props);
     var {
-      category: { list },
+      category: {
+        search: { list },
+      },
     } = this.props;
     var {
       category: { detail },
@@ -1266,7 +1263,7 @@ class ListCategory extends PureComponent {
                         styles['total-items__text___1TBmn']
                       }
                     >
-                      {list.length} sản phẩm
+                      {list && list.length} sản phẩm
                     </div>
                     <span
                       className={
@@ -1292,9 +1289,10 @@ class ListCategory extends PureComponent {
                     }
                   >
                     <div id="row-product" className={styles['row__row___2roCA']}>
-                      {list.map((value, index) => {
-                        return <ProductItem data={value} key={index} />;
-                      })}
+                      {list &&
+                        list.map((value, index) => {
+                          return <ProductItem data={value} key={index} />;
+                        })}
                     </div>
                   </div>
                 </div>

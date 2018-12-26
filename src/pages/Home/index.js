@@ -66,7 +66,7 @@ class ProductItem extends PureComponent {
     var endHour = 0;
     let start;
     if (data.death_clock) {
-      start = new Date().getTime() / 1000 - 86400 * 10;
+      start = new Date().getTime() / 1000;
       var endTime = (Date.parse(data.death_clock.end) / 1000 - start) / 86400;
 
       timeline = Math.floor(endTime);
@@ -112,7 +112,7 @@ class ProductItem extends PureComponent {
                 <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
                   <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
                     <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
-                    <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>
+                    <span className={`${styles['end-time__text___1A-sx']}`}> Còn </span>
                     {endHour > 0 && (
                       <span className={`${styles['end-time__timer___LMsIT']}`}>
                         {endHour + ' Giờ'}
