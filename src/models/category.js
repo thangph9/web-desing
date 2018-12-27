@@ -6,6 +6,7 @@ export default {
     list: [],
     breadcrumb: {},
     search: {},
+    filterUrl: '',
   },
 
   effects: {
@@ -88,6 +89,12 @@ export default {
       return {
         ...state,
         detail: action.payload,
+      };
+    },
+    filter(state, action) {
+      return {
+        ...state,
+        filterUrl: action.payload,
       };
     },
   },

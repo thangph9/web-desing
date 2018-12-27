@@ -1,3 +1,8 @@
+/* eslint-disable no-useless-return */
+/* eslint-disable no-useless-concat */
+/* eslint-disable operator-assignment */
+/* eslint-disable no-eval */
+/* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable no-sequences */
 /* eslint-disable no-fallthrough */
 /* eslint-disable default-case */
@@ -107,6 +112,7 @@ class ProductItem extends PureComponent {
         <Link className={styles['product-card__productCard___2lSYu']} to={`/product/${seoTitle}`}>
           <div>
             <div
+              style={!data.thumbnail ? { background: 'gainsboro', height: 'auto' } : {}}
               className={
                 styles['product-card__imageContainer___1apY_'] +
                 ' ' +
@@ -115,8 +121,12 @@ class ProductItem extends PureComponent {
             >
               <img
                 className={styles['product-card__image___QEKAk']}
-                src={`/images/f/${data.thumbnail.replace(/\-/g, '')}`}
-                alt="Giày Oxford Daiki Đen"
+                src={
+                  data.thumbnail
+                    ? `/images/f/${data.thumbnail.replace(/\-/g, '')}`
+                    : '/image/photofacefun_com_1545815130.jpg'
+                }
+                alt="image"
               />
               <div className={styles['product-card__discount___2R4sK']}>{data.sale}% Off</div>
             </div>
@@ -171,6 +181,10 @@ class ListCategory extends PureComponent {
       sortState: ['RECOMMEND'],
       total: '',
       total1: '',
+      globalProduct: [],
+      filterString: [],
+      filterStringSize: [],
+      totalSize: [],
     };
   }
   handleClickSort() {
@@ -254,36 +268,78 @@ class ListCategory extends PureComponent {
   componentDidMount() {
     var { dispatch, match } = this.props;
     var sort = this.props.location.query.sort;
+    var filterUrl = '';
+    var stringBrand = '';
+    var stringStyle = '';
+    var stringType = '';
+    var stringColor = '';
     if (this.props.location.query.brand) {
       this.setState({
         brand: this.props.location.query.brand.split(','),
+      });
+      var arrProp = this.props.location.query.brand.split(',');
+      arrProp.forEach((element, index) => {
+        if (index == 0) stringBrand = `v['brand']==='${element.replace(/-/g, ' ')}'`;
+        else {
+          stringBrand = stringBrand + `,v['brand']==='${element.replace(/-/g, ' ')}'`;
+        }
       });
     }
     if (this.props.location.query.style) {
       this.setState({
         style: this.props.location.query.style.split(','),
       });
+      var arrProp = this.props.location.query.style.split(',');
+      arrProp.forEach((element, index) => {
+        if (index == 0) stringStyle = `v['style']==='${element.replace(/-/g, ' ')}'`;
+        else {
+          stringStyle = stringStyle + `,v['style']==='${element.replace(/-/g, ' ')}'`;
+        }
+      });
     }
     if (this.props.location.query.type) {
       this.setState({
         type: this.props.location.query.type.split(','),
+      });
+      var arrProp = this.props.location.query.type.split(',');
+      arrProp.forEach((element, index) => {
+        if (index == 0) stringType = `v['type']==='${element.replace(/-/g, ' ')}'`;
+        else {
+          stringType = stringType + `,v['type']==='${element.replace(/-/g, ' ')}'`;
+        }
       });
     }
     if (this.props.location.query.size) {
       this.setState({
         size: this.props.location.query.size.split(','),
       });
+      var arrSize = this.props.location.query.size.split(',');
+      this.setState({
+        filterStringSize: arrSize,
+      });
     }
     if (this.props.location.query.color) {
       this.setState({
         color: this.props.location.query.color.split(','),
       });
+      var arrProp = this.props.location.query.color.split(',');
+      arrProp.forEach((element, index) => {
+        if (index == 0) stringColor = `v['color']==='${element.replace(/-/g, ' ')}'`;
+        else {
+          stringColor = stringColor + `,v['color']==='${element.replace(/-/g, ' ')}'`;
+        }
+      });
     }
+    filterUrl = stringBrand + '-' + stringColor + '-' + stringStyle + '-' + stringType;
+    console.log(filterUrl);
     var query = this.props.location.query;
     query.nodeid = match.params.nodeid;
     dispatch({
       type: 'category/search',
-      payload: query,
+      payload: {
+        nodeid: match.params.nodeid,
+        sort,
+      },
     });
     dispatch({
       type: 'category/detail',
@@ -291,6 +347,12 @@ class ListCategory extends PureComponent {
         nodeid: match.params.nodeid,
       },
     });
+    if (filterUrl !== '---') {
+      dispatch({
+        type: 'category/filter',
+        payload: filterUrl,
+      });
+    }
 
     /*
 
@@ -411,11 +473,45 @@ class ListCategory extends PureComponent {
       },
     });
   }
-  handleCheckFilter(filter, title) {
+  handleCheckFilter(filter, title, element) {
     if (title) {
       this.setState({
         [title]: !this.state[title],
       });
+    }
+    if (filter != 'size') {
+      var checkFilterString = this.state.filterString.filter((v, i) => {
+        return v === `v['${filter}']==='${element}'`;
+      });
+      if (checkFilterString.length == 0) {
+        this.setState({
+          filterString: [...this.state.filterString, `v['${filter}']==='${element}'`],
+        });
+      } else {
+        var removeString = this.state.filterString.filter((v, i) => {
+          return v !== `v['${filter}']==='${element}'`;
+        });
+        this.setState({
+          filterString: removeString,
+        });
+      }
+    } else {
+      var checkFilterString = this.state.filterStringSize.filter((v, i) => {
+        return v === element;
+      });
+      if (checkFilterString.length == 0) {
+        this.setState({
+          filterStringSize: [...this.state.filterStringSize, element],
+        });
+      } else {
+        var removeString = this.state.filterStringSize.filter((v, i) => {
+          return v !== element;
+        });
+        console.log(removeString);
+        this.setState({
+          filterStringSize: removeString,
+        });
+      }
     }
     let pathname = this.props.location.pathname;
     let search = this.props.location.search;
@@ -483,10 +579,40 @@ class ListCategory extends PureComponent {
     if (nextProps.location.query !== this.props.location.query) {
       var values = nextProps.location.query;
       values.nodeid = nextProps.match.params.nodeid;
-      console.log('da vao day');
       this.props.dispatch({
         type: 'category/search',
-        payload: values,
+        payload: {
+          nodeid: this.props.match.params.nodeid,
+          sort: nextProps.location.query.sort,
+        },
+      });
+    }
+    if (nextProps.category.search.list !== this.props.category.search.list) {
+      this.setState({
+        globalProduct: nextProps.category.search.list,
+      });
+    }
+    if (nextProps.category.search.filterMap !== this.props.category.search.filterMap) {
+      var stringSizeTotal = '';
+      nextProps.category.search.filterMap.size.forEach(element => {
+        if (stringSizeTotal.length == 0) {
+          stringSizeTotal += element;
+        } else {
+          stringSizeTotal = stringSizeTotal + ',' + element;
+        }
+        var arrSizeTotal = stringSizeTotal.split(',');
+        this.setState({
+          totalSize: Array.from(new Set(arrSizeTotal)).sort(),
+        });
+      });
+    }
+    if (nextProps.category.filterUrl !== this.props.category.filterUrl) {
+      let arrFilterString = nextProps.category.filterUrl.split('-').filter((v, i) => {
+        return v != '';
+      });
+      var filterString = arrFilterString.toString().split(',');
+      this.setState({
+        filterString,
       });
     }
   }
@@ -503,6 +629,7 @@ class ListCategory extends PureComponent {
     var {
       category: { detail },
     } = this.props;
+
     var dataDetail = [];
     if (dataDetail) {
       dataDetail = Array.isArray(detail) ? detail : [];
@@ -533,7 +660,7 @@ class ListCategory extends PureComponent {
           )}
           {dataDetail.length > 0 && (
             <li className={styles['breadcrumb__breadcrumb-item___3ytpk']}>
-              <h1>{dataDetail.length > 0 ? dataDetail[2].title : ''}</h1>
+              <h1>{dataDetail.length ? dataDetail[2].title : ''}</h1>
             </li>
           )}
         </ol>
@@ -640,6 +767,7 @@ class ListCategory extends PureComponent {
         search: { filterMap },
       },
     } = this.props;
+
     if (filter == true) {
       return (
         <div
@@ -701,12 +829,12 @@ class ListCategory extends PureComponent {
                 <div className={styles['row__row___2roCA']}>
                   {filterMap.style && filterMap.style.length > 0
                     ? filterMap.style.map((e, i) => {
-                        var v = e.replace(/ /g, '');
+                        var v = e.replace(/ /g, '-');
                         return (
                           <div key={i} className={styles['grid__col-12___39hfZ']}>
                             <div className={styles['filter-option__filter-option___3Xmf0']}>
                               <button
-                                onClick={() => this.handleCheckFilter('style', v)}
+                                onClick={() => this.handleCheckFilter('style', v, e)}
                                 type="button"
                                 className={
                                   this.checkStateUrl(this.state.style, v) == false
@@ -767,14 +895,14 @@ class ListCategory extends PureComponent {
               </div>
               <div id="kich-co-row" style={{ display: 'block' }}>
                 <div className={styles['row__row___2roCA']}>
-                  {filterMap.size && filterMap.size.length > 0
-                    ? filterMap.size[0].split(',').map((e, i) => {
-                        var v = e.replace(/ /g, '');
+                  {this.state.totalSize.length > 0
+                    ? this.state.totalSize.map((e, i) => {
+                        var v = e.replace(/ /g, '-');
                         return (
                           <div key={i} className={styles['grid__col-12___39hfZ']}>
                             <div className={styles['filter-option__filter-option___3Xmf0']}>
                               <button
-                                onClick={() => this.handleCheckFilter('size', v)}
+                                onClick={() => this.handleCheckFilter('size', v, e)}
                                 type="button"
                                 className={
                                   this.checkStateUrl(this.state.size, v) == false
@@ -837,13 +965,12 @@ class ListCategory extends PureComponent {
                 <div className={styles['row__row___2roCA']}>
                   {filterMap.brand && filterMap.brand.length > 0
                     ? filterMap.brand.map((e, i) => {
-                        var v = e.replace(/ /g, '');
-                        console.log(v);
+                        var v = e.replace(/ /g, '-');
                         return (
                           <div key={i} className={styles['grid__col-12___39hfZ']}>
                             <div className={styles['filter-option__filter-option___3Xmf0']}>
                               <button
-                                onClick={() => this.handleCheckFilter('brand', v)}
+                                onClick={() => this.handleCheckFilter('brand', v, e)}
                                 type="button"
                                 className={
                                   this.checkStateUrl(this.state.brand, v) == false
@@ -906,12 +1033,12 @@ class ListCategory extends PureComponent {
                 <div className={styles['row__row___2roCA']}>
                   {filterMap.type && filterMap.type.length > 0
                     ? filterMap.type.map((e, i) => {
-                        var v = e.replace(/ /g, '');
+                        var v = e.replace(/ /g, '-');
                         return (
                           <div key={i} className={styles['grid__col-12___39hfZ']}>
                             <div className={styles['filter-option__filter-option___3Xmf0']}>
                               <button
-                                onClick={() => this.handleCheckFilter('type', v)}
+                                onClick={() => this.handleCheckFilter('type', v, e)}
                                 type="button"
                                 className={
                                   this.checkStateUrl(this.state.type, v) == false
@@ -974,12 +1101,12 @@ class ListCategory extends PureComponent {
                 <div className={styles['row__row___2roCA']}>
                   {filterMap.color && filterMap.color.length > 0
                     ? filterMap.color.map((e, i) => {
-                        var v = e.replace(/ /g, '');
+                        var v = e.replace(/ /g, '-');
                         return (
                           <div key={i} className={styles['grid__col-12___39hfZ']}>
                             <div className={styles['filter-option__filter-option___3Xmf0']}>
                               <button
-                                onClick={() => this.handleCheckFilter('color', v)}
+                                onClick={() => this.handleCheckFilter('color', v, e)}
                                 type="button"
                                 className={
                                   this.checkStateUrl(this.state.color, v) == false
@@ -1049,8 +1176,7 @@ class ListCategory extends PureComponent {
     );
   }
   render() {
-    var { filter, test } = this.state;
-    console.log(this.props);
+    var { filter, test, globalProduct, filterString, filterStringSize, totalSize } = this.state;
     var {
       category: {
         search: { list },
@@ -1059,7 +1185,47 @@ class ListCategory extends PureComponent {
     var {
       category: { detail },
     } = this.props;
+    var filterRender = [];
     var dataDetail = [];
+    var globalProductNew = [];
+
+    var filterToString = filterString.toString().replace(/\,/g, '&&');
+    if (filterToString == '') {
+      globalProductNew = globalProduct;
+    } else {
+      globalProductNew = globalProduct.filter((v, i) => {
+        return eval(filterToString);
+      });
+    }
+    if (filterStringSize.length > 0 && totalSize.length > 0) {
+      var sizeReal = globalProductNew.filter((v, i) => {
+        return v.size;
+      });
+      globalProductNew = sizeReal.filter((v, index) => {
+        let arrSize = v.size.split(',');
+        var result = true;
+        console.log(filterStringSize);
+        console.log(arrSize);
+        if (arrSize.length >= filterStringSize.length) {
+          for (let i = 0; i < filterStringSize.length; i++) {
+            for (let j = 0; j < arrSize.length; j++) {
+              console.log(filterStringSize[i]);
+              console.log(arrSize[j]);
+              if (filterStringSize[i] === arrSize[j]) break;
+              if (j == arrSize.length - 1) {
+                console.log(i + 'di vao day');
+                result = false;
+              }
+            }
+          }
+        } else {
+          result = false;
+        }
+        console.log(result);
+        return result == true;
+      });
+    }
+    console.log(globalProductNew);
     if (dataDetail) {
       dataDetail = Array.isArray(detail) ? detail : [];
       var dataBreadcrumb = typeof dataDetail[1] === 'object' ? dataDetail[1] : {};
@@ -1263,7 +1429,7 @@ class ListCategory extends PureComponent {
                         styles['total-items__text___1TBmn']
                       }
                     >
-                      {list && list.length} sản phẩm
+                      {globalProductNew.length} sản phẩm
                     </div>
                     <span
                       className={
@@ -1289,10 +1455,9 @@ class ListCategory extends PureComponent {
                     }
                   >
                     <div id="row-product" className={styles['row__row___2roCA']}>
-                      {list &&
-                        list.map((value, index) => {
-                          return <ProductItem data={value} key={index} />;
-                        })}
+                      {globalProductNew.map((value, index) => {
+                        return <ProductItem data={value} key={index} />;
+                      })}
                     </div>
                   </div>
                 </div>
