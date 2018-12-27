@@ -555,7 +555,7 @@ function productSearch(req,res){
     ],
     function(err, result) {
       if (err) return res.send({ status: 'error' });
-      res.send({ status: 'ok', data:{list: results.items,pagination: {total : results.items.length,current: current} , filterMap: filterMap}});
+      res.send({ status: 'ok', data:{list: results.items,pagination: {total : results.items.length,current: current} , filterMap: filterMap,raito: results.raito}});
     }
   );
 }
