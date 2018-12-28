@@ -279,7 +279,7 @@ class Ebay extends PureComponent {
   renderDays() {
     const {
       product: {
-        list: { days },
+        ebay: { days },
       },
     } = this.props;
     let data = days ? days : [];
@@ -314,7 +314,7 @@ class Ebay extends PureComponent {
   renderBestSeller() {
     const {
       product: {
-        list: { bestSeller },
+        ebay: { bestSeller },
       },
     } = this.props;
     let data = bestSeller ? bestSeller : [];
@@ -345,7 +345,7 @@ class Ebay extends PureComponent {
   renderHotNew() {
     const {
       product: {
-        list: { hotnew },
+        ebay: { hotnew },
       },
     } = this.props;
     let data = hotnew ? hotnew : [];

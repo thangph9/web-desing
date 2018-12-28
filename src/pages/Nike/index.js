@@ -279,7 +279,7 @@ class Nike extends PureComponent {
   renderDays() {
     const {
       product: {
-        list: { days },
+        nike: { days },
       },
     } = this.props;
     let data = days ? days : [];
@@ -314,7 +314,7 @@ class Nike extends PureComponent {
   renderBestSeller() {
     const {
       product: {
-        list: { bestSeller },
+        nike: { bestSeller },
       },
     } = this.props;
     let data = bestSeller ? bestSeller : [];
@@ -345,7 +345,7 @@ class Nike extends PureComponent {
   renderHotNew() {
     const {
       product: {
-        list: { hotnew },
+        nike: { hotnew },
       },
     } = this.props;
     let data = hotnew ? hotnew : [];

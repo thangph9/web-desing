@@ -279,7 +279,7 @@ class Adidas extends PureComponent {
   renderDays() {
     const {
       product: {
-        list: { days },
+        adidas: { days },
       },
     } = this.props;
     let data = days ? days : [];
@@ -314,7 +314,7 @@ class Adidas extends PureComponent {
   renderBestSeller() {
     const {
       product: {
-        list: { bestSeller },
+        adidas: { bestSeller },
       },
     } = this.props;
     let data = bestSeller ? bestSeller : [];
@@ -345,7 +345,7 @@ class Adidas extends PureComponent {
   renderHotNew() {
     const {
       product: {
-        list: { hotnew },
+        adidas: { hotnew },
       },
     } = this.props;
     let data = hotnew ? hotnew : [];
@@ -373,9 +373,6 @@ class Adidas extends PureComponent {
     }
   }
   render() {
-    const {
-      adidas: { news },
-    } = this.props.product;
     const meta = {
       title: 'Adidas',
       description: null,

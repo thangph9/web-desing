@@ -49,7 +49,7 @@ export default {
         if (response.status === 'ok') {
           yield put({
             type: 'queryListAmazon',
-            payload: Array.isArray(response.data) ? response.data : [],
+            payload: typeof response.data === 'object' ? response.data : {},
           });
         } else {
           yield put({
@@ -70,7 +70,7 @@ export default {
         if (response.status === 'ok') {
           yield put({
             type: 'queryListEbay',
-            payload: Array.isArray(response.data) ? response.data : [],
+            payload: typeof response.data === 'object' ? response.data : {},
           });
         } else {
           yield put({
@@ -91,7 +91,7 @@ export default {
         if (response.status === 'ok') {
           yield put({
             type: 'queryListNike',
-            payload: response.data ? response.data : [],
+            payload: typeof response.data === 'object' ? response.data : {},
           });
         } else {
           yield put({

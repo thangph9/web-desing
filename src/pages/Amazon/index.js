@@ -279,7 +279,7 @@ class Amazon extends PureComponent {
   renderDays() {
     const {
       product: {
-        list: { days },
+        amazon: { days },
       },
     } = this.props;
     let data = days ? days : [];
@@ -314,7 +314,7 @@ class Amazon extends PureComponent {
   renderBestSeller() {
     const {
       product: {
-        list: { bestSeller },
+        amazon: { bestSeller },
       },
     } = this.props;
     let data = bestSeller ? bestSeller : [];
@@ -369,9 +369,6 @@ class Amazon extends PureComponent {
     );
   }
   render() {
-    const {
-      amazon: { news },
-    } = this.props.product;
     const meta = {
       title: 'Amazon',
       description: null,
