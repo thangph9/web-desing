@@ -279,9 +279,9 @@ class ListCategory extends PureComponent {
       });
       var arrProp = this.props.location.query.brand.split(',');
       arrProp.forEach((element, index) => {
-        if (index == 0) stringBrand = `v['brand']==='${element.replace(/-/g, ' ')}'`;
+        if (index == 0) stringBrand = `v['brand']==="${element.replace(/-/g, ' ')}"`;
         else {
-          stringBrand = stringBrand + `,v['brand']==='${element.replace(/-/g, ' ')}'`;
+          stringBrand = stringBrand + `,v['brand']==="${element.replace(/-/g, ' ')}"`;
         }
       });
     }
@@ -291,9 +291,9 @@ class ListCategory extends PureComponent {
       });
       var arrProp = this.props.location.query.style.split(',');
       arrProp.forEach((element, index) => {
-        if (index == 0) stringStyle = `v['style']==='${element.replace(/-/g, ' ')}'`;
+        if (index == 0) stringStyle = `v['style']==="${element.replace(/-/g, ' ')}"`;
         else {
-          stringStyle = stringStyle + `,v['style']==='${element.replace(/-/g, ' ')}'`;
+          stringStyle = stringStyle + `,v['style']==="${element.replace(/-/g, ' ')}"`;
         }
       });
     }
@@ -303,9 +303,9 @@ class ListCategory extends PureComponent {
       });
       var arrProp = this.props.location.query.type.split(',');
       arrProp.forEach((element, index) => {
-        if (index == 0) stringType = `v['type']==='${element.replace(/-/g, ' ')}'`;
+        if (index == 0) stringType = `v['type']==="${element.replace(/-/g, ' ')}"`;
         else {
-          stringType = stringType + `,v['type']==='${element.replace(/-/g, ' ')}'`;
+          stringType = stringType + `,v['type']==="${element.replace(/-/g, ' ')}"`;
         }
       });
     }
@@ -324,15 +324,16 @@ class ListCategory extends PureComponent {
       });
       var arrProp = this.props.location.query.color.split(',');
       arrProp.forEach((element, index) => {
-        if (index == 0) stringColor = `v['color']==='${element.replace(/-/g, ' ')}'`;
+        if (index == 0) stringColor = `v['color']==="${element.replace(/-/g, ' ')}"`;
         else {
-          stringColor = stringColor + `,v['color']==='${element.replace(/-/g, ' ')}'`;
+          stringColor = stringColor + `,v['color']==="${element.replace(/-/g, ' ')}"`;
         }
       });
     }
     filterUrl = stringBrand + '-' + stringColor + '-' + stringStyle + '-' + stringType;
     var query = this.props.location.query;
     query.nodeid = match.params.nodeid;
+
     dispatch({
       type: 'category/search',
       payload: {
@@ -340,6 +341,7 @@ class ListCategory extends PureComponent {
         sort,
       },
     });
+
     dispatch({
       type: 'category/detail',
       payload: {
@@ -382,6 +384,12 @@ class ListCategory extends PureComponent {
         style: [],
         type: [],
         brand: [],
+        filterString: [],
+        filterStringSize: [],
+      });
+      dispatch({
+        type: 'category/filter',
+        payload: '',
       });
       this.props.history.push({ pathname });
       return;
@@ -393,6 +401,10 @@ class ListCategory extends PureComponent {
       activeSoft[i].classList.remove('order-pages-list-category-index-sort__active___3DNgx');
     }
     liSort.classList.add('order-pages-list-category-index-sort__active___3DNgx');
+    var defautLayout = document.getElementsByClassName(
+      'order-layouts-home-layout-default-layout__container___13v1V'
+    )[0];
+    defautLayout.classList.remove('order-pages-list-category-index-filters-expanded');
   }
   componentWillUnmount() {
     // window.removeEventListener('scroll', this.handleScroll);
@@ -495,15 +507,15 @@ class ListCategory extends PureComponent {
     }
     if (filter != 'size') {
       var checkFilterString = this.state.filterString.filter((v, i) => {
-        return v === `v['${filter}']==='${element}'`;
+        return v === `v['${filter}']==="${element}"`;
       });
       if (checkFilterString.length == 0) {
         this.setState({
-          filterString: [...this.state.filterString, `v['${filter}']==='${element}'`],
+          filterString: [...this.state.filterString, `v['${filter}']==="${element}"`],
         });
       } else {
         var removeString = this.state.filterString.filter((v, i) => {
-          return v !== `v['${filter}']==='${element}'`;
+          return v !== `v['${filter}']==="${element}"`;
         });
         this.setState({
           filterString: removeString,
@@ -673,7 +685,7 @@ class ListCategory extends PureComponent {
           )}
           {dataDetail.length > 0 && (
             <li className={styles['breadcrumb__breadcrumb-item___3ytpk']}>
-              <h1>{dataDetail.length ? dataDetail[2].title : ''}</h1>
+              <h1>{dataDetail.length && dataDetail[2].title ? dataDetail[2].title : ''}</h1>
             </li>
           )}
         </ol>
@@ -1227,7 +1239,7 @@ class ListCategory extends PureComponent {
     }
     if (dataDetail) {
       dataDetail = Array.isArray(detail) ? detail : [];
-      var dataBreadcrumb = typeof dataDetail[1] === 'object' ? dataDetail[1] : {};
+      var dataBreadcrumb = typeof dataDetail[2] === 'object' ? dataDetail[2] : {};
       const title = dataBreadcrumb.title ? dataBreadcrumb.title : 'Danh sách sản phẩm';
       const meta_description = dataBreadcrumb.meta_description
         ? dataBreadcrumb.meta_description

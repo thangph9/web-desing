@@ -272,7 +272,7 @@ class ChangePassword extends PureComponent {
       return <Redirect to={`/login`} />;
     }
     if (user.changepass.status == 'ok') {
-      return <Redirect to={`/accountinformation`} />;
+      return <Redirect to={`/account/accountinformation`} />;
     }
     return (
       <DocumentMeta {...meta}>

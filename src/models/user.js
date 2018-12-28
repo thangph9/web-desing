@@ -17,6 +17,7 @@ import {
   deleteHelpBuy,
   verifyEmailRegister,
   getDealSock,
+  getDealSockDetail,
 } from '@/services/api';
 
 export default {
@@ -39,6 +40,7 @@ export default {
     deletehelpbuy: {},
     verify: {},
     dealSock: {},
+    getdealSockdetail: {},
   },
   effects: {
     *fetch(_, { call, put }) {
@@ -111,6 +113,13 @@ export default {
       yield put({
         type: 'getdealsock',
         payload: response || {},
+      });
+    },
+    *getdealdetail({ payload }, { call, put }) {
+      const response = yield call(getDealSockDetail, payload);
+      yield put({
+        type: 'getdealsockdetail',
+        payload: response.data || {},
       });
     },
     *confirm({ payload }, { call, put }) {
@@ -271,6 +280,12 @@ export default {
       return {
         ...state,
         getdealsock: action.payload,
+      };
+    },
+    getdealsockdetail(state, action) {
+      return {
+        ...state,
+        getdealSockdetail: action.payload,
       };
     },
     registration(state, action) {

@@ -18,7 +18,7 @@ export default [
       { path: '/account/helpbuy', component: './HelpBuy/' },
       { path: '/account/helpbuylist', component: './ListHelpBuy/' },
       { path: '/account/dealinday', component: './Account1/DealInDay/' },
-      { path: '/account/about-deal', component: './AboutDeal' },
+      { path: '/account/about-deal/:dealtitle/:artid', component: './AboutDeal' },
     ],
   },
   {

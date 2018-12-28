@@ -361,61 +361,6 @@ class Home extends PureComponent {
           {this.renderHotNew()}
           {this.renderBestSeller()}
         </div>
-        <div className={`${styles['home__subscription-container___17uZO']}`}>
-          <div className={`${styles['container__container___1fvX0']}`}>
-            <div
-              className={`${styles['subscription-form__container___363Gz']} ${
-                styles['home__content-wrap___1cpWR']
-              }`}
-            >
-              <div className={`${styles['subscription-form__subscription-box___3q4Dq']}`}>
-                <div className={`${styles['subscription-form__title-container___19sMv']}`}>
-                  <h3>Đăng ký ngay!</h3>
-                  <p className={`${styles['subscription-form__subtext___3gWxq']}`}>
-                    Nhận bản tin từ 123order mỗi ngày
-                  </p>
-                </div>
-                <form className={`${styles['subscription-form__form___1HTdc']}`} name="form">
-                  <div className={`${styles['row__row___2roCA']}`}>
-                    <div
-                      className={`${styles['subscription-form__form-group___2Xlci']} ${
-                        styles['subscription-form__col-md-8___2XbMH']
-                      } ${styles['subscription-form__input-wrap___SQsyI']}`}
-                    >
-                      <input
-                        type="email"
-                        style={{ fontSize: '15px' }}
-                        className={`${styles['subscription-form__form-control___hdjaw']}`}
-                        name="email"
-                        placeholder="Your email..."
-                        required
-                      />
-                    </div>
-                    <div
-                      className={`${styles['subscription-form__form-group___2Xlci']} ${
-                        styles['subscription-form__col-md-4___3bt17']
-                      } ${styles['subscription-form__button-wrap___2iFz3']}`}
-                    >
-                      <button
-                        type="submit"
-                        style={{
-                          color: '#fff',
-                          backgroundColor: '#16accf',
-                          borderColor: '#16accf',
-                        }}
-                        className={`${styles['subscription-form__btn___2kh7f']} ${
-                          styles['subscription-form__btn-primary___34C5C']
-                        }`}
-                      >
-                        Đăng Ký{' '}
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     );
   }

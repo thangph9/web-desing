@@ -43,6 +43,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Link, Redirect } from 'react-router-dom';
 import moment from 'moment';
+import { change_alias } from '@/utils/utils';
 import ReactHtmlParser, {
   processNodes,
   convertNodeToElement,
@@ -85,14 +86,12 @@ class DealInDay extends PureComponent {
       dataDeal: [],
       start: '',
       end: '',
+      dealTitle: '',
+      dealId: '',
     };
   }
-  handleSearch(e) {
-    console.log(e);
-  }
-  handleChangeSort(value) {
-    console.log(value);
-  }
+  handleSearch(e) {}
+  handleChangeSort(value) {}
   componentDidMount() {
     this.props.dispatch({
       type: 'user/getdeal',
@@ -100,7 +99,7 @@ class DealInDay extends PureComponent {
     });
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user !== this.props.user) {
+    if (nextProps.user.getdealsock !== this.props.user.getdealsock) {
       this.setState({
         dataDeal: nextProps.user.getdealsock.data,
       });
@@ -125,7 +124,7 @@ class DealInDay extends PureComponent {
     return 'Vẫn đang diễn ra';
   }
   render() {
-    var { dataDeal, start, end } = this.state;
+    var { dataDeal, start, end, dealId, dealTitle } = this.state;
     var root = document.getElementById('root');
     return (
       <div className={styles['jsx-157584619'] + ' ' + styles['content']}>
@@ -207,7 +206,14 @@ class DealInDay extends PureComponent {
                             </div>
                           }
                           title={
-                            <Link to={`/account/about-deal`} className={styles['title-eclipsis']}>
+                            <Link
+                              to={
+                                item.title && item.artid
+                                  ? `/account/about-deal/${change_alias(item.title)}/${item.artid}`
+                                  : ''
+                              }
+                              className={styles['title-eclipsis']}
+                            >
                               {item.title ? item.title : ''}
                             </Link>
                           }

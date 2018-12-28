@@ -140,6 +140,12 @@ export async function getProductDetail(params) {
     body: params,
   });
 }
+export async function getDealSockDetail(params) {
+  return request('/api/authentication/dealsockdetail', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function getDealSock(params) {
   return request('/api/authentication/dealsock', {
     method: 'POST',

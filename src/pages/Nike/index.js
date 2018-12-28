@@ -436,6 +436,7 @@ class Nike extends PureComponent {
         >
           <div className={`${styles['home__topShadow___3wy_J']}`} />
           {this.renderNews()}
+
           <div
             id={`${styles['home-banner']}`}
             className={`${styles['banner__bannerContainer___3Inm6']} ${
@@ -468,6 +469,9 @@ class Nike extends PureComponent {
               <div className={`${styles['banner__navigation___1KLgF']}`} />
             </div>
           </div>
+          {this.renderDays()}
+          {this.renderHotNew()}
+          {this.renderBestSeller()}
         </div>
       </DocumentMeta>
     );

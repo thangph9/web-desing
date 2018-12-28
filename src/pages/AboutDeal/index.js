@@ -72,6 +72,11 @@ import {
   Progress,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import ReactHtmlParser, {
+  processNodes,
+  convertNodeToElement,
+  htmlparser2,
+} from 'react-html-parser';
 import styles from './index.less';
 
 @connect(({ loading, user }) => ({
@@ -85,10 +90,18 @@ class AboutDeal extends PureComponent {
     super(props);
     this.state = {
       indexMore: undefined,
+      data: {},
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.dispatch({
+      type: 'user/getdealdetail',
+      payload: {
+        artid: this.props.match.params.artid,
+      },
+    });
+  }
   handleClickShipping() {
     this.setState({
       shipping: !this.state.shipping,
@@ -104,7 +117,15 @@ class AboutDeal extends PureComponent {
       indexMore: undefined,
     });
   }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.user.getdealSockdetail !== this.props.user.getdealSockdetail) {
+      this.setState({
+        data: nextProps.user.getdealSockdetail,
+      });
+    }
+  }
   render() {
+    var { data } = this.state;
     const meta = {
       title: 'Thông tin mua hộ',
       description: null,
@@ -116,13 +137,13 @@ class AboutDeal extends PureComponent {
         },
       },
     };
-    console.log(this.state.indexMore);
+    console.log(this.props);
     return (
       <DocumentMeta {...meta}>
         <div id={styles['boxWeshop']} className={styles['boxWeshop'] + ' ' + styles['clearfix']}>
           <div className={styles['container']}>
             <h3 className={styles['text-uppercase'] + ' ' + styles['title-box']}>
-              <strong>Title</strong>
+              <strong>{data.title && data.title}</strong>
             </h3>
             <div
               className={
@@ -131,8 +152,9 @@ class AboutDeal extends PureComponent {
             />
             <div className={styles['row']}>
               <div
+                style={{ marginBottom: '20px' }}
                 className={
-                  styles['col-sm-6'] +
+                  styles['col-sm-12'] +
                   ' ' +
                   styles['box-images'] +
                   ' ' +
@@ -143,11 +165,14 @@ class AboutDeal extends PureComponent {
                   styles['animated']
                 }
               >
-                <img src="https://weshop.com.vn/images/landing/landing-new/images01.png" />
+                <img
+                  alt="image"
+                  src={data.image ? `/images/f/${data.image.replace(/\-/g, '')}` : ''}
+                />
               </div>
               <div
                 className={
-                  styles['col-sm-6'] +
+                  styles['col-sm-12'] +
                   ' ' +
                   styles['to-animate'] +
                   ' ' +
@@ -157,17 +182,7 @@ class AboutDeal extends PureComponent {
                 }
               >
                 <div className={styles['row-text']}>
-                  <strong>Title-mini</strong>
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                    Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                    unknown printer took a galley of type and scrambled it to make a type specimen
-                    book. It has survived not only five centuries, but also the leap into electronic
-                    typesetting, remaining essentially unchanged. It was popularised in the 1960s
-                    with the release of Letraset sheets containing Lorem Ipsum passages, and more
-                    recently with desktop publishing software like Aldus PageMaker including
-                    versions of Lorem Ipsum
-                  </p>
+                  {data.content && ReactHtmlParser(data.content)}
                 </div>
               </div>
             </div>

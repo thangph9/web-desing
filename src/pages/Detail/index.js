@@ -100,6 +100,7 @@ class Detail extends PureComponent {
     indexColor: 0,
     toggle: false,
     size: undefined,
+    ['info-product']: true,
   };
 
   // eslint-disable-next-line react/sort-comp
@@ -272,10 +273,8 @@ class Detail extends PureComponent {
 
     return (
       <ol
-        style={{ padding: '0px' }}
-        className={`${styles['undefined']} ${styles['breadcrumb__breadcrumb___3F6K8']}
-
-                  `}
+        style={{ padding: '0px', position: 'relative', top: '6px' }}
+        className={`${styles['undefined']} ${styles['breadcrumb__breadcrumb___3F6K8']}`}
       >
         {dataBreadcrumb.length > 0 && (
           <li
@@ -823,6 +822,7 @@ class Detail extends PureComponent {
                           </h4>
                           <div
                             id="info-product"
+                            style={{ display: 'block' }}
                             className={`${styles['collapse']} ${
                               styles['product-description__panel-collapse___3G-5Q']
                             } collapselow`}
