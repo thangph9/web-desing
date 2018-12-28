@@ -265,7 +265,7 @@ function productAmazon(req,res){
             callback(null,null);
         },
         function(callback){
-            models.instance.category.find({$solr_query:'{"q": "category: 17bee6a4-aea3-4ce5-8128-718ae760aa26"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+            models.instance.category.find({$solr_query:'{"q": "category: 90c68414-48d6-4618-9002-16a537b9e992"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
                 if(res && res.length > 0){
                     results.news=res;
                 }
@@ -281,7 +281,7 @@ function productAmazon(req,res){
             })
         },
         function(callback){
-            models.instance.category.find({$solr_query:'{"q": "category: f4e2643d-3585-4bc9-a116-be9bd7c9b96f"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+            models.instance.category.find({$solr_query:'{"q": "category: 17bee6a4-aea3-4ce5-8128-718ae760aa26"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
                 if(res && res.length > 0){
                     results.hotnew=res;
                 }
