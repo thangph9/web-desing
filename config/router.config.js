@@ -85,7 +85,7 @@ export default [
         component: './Detail/',
       },
       {
-        path: '/Ebay',
+        path: '/ebay',
         name: 'ebay',
         component: './Ebay/',
       },

@@ -113,7 +113,7 @@ class GlobalHeader extends PureComponent {
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
                   <Link
                     style={{ textDecoration: 'none' }}
-                    to={`/Ebay  `}
+                    to={`/ebay`}
                     className={`${styles['header__nav-link___3W4sc']}`}
                   >
                     Ebay
