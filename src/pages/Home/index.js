@@ -358,8 +358,8 @@ class Home extends PureComponent {
             </div>
           </div>
           {this.renderDays()}
-          {this.renderBestSeller()}
           {this.renderHotNew()}
+          {this.renderBestSeller()}
         </div>
         <div className={`${styles['home__subscription-container___17uZO']}`}>
           <div className={`${styles['container__container___1fvX0']}`}>

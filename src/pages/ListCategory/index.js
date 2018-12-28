@@ -331,7 +331,6 @@ class ListCategory extends PureComponent {
       });
     }
     filterUrl = stringBrand + '-' + stringColor + '-' + stringStyle + '-' + stringType;
-    console.log(filterUrl);
     var query = this.props.location.query;
     query.nodeid = match.params.nodeid;
     dispatch({
@@ -452,13 +451,15 @@ class ListCategory extends PureComponent {
     });
     this.setState({}, () => {
       var result = this.state.total.split('&');
+      console.log(result);
       result.splice(result.length - 2, 2);
+      console.log(result);
       this.setState(
         {
           search:
             result.length > 0
               ? result.join('&') + '&sort=' + this.state.sortState.toString()
-              : this.state.total + 'sort=' + this.state.sortState.toString(),
+              : 'sort=' + this.state.sortState.toString(),
         },
         () => {
           this.props.history.push({ pathname, search: this.state.search });
@@ -507,7 +508,6 @@ class ListCategory extends PureComponent {
         var removeString = this.state.filterStringSize.filter((v, i) => {
           return v !== element;
         });
-        console.log(removeString);
         this.setState({
           filterStringSize: removeString,
         });
@@ -1204,16 +1204,11 @@ class ListCategory extends PureComponent {
       globalProductNew = sizeReal.filter((v, index) => {
         let arrSize = v.size.split(',');
         var result = true;
-        console.log(filterStringSize);
-        console.log(arrSize);
         if (arrSize.length >= filterStringSize.length) {
           for (let i = 0; i < filterStringSize.length; i++) {
             for (let j = 0; j < arrSize.length; j++) {
-              console.log(filterStringSize[i]);
-              console.log(arrSize[j]);
               if (filterStringSize[i] === arrSize[j]) break;
               if (j == arrSize.length - 1) {
-                console.log(i + 'di vao day');
                 result = false;
               }
             }
@@ -1221,11 +1216,9 @@ class ListCategory extends PureComponent {
         } else {
           result = false;
         }
-        console.log(result);
         return result == true;
       });
     }
-    console.log(globalProductNew);
     if (dataDetail) {
       dataDetail = Array.isArray(detail) ? detail : [];
       var dataBreadcrumb = typeof dataDetail[1] === 'object' ? dataDetail[1] : {};
@@ -1245,6 +1238,7 @@ class ListCategory extends PureComponent {
           },
         },
       };
+      console.log(this.state.total);
       return (
         <DocumentMeta {...meta}>
           <div className={styles['container__container___1fvX0']}>
