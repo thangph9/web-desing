@@ -451,9 +451,7 @@ class ListCategory extends PureComponent {
     });
     this.setState({}, () => {
       var result = this.state.total.split('&');
-      console.log(result);
       result.splice(result.length - 2, 2);
-      console.log(result);
       this.setState(
         {
           search:
@@ -1148,13 +1146,7 @@ class ListCategory extends PureComponent {
       );
     } else return '';
   }
-  renderTotalProduct() {
-    var { filter } = this.state;
-    var {
-      category: {
-        search: { list },
-      },
-    } = this.props;
+  renderTotalProduct(value) {
     return (
       <div
         className={
@@ -1170,7 +1162,7 @@ class ListCategory extends PureComponent {
             styles['sale__total-items___u7EoB'] + ' ' + styles['total-items__text___1TBmn']
           }
         >
-          {list && list.length} Sản phẩm
+          {value} Sản phẩm
         </div>
       </div>
     );
@@ -1238,7 +1230,7 @@ class ListCategory extends PureComponent {
           },
         },
       };
-      console.log(this.state.total);
+
       return (
         <DocumentMeta {...meta}>
           <div className={styles['container__container___1fvX0']}>
@@ -1316,7 +1308,7 @@ class ListCategory extends PureComponent {
                     }
                   >
                     <div className={styles['row__row___2roCA']}>
-                      {this.renderTotalProduct()}
+                      {this.renderTotalProduct(globalProductNew.length)}
                       <div
                         className={
                           styles['clearfix'] +
