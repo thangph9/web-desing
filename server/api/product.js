@@ -46,7 +46,7 @@ function productList(req,res){
             })
         },
         function(callback){
-             models.instance.category.find({$solr_query:'{"q": "category: *08ecb1e-cabf-4328-9ddc-011ca55a156d*"}'},{select: ['title','thumbnail','seo_link','nodeid','death_clock']},function(err,res){
+             models.instance.category.find({$solr_query:'{"q": "category: *07081437-d862-48d0-9987-4f656bd2de30*"}'},{select: ['title','thumbnail','seo_link','nodeid','death_clock']},function(err,res){
                 if(res){
                     results['hotnew']=res;
                 }
@@ -54,7 +54,7 @@ function productList(req,res){
             })
         },
         function(callback){
-             models.instance.category.find({$solr_query:'{"q": "category: *07081437-d862-48d0-9987-4f656bd2de30*"}'},{select: ['title','thumbnail','seo_link','nodeid','death_clock']},function(err,res){
+             models.instance.category.find({$solr_query:'{"q": "category: *08ecb1e-cabf-4328-9ddc-011ca55a156d*"}'},{select: ['title','thumbnail','seo_link','nodeid','death_clock']},function(err,res){
                 if(res){
                     results['bestSeller']=res;
                 }
@@ -536,16 +536,14 @@ function productSearch(req,res){
         });
       },
       function(callback) {
-       
           models.instance.currency_raito.find({}, function(err, items) {
             if (items && items.length > 0) {
               results.raito=items;
-              
             }
             callback(err, null);
           });
       },    
-      function(callback){
+      function(callback) {
           renderFilter(results.items,function(err,r){
               filterMap=r;
               callback(err,null);
@@ -554,8 +552,14 @@ function productSearch(req,res){
       }    
     ],
     function(err, result) {
+        var total=1;
+        var rs=[];
+    if(results.items && results.items.length > 0){
+        total=results.items.length;
+        rs=results.items
+    }  
       if (err) return res.send({ status: 'error' });
-      res.send({ status: 'ok', data:{list: results.items,pagination: {total : results.items.length,current: current} , filterMap: filterMap,raito: results.raito}});
+      res.send({ status: 'ok', data:{list: rs,pagination: {total : total,current: current} , filterMap: filterMap,raito: results.raito}});
     }
   );
 }
@@ -586,7 +590,6 @@ function generateMap(category,nodeid){
     }
     return parent.reverse();
 }
-
 function renderFilter(result,callback){
     let filterMap={};
     filterMap.style=[];
@@ -596,23 +599,26 @@ function renderFilter(result,callback){
     filterMap.type=[];
     async.series([
         function(callback){
-            result.map(e=>{
-                if(e.style && e.style.length > 0 ){
-                    filterMap.style.push(e.style);  
-                }
-                if(e.color && e.color.length > 0){
-                    filterMap.color.push(e.color);   
-                }
-                if(e.size && e.size.length > 0){
-                    filterMap.size.push(e.size);   
-                }
-                if(e.brand && e.brand.length > 0){
-                    filterMap.brand.push(e.brand);   
-                }
-                if(e.type && e.type.length > 0){
-                    filterMap.type.push(e.type);   
-                }
-            })
+            if(result && result.length > 0){
+                result.map(e=>{
+                    if(e.style && e.style.length > 0 ){
+                        filterMap.style.push(e.style);  
+                    }
+                    if(e.color && e.color.length > 0){
+                        filterMap.color.push(e.color);   
+                    }
+                    if(e.size && e.size.length > 0){
+                        filterMap.size.push(e.size);   
+                    }
+                    if(e.brand && e.brand.length > 0){
+                        filterMap.brand.push(e.brand);   
+                    }
+                    if(e.type && e.type.length > 0){
+                        filterMap.type.push(e.type);   
+                    }
+                })
+            }
+            
             callback(null,null)
         },
         function(callback){
@@ -640,7 +646,6 @@ function renderFilter(result,callback){
     
     
 }
-
 function treeMapBreadCumb(category,nodeid,callback){
     let treeMap=[];
     let parent={};
