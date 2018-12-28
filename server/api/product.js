@@ -373,7 +373,7 @@ function productNike(req,res){
             })
         },
         function(callback){
-            models.instance.category.find({$solr_query:'{"q": "category: b1f6e114-2784-487c-8a5a-4db5c5780347"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+            models.instance.category.find({$solr_query:'{"q": "category: c37e118d-7cb4-4530-a67d-9b231271d20d"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
                 if(res && res.length > 0){
                     results.hotnew=res;
                 }
@@ -381,7 +381,7 @@ function productNike(req,res){
             })
         },
         function(callback){
-            models.instance.category.find({$solr_query:'{"q": "category: b1f6e114-2784-487c-8a5a-4db5c5780347"}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
+            models.instance.category.find({$solr_query:'{"q": "category:b1f6e114-2784-487c-8a5a-4db5c5780347 "}'},{select: ['title','thumbnail','seo_link','nodeid']},function(err,res){
                 if(res && res.length > 0){
                     results.bestSeller=res;
                 }
