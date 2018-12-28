@@ -178,7 +178,7 @@ class ListCategory extends PureComponent {
       style: [],
       type: [],
       brand: [],
-      sortState: ['RECOMMEND'],
+      sortState: 'RECOMMEND',
       total: '',
       total1: '',
       globalProduct: [],
@@ -367,10 +367,25 @@ class ListCategory extends PureComponent {
     var btnSoft = document.getElementsByClassName(
       'order-pages-list-category-index-sort__btn-text___1mPct'
     )[0];
-    btnSoft.textContent = this.props.location.query.sort
-      ? 'Sắp xếp: ' + this.state[`${this.props.location.query.sort}`].title
-      : 'Sắp xếp: Gợi ý';
+    btnSoft.textContent =
+      this.props.location.query.sort && this.state[`${this.props.location.query.sort}`]
+        ? 'Sắp xếp: ' + this.state[`${this.props.location.query.sort}`].title
+        : 'Sắp xếp: Gợi ý';
     var liSort = document.getElementById(this.props.location.query.sort);
+    if (!liSort) {
+      let pathname = this.props.location.pathname;
+      let search = this.props.location.search;
+      this.setState({
+        sortState: 'RECOMMEND',
+        color: [],
+        size: [],
+        style: [],
+        type: [],
+        brand: [],
+      });
+      this.props.history.push({ pathname });
+      return;
+    }
     var activeSoft = document.getElementsByClassName(
       'order-pages-list-category-index-sort__dropdown-item___XkHiS'
     );
@@ -1180,7 +1195,6 @@ class ListCategory extends PureComponent {
     var filterRender = [];
     var dataDetail = [];
     var globalProductNew = [];
-
     var filterToString = filterString.toString().replace(/\,/g, '&&');
     if (filterToString == '') {
       globalProductNew = globalProduct;
