@@ -265,6 +265,21 @@ class ListCategory extends PureComponent {
       }
     }
   } */
+  componentWillMount() {
+    if (this.props.category.filterUrl != '') {
+      let arrFilterString = this.props.category.filterUrl.split('-').filter((v, i) => {
+        return v != '';
+      });
+      var filterString = arrFilterString.toString().split(',');
+      this.setState({
+        filterString,
+      });
+    }
+    var defautLayout = document.getElementsByClassName(
+      'order-layouts-home-layout-default-layout__container___13v1V'
+    )[0];
+    defautLayout.classList.remove('order-pages-list-category-index-filters-expanded');
+  }
   componentDidMount() {
     var { dispatch, match } = this.props;
     var sort = this.props.location.query.sort;
@@ -349,12 +364,13 @@ class ListCategory extends PureComponent {
       },
     });
     if (filterUrl !== '---') {
+      console.log('vao day');
       dispatch({
         type: 'category/filter',
         payload: filterUrl,
       });
     }
-
+    console.log(filterUrl);
     /*
 
     dispatch({
@@ -401,10 +417,6 @@ class ListCategory extends PureComponent {
       activeSoft[i].classList.remove('order-pages-list-category-index-sort__active___3DNgx');
     }
     liSort.classList.add('order-pages-list-category-index-sort__active___3DNgx');
-    var defautLayout = document.getElementsByClassName(
-      'order-layouts-home-layout-default-layout__container___13v1V'
-    )[0];
-    defautLayout.classList.remove('order-pages-list-category-index-filters-expanded');
   }
   componentWillUnmount() {
     // window.removeEventListener('scroll', this.handleScroll);
@@ -417,41 +429,6 @@ class ListCategory extends PureComponent {
       'order-layouts-home-layout-default-layout__container___13v1V'
     )[0];
     defautLayout.classList.toggle('order-pages-list-category-index-filters-expanded');
-    var buttonFilter = document.getElementById('button-filter');
-    buttonFilter.classList.toggle('order-pages-list-category-index-sale__filter-btn___30Ofp');
-    buttonFilter.classList.toggle('order-pages-list-category-index-sale__btn-block___O8koG');
-    var headerFilter = document.getElementById('header-filter');
-    headerFilter.classList.toggle('order-pages-list-category-index-sale__d-t___1Trp4');
-    var listProduct = document.getElementById('list-product');
-    listProduct.classList.toggle('order-pages-list-category-index-sale__col-md-8___34B6S');
-    listProduct.classList.toggle('order-pages-list-category-index-sale__col-lg-9___2qXAs');
-    listProduct.classList.toggle('order-pages-list-category-index-sale__col-12___82vEz');
-    var proudctItem = document.getElementsByClassName('product-items');
-    for (var i = 0; i < proudctItem.length; i++) {
-      proudctItem[i].classList.toggle('order-pages-list-category-index-sale__col-md-4___UhAyk');
-      proudctItem[i].classList.toggle('order-pages-list-category-index-sale__col-md-6___3wB0o');
-    }
-    var titleFilter = document.getElementById('title-filter');
-    if (titleFilter.textContent == 'Hiện bộ lọc') {
-      titleFilter.innerText = 'Đóng bộ lọc';
-      var i = document.createElement('i');
-      i.setAttribute('id', 'icon-filter');
-      i.setAttribute(
-        'class',
-        'order-pages-list-category-index-ic-ic-arrow-left order-pages-list-category-index-sale__icon-hide___3Iftv'
-      );
-      titleFilter.appendChild(i);
-      titleFilter.insertBefore(i, titleFilter.childNodes[0]);
-    } else {
-      titleFilter.innerText = 'Hiện bộ lọc';
-      var i = document.createElement('i');
-      i.setAttribute('id', 'icon-filter');
-      i.setAttribute(
-        'class',
-        'order-pages-list-category-index-ic-ic-arrow-right order-pages-list-category-index-sale__icon-show___3nTgw'
-      );
-      titleFilter.appendChild(i);
-    }
   }
   handleClickSoft(sort1) {
     var liSort = document.getElementById(sort1);
@@ -641,14 +618,10 @@ class ListCategory extends PureComponent {
       });
     }
   }
-  handleClickFilter(value, value1) {
-    var rowFilter = document.getElementById(value);
-    if (rowFilter.style.display == 'block') {
-      rowFilter.style.display = 'none';
-    } else rowFilter.style.display = 'block';
-    var iconFilter = document.getElementById(value1);
-    iconFilter.classList.toggle('order-pages-list-category-index-ic-ic-minus');
-    iconFilter.classList.toggle('order-pages-list-category-index-ic-ic-plus');
+  handleClickFilter(value) {
+    this.setState({
+      [value]: !this.state[value],
+    });
   }
   renderBreadcrumb() {
     var {
@@ -793,6 +766,7 @@ class ListCategory extends PureComponent {
       },
     } = this.props;
 
+    console.log(this.state['style-row']);
     if (filter == true) {
       return (
         <div
@@ -832,7 +806,7 @@ class ListCategory extends PureComponent {
               <div className={styles['filter__filter-header___3I6RP']}>
                 <h5
                   id="style"
-                  onClick={() => this.handleClickFilter('style-row', 'icon-style')}
+                  onClick={() => this.handleClickFilter('style-row')}
                   className={styles['clearfix']}
                 >
                   <a
@@ -842,65 +816,70 @@ class ListCategory extends PureComponent {
                   >
                     <span className={styles['float-left']}>Style</span>
                     <i
-                      id="icon-style"
                       className={
-                        styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                        !this.state['style-row']
+                          ? styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                          : styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus']
                       }
                     />
                   </a>
                 </h5>
               </div>
-              <div id="style-row" style={{ display: 'block' }}>
-                <div className={styles['row__row___2roCA']}>
-                  {filterMap.style && filterMap.style.length > 0
-                    ? filterMap.style.map((e, i) => {
-                        var v = e.replace(/ /g, '-');
-                        return (
-                          <div key={i} className={styles['grid__col-12___39hfZ']}>
-                            <div className={styles['filter-option__filter-option___3Xmf0']}>
-                              <button
-                                onClick={() => this.handleCheckFilter('style', v, e)}
-                                type="button"
-                                className={
-                                  this.checkStateUrl(this.state.style, v) == false
-                                    ? styles['filter-option__btn___2u45i'] +
-                                      ' ' +
-                                      styles['filter-option__btn-secondary___1DPfK'] +
-                                      ' ' +
-                                      styles['filter-option__btn-block___1tZOy']
-                                    : styles['filter-option__btn___2u45i'] +
-                                      ' ' +
-                                      styles['filter-option__btn-secondary___1DPfK'] +
-                                      ' ' +
-                                      styles['filter-option__btn-block___1tZOy'] +
-                                      ' ' +
-                                      styles['filter-option__active___1HV6C']
-                                }
-                              >
-                                {this.checkStateUrl(this.state.style, v) == true && (
-                                  <span
-                                    className={
-                                      styles['filter-option__icon___1wxyY'] +
-                                      ' ' +
-                                      styles['ic-ic-close']
-                                    }
-                                  />
-                                )}
-                                {e}
-                              </button>
+              {!this.state['style-row'] ? (
+                <div id="style-row">
+                  <div className={styles['row__row___2roCA']}>
+                    {filterMap.style && filterMap.style.length > 0
+                      ? filterMap.style.map((e, i) => {
+                          var v = e.replace(/ /g, '-');
+                          return (
+                            <div key={i} className={styles['grid__col-12___39hfZ']}>
+                              <div className={styles['filter-option__filter-option___3Xmf0']}>
+                                <button
+                                  onClick={() => this.handleCheckFilter('style', v, e)}
+                                  type="button"
+                                  className={
+                                    this.checkStateUrl(this.state.style, v) == false
+                                      ? styles['filter-option__btn___2u45i'] +
+                                        ' ' +
+                                        styles['filter-option__btn-secondary___1DPfK'] +
+                                        ' ' +
+                                        styles['filter-option__btn-block___1tZOy']
+                                      : styles['filter-option__btn___2u45i'] +
+                                        ' ' +
+                                        styles['filter-option__btn-secondary___1DPfK'] +
+                                        ' ' +
+                                        styles['filter-option__btn-block___1tZOy'] +
+                                        ' ' +
+                                        styles['filter-option__active___1HV6C']
+                                  }
+                                >
+                                  {this.checkStateUrl(this.state.style, v) == true && (
+                                    <span
+                                      className={
+                                        styles['filter-option__icon___1wxyY'] +
+                                        ' ' +
+                                        styles['ic-ic-close']
+                                      }
+                                    />
+                                  )}
+                                  {e}
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })
-                    : ''}
+                          );
+                        })
+                      : ''}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                ''
+              )}
             </div>
             <div className={styles['filter__filter-container___1hLIM']}>
               <div className={styles['filter__filter-header___3I6RP']}>
                 <h5
                   id="kich-co"
-                  onClick={() => this.handleClickFilter('kich-co-row', 'icon-kich-co')}
+                  onClick={() => this.handleClickFilter('kich-co-row')}
                   className={styles['clearfix']}
                 >
                   <a
@@ -910,65 +889,70 @@ class ListCategory extends PureComponent {
                   >
                     <span className={styles['float-left']}>Kích cỡ</span>
                     <i
-                      id="icon-kich-co"
                       className={
-                        styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                        !this.state['kich-co-row']
+                          ? styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                          : styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus']
                       }
                     />
                   </a>
                 </h5>
               </div>
-              <div id="kich-co-row" style={{ display: 'block' }}>
-                <div className={styles['row__row___2roCA']}>
-                  {this.state.totalSize.length > 0
-                    ? this.state.totalSize.map((e, i) => {
-                        var v = e.replace(/ /g, '-');
-                        return (
-                          <div key={i} className={styles['grid__col-12___39hfZ']}>
-                            <div className={styles['filter-option__filter-option___3Xmf0']}>
-                              <button
-                                onClick={() => this.handleCheckFilter('size', v, e)}
-                                type="button"
-                                className={
-                                  this.checkStateUrl(this.state.size, v) == false
-                                    ? styles['filter-option__btn___2u45i'] +
-                                      ' ' +
-                                      styles['filter-option__btn-secondary___1DPfK'] +
-                                      ' ' +
-                                      styles['filter-option__btn-block___1tZOy']
-                                    : styles['filter-option__btn___2u45i'] +
-                                      ' ' +
-                                      styles['filter-option__btn-secondary___1DPfK'] +
-                                      ' ' +
-                                      styles['filter-option__btn-block___1tZOy'] +
-                                      ' ' +
-                                      styles['filter-option__active___1HV6C']
-                                }
-                              >
-                                {this.checkStateUrl(this.state.size, v) == true && (
-                                  <span
-                                    className={
-                                      styles['filter-option__icon___1wxyY'] +
-                                      ' ' +
-                                      styles['ic-ic-close']
-                                    }
-                                  />
-                                )}
-                                {e}
-                              </button>
+              {!this.state['kich-co-row'] ? (
+                <div id="kich-co-row" style={{ display: 'block' }}>
+                  <div className={styles['row__row___2roCA']}>
+                    {this.state.totalSize.length > 0
+                      ? this.state.totalSize.map((e, i) => {
+                          var v = e.replace(/ /g, '-');
+                          return (
+                            <div key={i} className={styles['grid__col-12___39hfZ']}>
+                              <div className={styles['filter-option__filter-option___3Xmf0']}>
+                                <button
+                                  onClick={() => this.handleCheckFilter('size', v, e)}
+                                  type="button"
+                                  className={
+                                    this.checkStateUrl(this.state.size, v) == false
+                                      ? styles['filter-option__btn___2u45i'] +
+                                        ' ' +
+                                        styles['filter-option__btn-secondary___1DPfK'] +
+                                        ' ' +
+                                        styles['filter-option__btn-block___1tZOy']
+                                      : styles['filter-option__btn___2u45i'] +
+                                        ' ' +
+                                        styles['filter-option__btn-secondary___1DPfK'] +
+                                        ' ' +
+                                        styles['filter-option__btn-block___1tZOy'] +
+                                        ' ' +
+                                        styles['filter-option__active___1HV6C']
+                                  }
+                                >
+                                  {this.checkStateUrl(this.state.size, v) == true && (
+                                    <span
+                                      className={
+                                        styles['filter-option__icon___1wxyY'] +
+                                        ' ' +
+                                        styles['ic-ic-close']
+                                      }
+                                    />
+                                  )}
+                                  {e}
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })
-                    : ''}
+                          );
+                        })
+                      : ''}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                ''
+              )}
             </div>
             <div className={styles['filter__filter-container___1hLIM']}>
               <div className={styles['filter__filter-header___3I6RP']}>
                 <h5
                   id="thuong-hieu"
-                  onClick={() => this.handleClickFilter('thuong-hieu-row', 'icon-thuong-hieu')}
+                  onClick={() => this.handleClickFilter('thuong-hieu-row')}
                   className={styles['clearfix']}
                 >
                   <a
@@ -978,65 +962,70 @@ class ListCategory extends PureComponent {
                   >
                     <span className={styles['float-left']}>Thương hiệu</span>
                     <i
-                      id="icon-thuong-hieu"
                       className={
-                        styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                        !this.state['thuong-hieu-row']
+                          ? styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                          : styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus']
                       }
                     />
                   </a>
                 </h5>
               </div>
-              <div id="thuong-hieu-row" style={{ display: 'block' }}>
-                <div className={styles['row__row___2roCA']}>
-                  {filterMap.brand && filterMap.brand.length > 0
-                    ? filterMap.brand.map((e, i) => {
-                        var v = e.replace(/ /g, '-');
-                        return (
-                          <div key={i} className={styles['grid__col-12___39hfZ']}>
-                            <div className={styles['filter-option__filter-option___3Xmf0']}>
-                              <button
-                                onClick={() => this.handleCheckFilter('brand', v, e)}
-                                type="button"
-                                className={
-                                  this.checkStateUrl(this.state.brand, v) == false
-                                    ? styles['filter-option__btn___2u45i'] +
-                                      ' ' +
-                                      styles['filter-option__btn-secondary___1DPfK'] +
-                                      ' ' +
-                                      styles['filter-option__btn-block___1tZOy']
-                                    : styles['filter-option__btn___2u45i'] +
-                                      ' ' +
-                                      styles['filter-option__btn-secondary___1DPfK'] +
-                                      ' ' +
-                                      styles['filter-option__btn-block___1tZOy'] +
-                                      ' ' +
-                                      styles['filter-option__active___1HV6C']
-                                }
-                              >
-                                {this.checkStateUrl(this.state.brand, v) == true && (
-                                  <span
-                                    className={
-                                      styles['filter-option__icon___1wxyY'] +
-                                      ' ' +
-                                      styles['ic-ic-close']
-                                    }
-                                  />
-                                )}
-                                {e}
-                              </button>
+              {!this.state['thuong-hieu-row'] ? (
+                <div id="thuong-hieu-row" style={{ display: 'block' }}>
+                  <div className={styles['row__row___2roCA']}>
+                    {filterMap.brand && filterMap.brand.length > 0
+                      ? filterMap.brand.map((e, i) => {
+                          var v = e.replace(/ /g, '-');
+                          return (
+                            <div key={i} className={styles['grid__col-12___39hfZ']}>
+                              <div className={styles['filter-option__filter-option___3Xmf0']}>
+                                <button
+                                  onClick={() => this.handleCheckFilter('brand', v, e)}
+                                  type="button"
+                                  className={
+                                    this.checkStateUrl(this.state.brand, v) == false
+                                      ? styles['filter-option__btn___2u45i'] +
+                                        ' ' +
+                                        styles['filter-option__btn-secondary___1DPfK'] +
+                                        ' ' +
+                                        styles['filter-option__btn-block___1tZOy']
+                                      : styles['filter-option__btn___2u45i'] +
+                                        ' ' +
+                                        styles['filter-option__btn-secondary___1DPfK'] +
+                                        ' ' +
+                                        styles['filter-option__btn-block___1tZOy'] +
+                                        ' ' +
+                                        styles['filter-option__active___1HV6C']
+                                  }
+                                >
+                                  {this.checkStateUrl(this.state.brand, v) == true && (
+                                    <span
+                                      className={
+                                        styles['filter-option__icon___1wxyY'] +
+                                        ' ' +
+                                        styles['ic-ic-close']
+                                      }
+                                    />
+                                  )}
+                                  {e}
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })
-                    : ''}
+                          );
+                        })
+                      : ''}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                ''
+              )}
             </div>
             <div className={styles['filter__filter-container___1hLIM']}>
               <div className={styles['filter__filter-header___3I6RP']}>
                 <h5
                   id="type"
-                  onClick={() => this.handleClickFilter('type-row', 'icon-type')}
+                  onClick={() => this.handleClickFilter('type-row')}
                   className={styles['clearfix']}
                 >
                   <a
@@ -1046,65 +1035,70 @@ class ListCategory extends PureComponent {
                   >
                     <span className={styles['float-left']}>TYPE</span>
                     <i
-                      id="icon-type"
                       className={
-                        styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                        !this.state['type-row']
+                          ? styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                          : styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus']
                       }
                     />
                   </a>
                 </h5>
               </div>
-              <div id="type-row" style={{ display: 'block' }}>
-                <div className={styles['row__row___2roCA']}>
-                  {filterMap.type && filterMap.type.length > 0
-                    ? filterMap.type.map((e, i) => {
-                        var v = e.replace(/ /g, '-');
-                        return (
-                          <div key={i} className={styles['grid__col-12___39hfZ']}>
-                            <div className={styles['filter-option__filter-option___3Xmf0']}>
-                              <button
-                                onClick={() => this.handleCheckFilter('type', v, e)}
-                                type="button"
-                                className={
-                                  this.checkStateUrl(this.state.type, v) == false
-                                    ? styles['filter-option__btn___2u45i'] +
-                                      ' ' +
-                                      styles['filter-option__btn-secondary___1DPfK'] +
-                                      ' ' +
-                                      styles['filter-option__btn-block___1tZOy']
-                                    : styles['filter-option__btn___2u45i'] +
-                                      ' ' +
-                                      styles['filter-option__btn-secondary___1DPfK'] +
-                                      ' ' +
-                                      styles['filter-option__btn-block___1tZOy'] +
-                                      ' ' +
-                                      styles['filter-option__active___1HV6C']
-                                }
-                              >
-                                {this.checkStateUrl(this.state.type, v) == true && (
-                                  <span
-                                    className={
-                                      styles['filter-option__icon___1wxyY'] +
-                                      ' ' +
-                                      styles['ic-ic-close']
-                                    }
-                                  />
-                                )}
-                                {e}
-                              </button>
+              {!this.state['type-row'] ? (
+                <div id="type-row" style={{ display: 'block' }}>
+                  <div className={styles['row__row___2roCA']}>
+                    {filterMap.type && filterMap.type.length > 0
+                      ? filterMap.type.map((e, i) => {
+                          var v = e.replace(/ /g, '-');
+                          return (
+                            <div key={i} className={styles['grid__col-12___39hfZ']}>
+                              <div className={styles['filter-option__filter-option___3Xmf0']}>
+                                <button
+                                  onClick={() => this.handleCheckFilter('type', v, e)}
+                                  type="button"
+                                  className={
+                                    this.checkStateUrl(this.state.type, v) == false
+                                      ? styles['filter-option__btn___2u45i'] +
+                                        ' ' +
+                                        styles['filter-option__btn-secondary___1DPfK'] +
+                                        ' ' +
+                                        styles['filter-option__btn-block___1tZOy']
+                                      : styles['filter-option__btn___2u45i'] +
+                                        ' ' +
+                                        styles['filter-option__btn-secondary___1DPfK'] +
+                                        ' ' +
+                                        styles['filter-option__btn-block___1tZOy'] +
+                                        ' ' +
+                                        styles['filter-option__active___1HV6C']
+                                  }
+                                >
+                                  {this.checkStateUrl(this.state.type, v) == true && (
+                                    <span
+                                      className={
+                                        styles['filter-option__icon___1wxyY'] +
+                                        ' ' +
+                                        styles['ic-ic-close']
+                                      }
+                                    />
+                                  )}
+                                  {e}
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })
-                    : ''}
+                          );
+                        })
+                      : ''}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                ''
+              )}
             </div>
             <div className={styles['filter__filter-container___1hLIM']}>
               <div className={styles['filter__filter-header___3I6RP']}>
                 <h5
                   id="color"
-                  onClick={() => this.handleClickFilter('color-row', 'icon-color')}
+                  onClick={() => this.handleClickFilter('color-row')}
                   className={styles['clearfix']}
                 >
                   <a
@@ -1114,59 +1108,64 @@ class ListCategory extends PureComponent {
                   >
                     <span className={styles['float-left']}>Màu sắc</span>
                     <i
-                      id="icon-color"
                       className={
-                        styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                        !this.state['color-row']
+                          ? styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
+                          : styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus']
                       }
                     />
                   </a>
                 </h5>
               </div>
-              <div id="color-row" style={{ display: 'block' }}>
-                <div className={styles['row__row___2roCA']}>
-                  {filterMap.color && filterMap.color.length > 0
-                    ? filterMap.color.map((e, i) => {
-                        var v = e.replace(/ /g, '-');
-                        return (
-                          <div key={i} className={styles['grid__col-12___39hfZ']}>
-                            <div className={styles['filter-option__filter-option___3Xmf0']}>
-                              <button
-                                onClick={() => this.handleCheckFilter('color', v, e)}
-                                type="button"
-                                className={
-                                  this.checkStateUrl(this.state.color, v) == false
-                                    ? styles['filter-option__btn___2u45i'] +
-                                      ' ' +
-                                      styles['filter-option__btn-secondary___1DPfK'] +
-                                      ' ' +
-                                      styles['filter-option__btn-block___1tZOy']
-                                    : styles['filter-option__btn___2u45i'] +
-                                      ' ' +
-                                      styles['filter-option__btn-secondary___1DPfK'] +
-                                      ' ' +
-                                      styles['filter-option__btn-block___1tZOy'] +
-                                      ' ' +
-                                      styles['filter-option__active___1HV6C']
-                                }
-                              >
-                                {this.checkStateUrl(this.state.color, v) == true && (
-                                  <span
-                                    className={
-                                      styles['filter-option__icon___1wxyY'] +
-                                      ' ' +
-                                      styles['ic-ic-close']
-                                    }
-                                  />
-                                )}
-                                {e}
-                              </button>
+              {!this.state['color-row'] ? (
+                <div id="color-row" style={{ display: 'block' }}>
+                  <div className={styles['row__row___2roCA']}>
+                    {filterMap.color && filterMap.color.length > 0
+                      ? filterMap.color.map((e, i) => {
+                          var v = e.replace(/ /g, '-');
+                          return (
+                            <div key={i} className={styles['grid__col-12___39hfZ']}>
+                              <div className={styles['filter-option__filter-option___3Xmf0']}>
+                                <button
+                                  onClick={() => this.handleCheckFilter('color', v, e)}
+                                  type="button"
+                                  className={
+                                    this.checkStateUrl(this.state.color, v) == false
+                                      ? styles['filter-option__btn___2u45i'] +
+                                        ' ' +
+                                        styles['filter-option__btn-secondary___1DPfK'] +
+                                        ' ' +
+                                        styles['filter-option__btn-block___1tZOy']
+                                      : styles['filter-option__btn___2u45i'] +
+                                        ' ' +
+                                        styles['filter-option__btn-secondary___1DPfK'] +
+                                        ' ' +
+                                        styles['filter-option__btn-block___1tZOy'] +
+                                        ' ' +
+                                        styles['filter-option__active___1HV6C']
+                                  }
+                                >
+                                  {this.checkStateUrl(this.state.color, v) == true && (
+                                    <span
+                                      className={
+                                        styles['filter-option__icon___1wxyY'] +
+                                        ' ' +
+                                        styles['ic-ic-close']
+                                      }
+                                    />
+                                  )}
+                                  {e}
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })
-                    : ''}
+                          );
+                        })
+                      : ''}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                ''
+              )}
             </div>
           </div>
         </div>
@@ -1256,7 +1255,8 @@ class ListCategory extends PureComponent {
           },
         },
       };
-
+      console.log(filterString);
+      console.log(this.props.category.filterUrl);
       return (
         <DocumentMeta {...meta}>
           <div className={styles['container__container___1fvX0']}>
@@ -1311,15 +1311,27 @@ class ListCategory extends PureComponent {
                         styles['active']
                       }
                     >
-                      <span id="title-filter">
-                        Hiện bộ lọc
-                        <i
-                          id="icon-filter"
-                          className={
-                            styles['ic-ic-arrow-right'] + ' ' + styles['sale__icon-show___3nTgw']
-                          }
-                        />
-                      </span>
+                      {filter == false ? (
+                        <span>
+                          Hiện bộ lọc
+                          <i
+                            id="icon-filter"
+                            className={
+                              styles['ic-ic-arrow-right'] + ' ' + styles['sale__icon-show___3nTgw']
+                            }
+                          />
+                        </span>
+                      ) : (
+                        <span>
+                          <i
+                            id="icon-filter"
+                            className={
+                              styles['ic-ic-arrow-left'] + ' ' + styles['sale__icon-show___3nTgwt']
+                            }
+                          />
+                          Đóng bộ lọc
+                        </span>
+                      )}
                     </button>
                   </div>
                   <div
@@ -1463,7 +1475,15 @@ class ListCategory extends PureComponent {
                   <div
                     id="list-product"
                     className={
-                      styles['sale__products-list___2pc3u'] + ' ' + styles['sale__col-12___82vEz']
+                      filter == false
+                        ? styles['sale__products-list___2pc3u'] +
+                          ' ' +
+                          styles['sale__col-12___82vEz']
+                        : styles['sale__products-list___2pc3u'] +
+                          ' ' +
+                          styles['sale__col-md-8___34B6S'] +
+                          ' ' +
+                          styles['sale__col-lg-9___2qXAs']
                     }
                   >
                     <div id="row-product" className={styles['row__row___2roCA']}>

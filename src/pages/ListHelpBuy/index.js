@@ -437,7 +437,6 @@ class ListHelpBuy extends PureComponent {
                         columns={columns}
                         dataSource={dataTable}
                         bordered
-                        pagination={{ pageSize: 1 }}
                       />
                     </div>
                   </div>

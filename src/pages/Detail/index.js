@@ -66,6 +66,7 @@ import {
   Icon,
   Carousel,
   Tooltip,
+  Tabs,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
@@ -80,6 +81,7 @@ import styles1 from './test.less';
 
 var currencyFormatter = require('currency-formatter');
 
+const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -308,15 +310,6 @@ class Detail extends PureComponent {
       product: { detail },
     } = this.props;
     const { imageChoose } = this.state;
-    const settings = {
-      infinite: true,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      autoplay: true,
-      arrows: true,
-      dots: true,
-    };
     const data = detail || {};
     const image_huge = data.image_huge;
     const SmallImageUI = [];
@@ -329,26 +322,32 @@ class Detail extends PureComponent {
         var image = e.replace(/\-/g, '');
         SmallImageUI.push(
           // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-          <li
+
+          <TabPane
             key={i}
-            onClick={() => {
-              this.handleChangeImage(e, i);
-            }}
-            onMouseOver={this.onHover(e)}
-            className={
-              this.state.index != i
-                ? styles['images-slider__image-border___2hkRy']
-                : styles['images-slider__image-border___2hkRy'] +
-                  ' ' +
-                  styles['images-slider__image-selected___3ftth']
+            tab={
+              <li
+                style={{ marginBottom: 0 }}
+                onClick={() => {
+                  this.handleChangeImage(e, i);
+                }}
+                onMouseOver={this.onHover(e)}
+                className={
+                  this.state.index != i
+                    ? styles['images-slider__image-border___2hkRy']
+                    : styles['images-slider__image-border___2hkRy'] +
+                      ' ' +
+                      styles['images-slider__image-selected___3ftth']
+                }
+              >
+                <img
+                  className={styles['images-slider__image___wW9Yw']}
+                  src={`/images/w90/${image}`}
+                  sizes="80px"
+                />
+              </li>
             }
-          >
-            <img
-              className={styles['images-slider__image___wW9Yw']}
-              src={`/images/w90/${image}`}
-              sizes="80px"
-            />
-          </li>
+          />
         );
         HugeImageUI.push(
           <img
@@ -367,7 +366,6 @@ class Detail extends PureComponent {
           src={`/images/f/${imageChoose || image_huge[0].replace(/\-/g, '')}`}
         />
       );
-
       // eslint-disable-next-line camelcase
       zoom_image = (
         <img
@@ -400,7 +398,11 @@ class Detail extends PureComponent {
               }`}
               id="images-container"
             >
-              {SmallImageUI}
+              {SmallImageUI.length > 0 && (
+                <Tabs forceRender={false} tabPosition="left" style={{ height: 650 }}>
+                  {SmallImageUI}
+                </Tabs>
+              )}
             </ul>
             <div
               className={`${styles['ic-ic-arrow-down']} ${
@@ -535,7 +537,6 @@ class Detail extends PureComponent {
         detailCookie.size = !this.state.size ? data.size[0] : this.state.size;
       if (color != '') detailCookie.color = color;
     }
-    console.log(detail);
     return (
       <DocumentMeta {...meta}>
         <div id="app__body___3NlTJ">
@@ -1093,5 +1094,4 @@ class Detail extends PureComponent {
     );
   }
 }
-
 export default Detail;

@@ -21,12 +21,26 @@
       src: url('/image/slick.eot') format('embedded-opentype'), url('/image/slick.woff') format('woff'),
         url('/image/slick.ttf') format('truetype'), url('/image/slick.svg') format('svg');
     }
-
     .kep-login-facebook {
       width: 100%;
       margin-bottom: 30px;
     }
-
+    .ant-tabs-ink-bar {
+  z-index: 1;
+  position: absolute;
+  left: 0;
+  bottom: 1px;
+  box-sizing: border-box;
+  height: 2px;
+  background-color: #fff !important;
+  transform-origin: 0 0;
+}
+.ant-tabs-vertical > .ant-tabs-bar .ant-tabs-tab {
+  float: none;
+  margin: 0 0 16px 0;
+  padding: 0 3px !important;
+  display: block;
+}
     .slick-prev,
     .slick-next {
       font-size: 0;
@@ -393,6 +407,7 @@
     .slick-arrow.slick-hidden {
       display: none;
     }
+
   </style>
 <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
