@@ -200,6 +200,14 @@
   .home__defaultLayout___Q6Udu.home__paddingTopWithBanner___3Rqtc {
     padding-top: 136px !important;
   }
+  .filters-expanded .product-card__sale-product-card____fjbZ {
+    height: 270px;
+  }
+}
+@media (max-width: 767px) {
+  .filters-expanded .product-card__sale-product-card____fjbZ {
+    height: 220px;
+  }
 }
 @media (min-width: 576px) {
   .default-layout__container___13v1V {
@@ -216,9 +224,23 @@
     padding-bottom: 390px;
     padding-top: 50px;
   }
+  .filters-expanded .product-card__sale-product-card____fjbZ {
+    height: 270px;
+  }
 }
 @media (min-width: 1200px) {
   .default-layout__container___13v1V {
     padding-bottom: 390px;
+  }
+  .filters-expanded .product-card__sale-product-card____fjbZ {
+    height: 326px;
+  }
+}
+@media (max-width: 575px) {
+  .end-time__icon___REEKA {
+    display: none;
+  }
+  .filters-expanded .product-card__sale-product-card____fjbZ {
+    height: 62vw;
   }
 }

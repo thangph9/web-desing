@@ -255,6 +255,12 @@ export default {
         verify: {},
       };
     },
+    loginAfter(state) {
+      return {
+        ...state,
+        login: {},
+      };
+    },
     changepassAfter(state) {
       return {
         ...state,

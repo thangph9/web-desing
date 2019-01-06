@@ -200,6 +200,7 @@ class Login extends PureComponent {
     }
   }
   render() {
+    console.log(this.props);
     const meta = {
       title: 'Đăng Nhập',
       description: null,

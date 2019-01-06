@@ -109,16 +109,22 @@ class AccountInformation extends PureComponent {
       type: 'user/info',
     });
     if (this.props.user.verify.status == 'ok') {
-      message.success('Đăng ký tài khoản thành công! Chào mừng bạn đến với 123order!', 10);
+      message.success('Đăng ký tài khoản thành công! Chào mừng bạn đến với 123order!', 5);
     }
     if (this.props.user.changepass.status == 'ok') {
-      message.success('Thay đổi mật khẩu thành công!', 10);
+      message.success('Thay đổi mật khẩu thành công!', 5);
+    }
+    if (this.props.user.login.status == 'ok') {
+      message.success('Đăng nhập thành công! Chào mừng bạn đến với 123order!', 5);
     }
     this.props.dispatch({
       type: 'user/verifyAfter',
     });
     this.props.dispatch({
       type: 'user/changepassAfter',
+    });
+    this.props.dispatch({
+      type: 'user/loginAfter',
     });
   }
   handleClickSubmitEdit(item) {

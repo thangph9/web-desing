@@ -8,6 +8,7 @@ import {
   getListProductAdidas,
   getDEVDETAIL,
   getProductFilter,
+  getProductDetailTest,
 } from '@/services/api';
 
 export default {
@@ -15,6 +16,7 @@ export default {
   state: {
     list: [],
     detail: {},
+    detailtest: {},
     amazon: [],
     adidas: {},
     nike: [],
@@ -137,6 +139,16 @@ export default {
         });
       }
     },
+    *detailtest({ payload }, { call, put }) {
+      const response = yield call(getProductDetailTest, payload);
+
+      if (response.status && response.status === 'ok') {
+        yield put({
+          type: 'productDetailTest',
+          payload: response.data ? response.data : {},
+        });
+      }
+    },
     *filter({ payload }, { call, put }) {
       const response = yield call(getProductFilter, payload);
       if (response && response.status === 'ok') {
@@ -159,6 +171,12 @@ export default {
       return {
         ...state,
         detail: action.payload,
+      };
+    },
+    productDetailTest(state, action) {
+      return {
+        ...state,
+        detailtest: action.payload,
       };
     },
     queryListAmazon(state, action) {

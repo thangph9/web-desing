@@ -28,6 +28,7 @@ export default {
     value: 0,
     listArr: localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [],
     modal: false,
+    filter: false,
   },
   effects: {
     *fetch({ payload }, { call, put }) {
@@ -87,6 +88,12 @@ export default {
       return {
         ...state,
         modal: action.payload,
+      };
+    },
+    filter(state, action) {
+      return {
+        ...state,
+        filter: action.payload,
       };
     },
   },

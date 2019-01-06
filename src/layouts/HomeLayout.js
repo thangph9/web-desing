@@ -253,7 +253,7 @@ class HomeLayout extends React.PureComponent {
     });
   }
   render() {
-    var { modal } = this.props.list;
+    var { modal, filter } = this.props.list;
 
     const {
       // eslint-disable-next-line no-unused-vars
@@ -268,9 +268,17 @@ class HomeLayout extends React.PureComponent {
     const routerConfig = this.matchParamsPath(pathname);
     const layout = (
       <div
-        className={`${styles['default-layout__container___13v1V']} ${
-          styles.home__defaultLayout___Q6Udu
-        }`}
+        className={
+          filter === false
+            ? styles['default-layout__container___13v1V'] +
+              ' ' +
+              styles['home__defaultLayout___Q6Udu']
+            : styles['default-layout__container___13v1V'] +
+              ' ' +
+              styles['home__defaultLayout___Q6Udu'] +
+              ' ' +
+              styles['filters-expanded']
+        }
       >
         <div
           id="body-modals"

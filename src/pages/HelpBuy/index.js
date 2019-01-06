@@ -205,7 +205,7 @@ class HelpBuy extends PureComponent {
                   </div>
                 </div>
               </div>
-              <p>Paste product link you want to buy to get quote</p>
+              <p>Vui lòng điền thông tin sản phẩm cần mua vào đây!</p>
               <section id={styles['pastelink']}>
                 <div style={{ width: '60%', margin: '0 auto' }} className={styles['container']}>
                   <div className={styles['row']}>

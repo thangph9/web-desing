@@ -1,3 +1,4 @@
+/* eslint-disable no-self-assign */
 /* eslint-disable no-useless-return */
 /* eslint-disable no-useless-concat */
 /* eslint-disable operator-assignment */
@@ -144,10 +145,11 @@ class ProductItem extends PureComponent {
     );
   }
 }
-@connect(({ loading, category }) => ({
+@connect(({ loading, category, list }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   loading,
   category,
+  list,
 }))
 @Form.create()
 class ListCategory extends PureComponent {
@@ -270,15 +272,21 @@ class ListCategory extends PureComponent {
       let arrFilterString = this.props.category.filterUrl.split('-').filter((v, i) => {
         return v != '';
       });
-      var filterString = arrFilterString.toString().split(',');
-      this.setState({
-        filterString,
-      });
+      if (arrFilterString.length > 0) {
+        var filterString = arrFilterString.toString().split(',');
+        this.setState({
+          filterString,
+        });
+      }
     }
-    var defautLayout = document.getElementsByClassName(
-      'order-layouts-home-layout-default-layout__container___13v1V'
-    )[0];
-    defautLayout.classList.remove('order-pages-list-category-index-filters-expanded');
+    this.props.dispatch({
+      type: 'list/filter',
+      payload: false,
+    });
+    this.props.dispatch({
+      type: 'category/filter',
+      payload: '',
+    });
   }
   componentDidMount() {
     var { dispatch, match } = this.props;
@@ -356,7 +364,6 @@ class ListCategory extends PureComponent {
         sort,
       },
     });
-
     dispatch({
       type: 'category/detail',
       payload: {
@@ -364,13 +371,16 @@ class ListCategory extends PureComponent {
       },
     });
     if (filterUrl !== '---') {
-      console.log('vao day');
+      this.props.dispatch({
+        type: 'list/filter',
+        payload: true,
+      });
       dispatch({
         type: 'category/filter',
         payload: filterUrl,
       });
     }
-    console.log(filterUrl);
+
     /*
 
     dispatch({
@@ -418,17 +428,15 @@ class ListCategory extends PureComponent {
     }
     liSort.classList.add('order-pages-list-category-index-sort__active___3DNgx');
   }
-  componentWillUnmount() {
-    // window.removeEventListener('scroll', this.handleScroll);
-  }
+
   handleClickButtonFilter() {
     this.setState({
       filter: !this.state.filter,
     });
-    var defautLayout = document.getElementsByClassName(
-      'order-layouts-home-layout-default-layout__container___13v1V'
-    )[0];
-    defautLayout.classList.toggle('order-pages-list-category-index-filters-expanded');
+    this.props.dispatch({
+      type: 'list/filter',
+      payload: !this.props.list.filter,
+    });
   }
   handleClickSoft(sort1) {
     var liSort = document.getElementById(sort1);
@@ -612,10 +620,12 @@ class ListCategory extends PureComponent {
       let arrFilterString = nextProps.category.filterUrl.split('-').filter((v, i) => {
         return v != '';
       });
-      var filterString = arrFilterString.toString().split(',');
-      this.setState({
-        filterString,
-      });
+      if (arrFilterString.length > 0) {
+        var filterString = arrFilterString.toString().split(',');
+        this.setState({
+          filterString,
+        });
+      }
     }
   }
   handleClickFilter(value) {
@@ -718,28 +728,10 @@ class ListCategory extends PureComponent {
     );
   }
   handleClickButtonFilterClear() {
-    this.setState({
-      filter: !this.state.filter,
+    this.props.dispatch({
+      type: 'list/filter',
+      payload: !this.props.list.filter,
     });
-    var defautLayout = document.getElementsByClassName(
-      'order-layouts-home-layout-default-layout__container___13v1V'
-    )[0];
-    defautLayout.classList.toggle('order-pages-list-category-index-filters-expanded');
-    var buttonFilter = document.getElementById('button-filter');
-    buttonFilter.classList.toggle('order-pages-list-category-index-sale__filter-btn___30Ofp');
-    buttonFilter.classList.toggle('order-pages-list-category-index-sale__btn-block___O8koG');
-    var headerFilter = document.getElementById('header-filter');
-    headerFilter.classList.toggle('order-pages-list-category-index-sale__d-t___1Trp4');
-    var listProduct = document.getElementById('list-product');
-    listProduct.classList.toggle('order-pages-list-category-index-sale__col-md-8___34B6S');
-    listProduct.classList.toggle('order-pages-list-category-index-sale__col-lg-9___2qXAs');
-    listProduct.classList.toggle('order-pages-list-category-index-sale__col-12___82vEz');
-    var proudctItem = document.getElementsByClassName('product-items');
-    for (var i = 0; i < proudctItem.length; i++) {
-      proudctItem[i].classList.toggle('order-pages-list-category-index-sale__col-md-4___UhAyk');
-      proudctItem[i].classList.toggle('order-pages-list-category-index-sale__col-md-6___3wB0o');
-    }
-    var titleFilter = document.getElementById('title-filter');
     this.setState({
       color: [],
       size: [],
@@ -757,16 +749,15 @@ class ListCategory extends PureComponent {
     if (check.length > 0) return true;
     return false;
   }
-  renderFilterList(filter) {
-    var { filter } = this.state;
+  renderFilterList(value) {
+    var { filter } = this.props.list;
     var { search } = this.props.category;
     var {
       category: {
         search: { filterMap },
       },
     } = this.props;
-
-    console.log(this.state['style-row']);
+    filterMap ? (filterMap = filterMap) : (filterMap = {});
     if (filter == true) {
       return (
         <div
@@ -798,7 +789,7 @@ class ListCategory extends PureComponent {
                 styles['sale__total-items___u7EoB'] + ' ' + styles['total-items__text___1TBmn']
               }
             >
-              {filterMap.length} Sản phẩm
+              {value} Sản phẩm
             </div>
           </div>
           <div id="transform-fixed" className={styles['sale__fitlers-content-wrap___pU5ed']}>
@@ -1194,7 +1185,7 @@ class ListCategory extends PureComponent {
     );
   }
   render() {
-    var { filter, test, globalProduct, filterString, filterStringSize, totalSize } = this.state;
+    var { test, globalProduct, filterString, filterStringSize, totalSize } = this.state;
     var {
       category: {
         search: { list },
@@ -1203,10 +1194,14 @@ class ListCategory extends PureComponent {
     var {
       category: { detail },
     } = this.props;
+    var { filter } = this.props.list;
     var filterRender = [];
     var dataDetail = [];
     var globalProductNew = [];
-    var filterToString = filterString.toString().replace(/\,/g, '&&');
+    var filterToString = '';
+    if (filterString.length > 0) {
+      filterToString = filterString.toString().replace(/\,/g, '&&');
+    }
     if (filterToString == '') {
       globalProductNew = globalProduct;
     } else {
@@ -1255,8 +1250,6 @@ class ListCategory extends PureComponent {
           },
         },
       };
-      console.log(filterString);
-      console.log(this.props.category.filterUrl);
       return (
         <DocumentMeta {...meta}>
           <div className={styles['container__container___1fvX0']}>
@@ -1471,7 +1464,7 @@ class ListCategory extends PureComponent {
               </div>
               <div className={styles['sale__sale-content___1M-Lr']}>
                 <div id="row-filter" className={styles['row__row___2roCA']}>
-                  {this.renderFilterList(filter)}
+                  {this.renderFilterList(globalProductNew.length)}
                   <div
                     id="list-product"
                     className={

@@ -85,6 +85,11 @@ export default [
         component: './Detail/',
       },
       {
+        path: '/producttest/:optid/:productid',
+        name: 'detailtest',
+        component: './DetailTest/',
+      },
+      {
         path: '/ebay',
         name: 'ebay',
         component: './Ebay/',
