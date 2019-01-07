@@ -535,14 +535,14 @@ class DetailTest extends PureComponent {
         return v.attrs['1001'] === value;
       });
       this.props.history.push({
-        pathname: `/producttest/${arrSizeByValue[0].optid}/78f193a459bf4645b890a2757c1ae8c9l`,
+        pathname: `/producttest/${arrSizeByValue[0].optid}/${this.props.match.params.productid}`,
       });
     } else {
       var optProduct = this.state.detailtest.options.filter((v, i) => {
         return v.attrs['1000'] === this.state.color && v.attrs['1001'] === value;
       });
       this.props.history.push({
-        pathname: `/producttest/${optProduct[0].optid}/78f193a459bf4645b890a2757c1ae8c9l`,
+        pathname: `/producttest/${optProduct[0].optid}/${this.props.match.params.productid}`,
       });
     }
   }
@@ -583,6 +583,11 @@ class DetailTest extends PureComponent {
     this.setState({
       size_by_color: arrSizeByColor,
       size: undefined,
+    });
+    this.props.history.push({
+      pathname: `/producttest/${this.props.match.params.productid}/${
+        this.props.match.params.productid
+      }`,
     });
   }
   handleClickButtonTrue(value, color) {
@@ -629,7 +634,6 @@ class DetailTest extends PureComponent {
       detailCookie.sale_price = price;
     }
     console.log(detailtest);
-
     return (
       <DocumentMeta {...meta}>
         <div id="app__body___3NlTJ">
@@ -690,7 +694,7 @@ class DetailTest extends PureComponent {
                       </div>
                     </div>
 
-                    {detailtest && detailtest.variant.size ? (
+                    {detailtest && detailtest.variant['1001'] ? (
                       <div className={styles['product__sizes___27zL9']}>
                         <div
                           className={
@@ -700,7 +704,9 @@ class DetailTest extends PureComponent {
                           }
                         >
                           {' '}
-                          <h5 className={styles['size-variations__heading___1xG0s']}>Kích cỡ: </h5>
+                          <h5 className={styles['size-variations__heading___1xG0s']}>
+                            {detailtest.variant['1001'].name}{' '}
+                          </h5>
                           <div
                             data-auto-id="size-selector"
                             className={
@@ -739,7 +745,7 @@ class DetailTest extends PureComponent {
                                   data-auto-id="label"
                                 >
                                   <span className={styles1['gl-dropdown__select-label']}>
-                                    {detailtest.variant.size.value.length > 0 && !this.state.size
+                                    {detailtest.variant['1001'].value.length > 0 && !this.state.size
                                       ? 'Lựa chọn kích cỡ'
                                       : this.state.size}
                                   </span>
@@ -775,28 +781,32 @@ class DetailTest extends PureComponent {
                                       }
                                     >
                                       {detailtest &&
-                                        detailtest.variant.size.value.map((v, i) => {
-                                          return (
-                                            <li
-                                              onClick={() => this.handleClickSize(v)}
-                                              key={i}
-                                              className={styles1['gl-square-list__item']}
-                                              title={v}
-                                            >
-                                              <div
-                                                className={
-                                                  this.checkChilrd(v) === false
-                                                    ? styles1['gl-square-list__cta'] +
-                                                      ' ' +
-                                                      styles1['colorbbb']
-                                                    : styles1['gl-square-list__cta']
-                                                }
+                                        detailtest.variant['1001'].value
+                                          .sort((a, b) => {
+                                            return a - b;
+                                          })
+                                          .map((v, i) => {
+                                            return (
+                                              <li
+                                                onClick={() => this.handleClickSize(v)}
+                                                key={i}
+                                                className={styles1['gl-square-list__item']}
+                                                title={v}
                                               >
-                                                {v}
-                                              </div>
-                                            </li>
-                                          );
-                                        })}
+                                                <div
+                                                  className={
+                                                    this.checkChilrd(v) === false
+                                                      ? styles1['gl-square-list__cta'] +
+                                                        ' ' +
+                                                        styles1['colorbbb']
+                                                      : styles1['gl-square-list__cta']
+                                                  }
+                                                >
+                                                  {v}
+                                                </div>
+                                              </li>
+                                            );
+                                          })}
                                     </ol>
                                   </div>
                                 </div>
@@ -812,11 +822,19 @@ class DetailTest extends PureComponent {
                     {detailtest && this.state.color ? (
                       <div className={styles['product__colors___3jFbL']}>
                         <h5 className={styles['color-variations__heading___3tZSD']}>
-                          Màu sắc: {this.state.color}
+                          {detailtest.variant['1000'].name} : {this.state.color}
                         </h5>
-                        {detailtest.variant.color.value.map((v, i) => {
+                        {detailtest.variant['1000'].value.map((v, i) => {
                           return (
-                            <div key={i} style={{ paddingBottom: '10px' }}>
+                            <div
+                              title={
+                                this.checkSizeInColor(this.state.size, v, i) === false
+                                  ? 'Không có size cho màu này'
+                                  : ''
+                              }
+                              key={i}
+                              style={{ marginBottom: '10px' }}
+                            >
                               {this.checkSizeInColor(this.state.size, v, i) === false ? (
                                 <Button
                                   onClick={() => this.handleClickButton(i, v)}

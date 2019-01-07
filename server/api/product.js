@@ -857,7 +857,9 @@ function productDetailTest(req, res) {
               let obj = {};
               obj.variantid = element.variantid;
               obj.value = element.value;
-              objVariant[`${element.name}`] = obj;
+              obj.name = element.name;
+              obj.orderby = element.orderby;
+              objVariant[`${element.variantid}`] = obj;
             });
             results.variant = objVariant;
           }
