@@ -106,7 +106,9 @@ class DetailTest extends PureComponent {
     color: undefined,
     size_by_color: [],
     ['info-product']: true,
+    min_value: 1000,
     optid: '',
+    activeButton: 0,
   };
 
   // eslint-disable-next-line react/sort-comp
@@ -182,7 +184,6 @@ class DetailTest extends PureComponent {
       }
     }
     if (nextProps.match.params.optid !== this.props.match.params.optid) {
-      console.log('vao day');
       const product_by_option = nextProps.product.detailtest.options.filter((v, i) => {
         return v.optid === nextProps.match.params.optid;
       });
@@ -371,6 +372,7 @@ class DetailTest extends PureComponent {
     if (arrResult.length > 0) return true;
     return false;
   }
+
   renderSlider() {
     const {
       product: { detail },
@@ -544,6 +546,62 @@ class DetailTest extends PureComponent {
       });
     }
   }
+  checkSizeInColor(value, color, index) {
+    if (value) {
+      var result = this.state.detailtest.options
+        .filter((v, i) => {
+          return v.attrs['1000'] === color;
+        })
+        .filter((v, i) => {
+          return v.attrs['1001'] === value;
+        });
+      if (result.length > 0) {
+        if (this.state.min_value > index) {
+          this.setState({
+            min_value: index,
+          });
+        }
+        return true;
+      }
+      return false;
+    }
+    return true;
+  }
+  handleClickButton(value, color) {
+    this.setState({
+      activeButton: value,
+      color,
+      min_value: 1000,
+    });
+    const arrColor = this.state.detailtest.options.filter((v, i) => {
+      return v.attrs['1000'] === color;
+    });
+    var arrSizeByColor = [];
+    arrColor.forEach(element => {
+      arrSizeByColor.push(element.attrs['1001']);
+    });
+    this.setState({
+      size_by_color: arrSizeByColor,
+      size: undefined,
+    });
+  }
+  handleClickButtonTrue(value, color) {
+    this.setState({
+      activeButton: value,
+      color,
+      min_value: 1000,
+    });
+    const arrColor = this.state.detailtest.options.filter((v, i) => {
+      return v.attrs['1000'] === color;
+    });
+    var arrSizeByColor = [];
+    arrColor.forEach(element => {
+      arrSizeByColor.push(element.attrs['1001']);
+    });
+    this.setState({
+      size_by_color: arrSizeByColor,
+    });
+  }
   render() {
     var { detailtest } = this.state;
     const data = detailtest ? detailtest.product : undefined;
@@ -571,6 +629,7 @@ class DetailTest extends PureComponent {
       detailCookie.sale_price = price;
     }
     console.log(detailtest);
+
     return (
       <DocumentMeta {...meta}>
         <div id="app__body___3NlTJ">
@@ -749,15 +808,48 @@ class DetailTest extends PureComponent {
                     ) : (
                       ''
                     )}
-                    <div className={styles['product__colors___3jFbL']}>
-                      {detailtest ? (
+
+                    {detailtest && this.state.color ? (
+                      <div className={styles['product__colors___3jFbL']}>
                         <h5 className={styles['color-variations__heading___3tZSD']}>
                           Màu sắc: {this.state.color}
                         </h5>
-                      ) : (
-                        ''
-                      )}
-                    </div>
+                        {detailtest.variant.color.value.map((v, i) => {
+                          return (
+                            <div key={i} style={{ paddingBottom: '10px' }}>
+                              {this.checkSizeInColor(this.state.size, v, i) === false ? (
+                                <Button
+                                  onClick={() => this.handleClickButton(i, v)}
+                                  style={{ color: '#bbb' }}
+                                  type="dashed"
+                                  ghost={false}
+                                >
+                                  {v}
+                                </Button>
+                              ) : (
+                                <div>
+                                  {v === this.state.color ? (
+                                    <Button
+                                      onClick={() => this.handleClickButtonTrue(i, v)}
+                                      className={styles1['activeButton']}
+                                    >
+                                      {v}
+                                    </Button>
+                                  ) : (
+                                    <Button onClick={() => this.handleClickButtonTrue(i, v)}>
+                                      {v}
+                                    </Button>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      ''
+                    )}
+
                     <p
                       style={{ marginTop: '10px' }}
                       className={`${styles['product__few-items-notify___1Q8z3']}`}
