@@ -120,6 +120,11 @@ export default [
         component: './ListCategory/',
       },
       {
+        path: '/categorytest/:catid',
+        name: 'listcategorytest',
+        component: './ListCategoryTest/',
+      },
+      {
         path: '/register',
         name: 'register',
         component: './Register/',

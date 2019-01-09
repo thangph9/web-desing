@@ -922,6 +922,135 @@ function productDetailTest(req, res) {
     }
   );
 }
+function productSearchTest(req, res) {
+  var catid = '';
+  var data = [];
+  var results = {};
+  var dataResult = [];
+  async.series(
+    [
+      function(callback) {
+        try {
+          let catidParam = req.body.catid;
+          let uuid =
+            catidParam.substring(0, 7) +
+            '-' +
+            catidParam.substring(7, 11) +
+            '-' +
+            catidParam.substring(11, 15) +
+            '-' +
+            catidParam.substring(15, 20) +
+            '-' +
+            catidParam.substring(20, 32);
+          catid = models.uuidFromString(uuid);
+        } catch (e) {
+          return res.send({ status: 'error_invalid' });
+        }
+        callback(null, null);
+      },
+      function(callback) {
+        models.instance.product_by_categories.find(
+          { catid },
+          { select: ['productid', 'orderby'] },
+          function(err, result) {
+            if (result && result.length > 0) {
+              result.forEach((v, i) => {
+                data.push(v.productid);
+              });
+              dataResult = result;
+            } else return res.json({ status: 'error', message: 'Mã danh mục không đúng' });
+            callback(err, null);
+          }
+        );
+      },
+      function(callback) {
+        try {
+          let sort = req.body.sort;
+          switch (sort) {
+            case 'HIGHEST_DISCOUNT':
+              models.instance.product.find({ productid: { $in: data } }, function(err, result) {
+                if (result && result.length > 0) {
+                  results.list = result.sort((c, d) => {
+                    return (
+                      1 -
+                      (d.sale.salePrice / d.price) * 100 -
+                      (1 - (c.sale.salePrice / c.price) * 100)
+                    );
+                  });
+                }
+                callback(err, null);
+              });
+              break;
+            case 'LOW_PRICE':
+              models.instance.product.find({ productid: { $in: data } }, function(err, result) {
+                if (result && result.length > 0) {
+                  results.list = result.sort((c, d) => {
+                    return c.sale.salePrice - d.sale.salePrice;
+                  });
+                }
+                callback(err, null);
+              });
+              break;
+            case 'HIGH_PRICE':
+              models.instance.product.find({ productid: { $in: data } }, function(err, result) {
+                if (result && result.length > 0) {
+                  results.list = result.sort((c, d) => {
+                    return d.sale.salePrice - c.sale.salePrice;
+                  });
+                }
+                callback(err, null);
+              });
+              break;
+            default:
+              models.instance.product.find({ productid: { $in: data } }, function(err, result) {
+                if (result && result.length > 0) {
+                  let arrResult = [];
+                  result.forEach((v, i) => {
+                    var arrData = dataResult.filter((ele, ind) => {
+                      return ele.productid.toString() === v.productid.toString();
+                    });
+                    let a = JSON.stringify(v);
+                    let b = JSON.parse(a);
+                    if (arrData.length > 0) {
+                      b.orderby = arrData[0].orderby;
+                    }
+                    arrResult.push(b);
+                  });
+                  results.list = arrResult.sort((c, d) => {
+                    return c.orderby - d.orderby;
+                  });
+                }
+                callback(err, null);
+              });
+              break;
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      function(callback) {
+        renderFilter(results.list, function(err, r) {
+          results.filterMap = r;
+          callback(err, null);
+        });
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error' });
+      return res.json({ status: 'ok', data: results });
+      /*
+        res.send({
+         status: 'ok',
+         data: {
+           list: results.items,
+           pagination: { total: results.items.length, current: current },
+           // filterMap: filterMap,
+         },
+       });
+      */
+    }
+  );
+}
 var router = express.Router();
 router.get('/list', productList);
 router.post('/DT', productDetail);
@@ -929,6 +1058,7 @@ router.post('/TestDT', productDetailTest);
 router.get('/CT', productCategory);
 router.post('/LC', productCategory);
 router.post('/SEARCH', productSearch);
+router.post('/SEARCHTest', productSearchTest);
 router.get('/AM', productAmazon);
 router.get('/EB', productEbay);
 router.get('/NK', productNike);

@@ -1,4 +1,9 @@
-import { getCategoryProduct, getSearchSortProduct, getCategoryDetail } from '@/services/api';
+import {
+  getCategoryProduct,
+  getSearchSortProduct,
+  getCategoryDetail,
+  getSearchSortProductTest,
+} from '@/services/api';
 
 export default {
   namespace: 'category',
@@ -7,6 +12,7 @@ export default {
     breadcrumb: {},
     search: {},
     filterUrl: '',
+    searchtest: {},
   },
 
   effects: {
@@ -41,6 +47,19 @@ export default {
         if (response.status === 'ok') {
           yield put({
             type: 'querySearch',
+            payload: response.data,
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    *searchtest({ payload }, { call, put }) {
+      const response = yield call(getSearchSortProductTest, payload);
+      try {
+        if (response.status === 'ok') {
+          yield put({
+            type: 'querySearchTest',
             payload: response.data,
           });
         }
@@ -83,6 +102,12 @@ export default {
       return {
         ...state,
         search: action.payload,
+      };
+    },
+    querySearchTest(state, action) {
+      return {
+        ...state,
+        searchtest: action.payload,
       };
     },
     queryDetail(state, action) {

@@ -243,7 +243,6 @@ class DetailTest extends PureComponent {
     this.setState({
       total: !this.state.total,
     });
-
     this.props.dispatch({
       type: 'list/local',
       payload: JSON.parse(localStorage.getItem('cart')),
@@ -633,7 +632,6 @@ class DetailTest extends PureComponent {
       detailCookie.price = price;
       detailCookie.sale_price = price;
     }
-    console.log(detailtest);
     return (
       <DocumentMeta {...meta}>
         <div id="app__body___3NlTJ">
@@ -693,180 +691,200 @@ class DetailTest extends PureComponent {
                         </span>
                       </div>
                     </div>
-
-                    {detailtest && detailtest.variant['1001'] ? (
-                      <div className={styles['product__sizes___27zL9']}>
-                        <div
-                          className={
-                            styles['size-variations__heading-wrap___1xcPJ'] +
-                            ' ' +
-                            styles['size-variations__clearfix___1lHkH']
-                          }
-                        >
-                          {' '}
-                          <h5 className={styles['size-variations__heading___1xG0s']}>
-                            {detailtest.variant['1001'].name}{' '}
-                          </h5>
-                          <div
-                            data-auto-id="size-selector"
-                            className={
-                              styles1['col-s-9'] + ' ' + styles1['col-product-size___3NjQd']
-                            }
-                          >
-                            <div
-                              className={
-                                styles1['gl-form-item'] +
-                                ' ' +
-                                styles1['glass-product-size-dropdown___2jEjW'] +
-                                ' ' +
-                                styles1['gl-vspacing-s']
-                              }
-                              data-auto-id="product-size-dropdown"
-                            >
-                              <div
-                                className={
-                                  styles1['gl-dropdown'] +
-                                  ' ' +
-                                  styles1['gl-dropdown--no-max-height']
-                                }
-                                data-auto-id="product-size-dropdown"
-                              >
-                                <div
-                                  style={{ cursor: 'pointer' }}
-                                  onClick={() => this.handleClickToggle()}
-                                  className={
-                                    styles1['gl-dropdown__select'] +
-                                    ' ' +
-                                    styles1['label'] +
-                                    ' ' +
-                                    styles1['dropdown-select']
-                                  }
-                                  title="Select size"
-                                  data-auto-id="label"
-                                >
-                                  <span className={styles1['gl-dropdown__select-label']}>
-                                    {detailtest.variant['1001'].value.length > 0 && !this.state.size
-                                      ? 'Lựa chọn kích cỡ'
-                                      : this.state.size}
-                                  </span>
-                                  {!this.state.toggle ? (
-                                    <Icon style={{ fontSize: '18px' }} type="caret-up" />
-                                  ) : (
-                                    <Icon style={{ fontSize: '18px' }} type="caret-down" />
-                                  )}
+                    {detailtest && detailtest.variant.length > 0
+                      ? detailtest.variant
+                          .sort((c, d) => {
+                            return c.orderby - d.orderby;
+                          })
+                          .map((value, index) => {
+                            if (value.variantid === '1000') {
+                              return (
+                                <div key={index} className={styles['product__colors___3jFbL']}>
+                                  <h5 className={styles['color-variations__heading___3tZSD']}>
+                                    {detailtest.variant[index].name} :{' '}
+                                    {this.state.color
+                                      ? this.state.color
+                                      : 'Vui lòng lựa chọn màu sắc'}
+                                  </h5>
+                                  {detailtest.variant[index].value.map((v, i) => {
+                                    return (
+                                      <div
+                                        title={
+                                          this.checkSizeInColor(this.state.size, v, i) === false
+                                            ? `Không có size ${this.state.size} cho màu này`
+                                            : ''
+                                        }
+                                        key={i}
+                                        style={{ marginBottom: '10px' }}
+                                      >
+                                        {this.checkSizeInColor(this.state.size, v, i) === false ? (
+                                          <Button
+                                            onClick={() => this.handleClickButton(i, v)}
+                                            style={{ color: '#bbb' }}
+                                            type="dashed"
+                                            ghost={false}
+                                          >
+                                            {v}
+                                          </Button>
+                                        ) : (
+                                          <div>
+                                            {v === this.state.color ? (
+                                              <Button
+                                                onClick={() => this.handleClickButtonTrue(i, v)}
+                                                className={styles1['activeButton']}
+                                              >
+                                                {v}
+                                              </Button>
+                                            ) : (
+                                              <Button
+                                                onClick={() => this.handleClickButtonTrue(i, v)}
+                                              >
+                                                {v}
+                                              </Button>
+                                            )}
+                                          </div>
+                                        )}
+                                      </div>
+                                    );
+                                  })}
                                 </div>
-                                <div
-                                  className={
-                                    !this.state.toggle
-                                      ? styles1['gl-dropdown__options'] +
-                                        ' ' +
-                                        styles1['gl-dropdown__options--squared'] +
-                                        ' ' +
-                                        styles1['gl-dropdown__options--with-after']
-                                      : styles1['gl-dropdown__options-open'] +
-                                        ' ' +
-                                        styles1['gl-dropdown__options--squared'] +
-                                        ' ' +
-                                        styles1['gl-dropdown__options--with-after']
-                                  }
-                                  data-auto-id="item-wrapper"
-                                >
-                                  <div className={styles1['square-list']}>
-                                    <ol
-                                      style={{ listStyleType: 'none' }}
+                              );
+                            }
+                            if (value.variantid === '1001') {
+                              return (
+                                <div key={index} className={styles['product__sizes___27zL9']}>
+                                  <div
+                                    className={
+                                      styles['size-variations__heading-wrap___1xcPJ'] +
+                                      ' ' +
+                                      styles['size-variations__clearfix___1lHkH']
+                                    }
+                                  >
+                                    {' '}
+                                    <h5 className={styles['size-variations__heading___1xG0s']}>
+                                      {detailtest.variant[index].name}{' '}
+                                    </h5>
+                                    <div
+                                      data-auto-id="size-selector"
                                       className={
-                                        styles1['gl-square-list'] +
+                                        styles1['col-s-9'] +
                                         ' ' +
-                                        styles1['gl-square-list--condensed']
+                                        styles1['col-product-size___3NjQd']
                                       }
                                     >
-                                      {detailtest &&
-                                        detailtest.variant['1001'].value
-                                          .sort((a, b) => {
-                                            return a - b;
-                                          })
-                                          .map((v, i) => {
-                                            return (
-                                              <li
-                                                onClick={() => this.handleClickSize(v)}
-                                                key={i}
-                                                className={styles1['gl-square-list__item']}
-                                                title={v}
+                                      <div
+                                        className={
+                                          styles1['gl-form-item'] +
+                                          ' ' +
+                                          styles1['glass-product-size-dropdown___2jEjW'] +
+                                          ' ' +
+                                          styles1['gl-vspacing-s']
+                                        }
+                                        data-auto-id="product-size-dropdown"
+                                      >
+                                        <div
+                                          className={
+                                            styles1['gl-dropdown'] +
+                                            ' ' +
+                                            styles1['gl-dropdown--no-max-height']
+                                          }
+                                          data-auto-id="product-size-dropdown"
+                                        >
+                                          <div
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => this.handleClickToggle()}
+                                            className={
+                                              styles1['gl-dropdown__select'] +
+                                              ' ' +
+                                              styles1['label'] +
+                                              ' ' +
+                                              styles1['dropdown-select']
+                                            }
+                                            title="Select size"
+                                            data-auto-id="label"
+                                          >
+                                            <span className={styles1['gl-dropdown__select-label']}>
+                                              {detailtest.variant[index].value.length > 0 &&
+                                              !this.state.size
+                                                ? 'Lựa chọn kích cỡ'
+                                                : this.state.size}
+                                            </span>
+                                            {!this.state.toggle ? (
+                                              <Icon style={{ fontSize: '18px' }} type="caret-up" />
+                                            ) : (
+                                              <Icon
+                                                style={{ fontSize: '18px' }}
+                                                type="caret-down"
+                                              />
+                                            )}
+                                          </div>
+                                          <div
+                                            className={
+                                              !this.state.toggle
+                                                ? styles1['gl-dropdown__options'] +
+                                                  ' ' +
+                                                  styles1['gl-dropdown__options--squared'] +
+                                                  ' ' +
+                                                  styles1['gl-dropdown__options--with-after']
+                                                : styles1['gl-dropdown__options-open'] +
+                                                  ' ' +
+                                                  styles1['gl-dropdown__options--squared'] +
+                                                  ' ' +
+                                                  styles1['gl-dropdown__options--with-after']
+                                            }
+                                            data-auto-id="item-wrapper"
+                                          >
+                                            <div className={styles1['square-list']}>
+                                              <ol
+                                                style={{ listStyleType: 'none' }}
+                                                className={
+                                                  styles1['gl-square-list'] +
+                                                  ' ' +
+                                                  styles1['gl-square-list--condensed']
+                                                }
                                               >
-                                                <div
-                                                  className={
-                                                    this.checkChilrd(v) === false
-                                                      ? styles1['gl-square-list__cta'] +
-                                                        ' ' +
-                                                        styles1['colorbbb']
-                                                      : styles1['gl-square-list__cta']
-                                                  }
-                                                >
-                                                  {v}
-                                                </div>
-                                              </li>
-                                            );
-                                          })}
-                                    </ol>
+                                                {detailtest &&
+                                                  detailtest.variant[index].value
+                                                    .sort((a, b) => {
+                                                      return a - b;
+                                                    })
+                                                    .map((v, i) => {
+                                                      return (
+                                                        <li
+                                                          onClick={() => this.handleClickSize(v)}
+                                                          key={i}
+                                                          className={
+                                                            styles1['gl-square-list__item']
+                                                          }
+                                                          title={v}
+                                                        >
+                                                          <div
+                                                            className={
+                                                              this.checkChilrd(v) === false
+                                                                ? styles1['gl-square-list__cta'] +
+                                                                  ' ' +
+                                                                  styles1['colorbbb']
+                                                                : styles1['gl-square-list__cta']
+                                                            }
+                                                          >
+                                                            {v}
+                                                          </div>
+                                                        </li>
+                                                      );
+                                                    })}
+                                              </ol>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>{' '}
                                   </div>
                                 </div>
-                              </div>
-                            </div>
-                          </div>{' '}
-                        </div>
-                      </div>
-                    ) : (
-                      ''
-                    )}
-
-                    {detailtest && this.state.color ? (
-                      <div className={styles['product__colors___3jFbL']}>
-                        <h5 className={styles['color-variations__heading___3tZSD']}>
-                          {detailtest.variant['1000'].name} : {this.state.color}
-                        </h5>
-                        {detailtest.variant['1000'].value.map((v, i) => {
-                          return (
-                            <div
-                              title={
-                                this.checkSizeInColor(this.state.size, v, i) === false
-                                  ? 'Không có size cho màu này'
-                                  : ''
-                              }
-                              key={i}
-                              style={{ marginBottom: '10px' }}
-                            >
-                              {this.checkSizeInColor(this.state.size, v, i) === false ? (
-                                <Button
-                                  onClick={() => this.handleClickButton(i, v)}
-                                  style={{ color: '#bbb' }}
-                                  type="dashed"
-                                  ghost={false}
-                                >
-                                  {v}
-                                </Button>
-                              ) : (
-                                <div>
-                                  {v === this.state.color ? (
-                                    <Button
-                                      onClick={() => this.handleClickButtonTrue(i, v)}
-                                      className={styles1['activeButton']}
-                                    >
-                                      {v}
-                                    </Button>
-                                  ) : (
-                                    <Button onClick={() => this.handleClickButtonTrue(i, v)}>
-                                      {v}
-                                    </Button>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      ''
-                    )}
+                              );
+                            }
+                            return '';
+                          })
+                      : ''}
 
                     <p
                       style={{ marginTop: '10px' }}

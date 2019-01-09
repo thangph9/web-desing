@@ -291,6 +291,12 @@ export async function getSearchSortProduct(params) {
     body: params,
   });
 }
+export async function getSearchSortProductTest(params) {
+  return request(`/api/product/SEARCHTest?ref=${new Date().getTime()}`, {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function getRaito() {
   return request('/api/raito');
 }
