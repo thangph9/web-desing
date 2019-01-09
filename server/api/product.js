@@ -852,7 +852,8 @@ function productDetailTest(req, res) {
       function(callback) {
         models.instance.variant_by_product.find({ productid: productid }, function(err, res) {
           if (res && res.length > 0) {
-            let objVariant = {};
+            /*
+              let objVariant = {};
             res.forEach(element => {
               let obj = {};
               obj.variantid = element.variantid;
@@ -862,6 +863,8 @@ function productDetailTest(req, res) {
               objVariant[`${element.variantid}`] = obj;
             });
             results.variant = objVariant;
+            */
+            results.variant = res;
           }
           callback(err, null);
         });
