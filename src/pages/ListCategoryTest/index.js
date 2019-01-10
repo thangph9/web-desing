@@ -235,16 +235,16 @@ class ListCategoryTest extends PureComponent {
       ) {
         filterDiv = document.getElementById('transform-fixed');
         saleFilter.classList.add(
-          'order\\pages\\-list-category-test\\index-sale__fixed-position___P7XwH'
+          'order-pages-list-category-test-index-sale__fixed-position___P7XwH'
         );
         filterDiv.classList.remove(
-          'order\\pages\\-list-category-test\\index-sale__position-absolute___1tZOO'
+          'order-pages-list-category-test-index-sale__position-absolute___1tZOO'
         );
         var filterFixed = document.createElement('div');
         filterFixed.setAttribute('id', 'filterFiexd');
         filterFixed.setAttribute(
           'class',
-          'order\\pages\\-list-category-test\\index-sale__filters-container___32fTU order\\pages\\-list-category-test\\index-sale__col-md-4___UhAyk order\\pages\\-list-category-test\\index-sale__col-lg-3___2xbHl order\\pages\\-list-category-test\\index-sale__dumb-container___lFg-z order\\pages\\-list-category-test\\index-visibility-hidden'
+          'order-pages-list-category-test-index-sale__filters-container___32fTU order-pages-list-category-test-index-sale__col-md-4___UhAyk order-pages-list-category-test-index-sale__col-lg-3___2xbHl order-pages-list-category-test-index-sale__dumb-container___lFg-z order-pages-list-category-test-index-visibility-hidden'
         );
         rowFilter.appendChild(filterFixed);
         rowFilter.insertBefore(filterFixed, rowFilter.childNodes[1]);
@@ -257,24 +257,24 @@ class ListCategoryTest extends PureComponent {
       }
       if (scroll < 115 && idFix != null && saleFilter != null) {
         saleFilter.classList.remove(
-          'order\\pages\\-list-category-test\\index-sale__fixed-position___P7XwH'
+          'order-pages-list-category-test-index-sale__fixed-position___P7XwH'
         );
         rowFilter.removeChild(idFix);
         filterDiv = document.getElementById('transform-fixed');
         filterDiv.classList.remove(
-          'order\\pages\\-list-category-test\\index-sale__position-absolute___1tZOO'
+          'order-pages-list-category-test-index-sale__position-absolute___1tZOO'
         );
         filterDiv.style.transform = `translateY(0px)`;
         filterDiv.style.transition = 'transform 0.5s ease';
       }
       if (scroll >= screen.clientHeight - 1184 && idFix != null) {
         saleFilter.classList.remove(
-          'order\\pages\\-list-category-test\\index-sale__fixed-position___P7XwH'
+          'order-pages-list-category-test-index-sale__fixed-position___P7XwH'
         );
         filterDiv = document.getElementById('transform-fixed');
         rowFilter.removeChild(idFix);
         filterDiv.classList.add(
-          'order\\pages\\-list-category-test\\index-sale__position-absolute___1tZOO'
+          'order-pages-list-category-test-index-sale__position-absolute___1tZOO'
         );
       }
     }
@@ -392,7 +392,7 @@ class ListCategoryTest extends PureComponent {
 
     // window.addEventListener('scroll', this.handleScroll.bind(this));
     var btnSoft = document.getElementsByClassName(
-      'order\\pages\\-list-category-test\\index-sort__btn-text___1mPct'
+      'order-pages-list-category-test-index-sort__btn-text___1mPct'
     )[0];
     btnSoft.textContent =
       this.props.location.query.sort && this.state[`${this.props.location.query.sort}`]
@@ -420,14 +420,12 @@ class ListCategoryTest extends PureComponent {
       return;
     }
     var activeSoft = document.getElementsByClassName(
-      'order\\pages\\-list-category-test\\index-sort__dropdown-item___XkHiS'
+      'order-pages-list-category-test-index-sort__dropdown-item___XkHiS'
     );
     for (var i = 0; i < activeSoft.length; i++) {
-      activeSoft[i].classList.remove(
-        'order\\pages\\-list-category-test\\index-sort__active___3DNgx'
-      );
+      activeSoft[i].classList.remove('order-pages-list-category-test-index-sort__active___3DNgx');
     }
-    liSort.classList.add('order\\pages\\-list-category-test\\index-sort__active___3DNgx');
+    liSort.classList.add('order-pages-list-category-test-index-sort__active___3DNgx');
   }
 
   handleClickButtonFilter() {
@@ -444,18 +442,16 @@ class ListCategoryTest extends PureComponent {
     var ulSort = document.getElementById('sort-items');
     ulSort.style.display = 'none';
     var btnSoft = document.getElementsByClassName(
-      'order\\pages\\-list-category-test\\index-sort__btn-text___1mPct'
+      'order-pages-list-category-test-index-sort__btn-text___1mPct'
     )[0];
     btnSoft.textContent = 'Sắp xếp: ' + liSort.textContent;
     var activeSoft = document.getElementsByClassName(
-      'order\\pages\\-list-category-test\\index-sort__dropdown-item___XkHiS'
+      'order-pages-list-category-test-index-sort__dropdown-item___XkHiS'
     );
     for (var i = 0; i < activeSoft.length; i++) {
-      activeSoft[i].classList.remove(
-        'order\\pages\\-list-category-test\\index-sort__active___3DNgx'
-      );
+      activeSoft[i].classList.remove('order-pages-list-category-test-index-sort__active___3DNgx');
     }
-    liSort.classList.add('order\\pages\\-list-category-test\\index-sort__active___3DNgx');
+    liSort.classList.add('order-pages-list-category-test-index-sort__active___3DNgx');
     let pathname = this.props.location.pathname;
     let search = this.props.location.search;
     let query = this.props.location.query;
