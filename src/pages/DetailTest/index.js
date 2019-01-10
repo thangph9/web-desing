@@ -398,7 +398,7 @@ class DetailTest extends PureComponent {
   renderSlider() {
     const { imageChoose, detailtest, image_by_option } = this.state;
     const data = detailtest || {};
-    console.log(image_by_option);
+
     const image_huge = image_by_option;
     const SmallImageUI = [];
     const HugeImageUI = [];
@@ -633,7 +633,8 @@ class DetailTest extends PureComponent {
     });
   }
   render() {
-    var { detailtest } = this.state;
+    var { detailtest, image_by_option } = this.state;
+    console.log(detailtest);
     const data = detailtest ? detailtest.product : undefined;
     const title = 'Chi tiết sản phẩm';
     const meta_description = '123order ';
@@ -726,56 +727,98 @@ class DetailTest extends PureComponent {
                           .map((value, index) => {
                             if (value.variantid === '1000') {
                               return (
-                                <div key={index} className={styles['product__colors___3jFbL']}>
+                                <span key={index} className={styles['product__colors___3jFbL']}>
                                   <h5 className={styles['color-variations__heading___3tZSD']}>
                                     {detailtest.variant[index].name} :{' '}
                                     {this.state.color
                                       ? this.state.color
                                       : 'Vui lòng lựa chọn màu sắc'}
                                   </h5>
-                                  {detailtest.variant[index].value.map((v, i) => {
-                                    return (
-                                      <div
-                                        title={
-                                          this.checkSizeInColor(this.state.size, v, i) === false
-                                            ? `Không có size ${this.state.size} cho màu này`
-                                            : ''
-                                        }
-                                        key={i}
-                                        style={{ marginBottom: '10px' }}
-                                      >
-                                        {this.checkSizeInColor(this.state.size, v, i) === false ? (
-                                          <Button
-                                            onClick={() => this.handleClickButton(i, v)}
-                                            style={{ color: '#bbb' }}
-                                            type="dashed"
-                                            ghost={false}
-                                          >
-                                            {v}
-                                          </Button>
-                                        ) : (
-                                          <div>
-                                            {v === this.state.color ? (
-                                              <Button
-                                                onClick={() => this.handleClickButtonTrue(i, v)}
-                                                className={styles1['activeButton']}
-                                              >
-                                                {v}
-                                              </Button>
-                                            ) : (
-                                              <Button
-                                                onClick={() => this.handleClickButtonTrue(i, v)}
-                                                className={styles1['no-activeButton']}
-                                              >
-                                                {v}
-                                              </Button>
-                                            )}
-                                          </div>
-                                        )}
-                                      </div>
-                                    );
-                                  })}
-                                </div>
+                                  {detailtest.options &&
+                                    detailtest.options.map((v, i) => {
+                                      return (
+                                        <span
+                                          title={
+                                            this.checkSizeInColor(
+                                              this.state.size,
+                                              v.attrs['1000'],
+                                              i
+                                            ) === false
+                                              ? `Không có size ${this.state.size} cho màu này`
+                                              : ''
+                                          }
+                                          key={i}
+                                          style={{ marginBottom: '10px', marginRight: '10px' }}
+                                        >
+                                          {this.checkSizeInColor(
+                                            this.state.size,
+                                            v.attrs['1000'],
+                                            i
+                                          ) === false ? (
+                                            <Button
+                                              style={
+                                                image_by_option.length > 0
+                                                  ? {
+                                                      background: `url(/images/w90/${v.images[0].replace(
+                                                        /\-/g,
+                                                        ''
+                                                      )}) no-repeat`,
+                                                      width: '80px',
+                                                      height: '90px',
+                                                    }
+                                                  : {}
+                                              }
+                                              onClick={() =>
+                                                this.handleClickButton(i, v.attrs['1000'])
+                                              }
+                                            />
+                                          ) : (
+                                            <span>
+                                              {v.attrs['1000'] === this.state.color ? (
+                                                <Button
+                                                  style={
+                                                    image_by_option.length > 0
+                                                      ? {
+                                                          background: `url(/images/w90/${v.images[0].replace(
+                                                            /\-/g,
+                                                            ''
+                                                          )}) no-repeat`,
+                                                          width: '80px',
+                                                          height: '90px',
+                                                        }
+                                                      : {}
+                                                  }
+                                                  onClick={() =>
+                                                    this.handleClickButtonTrue(i, v.attrs['1000'])
+                                                  }
+                                                  className={styles1['activeButton']}
+                                                />
+                                              ) : (
+                                                <Button
+                                                  style={
+                                                    image_by_option.length > 0
+                                                      ? {
+                                                          background: `url(/images/w90/${v.images[0].replace(
+                                                            /\-/g,
+                                                            ''
+                                                          )}) no-repeat`,
+                                                          width: '80px',
+                                                          height: '90px',
+                                                        }
+                                                      : {}
+                                                  }
+                                                  onClick={() =>
+                                                    this.handleClickButtonTrue(i, v.attrs['1000'])
+                                                  }
+                                                  className={styles1['no-activeButton']}
+                                                />
+                                              )}
+                                            </span>
+                                          )}
+                                        </span>
+                                      );
+                                    })}
+                                </span>
                               );
                             }
                             if (value.variantid === '1001') {

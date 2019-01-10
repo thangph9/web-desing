@@ -788,8 +788,8 @@
   border: 1px dashed #d9dcdd;
 }
 .activeButton {
-  color: #40a9ff;
-  border-color: #40a9ff;
+  color: #40a9ff !important;
+  border: 1px solid #40a9ff !important;
 }
 .no-activeButton {
   color: rgba(0, 0, 0, 0.65) !important;
