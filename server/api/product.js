@@ -208,11 +208,11 @@ function productDetail(req, res) {
           callback(null, null);
         }
       },
-      /*function(callback) {
+      function(callback) {
         breadcrumb = generateMap(category, nodeid);
         results.breadcrumb = breadcrumb;
         callback(null, null);
-      },*/
+      },
     ],
     function(err, result) {
       if (err) return res.send({ status: 'error' });
@@ -704,26 +704,30 @@ function getBreadcumb(category, nodeid) {
   });
 }
 function generateMap(category, nodeid) {
-  let parent = [];
-  let temp = {};
-  let children = {};
-  var i = 0;
-  var node = nodeid;
-  children = getBreadcumb(category, node);
-  parent.push(children[0]);
-  var i = 1;
-  while (children[0].category != null && i < 100) {
-    if (children[0] && children[0].category && children[0].category.length > 0) {
-      node = children[0].category[0];
-      children = getBreadcumb(category, node);
-      parent.push(children[0]);
-    } else {
-      children = getBreadcumb(category, node);
-      parent.push(children[0]);
+  try {
+    let parent = [];
+    let temp = {};
+    let children = {};
+    var i = 0;
+    var node = nodeid;
+    children = getBreadcumb(category, node);
+    parent.push(children[0]);
+    var i = 1;
+    while (children[0].category != null && i < 100) {
+      if (children[0] && children[0].category && children[0].category.length > 0) {
+        node = children[0].category[0];
+        children = getBreadcumb(category, node);
+        parent.push(children[0]);
+      } else {
+        children = getBreadcumb(category, node);
+        parent.push(children[0]);
+      }
+      i++;
     }
-    i++;
+    return parent.reverse();
+  } catch (error) {
+    console.log(error + '');
   }
-  return parent.reverse();
 }
 function renderFilter(result, callback) {
   let filterMap = {};
