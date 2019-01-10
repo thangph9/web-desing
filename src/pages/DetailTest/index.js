@@ -398,7 +398,6 @@ class DetailTest extends PureComponent {
   renderSlider() {
     const { imageChoose, detailtest, image_by_option } = this.state;
     const data = detailtest || {};
-
     const image_huge = image_by_option;
     const SmallImageUI = [];
     const HugeImageUI = [];
@@ -410,7 +409,6 @@ class DetailTest extends PureComponent {
         var image = e.replace(/\-/g, '');
         SmallImageUI.push(
           // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-
           <TabPane
             key={i}
             tab={
@@ -436,7 +434,8 @@ class DetailTest extends PureComponent {
             }
           />
         );
-        HugeImageUI.push(
+        /*
+            HugeImageUI.push(
           <img
             key={i}
             className={`${styles['slick-slide']} ${styles['images-slider__image___wW9Yw']}`}
@@ -444,13 +443,14 @@ class DetailTest extends PureComponent {
             style={{ outline: 'none', width: 447 }}
           />
         );
+        */
       });
       // eslint-disable-next-line camelcase
       huge_image = (
         <img
           key={imageChoose ? `huge${imageChoose}` : `huge${image_huge[0].replace(/\-/g, '')}`}
           className={`${styles['images-slider__image___wW9Yw']}`}
-          src={`/images/f/${imageChoose || image_huge[0].replace(/\-/g, '')}`}
+          src={`/images/f/${image_huge[this.state.index].replace(/\-/g, '')}`}
         />
       );
       // eslint-disable-next-line camelcase
@@ -459,10 +459,11 @@ class DetailTest extends PureComponent {
           key={imageChoose ? `zoom${imageChoose}` : `zoom${image_huge[0].replace(/\-/g, '')}`}
           id="zoom-image"
           className={`${styles['images-slider__zoom-image___3jo-j']}`}
-          src={`/images/f/${imageChoose || image_huge[0].replace(/\-/g, '')}`}
-          srcSet={`/images/f/${imageChoose ||
-            image_huge[0].replace(/\-/g, '')} 1100w, /images/f/${imageChoose ||
-            image_huge[0].replace(/\-/g, '')} 1280w`}
+          src={`/images/f/${image_huge[this.state.index].replace(/\-/g, '')}`}
+          srcSet={`/images/f/${image_huge[this.state.index].replace(
+            /\-/g,
+            ''
+          )} 1100w, /images/f/${image_huge[this.state.index].replace(/\-/g, '')} 1280w`}
         />
       );
     }
@@ -755,7 +756,10 @@ class DetailTest extends PureComponent {
                                             v.attrs['1000'],
                                             i
                                           ) === false ? (
-                                            <span style={{ display: 'inline-block' }}>
+                                            <span
+                                              title={v.attrs['1000']}
+                                              style={{ display: 'inline-block' }}
+                                            >
                                               <Button
                                                 style={
                                                   image_by_option.length > 0
@@ -777,7 +781,10 @@ class DetailTest extends PureComponent {
                                               </Button>
                                             </span>
                                           ) : (
-                                            <span style={{ display: 'inline-block' }}>
+                                            <span
+                                              title={v.attrs['1000']}
+                                              style={{ display: 'inline-block' }}
+                                            >
                                               {v.attrs['1000'] === this.state.color ? (
                                                 <Button
                                                   style={
