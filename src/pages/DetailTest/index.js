@@ -226,6 +226,7 @@ class DetailTest extends PureComponent {
           if (v.optid === nextProps.match.params.optid) {
             this.setState({
               image_by_option: v.images,
+              index: 0,
             });
           }
         });
