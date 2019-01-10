@@ -979,7 +979,9 @@ function productSearchTest(req, res) {
             case 'HIGHEST_DISCOUNT':
               models.instance.product.find({ productid: { $in: data } }, function(err, result) {
                 if (result && result.length > 0) {
-                  results.list = result.sort((c, d) => {
+                  var a = JSON.stringify(result);
+                  var b = JSON.parse(a);
+                  results.list = b.sort((c, d) => {
                     return (
                       1 -
                       (d.sale.salePrice / d.price) * 100 -
@@ -993,7 +995,9 @@ function productSearchTest(req, res) {
             case 'LOW_PRICE':
               models.instance.product.find({ productid: { $in: data } }, function(err, result) {
                 if (result && result.length > 0) {
-                  results.list = result.sort((c, d) => {
+                  var a = JSON.stringify(result);
+                  var b = JSON.parse(a);
+                  results.list = b.sort((c, d) => {
                     return c.sale.salePrice - d.sale.salePrice;
                   });
                 }
@@ -1003,7 +1007,9 @@ function productSearchTest(req, res) {
             case 'HIGH_PRICE':
               models.instance.product.find({ productid: { $in: data } }, function(err, result) {
                 if (result && result.length > 0) {
-                  results.list = result.sort((c, d) => {
+                  var a = JSON.stringify(result);
+                  var b = JSON.parse(a);
+                  results.list = b.sort((c, d) => {
                     return d.sale.salePrice - c.sale.salePrice;
                   });
                 }
@@ -1062,12 +1068,14 @@ function productSearchTest(req, res) {
           console.log(error);
         }
       },
-      function(callback) {
-        renderFilter(results.list, function(err, r) {
+      /*
+      function (callback) {
+        renderFilter(results.list, function (err, r) {
           results.filterMap = r;
           callback(err, null);
         });
       },
+       */
     ],
     function(err, result) {
       if (err) return res.json({ status: 'error' });
