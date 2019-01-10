@@ -439,7 +439,7 @@ class DetailTest extends PureComponent {
           <img
             key={i}
             className={`${styles['slick-slide']} ${styles['images-slider__image___wW9Yw']}`}
-            src={`/images/f/${image_huge[this.state.index]}`}
+            src={`/images/f/${image_huge[this.state.index].replace(/\-/g, '')}`}
             style={{ outline: 'none', width: 447 }}
           />
         );
