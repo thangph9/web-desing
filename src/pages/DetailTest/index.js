@@ -109,6 +109,7 @@ class DetailTest extends PureComponent {
     min_value: 1000,
     optid: '',
     activeButton: 0,
+    image_by_option: [],
   };
 
   // eslint-disable-next-line react/sort-comp
@@ -156,9 +157,22 @@ class DetailTest extends PureComponent {
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.product.detailtest !== this.props.product.detailtest) {
-      this.setState({
-        detailtest: nextProps.product.detailtest,
-      });
+      this.setState(
+        {
+          detailtest: nextProps.product.detailtest,
+        },
+        () => {
+          if (this.state.detailtest.options) {
+            this.state.detailtest.options.forEach((v, i) => {
+              if (v.optid === this.props.match.params.optid) {
+                this.setState({
+                  image_by_option: v.images,
+                });
+              }
+            });
+          }
+        }
+      );
       const product_by_option = nextProps.product.detailtest.options.filter((v, i) => {
         return v.optid === this.props.match.params.optid;
       });
@@ -206,6 +220,15 @@ class DetailTest extends PureComponent {
             });
           }
         );
+      }
+      if (this.state.detailtest.options) {
+        this.state.detailtest.options.forEach((v, i) => {
+          if (v.optid === nextProps.match.params.optid) {
+            this.setState({
+              image_by_option: v.images,
+            });
+          }
+        });
       }
     }
   }
@@ -373,12 +396,10 @@ class DetailTest extends PureComponent {
   }
 
   renderSlider() {
-    const {
-      product: { detail },
-    } = this.props;
-    const { imageChoose } = this.state;
-    const data = detail || {};
-    const image_huge = data.image_huge;
+    const { imageChoose, detailtest, image_by_option } = this.state;
+    const data = detailtest || {};
+    console.log(image_by_option);
+    const image_huge = image_by_option;
     const SmallImageUI = [];
     const HugeImageUI = [];
     const LargeImageUI = [];
@@ -398,7 +419,6 @@ class DetailTest extends PureComponent {
                 onClick={() => {
                   this.handleChangeImage(e, i);
                 }}
-                onMouseOver={this.onHover(e)}
                 className={
                   this.state.index != i
                     ? styles['images-slider__image-border___2hkRy']
@@ -661,6 +681,7 @@ class DetailTest extends PureComponent {
                       styles['product__slider-section___2raV3']
                     }`}
                   >
+                    {this.renderSlider()}
                     <div
                       className={`${styles['hidden-sm-down']} ${
                         styles['product__brand-info___1s9-O']
@@ -744,6 +765,7 @@ class DetailTest extends PureComponent {
                                             ) : (
                                               <Button
                                                 onClick={() => this.handleClickButtonTrue(i, v)}
+                                                className={styles1['no-activeButton']}
                                               >
                                                 {v}
                                               </Button>
