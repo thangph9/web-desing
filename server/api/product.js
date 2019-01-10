@@ -208,11 +208,11 @@ function productDetail(req, res) {
           callback(null, null);
         }
       },
-      function(callback) {
+      /*function(callback) {
         breadcrumb = generateMap(category, nodeid);
         results.breadcrumb = breadcrumb;
         callback(null, null);
-      },
+      },*/
     ],
     function(err, result) {
       if (err) return res.send({ status: 'error' });
