@@ -755,25 +755,29 @@ class DetailTest extends PureComponent {
                                             v.attrs['1000'],
                                             i
                                           ) === false ? (
-                                            <Button
-                                              style={
-                                                image_by_option.length > 0
-                                                  ? {
-                                                      background: `url(/images/w90/${v.images[0].replace(
-                                                        /\-/g,
-                                                        ''
-                                                      )}) no-repeat`,
-                                                      width: '80px',
-                                                      height: '90px',
-                                                    }
-                                                  : {}
-                                              }
-                                              onClick={() =>
-                                                this.handleClickButton(i, v.attrs['1000'])
-                                              }
-                                            />
+                                            <span style={{ display: 'inline-block' }}>
+                                              <Button
+                                                style={
+                                                  image_by_option.length > 0
+                                                    ? {
+                                                        background: `url(/images/w90/${v.images[0].replace(
+                                                          /\-/g,
+                                                          ''
+                                                        )}) no-repeat`,
+                                                        width: '80px',
+                                                        height: '90px',
+                                                      }
+                                                    : {}
+                                                }
+                                                onClick={() =>
+                                                  this.handleClickButton(i, v.attrs['1000'])
+                                                }
+                                              >
+                                                {image_by_option.length > 0 ? '' : v.attrs['1000']}
+                                              </Button>
+                                            </span>
                                           ) : (
-                                            <span>
+                                            <span style={{ display: 'inline-block' }}>
                                               {v.attrs['1000'] === this.state.color ? (
                                                 <Button
                                                   style={
@@ -792,7 +796,11 @@ class DetailTest extends PureComponent {
                                                     this.handleClickButtonTrue(i, v.attrs['1000'])
                                                   }
                                                   className={styles1['activeButton']}
-                                                />
+                                                >
+                                                  {image_by_option.length > 0
+                                                    ? ''
+                                                    : v.attrs['1000']}
+                                                </Button>
                                               ) : (
                                                 <Button
                                                   style={
@@ -811,7 +819,11 @@ class DetailTest extends PureComponent {
                                                     this.handleClickButtonTrue(i, v.attrs['1000'])
                                                   }
                                                   className={styles1['no-activeButton']}
-                                                />
+                                                >
+                                                  {image_by_option.length > 0
+                                                    ? ''
+                                                    : v.attrs['1000']}
+                                                </Button>
                                               )}
                                             </span>
                                           )}
