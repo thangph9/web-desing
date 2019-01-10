@@ -772,15 +772,18 @@ class DetailTest extends PureComponent {
                                               style={{ display: 'inline-block' }}
                                             >
                                               <Button
+                                                className={styles1['false-activeButton']}
                                                 style={
                                                   image_by_option.length > 0 && v.images
                                                     ? {
-                                                        background: `url(/images/w90/${v.images[0].replace(
+                                                        backgroundImage: `url(/images/w90/${v.images[0].replace(
                                                           /\-/g,
                                                           ''
-                                                        )}) no-repeat`,
+                                                        )})`,
+                                                        backgroundRepeat: 'no-repeat',
                                                         width: '80px',
                                                         height: '90px',
+                                                        filter: 'opacity(40%)',
                                                       }
                                                     : {}
                                                 }
@@ -803,10 +806,11 @@ class DetailTest extends PureComponent {
                                                   style={
                                                     image_by_option.length > 0 && v.images
                                                       ? {
-                                                          background: `url(/images/w90/${v.images[0].replace(
+                                                          backgroundImage: `url(/images/w90/${v.images[0].replace(
                                                             /\-/g,
                                                             ''
-                                                          )}) no-repeat`,
+                                                          )})`,
+                                                          backgroundRepeat: 'no-repeat',
                                                           width: '80px',
                                                           height: '90px',
                                                         }
@@ -826,10 +830,11 @@ class DetailTest extends PureComponent {
                                                   style={
                                                     image_by_option.length > 0 && v.images
                                                       ? {
-                                                          background: `url(/images/w90/${v.images[0].replace(
+                                                          backgroundImage: `url(/images/w90/${v.images[0].replace(
                                                             /\-/g,
                                                             ''
-                                                          )}) no-repeat`,
+                                                          )})`,
+                                                          backgroundRepeat: 'no-repeat',
                                                           width: '80px',
                                                           height: '90px',
                                                         }
