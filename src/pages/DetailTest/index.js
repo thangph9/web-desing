@@ -166,7 +166,7 @@ class DetailTest extends PureComponent {
             this.state.detailtest.options.forEach((v, i) => {
               if (v.optid === this.props.match.params.optid) {
                 this.setState({
-                  image_by_option: v.images,
+                  image_by_option: v.images ? v.images : [],
                 });
               }
             });
@@ -225,7 +225,7 @@ class DetailTest extends PureComponent {
         this.state.detailtest.options.forEach((v, i) => {
           if (v.optid === nextProps.match.params.optid) {
             this.setState({
-              image_by_option: v.images,
+              image_by_option: v.images ? v.images : [],
               index: 0,
             });
           }
@@ -435,16 +435,14 @@ class DetailTest extends PureComponent {
             }
           />
         );
-        /*
-            HugeImageUI.push(
+        HugeImageUI.push(
           <img
             key={i}
             className={`${styles['slick-slide']} ${styles['images-slider__image___wW9Yw']}`}
-            src={`/images/f/${image}`}
+            src={`/images/f/${image_huge[index]}`}
             style={{ outline: 'none', width: 447 }}
           />
         );
-        */
       });
       // eslint-disable-next-line camelcase
       huge_image = (
@@ -750,7 +748,19 @@ class DetailTest extends PureComponent {
                                               : ''
                                           }
                                           key={i}
-                                          style={{ marginBottom: '10px', marginRight: '10px' }}
+                                          style={
+                                            image_by_option.length > 0 && v.images
+                                              ? {
+                                                  marginBottom: '10px',
+                                                  marginRight: '10px',
+                                                  display: 'inline-block',
+                                                }
+                                              : {
+                                                  marginBottom: '10px',
+                                                  marginRight: '10px',
+                                                  display: 'block',
+                                                }
+                                          }
                                         >
                                           {this.checkSizeInColor(
                                             this.state.size,
@@ -763,7 +773,7 @@ class DetailTest extends PureComponent {
                                             >
                                               <Button
                                                 style={
-                                                  image_by_option.length > 0
+                                                  image_by_option.length > 0 && v.images
                                                     ? {
                                                         background: `url(/images/w90/${v.images[0].replace(
                                                           /\-/g,
@@ -778,7 +788,9 @@ class DetailTest extends PureComponent {
                                                   this.handleClickButton(i, v.attrs['1000'])
                                                 }
                                               >
-                                                {image_by_option.length > 0 ? '' : v.attrs['1000']}
+                                                {image_by_option.length > 0 && v.images
+                                                  ? ''
+                                                  : v.attrs['1000']}
                                               </Button>
                                             </span>
                                           ) : (
@@ -789,7 +801,7 @@ class DetailTest extends PureComponent {
                                               {v.attrs['1000'] === this.state.color ? (
                                                 <Button
                                                   style={
-                                                    image_by_option.length > 0
+                                                    image_by_option.length > 0 && v.images
                                                       ? {
                                                           background: `url(/images/w90/${v.images[0].replace(
                                                             /\-/g,
@@ -805,14 +817,14 @@ class DetailTest extends PureComponent {
                                                   }
                                                   className={styles1['activeButton']}
                                                 >
-                                                  {image_by_option.length > 0
+                                                  {image_by_option.length > 0 && v.images
                                                     ? ''
                                                     : v.attrs['1000']}
                                                 </Button>
                                               ) : (
                                                 <Button
                                                   style={
-                                                    image_by_option.length > 0
+                                                    image_by_option.length > 0 && v.images
                                                       ? {
                                                           background: `url(/images/w90/${v.images[0].replace(
                                                             /\-/g,
@@ -828,7 +840,7 @@ class DetailTest extends PureComponent {
                                                   }
                                                   className={styles1['no-activeButton']}
                                                 >
-                                                  {image_by_option.length > 0
+                                                  {image_by_option.length > 0 && v.images
                                                     ? ''
                                                     : v.attrs['1000']}
                                                 </Button>
