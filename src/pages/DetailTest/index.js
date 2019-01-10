@@ -162,7 +162,7 @@ class DetailTest extends PureComponent {
       const product_by_option = nextProps.product.detailtest.options.filter((v, i) => {
         return v.optid === this.props.match.params.optid;
       });
-      if (product_by_option.length > 0) {
+      if (product_by_option.length > 0 && product_by_option[0].attrs) {
         this.setState(
           {
             size: product_by_option[0].attrs['1001'],
@@ -605,6 +605,12 @@ class DetailTest extends PureComponent {
     this.setState({
       size_by_color: arrSizeByColor,
     });
+    var optProduct = this.state.detailtest.options.filter((v, i) => {
+      return v.attrs['1000'] === color && v.attrs['1001'] === this.state.size;
+    });
+    this.props.history.push({
+      pathname: `/producttest/${optProduct[0].optid}/${this.props.match.params.productid}`,
+    });
   }
   render() {
     var { detailtest } = this.state;
@@ -691,7 +697,7 @@ class DetailTest extends PureComponent {
                         </span>
                       </div>
                     </div>
-                    {detailtest && detailtest.variant.length > 0
+                    {detailtest && detailtest.variant && detailtest.variant.length > 0
                       ? detailtest.variant
                           .sort((c, d) => {
                             return c.orderby - d.orderby;

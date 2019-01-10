@@ -110,7 +110,17 @@ class ProductItem extends PureComponent {
           styles['product-items']
         }
       >
-        <Link className={styles['product-card__productCard___2lSYu']} to={`/product/${seoTitle}`}>
+        <Link
+          className={styles['product-card__productCard___2lSYu']}
+          to={
+            data.optid && data.productid
+              ? `/producttest/${data.optid.replace(/\-/g, '')}/${data.productid.replace(/\-/g, '')}`
+              : `/producttest/${data.productid.replace(/\-/g, '')}/${data.productid.replace(
+                  /\-/g,
+                  ''
+                )}`
+          }
+        >
           <div>
             <div
               style={!data.thumbnail ? { background: 'gainsboro', height: 'auto' } : {}}

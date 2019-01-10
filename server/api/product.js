@@ -1,3 +1,4 @@
+/* eslint-disable no-continue */
 /* eslint-disable no-useless-escape */
 /* eslint-disable spaced-comment */
 /* eslint-disable array-callback-return */
@@ -930,6 +931,7 @@ function productSearchTest(req, res) {
   var data = [];
   var results = {};
   var dataResult = [];
+
   async.series(
     [
       function(callback) {
@@ -1008,10 +1010,12 @@ function productSearchTest(req, res) {
               models.instance.product.find({ productid: { $in: data } }, function(err, result) {
                 if (result && result.length > 0) {
                   let arrResult = [];
+
                   result.forEach((v, i) => {
                     var arrData = dataResult.filter((ele, ind) => {
                       return ele.productid.toString() === v.productid.toString();
                     });
+
                     let a = JSON.stringify(v);
                     let b = JSON.parse(a);
                     if (arrData.length > 0) {
@@ -1027,6 +1031,29 @@ function productSearchTest(req, res) {
               });
               break;
           }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      function(callback) {
+        try {
+          models.instance.options.find({ productid: { $in: data } }, function(err, result) {
+            if (result && result.length > 0) {
+              var checkproductid = '';
+              var arrData = results.list;
+              for (let i = 0; i < result.length; i++) {
+                for (let j = 0; j < arrData.length; j++) {
+                  if (checkproductid === result[i].productid.toString()) continue;
+                  if (result[i].productid.toString() === arrData[j].productid.toString()) {
+                    checkproductid = result[i].productid.toString();
+                    arrData[j].optid = result[i].optid;
+                  }
+                }
+              }
+              results.list = arrData;
+            }
+            callback(err, null);
+          });
         } catch (error) {
           console.log(error);
         }
