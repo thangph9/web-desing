@@ -110,6 +110,8 @@ class DetailTest extends PureComponent {
     optid: '',
     activeButton: 0,
     image_by_option: [],
+    listSize: [],
+    listColorAndImage: [],
   };
 
   // eslint-disable-next-line react/sort-comp
@@ -195,6 +197,40 @@ class DetailTest extends PureComponent {
             });
           }
         );
+      }
+      if (nextProps.product.detailtest.options) {
+        var arrListSize = [];
+        var arrListColor = [];
+        var checkDup = [];
+        nextProps.product.detailtest.options.forEach((v, i) => {
+          if (v.attrs) {
+            var obj = {};
+            if (v.attrs['1000']) {
+              obj['1000'] = v.attrs['1000'];
+              checkDup.push(v.attrs['1000']);
+              obj.images = v.images;
+              arrListColor.push(obj);
+            }
+            if (v.attrs['1001']) {
+              arrListSize.push(v.attrs['1001']);
+            }
+          }
+        });
+        const filterCheck = arrListColor.filter((elem, index, self) => {
+          var pos = self
+            .map(e => {
+              return e['1000'];
+            })
+            .indexOf(elem['1000']);
+          return index === pos;
+        });
+        console.log(filterCheck);
+        this.setState({
+          listColorAndImage: filterCheck,
+          listSize: Array.from(new Set(arrListSize)).sort((a, b) => {
+            return a - b;
+          }),
+        });
       }
     }
     if (nextProps.match.params.optid !== this.props.match.params.optid) {
@@ -628,9 +664,11 @@ class DetailTest extends PureComponent {
     var optProduct = this.state.detailtest.options.filter((v, i) => {
       return v.attrs['1000'] === color && v.attrs['1001'] === this.state.size;
     });
-    this.props.history.push({
-      pathname: `/producttest/${optProduct[0].optid}/${this.props.match.params.productid}`,
-    });
+    if (optProduct.length > 0) {
+      this.props.history.push({
+        pathname: `/producttest/${optProduct[0].optid}/${this.props.match.params.productid}`,
+      });
+    }
   }
   render() {
     var { detailtest, image_by_option } = this.state;
@@ -735,15 +773,12 @@ class DetailTest extends PureComponent {
                                       : 'Vui lòng lựa chọn màu sắc'}
                                   </h5>
                                   {detailtest.options &&
-                                    detailtest.options.map((v, i) => {
+                                    this.state.listColorAndImage.map((v, i) => {
                                       return (
                                         <span
                                           title={
-                                            this.checkSizeInColor(
-                                              this.state.size,
-                                              v.attrs['1000'],
-                                              i
-                                            ) === false
+                                            this.checkSizeInColor(this.state.size, v['1000'], i) ===
+                                            false
                                               ? `Không có size ${this.state.size} cho màu này`
                                               : ''
                                           }
@@ -762,13 +797,10 @@ class DetailTest extends PureComponent {
                                                 }
                                           }
                                         >
-                                          {this.checkSizeInColor(
-                                            this.state.size,
-                                            v.attrs['1000'],
-                                            i
-                                          ) === false ? (
+                                          {this.checkSizeInColor(this.state.size, v['1000'], i) ===
+                                          false ? (
                                             <span
-                                              title={v.attrs['1000']}
+                                              title={v['1000']}
                                               style={{ display: 'inline-block' }}
                                             >
                                               <Button
@@ -787,21 +819,19 @@ class DetailTest extends PureComponent {
                                                       }
                                                     : {}
                                                 }
-                                                onClick={() =>
-                                                  this.handleClickButton(i, v.attrs['1000'])
-                                                }
+                                                onClick={() => this.handleClickButton(i, v['1000'])}
                                               >
                                                 {image_by_option.length > 0 && v.images
                                                   ? ''
-                                                  : v.attrs['1000']}
+                                                  : v['1000']}
                                               </Button>
                                             </span>
                                           ) : (
                                             <span
-                                              title={v.attrs['1000']}
+                                              title={v['1000']}
                                               style={{ display: 'inline-block' }}
                                             >
-                                              {v.attrs['1000'] === this.state.color ? (
+                                              {v['1000'] === this.state.color ? (
                                                 <Button
                                                   style={
                                                     image_by_option.length > 0 && v.images
@@ -817,13 +847,13 @@ class DetailTest extends PureComponent {
                                                       : {}
                                                   }
                                                   onClick={() =>
-                                                    this.handleClickButtonTrue(i, v.attrs['1000'])
+                                                    this.handleClickButtonTrue(i, v['1000'])
                                                   }
                                                   className={styles1['activeButton']}
                                                 >
                                                   {image_by_option.length > 0 && v.images
                                                     ? ''
-                                                    : v.attrs['1000']}
+                                                    : v['1000']}
                                                 </Button>
                                               ) : (
                                                 <Button
@@ -841,13 +871,13 @@ class DetailTest extends PureComponent {
                                                       : {}
                                                   }
                                                   onClick={() =>
-                                                    this.handleClickButtonTrue(i, v.attrs['1000'])
+                                                    this.handleClickButtonTrue(i, v['1000'])
                                                   }
                                                   className={styles1['no-activeButton']}
                                                 >
                                                   {image_by_option.length > 0 && v.images
                                                     ? ''
-                                                    : v.attrs['1000']}
+                                                    : v['1000']}
                                                 </Button>
                                               )}
                                             </span>
@@ -912,8 +942,7 @@ class DetailTest extends PureComponent {
                                             data-auto-id="label"
                                           >
                                             <span className={styles1['gl-dropdown__select-label']}>
-                                              {detailtest.variant[index].value.length > 0 &&
-                                              !this.state.size
+                                              {detailtest.options && !this.state.size
                                                 ? 'Lựa chọn kích cỡ'
                                                 : this.state.size}
                                             </span>
@@ -952,34 +981,29 @@ class DetailTest extends PureComponent {
                                                 }
                                               >
                                                 {detailtest &&
-                                                  detailtest.variant[index].value
-                                                    .sort((a, b) => {
-                                                      return a - b;
-                                                    })
-                                                    .map((v, i) => {
-                                                      return (
-                                                        <li
-                                                          onClick={() => this.handleClickSize(v)}
-                                                          key={i}
+                                                  detailtest.options &&
+                                                  this.state.listSize.map((v, i) => {
+                                                    return (
+                                                      <li
+                                                        onClick={() => this.handleClickSize(v)}
+                                                        key={i}
+                                                        className={styles1['gl-square-list__item']}
+                                                        title={v}
+                                                      >
+                                                        <div
                                                           className={
-                                                            styles1['gl-square-list__item']
+                                                            this.checkChilrd(v) === false
+                                                              ? styles1['gl-square-list__cta'] +
+                                                                ' ' +
+                                                                styles1['colorbbb']
+                                                              : styles1['gl-square-list__cta']
                                                           }
-                                                          title={v}
                                                         >
-                                                          <div
-                                                            className={
-                                                              this.checkChilrd(v) === false
-                                                                ? styles1['gl-square-list__cta'] +
-                                                                  ' ' +
-                                                                  styles1['colorbbb']
-                                                                : styles1['gl-square-list__cta']
-                                                            }
-                                                          >
-                                                            {v}
-                                                          </div>
-                                                        </li>
-                                                      );
-                                                    })}
+                                                          {v}
+                                                        </div>
+                                                      </li>
+                                                    );
+                                                  })}
                                               </ol>
                                             </div>
                                           </div>
@@ -998,7 +1022,9 @@ class DetailTest extends PureComponent {
                       style={{ marginTop: '10px' }}
                       className={`${styles['product__few-items-notify___1Q8z3']}`}
                     >
-                      {detailtest ? `Chỉ còn lại ${data.amount} sản phẩm` : 'Hết hàng'}
+                      {detailtest && data.amount
+                        ? `Chỉ còn lại ${data.amount} sản phẩm`
+                        : 'Hết hàng'}
                     </p>
                     <div className={`${styles['product__few-items-notify___1Q8z3']}`}>
                       <button
