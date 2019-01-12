@@ -18,6 +18,7 @@ module.exports = {
       type: 'set',
       typeDef: '<text>',
     },
+    currency: 'text',
     name: 'text',
     lname: 'text',
     thumbnail: 'text',

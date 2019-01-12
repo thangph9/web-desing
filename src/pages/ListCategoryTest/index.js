@@ -93,11 +93,26 @@ var currencyFormatter = require('currency-formatter');
 }))
 class ProductItem extends PureComponent {
   render() {
-    var { data } = this.props;
+    var { data, currency } = this.props;
+    console.log(data);
     let productid = data.productid ? data.productid.replace(/\-/g, '') : 'null';
     let seoTitle = data.seo_link + '/' + productid;
-    const price = currencyFormatter.format(data['price'], { locale: 'vi-VN' });
-    const sale_price = currencyFormatter.format(data.sale.salePrice, { locale: 'vi-VN' });
+    var currencyByProduct = currency.filter((v, i) => {
+      return v.currency === data.currency;
+    });
+    var price = 0;
+    var sale_price = 0;
+    if (currencyByProduct.length > 0) {
+      price = currencyFormatter.format(data['price'] * currencyByProduct[0].raito, {
+        locale: 'vi-VN',
+      });
+      sale_price = currencyFormatter.format(data.sale.salePrice * currencyByProduct[0].raito, {
+        locale: 'vi-VN',
+      });
+    } else {
+      price = currencyFormatter.format(data['price'] * 1, { locale: 'vi-VN' });
+      sale_price = currencyFormatter.format(data.sale.salePrice * 1, { locale: 'vi-VN' });
+    }
     return (
       <div
         className={
@@ -199,6 +214,7 @@ class ListCategoryTest extends PureComponent {
       filterString: [],
       filterStringSize: [],
       totalSize: [],
+      currency: [],
     };
   }
   handleClickSort() {
@@ -207,78 +223,6 @@ class ListCategoryTest extends PureComponent {
       sort.style.display = 'none';
     } else sort.style.display = 'block';
   }
-  /* handleScroll() {
-    var screen = document.getElementById('screen');
-    var scroll = document.documentElement.scrollTop;
-    var scrollHeight = window.document.body.scrollHeight;
-    var idFix = document.getElementById('filterFiexd');
-    var rowFilter = document.getElementById('row-filter');
-    var saleFilter = document.getElementById('sale-filter');
-    var rowProduct = document.getElementById('row-product');
-    var filterDiv = document.getElementById('transform-fixed');
-    if (
-      screen != null &&
-      scroll != null &&
-      scrollHeight != null &&
-      rowFilter != null &&
-      rowProduct != null &&
-      filterDiv != null
-    ) {
-      if (rowProduct.clientHeight <= filterDiv.clientHeight) {
-        return;
-      }
-      if (
-        scroll >= 115 &&
-        scroll < screen.clientHeight - 1184 &&
-        idFix == null &&
-        saleFilter != null
-      ) {
-        filterDiv = document.getElementById('transform-fixed');
-        saleFilter.classList.add(
-          'order-pages-list-category-test-index-sale__fixed-position___P7XwH'
-        );
-        filterDiv.classList.remove(
-          'order-pages-list-category-test-index-sale__position-absolute___1tZOO'
-        );
-        var filterFixed = document.createElement('div');
-        filterFixed.setAttribute('id', 'filterFiexd');
-        filterFixed.setAttribute(
-          'class',
-          'order-pages-list-category-test-index-sale__filters-container___32fTU order-pages-list-category-test-index-sale__col-md-4___UhAyk order-pages-list-category-test-index-sale__col-lg-3___2xbHl order-pages-list-category-test-index-sale__dumb-container___lFg-z order-pages-list-category-test-index-visibility-hidden'
-        );
-        rowFilter.appendChild(filterFixed);
-        rowFilter.insertBefore(filterFixed, rowFilter.childNodes[1]);
-        filterDiv = document.getElementById('transform-fixed');
-        var numberScreen = saleFilter.clientHeight + 115 - window.innerHeight;
-        if (numberScreen > 0) {
-          filterDiv.style.transform = `translateY(-${numberScreen}px)`;
-          filterDiv.style.transition = 'transform 0.5s ease';
-        }
-      }
-      if (scroll < 115 && idFix != null && saleFilter != null) {
-        saleFilter.classList.remove(
-          'order-pages-list-category-test-index-sale__fixed-position___P7XwH'
-        );
-        rowFilter.removeChild(idFix);
-        filterDiv = document.getElementById('transform-fixed');
-        filterDiv.classList.remove(
-          'order-pages-list-category-test-index-sale__position-absolute___1tZOO'
-        );
-        filterDiv.style.transform = `translateY(0px)`;
-        filterDiv.style.transition = 'transform 0.5s ease';
-      }
-      if (scroll >= screen.clientHeight - 1184 && idFix != null) {
-        saleFilter.classList.remove(
-          'order-pages-list-category-test-index-sale__fixed-position___P7XwH'
-        );
-        filterDiv = document.getElementById('transform-fixed');
-        rowFilter.removeChild(idFix);
-        filterDiv.classList.add(
-          'order-pages-list-category-test-index-sale__position-absolute___1tZOO'
-        );
-      }
-    }
-  } */
   componentWillMount() {
     if (this.props.category.filterUrl != '') {
       let arrFilterString = this.props.category.filterUrl.split('-').filter((v, i) => {
@@ -601,6 +545,11 @@ class ListCategoryTest extends PureComponent {
     if (nextProps.category.searchtest.list !== this.props.category.searchtest.list) {
       this.setState({
         globalProduct: nextProps.category.searchtest.list,
+      });
+    }
+    if (nextProps.category.searchtest.currency !== this.props.category.searchtest.currency) {
+      this.setState({
+        currency: nextProps.category.searchtest.currency,
       });
     }
     if (nextProps.category.searchtest.filterMap !== this.props.category.searchtest.filterMap) {
@@ -1200,8 +1149,6 @@ class ListCategoryTest extends PureComponent {
     var dataDetail = [];
     var globalProductNew = [];
     var filterToString = '';
-    console.log(this.props.category);
-    console.log(globalProduct);
     if (filterString.length > 0) {
       filterToString = filterString.toString().replace(/\,/g, '&&');
     }
@@ -1484,7 +1431,9 @@ class ListCategoryTest extends PureComponent {
                   >
                     <div id="row-product" className={styles['row__row___2roCA']}>
                       {globalProductNew.map((value, index) => {
-                        return <ProductItem data={value} key={index} />;
+                        return (
+                          <ProductItem currency={this.state.currency} data={value} key={index} />
+                        );
                       })}
                     </div>
                   </div>

@@ -1069,28 +1069,24 @@ function productSearchTest(req, res) {
           console.log(error);
         }
       },
-      /*
-      function (callback) {
-        renderFilter(results.list, function (err, r) {
+      function(callback) {
+        models.instance.currency_raito.find({}, function(err, items) {
+          if (items && items.length > 0) {
+            results.currency = items;
+          }
+          callback(err, null);
+        });
+      },
+      function(callback) {
+        renderFilter(results.list, function(err, r) {
           results.filterMap = r;
           callback(err, null);
         });
       },
-       */
     ],
     function(err, result) {
       if (err) return res.json({ status: 'error' });
       return res.json({ status: 'ok', data: results });
-      /*
-        res.send({
-         status: 'ok',
-         data: {
-           list: results.items,
-           pagination: { total: results.items.length, current: current },
-           // filterMap: filterMap,
-         },
-       });
-      */
     }
   );
 }
