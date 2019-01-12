@@ -45,6 +45,7 @@ module.exports = {
       type: 'set',
       typeDef: '<text>',
     },
+    size_desc: 'text',  
     seo_link: 'text',
     meta: 'text',
     meta_description: 'text',
