@@ -198,6 +198,12 @@ class DetailTest extends PureComponent {
           }
         );
       }
+      if (product_by_option.length > 0) {
+        this.setState({
+          price_by_options: product_by_option[0].price,
+          amount_by_option: product_by_option[0].amount,
+        });
+      }
       if (nextProps.product.detailtest.options) {
         var arrListSize = [];
         var arrListColor = [];
@@ -238,6 +244,12 @@ class DetailTest extends PureComponent {
         return v.optid === nextProps.match.params.optid;
       });
       if (product_by_option.length > 0) {
+        this.setState({
+          price_by_options: product_by_option[0].price,
+          amount_by_option: product_by_option[0].amount,
+        });
+      }
+      if (product_by_option.length > 0 && product_by_option[0].attrs) {
         this.setState(
           {
             size: product_by_option[0].attrs['1001'],
@@ -671,14 +683,15 @@ class DetailTest extends PureComponent {
     }
   }
   render() {
-    var { detailtest, image_by_option } = this.state;
+    var { detailtest, image_by_option, price_by_options, amount_by_option } = this.state;
     console.log(detailtest);
     const data = detailtest ? detailtest.product : undefined;
     const title = 'Chi tiết sản phẩm';
     const meta_description = '123order ';
     const meta_data = '123order,order';
     const endTime = data ? new Date(data.sale.saleDate).getTime() : 0;
-    const price = data ? data.price : '';
+    const price = price_by_options ? price_by_options : data ? data.price : '';
+    const amount = amount_by_option ? amount_by_option : data ? data.amount : '';
     const meta = {
       title,
       description: meta_description,
@@ -816,6 +829,7 @@ class DetailTest extends PureComponent {
                                                         width: '80px',
                                                         height: '90px',
                                                         filter: 'opacity(40%)',
+                                                        backgroundPosition: 'center',
                                                       }
                                                     : {}
                                                 }
@@ -843,6 +857,7 @@ class DetailTest extends PureComponent {
                                                           backgroundRepeat: 'no-repeat',
                                                           width: '80px',
                                                           height: '90px',
+                                                          backgroundPosition: 'center',
                                                         }
                                                       : {}
                                                   }
@@ -867,6 +882,7 @@ class DetailTest extends PureComponent {
                                                           backgroundRepeat: 'no-repeat',
                                                           width: '80px',
                                                           height: '90px',
+                                                          backgroundPosition: 'center',
                                                         }
                                                       : {}
                                                   }
@@ -1022,9 +1038,7 @@ class DetailTest extends PureComponent {
                       style={{ marginTop: '10px' }}
                       className={`${styles['product__few-items-notify___1Q8z3']}`}
                     >
-                      {detailtest && data.amount
-                        ? `Chỉ còn lại ${data.amount} sản phẩm`
-                        : 'Hết hàng'}
+                      {amount ? `Chỉ còn lại ${amount} sản phẩm` : 'Hết hàng'}
                     </p>
                     <div className={`${styles['product__few-items-notify___1Q8z3']}`}>
                       <button

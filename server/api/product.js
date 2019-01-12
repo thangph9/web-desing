@@ -884,6 +884,7 @@ function productDetailTest(req, res) {
               obj.attrs = element.attrs;
               obj.images = element.images;
               obj.price = element.price;
+              obj.amount = element.amount;
               arr.push(obj);
             });
             results.options = arr;
