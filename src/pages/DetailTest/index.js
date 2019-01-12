@@ -716,7 +716,9 @@ class DetailTest extends PureComponent {
           <div className={styles['container__container___1fvX0']}>
             <div style={{ paddingTop: '5px' }} className={styles['product__product___2plEK']}>
               <div className={styles['product__product-header___2yYGL']}>
+                {this.renderBreadcrumb()}
                 <div
+                  style={this.state.breadcrumb ? {} : { marginTop: '30px' }}
                   className={`${styles['product__data-layer-category___1lWBV']}
                   `}
                 >
