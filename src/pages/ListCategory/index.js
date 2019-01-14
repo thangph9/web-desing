@@ -612,7 +612,9 @@ class ListCategory extends PureComponent {
         }
         var arrSizeTotal = stringSizeTotal.split(',');
         this.setState({
-          totalSize: Array.from(new Set(arrSizeTotal)).sort(),
+          totalSize: Array.from(new Set(arrSizeTotal)).sort((a, b) => {
+            return a - b;
+          }),
         });
       });
     }
