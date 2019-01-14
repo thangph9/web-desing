@@ -112,6 +112,7 @@ class DetailTest extends PureComponent {
     image_by_option: [],
     listSize: [],
     listColorAndImage: [],
+    raito: 1,
   };
 
   // eslint-disable-next-line react/sort-comp
@@ -172,6 +173,16 @@ class DetailTest extends PureComponent {
                 });
               }
             });
+          }
+          if (this.state.detailtest.currency) {
+            const currency_by_product = this.state.detailtest.currency.filter((v, i) => {
+              return v.currency === this.state.detailtest.product.currency;
+            });
+            if (currency_by_product.length > 0) {
+              this.setState({
+                raito: currency_by_product[0].raito,
+              });
+            }
           }
         }
       );
@@ -683,14 +694,20 @@ class DetailTest extends PureComponent {
     }
   }
   render() {
-    var { detailtest, image_by_option, price_by_options, amount_by_option } = this.state;
+    var { detailtest, image_by_option, price_by_options, amount_by_option, raito } = this.state;
     console.log(detailtest);
     const data = detailtest ? detailtest.product : undefined;
     const title = 'Chi tiết sản phẩm';
     const meta_description = '123order ';
     const meta_data = '123order,order';
     const endTime = data ? new Date(data.sale.saleDate).getTime() : 0;
-    const price = price_by_options ? price_by_options : data ? data.price : '';
+    const price = currencyFormatter.format(
+      price_by_options ? price_by_options * raito : data ? data.price * raito : '',
+      { locale: 'vi-VN' }
+    );
+    const sale_price = currencyFormatter.format(data ? data.sale.salePrice * raito : '', {
+      locale: 'vi-VN',
+    });
     const amount = amount_by_option ? amount_by_option : data ? data.amount : '';
     const meta = {
       title,
@@ -768,7 +785,7 @@ class DetailTest extends PureComponent {
                           {price}
                         </span>
                         <span className={`${styles['product-info__sale-price___1unp2']}`}>
-                          {price}
+                          {sale_price}
                         </span>
                       </div>
                     </div>

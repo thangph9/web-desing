@@ -830,9 +830,9 @@ function productSearch(req, res) {
       },
       function(callback) {
         try {
-          models.instance.product_detail.find({ $solr_query: query }, function(err, res) {
-            if (res && res.length > 0) {
-              results.items = res;
+          models.instance.product_detail.find({ $solr_query: query }, function(err, result) {
+            if (result && result.length > 0) {
+              results.items = result;
             }
             callback(err, null);
           });

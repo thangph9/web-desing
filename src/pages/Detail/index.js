@@ -399,7 +399,7 @@ class Detail extends PureComponent {
               id="images-container"
             >
               {SmallImageUI.length > 0 && (
-                <Tabs forceRender={false} tabPosition="left" style={{ height: 650 }}>
+                <Tabs forceRender tabPosition="left" style={{ height: 535 }}>
                   {SmallImageUI}
                 </Tabs>
               )}
@@ -490,7 +490,7 @@ class Detail extends PureComponent {
     const endTime = detail.death_clock ? new Date(detail.death_clock.end).getTime() : 0;
     const price = currencyFormatter.format(data['_price'], { locale: 'vi-VN' });
     const sale_price = currencyFormatter.format(data['_sale_price'], { locale: 'vi-VN' });
-
+    const timeNow = new Date().getTime();
     const meta = {
       title,
       description: meta_description,
@@ -732,17 +732,17 @@ class Detail extends PureComponent {
                         Thêm vào giỏ hàng
                       </button>
                     </div>
-                    {endTime > 0 && (
-                      <div className={`${styles['product__sale-timer___RypVA']}`}>
-                        <p>Ưu đãi này sẽ kết thúc trong:</p>
-
-                        <CountDown
-                          style={{ fontSize: 20 }}
-                          target={endTime}
-                          format={this.formatCountDown}
-                        />
-                      </div>
-                    )}
+                    {endTime > 0 &&
+                      endTime > timeNow && (
+                        <div className={`${styles['product__sale-timer___RypVA']}`}>
+                          <p>Ưu đãi này sẽ kết thúc trong:</p>
+                          <CountDown
+                            style={{ fontSize: 20 }}
+                            target={endTime}
+                            format={this.formatCountDown}
+                          />
+                        </div>
+                      )}
                     <div className={`${styles['product__additional-info___34ReF']}`}>
                       <div>
                         <div className={`${styles['additional-info__item___38NHG']}`}>
@@ -787,227 +787,269 @@ class Detail extends PureComponent {
                       </div>
                     </div>
                     <div className={`${styles['product__product-desc___3eim0']}`}>
-                      <div>
-                        <div className={`${styles['product-description__group___3Z2qF']}`}>
-                          <h4 className={`${styles['product-description__panel-title___1aoFo']}`}>
-                            <Link
-                              onClick={() => this.handleClickDesciption('info-product')}
-                              className={`${
-                                styles['product-description__accordion-toggle___1kmrM']
-                              }`}
-                              to={`#info-product`}
-                            >
-                              <div className={`${styles['product-description__title___Xh_fg']}`}>
-                                Thông tin sản phẩm
+                      {data.description &&
+                        data.description.length > 10 && (
+                          <div>
+                            <div className={`${styles['product-description__group___3Z2qF']}`}>
+                              <h4
+                                className={`${styles['product-description__panel-title___1aoFo']}`}
+                              >
                                 <span
+                                  style={{ cursor: 'pointer' }}
+                                  onClick={() => this.handleClickDesciption('info-product')}
                                   className={`${
-                                    styles['product-description__btn-collapse___3Pk93']
+                                    styles['product-description__accordion-toggle___1kmrM']
                                   }`}
                                 >
-                                  {!this.state['info-product'] ? (
-                                    <i
-                                      className={`${styles['ic-ic-plus']} ${
-                                        styles['product-description__collapsed___ahwQq']
-                                      }`}
-                                    />
-                                  ) : (
-                                    <i
-                                      className={`${styles['ic-ic-minus']} ${
-                                        styles['product-description__collapsed___ahwQq']
-                                      }`}
-                                    />
-                                  )}
-                                </span>
-                              </div>
-                            </Link>
-                          </h4>
-                          <div
-                            id="info-product"
-                            style={{ display: 'block' }}
-                            className={`${styles['collapse']} ${
-                              styles['product-description__panel-collapse___3G-5Q']
-                            } collapselow`}
-                          >
-                            <div
-                              className={`${styles['product-description__product-info___nWbK5']}`}
-                            >
-                              {ReactHtmlParser(data.description)}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <div className={`${styles['product-description__group___3Z2qF']}`}>
-                          <h4 className={`${styles['product-description__panel-title___1aoFo']}`}>
-                            <Link
-                              onClick={() => this.handleClickDesciption('material')}
-                              className={`${
-                                styles['product-description__accordion-toggle___1kmrM']
-                              }`}
-                              to={`#material`}
-                            >
-                              <div className={`${styles['product-description__title___Xh_fg']}`}>
-                                Chất liệu &amp; Cách sử dụng
-                                <span
-                                  className={`${
-                                    styles['product-description__btn-collapse___3Pk93']
-                                  }`}
-                                >
-                                  {!this.state['material'] ? (
-                                    <i
-                                      className={`${styles['ic-ic-plus']} ${
-                                        styles['product-description__collapsed___ahwQq']
-                                      }`}
-                                    />
-                                  ) : (
-                                    <i
-                                      className={`${styles['ic-ic-minus']} ${
-                                        styles['product-description__collapsed___ahwQq']
-                                      }`}
-                                    />
-                                  )}
-                                </span>
-                              </div>
-                            </Link>
-                          </h4>
-                          <div
-                            id="material"
-                            className={`${styles['collapse']} ${
-                              styles['product-description__panel-collapse___3G-5Q']
-                            } collapselow`}
-                          >
-                            <div
-                              className={`${styles['product-description__material-care___1szER']}`}
-                            >
-                              <ul
-                                className={`${styles['product-description__desc-list___3qcUM']}`}
-                              />
-                              {ReactHtmlParser(data.materials_use)}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <div className={`${styles['product-description__group___3Z2qF']}`}>
-                          <h4 className={`${styles['product-description__panel-title___1aoFo']}`}>
-                            <Link
-                              onClick={() => this.handleClickDesciption('size-table')}
-                              id="size-table-click"
-                              className={`${
-                                styles['product-description__accordion-toggle___1kmrM']
-                              }`}
-                              to={`#size-table`}
-                            >
-                              <div className={`${styles['product-description__title___Xh_fg']}`}>
-                                Chi tiết kích cỡ
-                                <span
-                                  className={`${
-                                    styles['product-description__btn-collapse___3Pk93']
-                                  }`}
-                                >
-                                  {!this.state['size-table'] ? (
-                                    <i
-                                      className={`${styles['ic-ic-plus']} ${
-                                        styles['product-description__collapsed___ahwQq']
-                                      }`}
-                                    />
-                                  ) : (
-                                    <i
-                                      className={`${styles['ic-ic-minus']} ${
-                                        styles['product-description__collapsed___ahwQq']
-                                      }`}
-                                    />
-                                  )}
-                                </span>
-                              </div>
-                            </Link>
-                          </h4>
-                          <div
-                            id="size-table"
-                            className={`${styles['collapse']} ${
-                              styles['product-description__panel-collapse___3G-5Q']
-                            } collapselow`}
-                          >
-                            <div>
-                              <div className={`${styles['product-description__size-fit___1p0wI']}`}>
-                                <ul
-                                  className={`${styles['product-description__desc-list___3qcUM']}`}
-                                >
-                                  {ReactHtmlParser(data.size_desc)}
-                                </ul>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <div
-                          className={`${styles['product-description__group___3Z2qF']} ${
-                            styles['hidden-md-up']
-                          }`}
-                        >
-                          <h4 className={`${styles['product-description__panel-title___1aoFo']}`}>
-                            <Link
-                              onClick={() => this.handleClickDesciption('info-brand')}
-                              className={`${
-                                styles['product-description__accordion-toggle___1kmrM']
-                              }`}
-                              to={`#info-brand`}
-                            >
-                              <div className={`${styles['product-description__title___Xh_fg']}`}>
-                                <span>
-                                  <img
-                                    className={`${
-                                      styles['product-description__about-the-brand-logo___h7FTg']
-                                    }`}
-                                    src="https://leflair-assets.storage.googleapis.com/59ca0a3be1b357001a65d626.jpg"
-                                  />
-                                  <span
-                                    className={`${
-                                      styles['product-description__about-the-brand-heading___20E5W']
-                                    }`}
+                                  <div
+                                    className={`${styles['product-description__title___Xh_fg']}`}
                                   >
-                                    Thông tin thương hiệu
-                                  </span>
+                                    Thông tin sản phẩm
+                                    <span
+                                      className={`${
+                                        styles['product-description__btn-collapse___3Pk93']
+                                      }`}
+                                    >
+                                      {!this.state['info-product'] ? (
+                                        <i
+                                          className={`${styles['ic-ic-plus']} ${
+                                            styles['product-description__collapsed___ahwQq']
+                                          }`}
+                                        />
+                                      ) : (
+                                        <i
+                                          className={`${styles['ic-ic-minus']} ${
+                                            styles['product-description__collapsed___ahwQq']
+                                          }`}
+                                        />
+                                      )}
+                                    </span>
+                                  </div>
                                 </span>
-                                <span
+                              </h4>
+                              <div
+                                id="info-product"
+                                style={{ display: 'block' }}
+                                className={`${styles['collapse']} ${
+                                  styles['product-description__panel-collapse___3G-5Q']
+                                } collapselow`}
+                              >
+                                <div
                                   className={`${
-                                    styles['product-description__btn-collapse___3Pk93']
+                                    styles['product-description__product-info___nWbK5']
                                   }`}
                                 >
-                                  {!this.state['info-brand'] ? (
-                                    <i
-                                      className={`${styles['ic-ic-plus']} ${
-                                        styles['product-description__collapsed___ahwQq']
-                                      }`}
-                                    />
-                                  ) : (
-                                    <i
-                                      className={`${styles['ic-ic-minus']} ${
-                                        styles['product-description__collapsed___ahwQq']
-                                      }`}
-                                    />
-                                  )}
-                                </span>
+                                  {ReactHtmlParser(data.description)}
+                                </div>
                               </div>
-                            </Link>
-                          </h4>
-                          <div
-                            id="info-brand"
-                            className={`${styles['collapse']} ${
-                              styles['product-description__panel-collapse___3G-5Q']
-                            } collapselow`}
-                          >
-                            <div
-                              className={`${
-                                styles['product-description__about-the-brand___3lT4W']
-                              }`}
-                            >
-                              {ReactHtmlParser(data.desc_detail)}
                             </div>
                           </div>
-                        </div>
-                      </div>
+                        )}
+                      {data.materials_use &&
+                        data.materials_use.length > 10 && (
+                          <div>
+                            <div className={`${styles['product-description__group___3Z2qF']}`}>
+                              <h4
+                                className={`${styles['product-description__panel-title___1aoFo']}`}
+                              >
+                                <span
+                                  style={{ cursor: 'pointer' }}
+                                  onClick={() => this.handleClickDesciption('material')}
+                                  className={`${
+                                    styles['product-description__accordion-toggle___1kmrM']
+                                  }`}
+                                >
+                                  <div
+                                    className={`${styles['product-description__title___Xh_fg']}`}
+                                  >
+                                    Chất liệu &amp; Cách sử dụng
+                                    <span
+                                      className={`${
+                                        styles['product-description__btn-collapse___3Pk93']
+                                      }`}
+                                    >
+                                      {!this.state['material'] ? (
+                                        <i
+                                          className={`${styles['ic-ic-plus']} ${
+                                            styles['product-description__collapsed___ahwQq']
+                                          }`}
+                                        />
+                                      ) : (
+                                        <i
+                                          className={`${styles['ic-ic-minus']} ${
+                                            styles['product-description__collapsed___ahwQq']
+                                          }`}
+                                        />
+                                      )}
+                                    </span>
+                                  </div>
+                                </span>
+                              </h4>
+                              <div
+                                id="material"
+                                className={`${styles['collapse']} ${
+                                  styles['product-description__panel-collapse___3G-5Q']
+                                } collapselow`}
+                              >
+                                <div
+                                  className={`${
+                                    styles['product-description__material-care___1szER']
+                                  }`}
+                                >
+                                  <ul
+                                    className={`${
+                                      styles['product-description__desc-list___3qcUM']
+                                    }`}
+                                  />
+                                  {ReactHtmlParser(data.materials_use)}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      {data.size_desc &&
+                        data.size_desc.length > 10 && (
+                          <div>
+                            <div className={`${styles['product-description__group___3Z2qF']}`}>
+                              <h4
+                                className={`${styles['product-description__panel-title___1aoFo']}`}
+                              >
+                                <span
+                                  style={{ cursor: 'pointer' }}
+                                  onClick={() => this.handleClickDesciption('size-table')}
+                                  id="size-table-click"
+                                  className={`${
+                                    styles['product-description__accordion-toggle___1kmrM']
+                                  }`}
+                                >
+                                  <div
+                                    className={`${styles['product-description__title___Xh_fg']}`}
+                                  >
+                                    Chi tiết kích cỡ
+                                    <span
+                                      className={`${
+                                        styles['product-description__btn-collapse___3Pk93']
+                                      }`}
+                                    >
+                                      {!this.state['size-table'] ? (
+                                        <i
+                                          className={`${styles['ic-ic-plus']} ${
+                                            styles['product-description__collapsed___ahwQq']
+                                          }`}
+                                        />
+                                      ) : (
+                                        <i
+                                          className={`${styles['ic-ic-minus']} ${
+                                            styles['product-description__collapsed___ahwQq']
+                                          }`}
+                                        />
+                                      )}
+                                    </span>
+                                  </div>
+                                </span>
+                              </h4>
+                              <div
+                                id="size-table"
+                                className={`${styles['collapse']} ${
+                                  styles['product-description__panel-collapse___3G-5Q']
+                                } collapselow`}
+                              >
+                                <div>
+                                  <div
+                                    className={`${styles['product-description__size-fit___1p0wI']}`}
+                                  >
+                                    <ul
+                                      className={`${
+                                        styles['product-description__desc-list___3qcUM']
+                                      }`}
+                                    >
+                                      {ReactHtmlParser(data.size_desc)}
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      {data.desc_detail &&
+                        data.desc_detail.length > 0 && (
+                          <div>
+                            <div
+                              className={`${styles['product-description__group___3Z2qF']} ${
+                                styles['hidden-md-up']
+                              }`}
+                            >
+                              <h4
+                                className={`${styles['product-description__panel-title___1aoFo']}`}
+                              >
+                                <span
+                                  style={{ cursor: 'pointer' }}
+                                  onClick={() => this.handleClickDesciption('info-brand')}
+                                  className={`${
+                                    styles['product-description__accordion-toggle___1kmrM']
+                                  }`}
+                                >
+                                  <div
+                                    className={`${styles['product-description__title___Xh_fg']}`}
+                                  >
+                                    <span>
+                                      <img
+                                        className={`${
+                                          styles[
+                                            'product-description__about-the-brand-logo___h7FTg'
+                                          ]
+                                        }`}
+                                        src="https://leflair-assets.storage.googleapis.com/59ca0a3be1b357001a65d626.jpg"
+                                      />
+                                      <span
+                                        className={`${
+                                          styles[
+                                            'product-description__about-the-brand-heading___20E5W'
+                                          ]
+                                        }`}
+                                      >
+                                        Thông tin thương hiệu
+                                      </span>
+                                    </span>
+                                    <span
+                                      className={`${
+                                        styles['product-description__btn-collapse___3Pk93']
+                                      }`}
+                                    >
+                                      {!this.state['info-brand'] ? (
+                                        <i
+                                          className={`${styles['ic-ic-plus']} ${
+                                            styles['product-description__collapsed___ahwQq']
+                                          }`}
+                                        />
+                                      ) : (
+                                        <i
+                                          className={`${styles['ic-ic-minus']} ${
+                                            styles['product-description__collapsed___ahwQq']
+                                          }`}
+                                        />
+                                      )}
+                                    </span>
+                                  </div>
+                                </span>
+                              </h4>
+                              <div
+                                id="info-brand"
+                                className={`${styles['collapse']} ${
+                                  styles['product-description__panel-collapse___3G-5Q']
+                                } collapselow`}
+                              >
+                                <div
+                                  className={`${
+                                    styles['product-description__about-the-brand___3lT4W']
+                                  }`}
+                                >
+                                  {ReactHtmlParser(data.desc_detail)}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
