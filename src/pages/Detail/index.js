@@ -361,6 +361,7 @@ class Detail extends PureComponent {
       // eslint-disable-next-line camelcase
       huge_image = (
         <img
+          id="image-huge"
           key={imageChoose ? `huge${imageChoose}` : `huge${image_huge[0].replace(/\-/g, '')}`}
           className={`${styles['images-slider__image___wW9Yw']}`}
           src={`/images/f/${imageChoose || image_huge[0].replace(/\-/g, '')}`}
@@ -399,7 +400,7 @@ class Detail extends PureComponent {
               id="images-container"
             >
               {SmallImageUI.length > 0 && (
-                <Tabs forceRender tabPosition="left" style={{ height: 535 }}>
+                <Tabs defaultActiveKey="0" tabPosition="left" style={{ height: 650 }}>
                   {SmallImageUI}
                 </Tabs>
               )}
