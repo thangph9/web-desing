@@ -795,371 +795,425 @@ class ListCategory extends PureComponent {
             </div>
           </div>
           <div id="transform-fixed" className={styles['sale__fitlers-content-wrap___pU5ed']}>
-            <div className={styles['filter__filter-container___1hLIM']}>
-              <div className={styles['filter__filter-header___3I6RP']}>
-                <h5
-                  id="style"
-                  onClick={() => this.handleClickFilter('style-row')}
-                  className={styles['clearfix']}
-                >
-                  <a
-                    className={styles['clearfix'] + ' ' + styles['d-block']}
-                    href="javascript:void(0)"
-                    id="style"
-                  >
-                    <span className={styles['float-left']}>Style</span>
-                    <i
-                      className={
-                        !this.state['style-row']
-                          ? styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
-                          : styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus']
-                      }
-                    />
-                  </a>
-                </h5>
-              </div>
-              {!this.state['style-row'] ? (
-                <div id="style-row">
-                  <div className={styles['row__row___2roCA']}>
-                    {filterMap.style && filterMap.style.length > 0
-                      ? filterMap.style.map((e, i) => {
-                          var v = e.replace(/ /g, '-');
-                          return (
-                            <div key={i} className={styles['grid__col-12___39hfZ']}>
-                              <div className={styles['filter-option__filter-option___3Xmf0']}>
-                                <button
-                                  onClick={() => this.handleCheckFilter('style', v, e)}
-                                  type="button"
-                                  className={
-                                    this.checkStateUrl(this.state.style, v) == false
-                                      ? styles['filter-option__btn___2u45i'] +
-                                        ' ' +
-                                        styles['filter-option__btn-secondary___1DPfK'] +
-                                        ' ' +
-                                        styles['filter-option__btn-block___1tZOy']
-                                      : styles['filter-option__btn___2u45i'] +
-                                        ' ' +
-                                        styles['filter-option__btn-secondary___1DPfK'] +
-                                        ' ' +
-                                        styles['filter-option__btn-block___1tZOy'] +
-                                        ' ' +
-                                        styles['filter-option__active___1HV6C']
-                                  }
-                                >
-                                  {this.checkStateUrl(this.state.style, v) == true && (
-                                    <span
-                                      className={
-                                        styles['filter-option__icon___1wxyY'] +
-                                        ' ' +
-                                        styles['ic-ic-close']
-                                      }
-                                    />
-                                  )}
-                                  {e}
-                                </button>
-                              </div>
-                            </div>
-                          );
-                        })
-                      : ''}
+            {filterMap.style &&
+              filterMap.style.length > 0 && (
+                <div className={styles['filter__filter-container___1hLIM']}>
+                  <div className={styles['filter__filter-header___3I6RP']}>
+                    <h5
+                      id="style"
+                      onClick={() => this.handleClickFilter('style-row')}
+                      className={styles['clearfix']}
+                    >
+                      <a
+                        className={styles['clearfix'] + ' ' + styles['d-block']}
+                        href="javascript:void(0)"
+                        id="style"
+                      >
+                        <span className={styles['float-left']}>Style</span>
+                        <i
+                          className={
+                            !this.state['style-row']
+                              ? styles['fa'] +
+                                ' ' +
+                                styles['float-right'] +
+                                ' ' +
+                                styles['ic-ic-minus']
+                              : styles['fa'] +
+                                ' ' +
+                                styles['float-right'] +
+                                ' ' +
+                                styles['ic-ic-plus']
+                          }
+                        />
+                      </a>
+                    </h5>
                   </div>
-                </div>
-              ) : (
-                ''
-              )}
-            </div>
-            <div className={styles['filter__filter-container___1hLIM']}>
-              <div className={styles['filter__filter-header___3I6RP']}>
-                <h5
-                  id="kich-co"
-                  onClick={() => this.handleClickFilter('kich-co-row')}
-                  className={styles['clearfix']}
-                >
-                  <a
-                    className={styles['clearfix'] + ' ' + styles['d-block']}
-                    href="javascript:void(0)"
-                    id="size"
-                  >
-                    <span className={styles['float-left']}>Kích cỡ</span>
-                    <i
-                      className={
-                        !this.state['kich-co-row']
-                          ? styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
-                          : styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus']
-                      }
-                    />
-                  </a>
-                </h5>
-              </div>
-              {!this.state['kich-co-row'] ? (
-                <div id="kich-co-row" style={{ display: 'block' }}>
-                  <div className={styles['row__row___2roCA']}>
-                    {this.state.totalSize.length > 0
-                      ? this.state.totalSize.map((e, i) => {
-                          var v = e.replace(/ /g, '-');
-                          return (
-                            <div key={i} className={styles['grid__col-12___39hfZ']}>
-                              <div className={styles['filter-option__filter-option___3Xmf0']}>
-                                <button
-                                  onClick={() => this.handleCheckFilter('size', v, e)}
-                                  type="button"
-                                  className={
-                                    this.checkStateUrl(this.state.size, v) == false
-                                      ? styles['filter-option__btn___2u45i'] +
-                                        ' ' +
-                                        styles['filter-option__btn-secondary___1DPfK'] +
-                                        ' ' +
-                                        styles['filter-option__btn-block___1tZOy']
-                                      : styles['filter-option__btn___2u45i'] +
-                                        ' ' +
-                                        styles['filter-option__btn-secondary___1DPfK'] +
-                                        ' ' +
-                                        styles['filter-option__btn-block___1tZOy'] +
-                                        ' ' +
-                                        styles['filter-option__active___1HV6C']
-                                  }
-                                >
-                                  {this.checkStateUrl(this.state.size, v) == true && (
-                                    <span
+                  {!this.state['style-row'] ? (
+                    <div id="style-row">
+                      <div className={styles['row__row___2roCA']}>
+                        {filterMap.style && filterMap.style.length > 0
+                          ? filterMap.style.map((e, i) => {
+                              var v = e.replace(/ /g, '-');
+                              return (
+                                <div key={i} className={styles['grid__col-12___39hfZ']}>
+                                  <div className={styles['filter-option__filter-option___3Xmf0']}>
+                                    <button
+                                      onClick={() => this.handleCheckFilter('style', v, e)}
+                                      type="button"
                                       className={
-                                        styles['filter-option__icon___1wxyY'] +
-                                        ' ' +
-                                        styles['ic-ic-close']
+                                        this.checkStateUrl(this.state.style, v) == false
+                                          ? styles['filter-option__btn___2u45i'] +
+                                            ' ' +
+                                            styles['filter-option__btn-secondary___1DPfK'] +
+                                            ' ' +
+                                            styles['filter-option__btn-block___1tZOy']
+                                          : styles['filter-option__btn___2u45i'] +
+                                            ' ' +
+                                            styles['filter-option__btn-secondary___1DPfK'] +
+                                            ' ' +
+                                            styles['filter-option__btn-block___1tZOy'] +
+                                            ' ' +
+                                            styles['filter-option__active___1HV6C']
                                       }
-                                    />
-                                  )}
-                                  {e}
-                                </button>
-                              </div>
-                            </div>
-                          );
-                        })
-                      : ''}
-                  </div>
+                                    >
+                                      {this.checkStateUrl(this.state.style, v) == true && (
+                                        <span
+                                          className={
+                                            styles['filter-option__icon___1wxyY'] +
+                                            ' ' +
+                                            styles['ic-ic-close']
+                                          }
+                                        />
+                                      )}
+                                      {e}
+                                    </button>
+                                  </div>
+                                </div>
+                              );
+                            })
+                          : ''}
+                      </div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </div>
-              ) : (
-                ''
               )}
-            </div>
-            <div className={styles['filter__filter-container___1hLIM']}>
-              <div className={styles['filter__filter-header___3I6RP']}>
-                <h5
-                  id="thuong-hieu"
-                  onClick={() => this.handleClickFilter('thuong-hieu-row')}
-                  className={styles['clearfix']}
-                >
-                  <a
-                    className={styles['clearfix'] + ' ' + styles['d-block']}
-                    href="javascript:void(0)"
-                    id="brand"
+            {this.state.totalSize.length > 0 && (
+              <div className={styles['filter__filter-container___1hLIM']}>
+                <div className={styles['filter__filter-header___3I6RP']}>
+                  <h5
+                    id="kich-co"
+                    onClick={() => this.handleClickFilter('kich-co-row')}
+                    className={styles['clearfix']}
                   >
-                    <span className={styles['float-left']}>Thương hiệu</span>
-                    <i
-                      className={
-                        !this.state['thuong-hieu-row']
-                          ? styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
-                          : styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus']
-                      }
-                    />
-                  </a>
-                </h5>
-              </div>
-              {!this.state['thuong-hieu-row'] ? (
-                <div id="thuong-hieu-row" style={{ display: 'block' }}>
-                  <div className={styles['row__row___2roCA']}>
-                    {filterMap.brand && filterMap.brand.length > 0
-                      ? filterMap.brand.map((e, i) => {
-                          var v = e.replace(/ /g, '-');
-                          return (
-                            <div key={i} className={styles['grid__col-12___39hfZ']}>
-                              <div className={styles['filter-option__filter-option___3Xmf0']}>
-                                <button
-                                  onClick={() => this.handleCheckFilter('brand', v, e)}
-                                  type="button"
-                                  className={
-                                    this.checkStateUrl(this.state.brand, v) == false
-                                      ? styles['filter-option__btn___2u45i'] +
-                                        ' ' +
-                                        styles['filter-option__btn-secondary___1DPfK'] +
-                                        ' ' +
-                                        styles['filter-option__btn-block___1tZOy']
-                                      : styles['filter-option__btn___2u45i'] +
-                                        ' ' +
-                                        styles['filter-option__btn-secondary___1DPfK'] +
-                                        ' ' +
-                                        styles['filter-option__btn-block___1tZOy'] +
-                                        ' ' +
-                                        styles['filter-option__active___1HV6C']
-                                  }
-                                >
-                                  {this.checkStateUrl(this.state.brand, v) == true && (
-                                    <span
-                                      className={
-                                        styles['filter-option__icon___1wxyY'] +
-                                        ' ' +
-                                        styles['ic-ic-close']
-                                      }
-                                    />
-                                  )}
-                                  {e}
-                                </button>
-                              </div>
-                            </div>
-                          );
-                        })
-                      : ''}
-                  </div>
+                    <a
+                      className={styles['clearfix'] + ' ' + styles['d-block']}
+                      href="javascript:void(0)"
+                      id="size"
+                    >
+                      <span className={styles['float-left']}>Kích cỡ</span>
+                      <i
+                        className={
+                          !this.state['kich-co-row']
+                            ? styles['fa'] +
+                              ' ' +
+                              styles['float-right'] +
+                              ' ' +
+                              styles['ic-ic-minus']
+                            : styles['fa'] +
+                              ' ' +
+                              styles['float-right'] +
+                              ' ' +
+                              styles['ic-ic-plus']
+                        }
+                      />
+                    </a>
+                  </h5>
                 </div>
-              ) : (
-                ''
-              )}
-            </div>
-            <div className={styles['filter__filter-container___1hLIM']}>
-              <div className={styles['filter__filter-header___3I6RP']}>
-                <h5
-                  id="type"
-                  onClick={() => this.handleClickFilter('type-row')}
-                  className={styles['clearfix']}
-                >
-                  <a
-                    className={styles['clearfix'] + ' ' + styles['d-block']}
-                    href="javascript:void(0)"
-                    id="type"
-                  >
-                    <span className={styles['float-left']}>TYPE</span>
-                    <i
-                      className={
-                        !this.state['type-row']
-                          ? styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
-                          : styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus']
-                      }
-                    />
-                  </a>
-                </h5>
-              </div>
-              {!this.state['type-row'] ? (
-                <div id="type-row" style={{ display: 'block' }}>
-                  <div className={styles['row__row___2roCA']}>
-                    {filterMap.type && filterMap.type.length > 0
-                      ? filterMap.type.map((e, i) => {
-                          var v = e.replace(/ /g, '-');
-                          return (
-                            <div key={i} className={styles['grid__col-12___39hfZ']}>
-                              <div className={styles['filter-option__filter-option___3Xmf0']}>
-                                <button
-                                  onClick={() => this.handleCheckFilter('type', v, e)}
-                                  type="button"
-                                  className={
-                                    this.checkStateUrl(this.state.type, v) == false
-                                      ? styles['filter-option__btn___2u45i'] +
-                                        ' ' +
-                                        styles['filter-option__btn-secondary___1DPfK'] +
-                                        ' ' +
-                                        styles['filter-option__btn-block___1tZOy']
-                                      : styles['filter-option__btn___2u45i'] +
-                                        ' ' +
-                                        styles['filter-option__btn-secondary___1DPfK'] +
-                                        ' ' +
-                                        styles['filter-option__btn-block___1tZOy'] +
-                                        ' ' +
-                                        styles['filter-option__active___1HV6C']
-                                  }
-                                >
-                                  {this.checkStateUrl(this.state.type, v) == true && (
-                                    <span
-                                      className={
-                                        styles['filter-option__icon___1wxyY'] +
-                                        ' ' +
-                                        styles['ic-ic-close']
-                                      }
-                                    />
-                                  )}
-                                  {e}
-                                </button>
+                {!this.state['kich-co-row'] ? (
+                  <div id="kich-co-row" style={{ display: 'block' }}>
+                    <div className={styles['row__row___2roCA']}>
+                      {this.state.totalSize.length > 0
+                        ? this.state.totalSize.map((e, i) => {
+                            var v = e.replace(/ /g, '-');
+                            return (
+                              <div key={i} className={styles['grid__col-12___39hfZ']}>
+                                <div className={styles['filter-option__filter-option___3Xmf0']}>
+                                  <button
+                                    onClick={() => this.handleCheckFilter('size', v, e)}
+                                    type="button"
+                                    className={
+                                      this.checkStateUrl(this.state.size, v) == false
+                                        ? styles['filter-option__btn___2u45i'] +
+                                          ' ' +
+                                          styles['filter-option__btn-secondary___1DPfK'] +
+                                          ' ' +
+                                          styles['filter-option__btn-block___1tZOy']
+                                        : styles['filter-option__btn___2u45i'] +
+                                          ' ' +
+                                          styles['filter-option__btn-secondary___1DPfK'] +
+                                          ' ' +
+                                          styles['filter-option__btn-block___1tZOy'] +
+                                          ' ' +
+                                          styles['filter-option__active___1HV6C']
+                                    }
+                                  >
+                                    {this.checkStateUrl(this.state.size, v) == true && (
+                                      <span
+                                        className={
+                                          styles['filter-option__icon___1wxyY'] +
+                                          ' ' +
+                                          styles['ic-ic-close']
+                                        }
+                                      />
+                                    )}
+                                    {e}
+                                  </button>
+                                </div>
                               </div>
-                            </div>
-                          );
-                        })
-                      : ''}
+                            );
+                          })
+                        : ''}
+                    </div>
                   </div>
-                </div>
-              ) : (
-                ''
-              )}
-            </div>
-            <div className={styles['filter__filter-container___1hLIM']}>
-              <div className={styles['filter__filter-header___3I6RP']}>
-                <h5
-                  id="color"
-                  onClick={() => this.handleClickFilter('color-row')}
-                  className={styles['clearfix']}
-                >
-                  <a
-                    className={styles['clearfix'] + ' ' + styles['d-block']}
-                    href="javascript:void(0)"
-                    id="type"
-                  >
-                    <span className={styles['float-left']}>Màu sắc</span>
-                    <i
-                      className={
-                        !this.state['color-row']
-                          ? styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus']
-                          : styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus']
-                      }
-                    />
-                  </a>
-                </h5>
+                ) : (
+                  ''
+                )}
               </div>
-              {!this.state['color-row'] ? (
-                <div id="color-row" style={{ display: 'block' }}>
-                  <div className={styles['row__row___2roCA']}>
-                    {filterMap.color && filterMap.color.length > 0
-                      ? filterMap.color.map((e, i) => {
-                          var v = e.replace(/ /g, '-');
-                          return (
-                            <div key={i} className={styles['grid__col-12___39hfZ']}>
-                              <div className={styles['filter-option__filter-option___3Xmf0']}>
-                                <button
-                                  onClick={() => this.handleCheckFilter('color', v, e)}
-                                  type="button"
-                                  className={
-                                    this.checkStateUrl(this.state.color, v) == false
-                                      ? styles['filter-option__btn___2u45i'] +
-                                        ' ' +
-                                        styles['filter-option__btn-secondary___1DPfK'] +
-                                        ' ' +
-                                        styles['filter-option__btn-block___1tZOy']
-                                      : styles['filter-option__btn___2u45i'] +
-                                        ' ' +
-                                        styles['filter-option__btn-secondary___1DPfK'] +
-                                        ' ' +
-                                        styles['filter-option__btn-block___1tZOy'] +
-                                        ' ' +
-                                        styles['filter-option__active___1HV6C']
-                                  }
-                                >
-                                  {this.checkStateUrl(this.state.color, v) == true && (
-                                    <span
-                                      className={
-                                        styles['filter-option__icon___1wxyY'] +
-                                        ' ' +
-                                        styles['ic-ic-close']
-                                      }
-                                    />
-                                  )}
-                                  {e}
-                                </button>
-                              </div>
-                            </div>
-                          );
-                        })
-                      : ''}
+            )}
+            {filterMap.brand &&
+              filterMap.brand.length > 0 && (
+                <div className={styles['filter__filter-container___1hLIM']}>
+                  <div className={styles['filter__filter-header___3I6RP']}>
+                    <h5
+                      id="thuong-hieu"
+                      onClick={() => this.handleClickFilter('thuong-hieu-row')}
+                      className={styles['clearfix']}
+                    >
+                      <a
+                        className={styles['clearfix'] + ' ' + styles['d-block']}
+                        href="javascript:void(0)"
+                        id="brand"
+                      >
+                        <span className={styles['float-left']}>Thương hiệu</span>
+                        <i
+                          className={
+                            !this.state['thuong-hieu-row']
+                              ? styles['fa'] +
+                                ' ' +
+                                styles['float-right'] +
+                                ' ' +
+                                styles['ic-ic-minus']
+                              : styles['fa'] +
+                                ' ' +
+                                styles['float-right'] +
+                                ' ' +
+                                styles['ic-ic-plus']
+                          }
+                        />
+                      </a>
+                    </h5>
                   </div>
+                  {!this.state['thuong-hieu-row'] ? (
+                    <div id="thuong-hieu-row" style={{ display: 'block' }}>
+                      <div className={styles['row__row___2roCA']}>
+                        {filterMap.brand && filterMap.brand.length > 0
+                          ? filterMap.brand.map((e, i) => {
+                              var v = e.replace(/ /g, '-');
+                              return (
+                                <div key={i} className={styles['grid__col-12___39hfZ']}>
+                                  <div className={styles['filter-option__filter-option___3Xmf0']}>
+                                    <button
+                                      onClick={() => this.handleCheckFilter('brand', v, e)}
+                                      type="button"
+                                      className={
+                                        this.checkStateUrl(this.state.brand, v) == false
+                                          ? styles['filter-option__btn___2u45i'] +
+                                            ' ' +
+                                            styles['filter-option__btn-secondary___1DPfK'] +
+                                            ' ' +
+                                            styles['filter-option__btn-block___1tZOy']
+                                          : styles['filter-option__btn___2u45i'] +
+                                            ' ' +
+                                            styles['filter-option__btn-secondary___1DPfK'] +
+                                            ' ' +
+                                            styles['filter-option__btn-block___1tZOy'] +
+                                            ' ' +
+                                            styles['filter-option__active___1HV6C']
+                                      }
+                                    >
+                                      {this.checkStateUrl(this.state.brand, v) == true && (
+                                        <span
+                                          className={
+                                            styles['filter-option__icon___1wxyY'] +
+                                            ' ' +
+                                            styles['ic-ic-close']
+                                          }
+                                        />
+                                      )}
+                                      {e}
+                                    </button>
+                                  </div>
+                                </div>
+                              );
+                            })
+                          : ''}
+                      </div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </div>
-              ) : (
-                ''
               )}
-            </div>
+            {filterMap.type &&
+              filterMap.type.length > 0 && (
+                <div className={styles['filter__filter-container___1hLIM']}>
+                  <div className={styles['filter__filter-header___3I6RP']}>
+                    <h5
+                      id="type"
+                      onClick={() => this.handleClickFilter('type-row')}
+                      className={styles['clearfix']}
+                    >
+                      <a
+                        className={styles['clearfix'] + ' ' + styles['d-block']}
+                        href="javascript:void(0)"
+                        id="type"
+                      >
+                        <span className={styles['float-left']}>TYPE</span>
+                        <i
+                          className={
+                            !this.state['type-row']
+                              ? styles['fa'] +
+                                ' ' +
+                                styles['float-right'] +
+                                ' ' +
+                                styles['ic-ic-minus']
+                              : styles['fa'] +
+                                ' ' +
+                                styles['float-right'] +
+                                ' ' +
+                                styles['ic-ic-plus']
+                          }
+                        />
+                      </a>
+                    </h5>
+                  </div>
+                  {!this.state['type-row'] ? (
+                    <div id="type-row" style={{ display: 'block' }}>
+                      <div className={styles['row__row___2roCA']}>
+                        {filterMap.type && filterMap.type.length > 0
+                          ? filterMap.type.map((e, i) => {
+                              var v = e.replace(/ /g, '-');
+                              return (
+                                <div key={i} className={styles['grid__col-12___39hfZ']}>
+                                  <div className={styles['filter-option__filter-option___3Xmf0']}>
+                                    <button
+                                      onClick={() => this.handleCheckFilter('type', v, e)}
+                                      type="button"
+                                      className={
+                                        this.checkStateUrl(this.state.type, v) == false
+                                          ? styles['filter-option__btn___2u45i'] +
+                                            ' ' +
+                                            styles['filter-option__btn-secondary___1DPfK'] +
+                                            ' ' +
+                                            styles['filter-option__btn-block___1tZOy']
+                                          : styles['filter-option__btn___2u45i'] +
+                                            ' ' +
+                                            styles['filter-option__btn-secondary___1DPfK'] +
+                                            ' ' +
+                                            styles['filter-option__btn-block___1tZOy'] +
+                                            ' ' +
+                                            styles['filter-option__active___1HV6C']
+                                      }
+                                    >
+                                      {this.checkStateUrl(this.state.type, v) == true && (
+                                        <span
+                                          className={
+                                            styles['filter-option__icon___1wxyY'] +
+                                            ' ' +
+                                            styles['ic-ic-close']
+                                          }
+                                        />
+                                      )}
+                                      {e}
+                                    </button>
+                                  </div>
+                                </div>
+                              );
+                            })
+                          : ''}
+                      </div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                </div>
+              )}
+            {filterMap.color &&
+              filterMap.color.length > 0 && (
+                <div className={styles['filter__filter-container___1hLIM']}>
+                  <div className={styles['filter__filter-header___3I6RP']}>
+                    <h5
+                      id="color"
+                      onClick={() => this.handleClickFilter('color-row')}
+                      className={styles['clearfix']}
+                    >
+                      <a
+                        className={styles['clearfix'] + ' ' + styles['d-block']}
+                        href="javascript:void(0)"
+                        id="type"
+                      >
+                        <span className={styles['float-left']}>Màu sắc</span>
+                        <i
+                          className={
+                            !this.state['color-row']
+                              ? styles['fa'] +
+                                ' ' +
+                                styles['float-right'] +
+                                ' ' +
+                                styles['ic-ic-minus']
+                              : styles['fa'] +
+                                ' ' +
+                                styles['float-right'] +
+                                ' ' +
+                                styles['ic-ic-plus']
+                          }
+                        />
+                      </a>
+                    </h5>
+                  </div>
+                  {!this.state['color-row'] ? (
+                    <div id="color-row" style={{ display: 'block' }}>
+                      <div className={styles['row__row___2roCA']}>
+                        {filterMap.color && filterMap.color.length > 0
+                          ? filterMap.color.map((e, i) => {
+                              var v = e.replace(/ /g, '-');
+                              return (
+                                <div key={i} className={styles['grid__col-12___39hfZ']}>
+                                  <div className={styles['filter-option__filter-option___3Xmf0']}>
+                                    <button
+                                      onClick={() => this.handleCheckFilter('color', v, e)}
+                                      type="button"
+                                      className={
+                                        this.checkStateUrl(this.state.color, v) == false
+                                          ? styles['filter-option__btn___2u45i'] +
+                                            ' ' +
+                                            styles['filter-option__btn-secondary___1DPfK'] +
+                                            ' ' +
+                                            styles['filter-option__btn-block___1tZOy']
+                                          : styles['filter-option__btn___2u45i'] +
+                                            ' ' +
+                                            styles['filter-option__btn-secondary___1DPfK'] +
+                                            ' ' +
+                                            styles['filter-option__btn-block___1tZOy'] +
+                                            ' ' +
+                                            styles['filter-option__active___1HV6C']
+                                      }
+                                    >
+                                      {this.checkStateUrl(this.state.color, v) == true && (
+                                        <span
+                                          className={
+                                            styles['filter-option__icon___1wxyY'] +
+                                            ' ' +
+                                            styles['ic-ic-close']
+                                          }
+                                        />
+                                      )}
+                                      {e}
+                                    </button>
+                                  </div>
+                                </div>
+                              );
+                            })
+                          : ''}
+                      </div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                </div>
+              )}
           </div>
         </div>
       );
