@@ -195,78 +195,6 @@ class ListCategory extends PureComponent {
       sort.style.display = 'none';
     } else sort.style.display = 'block';
   }
-  /* handleScroll() {
-    var screen = document.getElementById('screen');
-    var scroll = document.documentElement.scrollTop;
-    var scrollHeight = window.document.body.scrollHeight;
-    var idFix = document.getElementById('filterFiexd');
-    var rowFilter = document.getElementById('row-filter');
-    var saleFilter = document.getElementById('sale-filter');
-    var rowProduct = document.getElementById('row-product');
-    var filterDiv = document.getElementById('transform-fixed');
-    if (
-      screen != null &&
-      scroll != null &&
-      scrollHeight != null &&
-      rowFilter != null &&
-      rowProduct != null &&
-      filterDiv != null
-    ) {
-      if (rowProduct.clientHeight <= filterDiv.clientHeight) {
-        return;
-      }
-      if (
-        scroll >= 115 &&
-        scroll < screen.clientHeight - 1184 &&
-        idFix == null &&
-        saleFilter != null
-      ) {
-        filterDiv = document.getElementById('transform-fixed');
-        saleFilter.classList.add(
-          'order-pages-list-category-index-sale__fixed-position___P7XwH'
-        );
-        filterDiv.classList.remove(
-          'order-pages-list-category-index-sale__position-absolute___1tZOO'
-        );
-        var filterFixed = document.createElement('div');
-        filterFixed.setAttribute('id', 'filterFiexd');
-        filterFixed.setAttribute(
-          'class',
-          'order-pages-list-category-index-sale__filters-container___32fTU order-pages-list-category-index-sale__col-md-4___UhAyk order-pages-list-category-index-sale__col-lg-3___2xbHl order-pages-list-category-index-sale__dumb-container___lFg-z order-pages-list-category-index-visibility-hidden'
-        );
-        rowFilter.appendChild(filterFixed);
-        rowFilter.insertBefore(filterFixed, rowFilter.childNodes[1]);
-        filterDiv = document.getElementById('transform-fixed');
-        var numberScreen = saleFilter.clientHeight + 115 - window.innerHeight;
-        if (numberScreen > 0) {
-          filterDiv.style.transform = `translateY(-${numberScreen}px)`;
-          filterDiv.style.transition = 'transform 0.5s ease';
-        }
-      }
-      if (scroll < 115 && idFix != null && saleFilter != null) {
-        saleFilter.classList.remove(
-          'order-pages-list-category-index-sale__fixed-position___P7XwH'
-        );
-        rowFilter.removeChild(idFix);
-        filterDiv = document.getElementById('transform-fixed');
-        filterDiv.classList.remove(
-          'order-pages-list-category-index-sale__position-absolute___1tZOO'
-        );
-        filterDiv.style.transform = `translateY(0px)`;
-        filterDiv.style.transition = 'transform 0.5s ease';
-      }
-      if (scroll >= screen.clientHeight - 1184 && idFix != null) {
-        saleFilter.classList.remove(
-          'order-pages-list-category-index-sale__fixed-position___P7XwH'
-        );
-        filterDiv = document.getElementById('transform-fixed');
-        rowFilter.removeChild(idFix);
-        filterDiv.classList.add(
-          'order-pages-list-category-index-sale__position-absolute___1tZOO'
-        );
-      }
-    }
-  } */
   componentWillMount() {
     if (this.props.category.filterUrl != '') {
       let arrFilterString = this.props.category.filterUrl.split('-').filter((v, i) => {
@@ -380,18 +308,6 @@ class ListCategory extends PureComponent {
         payload: filterUrl,
       });
     }
-
-    /*
-
-    dispatch({
-      type: 'category/detail',
-      payload: {
-        nodeid: match.params.nodeid,
-      },
-    });
-    */
-
-    // window.addEventListener('scroll', this.handleScroll.bind(this));
     var btnSoft = document.getElementsByClassName(
       'order-pages-list-category-index-sort__btn-text___1mPct'
     )[0];
@@ -740,6 +656,8 @@ class ListCategory extends PureComponent {
       type: [],
       brand: [],
       style: [],
+      filterStringSize: [],
+      filterString: [],
     });
     let pathname = this.props.location.pathname;
     this.props.history.push({ pathname });

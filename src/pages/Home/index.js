@@ -1,3 +1,7 @@
+/* eslint-disable react/jsx-first-prop-new-line */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable no-console */
+/* eslint-disable react/no-unused-state */
 /* eslint-disable vars-on-top */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-redeclare */
@@ -32,6 +36,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import Slider from 'react-slick';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import {
   Form,
@@ -95,7 +100,7 @@ class ProductItem extends PureComponent {
               <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
                 <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
                   <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
-                  <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>
+                  <span className={`${styles['end-time__text___1A-sx']}`}> Còn </span>
                   <span className={`${styles['end-time__timer___LMsIT']}`}>
                     {timeline + ' Ngày '}
                   </span>
@@ -136,7 +141,26 @@ class ProductItem extends PureComponent {
 }))
 @Form.create()
 class Home extends PureComponent {
-  state = {};
+  constructor(props) {
+    super(props);
+    this.state = {
+      slideObj: [
+        {
+          productid: 1,
+          title: 'Geox Giày Thời Trang Nam & Nữ',
+          image: 'https://images.leflair.vn/w1440/q85/5c3d8baed0192e12cc0af660.jpg',
+          link: '/category/giam-den-74-zeca-dong-ho-nam-nu/79998a705cad4f538f6f65b4219edd5b',
+        },
+        {
+          productid: 2,
+          title: 'Giảm Đến 80% - Amelia Thời Trang Nữ',
+          image: 'https://images.leflair.vn/w1440/q85/5c357b1b73828eccbd7ce629.jpg',
+          link:
+            '/category/giam-den-66-asics-tiger-giay-the-thao-nam-nu/a78b30574e0c4d858d42635d569764e5',
+        },
+      ],
+    };
+  }
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -278,45 +302,77 @@ class Home extends PureComponent {
       nodeid = news[0].nodeid ? news[0].nodeid.replace(/\-/g, '') : 'null';
       seoTitle = news[0].seo_link + '/' + nodeid;
     }
+    var settings = {
+      dots: false,
+      arrows: false,
+      infinite: true,
+      autoplaySpeed: 5000,
+      speed: 500,
+      autoplay: true,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      className: `${styles['hidden-md-up']} min-height`,
+    };
+    var settings1 = {
+      dots: false,
+      arrows: false,
+      autoplaySpeed: 5000,
+      autoplay: true,
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      className: `${styles['hidden-sm-down']}`,
+    };
     return (
       <div>
         <div
+          style={{ paddingBottom: '0px' }}
           className={`${styles['container__container___1fvX0']} ${
             styles['home__featuredContainer___1YAQy']
           }`}
         >
-          <Link to={`/category/${seoTitle}`}>
-            <img
-              className={`${styles['hidden-md-up']}`}
-              src={`/images/f/061b4f6603934b6caf40d8571be0be35`}
-              alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
-            />
-            <img
-              className={`${styles['hidden-sm-down']}`}
-              src={`/images/f/061b4f6603934b6caf40d8571be0be35`}
-              alt="Giảm Đến 82% - Nike Giày Thể Thao Nam"
-            />
-
-            <div
-              className={`${styles['hidden-md-up']} ${styles['home__badge___2w2Lc']} ${
-                styles['home__featured-badge___2hhaD']
-              }`}
-            >
-              Ưu đãi nổi bật
-            </div>
-            <div className={`${styles['hidden-md-up']} ${styles['home__currentSaleInfo___2Fj0C']}`}>
-              <div className={`${styles['home__currentSaleTitle___1jXFQ']}`}>
-                Giảm Đến 82% - Nike Giày Thể Thao Nam
-              </div>
-              <div className={`${styles['home__endTimeWrap___25O4u']}`}>
-                <span className={`${styles['home__endTimeContent___2G8rq']}`}>
-                  <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
-                  <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>{' '}
-                  <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
-                </span>
-              </div>
-            </div>
-          </Link>
+          <Slider {...settings}>
+            {this.state.slideObj.map((v, i) => {
+              return (
+                <Link to={v.link}>
+                  <img key={i} src={v.image} alt={v.title} />
+                  <div
+                    className={`${styles['hidden-md-up']} ${styles['home__badge___2w2Lc']} ${
+                      styles['home__featured-badge___2hhaD']
+                    }`}
+                  >
+                    Ưu đãi nổi bật
+                  </div>
+                  <div
+                    className={`${styles['hidden-md-up']} ${
+                      styles['home__currentSaleInfo___2Fj0C']
+                    }`}
+                  >
+                    <div className={`${styles['home__currentSaleTitle___1jXFQ']}`}>{v.title}</div>
+                    <div className={`${styles['home__endTimeWrap___25O4u']}`}>
+                      <span className={`${styles['home__endTimeContent___2G8rq']}`}>
+                        <i
+                          className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`}
+                        />
+                        <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>{' '}
+                        <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </Slider>
+          <Slider {...settings1}>
+            {this.state.slideObj.map((v, i) => {
+              return (
+                <Link to={v.link}>
+                  <img key={i} src={v.image} alt={v.title} />
+                </Link>
+              );
+            })}
+          </Slider>
         </div>
         <div
           className={`${styles['container__container___1fvX0']} ${
