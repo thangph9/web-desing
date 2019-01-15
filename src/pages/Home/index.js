@@ -304,25 +304,25 @@ class Home extends PureComponent {
     }
     var settings = {
       dots: false,
-      arrows: false,
+      arrows: true,
       infinite: true,
       autoplaySpeed: 5000,
       speed: 500,
       autoplay: true,
       slidesToShow: 1,
       slidesToScroll: 1,
-      className: `${styles['hidden-md-up']} min-height`,
+      className: `${styles['hidden-md-up']} min-height md-up`,
     };
     var settings1 = {
       dots: false,
-      arrows: false,
+      arrows: true,
       autoplaySpeed: 5000,
       autoplay: true,
       infinite: true,
       speed: 500,
       slidesToShow: 1,
       slidesToScroll: 1,
-      className: `${styles['hidden-sm-down']}`,
+      className: `${styles['hidden-sm-down']} min-height sm-up`,
     };
     return (
       <div>

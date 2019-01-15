@@ -317,7 +317,81 @@
     .min-height .slick-list .slick-track .slick-slide {
       min-height: 0px !important;
     }
-
+    .sm-up .slick-next:before {
+      font-family: icomoon !important;
+    color: #111;
+    font-size: 30px;
+    }
+    .sm-up .slick-prev:before{
+      font-family: icomoon !important;
+    color: #111;
+    font-size: 30px;
+    }
+    .md-up .slick-next:before {
+      font-family: icomoon !important;
+    color: #111;
+    }
+    .md-up .slick-prev:before{
+      font-family: icomoon !important;
+    color: #111;
+    }
+    .sm-up .slick-prev,.slick-next {
+      font-size: 0;
+      line-height: 0;
+      position: absolute;
+      top: 48%;
+      z-index: 1;
+      display: block;
+      width: 50px;
+      height: 50px;
+      padding: 0;
+      -webkit-transform: translate(0, -50%);
+      -ms-transform: translate(0, -50%);
+      transform: translate(0, -50%);
+      cursor: pointer;
+      color: transparent;
+      border: none;
+      outline: none;
+      background: transparent;
+    }
+    .md-up .slick-prev {
+      font-size: 0;
+      line-height: 0;
+      position: absolute;
+      top: 43%;
+      z-index: 1;
+      display: block;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      -webkit-transform: translate(0, -50%);
+      -ms-transform: translate(0, -50%);
+      transform: translate(0, -50%);
+      cursor: pointer;
+      color: transparent;
+      border: none;
+      outline: none;
+      background: transparent;
+    }
+    .md-up .slick-next{
+      font-size: 0;
+      line-height: 0;
+      position: absolute;
+      top: 43%;
+      z-index: 1;
+      display: block;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      -webkit-transform: translate(0, -50%);
+      -ms-transform: translate(0, -50%);
+      transform: translate(0, -50%);
+      cursor: pointer;
+      color: transparent;
+      border: none;
+      outline: none;
+      background: transparent;
+    }
     @media (max-width: 767px) {
       .slick-slide {
         min-height: 450px;
