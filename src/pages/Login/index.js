@@ -199,8 +199,8 @@ class Login extends PureComponent {
       });
     }
   }
+
   render() {
-    console.log(this.props);
     const meta = {
       title: 'Đăng Nhập',
       description: null,
@@ -213,6 +213,7 @@ class Login extends PureComponent {
       },
     };
     var { user } = this.props;
+    console.log(this.props);
     var validateStt = '';
     var help_pass = '';
     if (user.login.status == 'error') {
@@ -224,10 +225,6 @@ class Login extends PureComponent {
     }
     const tailFormItemLayout = {};
     const { getFieldDecorator } = this.props.form;
-    if (localStorage.account) {
-      var obj = JSON.parse(localStorage.account);
-    }
-
     if (localStorage.account) {
       return <Redirect to={`/account/accountinformation`} />;
     }

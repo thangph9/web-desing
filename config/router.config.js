@@ -30,6 +30,18 @@ export default [
     ],
   },
   {
+    path: '/cms123order',
+    component: '../layouts/CMS123order',
+    routes: [
+      { path: '/cms123order', redirect: '/cms123order/user' },
+      { path: '/cms123order/products', component: '/CMS/Products' },
+      { path: '/cms123order/categorys', component: '/CMS/Categorys' },
+      { path: '/cms123order/orderlist', component: '/CMS/OrderList' },
+      { path: '/cms123order/user', component: '/CMS/User' },
+      { path: '/cms123order/options', component: '/CMS/Options' },
+    ],
+  },
+  {
     path: '/verifyemail',
     component: '../layouts/CheckoutLayout',
     routes: [{ path: '/verifyemail', component: './Verify/' }],

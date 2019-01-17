@@ -226,6 +226,13 @@ export async function getInfoUser(params) {
     headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('account')) },
   });
 }
+export async function checkPermission(params) {
+  return request('/api/authentication/checkpermission', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('account')) },
+  });
+}
 export async function getHelpBuy(params) {
   return request('/api/authentication/gethelpbuy', {
     method: 'POST',

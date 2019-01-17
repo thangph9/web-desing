@@ -695,7 +695,7 @@ class DetailTest extends PureComponent {
   }
   render() {
     var { detailtest, image_by_option, price_by_options, amount_by_option, raito } = this.state;
-    console.log(detailtest);
+    console.log(this.props);
     const data = detailtest ? detailtest.product : undefined;
     const title = 'Chi tiết sản phẩm';
     const meta_description = '123order ';

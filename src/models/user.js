@@ -18,6 +18,7 @@ import {
   verifyEmailRegister,
   getDealSock,
   getDealSockDetail,
+  checkPermission,
 } from '@/services/api';
 
 export default {
@@ -41,6 +42,7 @@ export default {
     verify: {},
     dealSock: {},
     getdealSockdetail: {},
+    checkpermission: {},
   },
   effects: {
     *fetch(_, { call, put }) {
@@ -138,17 +140,17 @@ export default {
     },
     *info({ payload }, { call, put }) {
       const response = yield call(getInfoUser, payload);
-      if (response && response.status === 'ok') {
-        yield put({
-          type: 'infoAuthentication',
-          payload: response.info || {},
-        });
-      } else {
-        yield put({
-          type: 'infoAuthentication',
-          payload: {},
-        });
-      }
+      yield put({
+        type: 'infoAuthentication',
+        payload: response,
+      });
+    },
+    *checkpermission({ payload }, { call, put }) {
+      const response = yield call(checkPermission, payload);
+      yield put({
+        type: 'checkPermissionAuthentication',
+        payload: response,
+      });
     },
     *gethelpbuy({ payload }, { call, put }) {
       const response = yield call(getHelpBuy, payload);
@@ -316,7 +318,6 @@ export default {
       return {
         ...state,
         login: action.payload,
-        registerfb: {},
       };
     },
     checkAuthentication(state, action) {
@@ -342,6 +343,12 @@ export default {
       return {
         ...state,
         info: action.payload,
+      };
+    },
+    checkPermissionAuthentication(state, action) {
+      return {
+        ...state,
+        checkpermission: action.payload,
       };
     },
     gethelpbuyAuthentication(state, action) {

@@ -7,10 +7,7 @@ module.exports = {
     last_login: 'timestamp',
     name: 'text',
     phone: 'text',
-    role: {
-      type: 'set',
-      typeDef: 'text',
-    },
+    permissionid: 'int',
     updateat: 'timestamp',
     username: 'text',
   },

@@ -290,6 +290,7 @@ function register(req, res) {
           name: PARAM_IS_VALID['fullname'],
           phone: PARAM_IS_VALID['phone'],
           username: PARAM_IS_VALID['username'],
+          permissionid: 2,
         };
         let account_login_object = {
           username: PARAM_IS_VALID['username'],
@@ -489,6 +490,7 @@ function login(req, res) {
                 name: userInfo[0].name,
                 phone: userInfo[0].phone,
                 address: userInfo[0].address,
+                permissionid: userInfo[0].permissionid,
               },
               jwtprivate,
               {
@@ -1443,6 +1445,23 @@ function getDealSock(req, res) {
     }
   );
 }
+function checkPermission(req, res) {
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+  } catch (e) {
+    return res.send({ status: 'error' });
+  }
+  if (legit.permissionid === 1) {
+    return res.json({ status: 'ok' });
+  }
+  return res.json({ status: 'error' });
+}
 router.post('/register', register);
 router.post('/registerfb', registerfb);
 router.post('/login', login);
@@ -1459,4 +1478,5 @@ router.post('/sethelpbuy', setHelpBuy);
 router.post('/deletehelpbuy', deleteHelpBuy);
 router.post('/verifyemail', verifyEmail);
 router.post('/dealsock', getDealSock);
+router.post('/checkpermission', checkPermission);
 module.exports = router;

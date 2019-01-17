@@ -127,15 +127,25 @@ class AccountInformation extends PureComponent {
       type: 'user/loginAfter',
     });
   }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.user.info !== nextProps.user.info) {
+      console.log(nextProps);
+      this.setState({
+        info: nextProps.user.info.info,
+        status: nextProps.user.info.status,
+      });
+    }
+  }
   handleClickSubmitEdit(item) {
     const { form, user } = this.props;
+    const { info, status } = this.state;
     const fullname = form.getFieldValue('fullname');
     const phone = form.getFieldValue('phone');
     const address = form.getFieldValue('address');
     var valueInfo = {};
-    valueInfo.fullname = fullname ? fullname : user.info.name;
-    valueInfo.phone = phone ? phone : user.info.phone;
-    valueInfo.address = address ? address : user.info.address;
+    valueInfo.fullname = fullname ? fullname : info.name;
+    valueInfo.phone = phone ? phone : info.phone;
+    valueInfo.address = address ? address : info.address;
     this.props.dispatch({
       type: 'user/changeinfo',
       payload: valueInfo,
@@ -157,13 +167,18 @@ class AccountInformation extends PureComponent {
     });
   }
   render() {
-    const info = JSON.parse(localStorage.getItem('account'));
+    const { info, status } = this.state;
     var root = document.getElementById('root');
     const { count, prefix, help, visible, rule } = this.state;
     const { getFieldDecorator } = this.props.form;
     var { user } = this.props;
     var validateStt = '';
     var help_pass = '';
+    console.log(status);
+    if (status === 'error') {
+      localStorage.removeItem('account');
+      return <Redirect to={`/login`} />;
+    }
     if (info) {
       return (
         <div className={styles['jsx-157584619'] + ' ' + styles['content']}>
@@ -242,7 +257,7 @@ class AccountInformation extends PureComponent {
                                 <Input
                                   style={{ width: '50%' }}
                                   size="small"
-                                  placeholder={user.info.name && user.info.name}
+                                  placeholder={info.name && info.name}
                                 />
                               )}
                               <Icon
@@ -254,7 +269,7 @@ class AccountInformation extends PureComponent {
                               />
                             </FormItem>
                           ) : (
-                            user.info.name && user.info.name
+                            info.name && info.name
                           )}
                           {this.state.editName ? (
                             ''
@@ -283,7 +298,7 @@ class AccountInformation extends PureComponent {
                             styles['text-truncate']
                           }
                         >
-                          {user.info.username && user.info.username}
+                          {info.username && info.username}
                         </div>
                       </div>
                       <div className={styles['row']}>
@@ -306,7 +321,7 @@ class AccountInformation extends PureComponent {
                                 <Input
                                   style={{ width: '50%' }}
                                   size="small"
-                                  placeholder={user.info.phone && user.info.phone}
+                                  placeholder={info.phone && info.phone}
                                 />
                               )}
                               <Icon
@@ -318,7 +333,7 @@ class AccountInformation extends PureComponent {
                               />
                             </FormItem>
                           ) : (
-                            user.info.phone && user.info.phone
+                            info.phone && info.phone
                           )}
                           {this.state.editPhone ? (
                             ''
@@ -353,7 +368,7 @@ class AccountInformation extends PureComponent {
                                 <Input
                                   style={{ width: '50%' }}
                                   size="small"
-                                  placeholder={user.info.address && user.info.address}
+                                  placeholder={info.address && info.address}
                                 />
                               )}
                               <Icon
@@ -365,7 +380,7 @@ class AccountInformation extends PureComponent {
                               />
                             </FormItem>
                           ) : (
-                            user.info.address && user.info.address
+                            info.address && info.address
                           )}
                           {this.state.editAddress ? (
                             ''
@@ -405,7 +420,7 @@ class AccountInformation extends PureComponent {
         </div>
       );
     } else {
-      return <Redirect to={`/`} />;
+      return '';
     }
   }
 }
