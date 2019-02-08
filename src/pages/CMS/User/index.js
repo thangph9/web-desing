@@ -1,3 +1,4 @@
+/* eslint-disable react/sort-comp */
 /* eslint-disable react/prefer-stateless-function */
 /* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable react/destructuring-assignment */
@@ -45,6 +46,7 @@ import {
   DatePicker,
   Select,
   Button,
+  message,
   Card,
   InputNumber,
   Radio,
@@ -58,9 +60,48 @@ import styles from './index.less';
 @connect(({ user }) => ({
   user,
 }))
+@Form.create()
 class User extends React.PureComponent {
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        this.props.dispatch({
+          type: 'user/changepermission',
+          payload: values,
+        });
+      }
+    });
+  };
+  componentWillReceiveProps(nextProps) {
+    if (this.props.user.changepermission !== nextProps.user.changepermission) {
+      message.success(nextProps.user.changepermission.message, 5);
+    }
+  }
   render() {
-    return <div>User</div>;
+    const { getFieldDecorator } = this.props.form;
+    return (
+      <div>
+        <p>Cấp quyền Admin</p>
+        <Form onSubmit={this.handleSubmit} className="login-form">
+          <Form.Item style={{ width: '25%' }}>
+            {getFieldDecorator('username', {
+              rules: [{ required: true, message: 'Please input your username!' }],
+            })(
+              <Input
+                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                placeholder="Username"
+              />
+            )}
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" className="login-form-button">
+              Xác nhận
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+    );
   }
 }
 

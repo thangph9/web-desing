@@ -259,6 +259,18 @@ export async function deleteHelpBuy(params) {
     body: params,
   });
 }
+export async function payCompelete(params) {
+  return request('/api/authentication/paycompelete', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function changePermission(params) {
+  return request('/api/authentication/changepermission', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function getProductFilter(params) {
   return request('/api/product/filterproduct', {
     method: 'POST',

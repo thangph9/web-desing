@@ -148,13 +148,13 @@ class Home extends PureComponent {
         {
           productid: 1,
           title: 'Geox Giày Thời Trang Nam & Nữ',
-          image: 'https://images.leflair.vn/w1440/q85/5c3d8baed0192e12cc0af660.jpg',
+          image: 'https://images.leflair.vn/w2560/q85/5c50331eae2d5e0558a86772.jpg',
           link: '/category/giam-den-74-zeca-dong-ho-nam-nu/79998a705cad4f538f6f65b4219edd5b',
         },
         {
           productid: 2,
           title: 'Giảm Đến 80% - Amelia Thời Trang Nữ',
-          image: 'https://images.leflair.vn/w1440/q85/5c357b1b73828eccbd7ce629.jpg',
+          image: 'https://images.leflair.vn/w2560/q85/5c4e77f492a3253a8582e9ac.jpg',
           link:
             '/category/giam-den-66-asics-tiger-giay-the-thao-nam-nu/a78b30574e0c4d858d42635d569764e5',
         },

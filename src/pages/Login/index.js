@@ -213,7 +213,6 @@ class Login extends PureComponent {
       },
     };
     var { user } = this.props;
-    console.log(this.props);
     var validateStt = '';
     var help_pass = '';
     if (user.login.status == 'error') {

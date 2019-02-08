@@ -1,3 +1,5 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable class-methods-use-this */
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-shadow */
 /* eslint-disable array-callback-return */
@@ -82,15 +84,6 @@ class Checkout extends PureComponent {
     confirmDirty: false,
     autoCompleteResult: [],
   };
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log(values);
-      }
-    });
-    return <Redirect to={'/checkout/paycomplete'} />;
-  };
   handleClickEditProduct() {
     this.props.dispatch({
       type: 'list/modal',
@@ -106,17 +99,54 @@ class Checkout extends PureComponent {
       type: 'user/info',
     });
   }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.user.info !== nextProps.user.info) {
+      this.setState({
+        info: nextProps.user.info.info,
+        status_info: nextProps.user.info.status,
+      });
+    }
+  }
+  payCompelete(sale_price, arr, info) {
+    var obj = {};
+    obj.total_price = sale_price + 25000;
+    obj.total = 0;
+    obj.list_product = [];
+    arr.forEach((v, i) => {
+      var productOrder = {};
+      productOrder.productid = v[0].productid;
+      if (v[0].size) productOrder.size = v[0].size;
+      if (v[0].color) productOrder.color = v[0].color;
+      if (v[0].sale_price) {
+        productOrder.price = v[0].sale_price + '';
+      } else {
+        productOrder.price = v[0].price + '';
+      }
+      productOrder.total = v[1] + '';
+      obj.list_product.push(productOrder);
+    });
+    obj.order_by = info.name;
+    obj.phone = info.phone;
+    obj.address = info.address;
 
+    this.props.dispatch({
+      type: 'user/paycompelete',
+      payload: obj,
+    });
+    /*
+
+     */
+  }
   render() {
     const Information = JSON.parse(localStorage.getItem('Information'));
-
+    var { info, status_info } = this.state;
     var { listArr } = this.props.list;
     var total = 0;
     for (var i = 0; i < listArr.length; i++) {
       total = total + listArr[i][1];
     }
     var { user } = this.props;
-    console.log(user.info);
+
     var { modal } = this.props.list;
     var sale_price = 0;
     if (listArr && listArr.length > 0) {
@@ -125,7 +155,7 @@ class Checkout extends PureComponent {
       });
     }
 
-    if (Information || localStorage.account) {
+    if (Information || status_info !== 'error') {
       return (
         <div className={styles['container__container___1fvX0']}>
           <div className={styles['process-indicator__indicator-section___Z-6r8']}>
@@ -206,11 +236,7 @@ class Checkout extends PureComponent {
                           <span className={styles['']}>25.000 ₫</span>
                         </div>
                       </div>
-                      <div>
-                        <a href="/auth/signin?redirect=/checkout">
-                          Đăng nhập để sử dụng mã giảm giá
-                        </a>
-                      </div>
+
                       <hr />
                       <div
                         id={styles['order-summary']}
@@ -238,11 +264,16 @@ class Checkout extends PureComponent {
                       <h4 className={styles['an-address__card-title___1w0eI']}>
                         <span>Giao hàng đến</span>
                         <div className={styles['an-address__actions___3lZYH']}>
-                          <a href="/checkout/addresses/shipping">Sửa</a>
+                          <Link
+                            style={{ fontWeight: 700, fontSize: '1.125rem' }}
+                            to={`/account/accountinformation`}
+                          >
+                            Sửa
+                          </Link>
                         </div>
                       </h4>
                       {Information &&
-                        !localStorage.account && (
+                        !info && (
                           <div>
                             <div>
                               <span>{Information.lastname + ' ' + Information.firstname}</span>
@@ -253,30 +284,35 @@ class Checkout extends PureComponent {
                           </div>
                         )}
                       {!Information &&
-                        localStorage.account && (
+                        info && (
                           <div>
                             <div>
-                              <span>{user.info.name && user.info.name}</span>
+                              <span>{info.name && info.name}</span>
                               <span className={styles['an-address__dot-seperator___1_vim']}>•</span>
-                              <span>{user.info.phone && user.info.phone}</span>
+                              <span>{info.phone && info.phone}</span>
                             </div>
-                            <div>{user.info.address}</div>
+                            <div>{info.address}</div>
                           </div>
                         )}
                     </div>
                   </div>
                 </div>
                 <div className={styles['order-details__card___x9UEx']}>
-                  {listArr.map((v, i) => {
-                    return (
-                      <div key={i} className={styles['order-details__card-block___3EZL6']}>
-                        <h4 className={styles['order-details__card-title___1HHwX']}>
-                          <span>Đơn hàng của bạn ({v[1]} Sản phẩm)</span>
-                          <div className={styles['order-details__actions___3Vtxn']}>
-                            <a onClick={() => this.handleClickEditProduct()}>Sửa</a>
-                          </div>
-                        </h4>
-                        <div>
+                  <div className={styles['order-details__card-block___3EZL6']}>
+                    <h4 className={styles['order-details__card-title___1HHwX']}>
+                      <span>Đơn hàng của bạn </span>
+                      <div className={styles['order-details__actions___3Vtxn']}>
+                        <span
+                          style={{ cursor: 'pointer', color: '#16accf' }}
+                          onClick={() => this.handleClickEditProduct()}
+                        >
+                          Sửa
+                        </span>
+                      </div>
+                    </h4>
+                    {listArr.map((v, i) => {
+                      return (
+                        <div key={i}>
                           <div
                             className={
                               styles['order-details__product___3Ul2e'] + ' ' + styles['clearfix']
@@ -292,6 +328,16 @@ class Checkout extends PureComponent {
                               <div className={styles['order-details__desc___3xcNy']}>
                                 Số lượng: {v[1]}
                               </div>
+                              {v[0].color && (
+                                <div className={styles['order-details__desc___3xcNy']}>
+                                  Màu sắc: {v[0].color}
+                                </div>
+                              )}
+                              {v[0].size && (
+                                <div className={styles['order-details__desc___3xcNy']}>
+                                  Kích cỡ: {v[0].size}
+                                </div>
+                              )}
                               <div className={styles['order-details__desc___3xcNy']}>
                                 Giá:{' '}
                                 <span>
@@ -302,10 +348,11 @@ class Checkout extends PureComponent {
                               </div>
                             </div>
                           </div>
+                          <hr />
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
               <div className={styles['checkout__col-lg-8___QjgUh']}>
@@ -354,292 +401,58 @@ class Checkout extends PureComponent {
                           </span>
                         </div>
                       </div>
-                      <div
-                        style={{ display: 'none' }}
-                        className={
-                          styles['cc__option___2-tQJ'] + ' ' + styles['cc__credit-card___23cnt']
-                        }
-                      >
-                        <div className={styles['cc__heading___3PENY']}>
-                          <label
-                            className={
-                              styles['cc__custom-control___2TOMa'] +
-                              ' ' +
-                              styles['cc__custom-radio___22jyc']
-                            }
-                          >
-                            <input
-                              type="radio"
-                              id={styles['input-credit-card']}
-                              name="radio"
-                              className={styles['cc__custom-control-input___3wz-W']}
-                              readOnly
-                              defaultValue="on"
-                            />
+                    </div>
+                    <hr />
 
-                            <span className={styles['cc__custom-control-description___2W0MV']}>
-                              Thẻ quốc tế Visa/MasterCard
-                            </span>
-                          </label>
-                          <div
+                    <div>
+                      <div
+                        className={styles['checkout-btn__checkout___2DoYD']}
+                        id={styles['btn-checkout-mobile']}
+                      >
+                        <div
+                          className={
+                            styles['checkout-btn__actions___3qxu8'] + ' ' + styles['text-center']
+                          }
+                        >
+                          <button
+                            onClick={() => this.payCompelete(sale_price, listArr, info)}
                             className={
-                              styles['cc__shipping-fee___xDPmW'] +
+                              styles['checkout-btn__btn___1DYTV'] +
                               ' ' +
-                              styles['cc__free-shipping___WuDQM']
+                              styles['checkout-btn__btn-primary___1RlmT'] +
+                              ' ' +
+                              styles['checkout-btn__btn-checkout___2E7IJ']
                             }
                           >
-                            miễn phí giao hàng
-                          </div>
-                        </div>
-                        <div className={styles['cc__credit-card-form___1tILw']}>
-                          <div
-                            className={
-                              styles['row__row___2roCA'] +
-                              ' ' +
-                              styles['credit-card-form__cc-form-container___3IwSf']
-                            }
-                          >
-                            <div
+                            <i
                               className={
-                                styles['credit-card-form__col-lg-6___3YEEz'] +
-                                ' ' +
-                                styles['credit-card-form__cc-form-wrap___2lS5X']
+                                styles['checkout-btn__icon___3Vplk'] + ' ' + styles['ic-ic-lock']
                               }
+                            />
+                            Hoàn tất đặt hàng
+                          </button>
+                          <div className={styles['checkout-btn__policy___1EXJa']}>
+                            <span>Bằng việc tiếp tục, bạn đồng ý với</span>
+                            <a
+                              href="https://support.leflair.vn/hc/vi/articles/214857097-%C4%90i%E1%BB%81u-kho%E1%BA%A3n-v%C3%A0-quy-%C4%91%E1%BB%8Bnh-chung"
+                              target="blank"
                             >
-                              <div>
-                                <form noValidate autoComplete="on">
-                                  <div className={styles['credit-card-form__form-group___BZuCA']}>
-                                    <label
-                                      className={
-                                        styles['credit-card-form__form-control-label___3G261']
-                                      }
-                                    >
-                                      Tên chủ thẻ
-                                    </label>
-                                    <input
-                                      type="text"
-                                      className={'credit-card-form__form-control___2zxui'}
-                                      placeholder="Tên chủ thẻ"
-                                      name="cc-name"
-                                      required
-                                      autoComplete="cc-name"
-                                    />
-                                    <div
-                                      className={
-                                        styles['credit-card-form__error-text___Wia_D'] +
-                                        ' ' +
-                                        styles['text-danger']
-                                      }
-                                    >
-                                      Tên chủ thẻ là bắt buộc
-                                    </div>
-                                  </div>
-                                  <div className={styles['credit-card-form__form-group___BZuCA']}>
-                                    <label
-                                      className={
-                                        styles['credit-card-form__form-control-label___3G261']
-                                      }
-                                    >
-                                      Số thẻ
-                                    </label>
-                                    <span className={styles['credit-card-form__card-list___39avV']}>
-                                      <img src="/images/credit-card-list.jpg" />
-                                    </span>
-                                    <input
-                                      type="tel"
-                                      className={styles['credit-card-form__form-control___2zxui']}
-                                      name="cc-number"
-                                      placeholder="•••• •••• •••• ••••"
-                                      required
-                                      pattern="d*"
-                                    />
-                                    <div
-                                      className={
-                                        styles['credit-card-form__error-text___Wia_D'] +
-                                        ' ' +
-                                        styles['text-danger']
-                                      }
-                                    >
-                                      Số thẻ không hợp lệ
-                                    </div>
-                                  </div>
-                                  <div
-                                    className={
-                                      styles['row__row___2roCA'] +
-                                      ' ' +
-                                      styles['credit-card-form__form-group___BZuCA']
-                                    }
-                                  >
-                                    <div className={styles['credit-card-form__col-6___3m3FL']}>
-                                      <label
-                                        className={
-                                          styles['credit-card-form__form-control-label___3G261']
-                                        }
-                                      >
-                                        Ngày hết hạn
-                                      </label>
-                                      <input
-                                        type="tel"
-                                        className={styles['credit-card-form__form-control___2zxui']}
-                                        name="cc-exp"
-                                        autoComplete="cc-exp"
-                                        placeholder="MM / YY"
-                                        maxLength={7}
-                                        required
-                                      />
-                                      <div
-                                        className={
-                                          styles['credit-card-form__error-text___Wia_D'] +
-                                          ' ' +
-                                          styles['text-danger']
-                                        }
-                                      >
-                                        Ngày hết hạn không hợp lệ
-                                      </div>
-                                    </div>
-                                    <div className={styles['credit-card-form__col-6___3m3FL']}>
-                                      <label
-                                        className={
-                                          styles['credit-card-form__form-control-label___3G261']
-                                        }
-                                      >
-                                        CVV
-                                      </label>
-                                      <input
-                                        type="tel"
-                                        className={styles['credit-card-form__form-control___2zxui']}
-                                        placeholder="•••"
-                                        name="cc-cvc"
-                                        required
-                                        autoComplete="off"
-                                      />
-                                      <div
-                                        className={
-                                          styles['credit-card-form__error-text___Wia_D'] +
-                                          ' ' +
-                                          styles['text-danger']
-                                        }
-                                      >
-                                        Sô CVV không đúng
-                                      </div>
-                                    </div>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
-                            <div
-                              id={styles['card-container']}
-                              className={
-                                styles['credit-card-form__col-lg-6___3YEEz'] +
-                                ' ' +
-                                styles['credit-card-form__real-card-wrap___2oQR6']
-                              }
-                            >
-                              <div className={styles['jp-card-container']}>
-                                <div className={styles['jp-card']}>
-                                  <div className={styles['jp-card-front']}>
-                                    <div
-                                      className={
-                                        styles['jp-card-logo'] + ' ' + styles['jp-card-visa']
-                                      }
-                                    >
-                                      visa
-                                    </div>
-                                    <div
-                                      className={
-                                        styles['jp-card-logo'] + ' ' + styles['jp-card-mastercard']
-                                      }
-                                    >
-                                      MasterCard
-                                    </div>
-                                    <div
-                                      className={
-                                        styles['jp-card-logo'] + ' ' + styles['jp-card-maestro']
-                                      }
-                                    >
-                                      Maestro
-                                    </div>
-                                    <div
-                                      className={
-                                        styles['jp-card-logo'] + ' ' + styles['jp-card-amex']
-                                      }
-                                    />
-                                    <div
-                                      className={
-                                        styles['jp-card-logo'] + ' ' + styles['jp-card-discover']
-                                      }
-                                    >
-                                      discover
-                                    </div>
-                                    <div
-                                      className={
-                                        styles['jp-card-logo'] + ' ' + styles['jp-card-dankort']
-                                      }
-                                    >
-                                      <div className={styles['dk']}>
-                                        <div className={styles['d']} />
-                                        <div className={styles['k']} />
-                                      </div>
-                                    </div>
-                                    <div className={styles['jp-card-lower']}>
-                                      <div className={styles['jp-card-shiny']} />
-                                      <div
-                                        className={
-                                          styles['jp-card-cvc'] + ' ' + styles['jp-card-display']
-                                        }
-                                      >
-                                        •••
-                                      </div>
-                                      <div
-                                        className={
-                                          styles['jp-card-number'] + ' ' + styles['jp-card-display']
-                                        }
-                                      >
-                                        •••• •••• •••• ••••
-                                      </div>
-                                      <div
-                                        className={
-                                          styles['jp-card-name'] + ' ' + styles['jp-card-display']
-                                        }
-                                      >
-                                        Full Name
-                                      </div>
-                                      <div
-                                        className={
-                                          styles['jp-card-expiry'] + ' ' + styles['jp-card-display']
-                                        }
-                                        data-before="month/year"
-                                        data-after="validthru"
-                                      >
-                                        ••/••
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className={styles['jp-card-back']}>
-                                    <div className={styles['jp-card-bar']} />
-                                    <div
-                                      className={
-                                        styles['jp-card-cvc'] + ' ' + styles['jp-card-display']
-                                      }
-                                    >
-                                      •••
-                                    </div>
-                                    <div className={styles['jp-card-shiny']} />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                              {' '}
+                              điều khoản sử dụng{' '}
+                            </a>
+                            của 123order Vietnam
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <hr />
-                    <form noValidate>
-                      <div>
-                        <div
-                          className={styles['checkout-btn__checkout___2DoYD']}
-                          id={styles['btn-checkout-mobile']}
-                        >
+                      <div
+                        className={
+                          styles['checkout-btn__btn-float-checkout___1K6H3'] +
+                          ' ' +
+                          styles['checkout-btn__hide___20YA0']
+                        }
+                        id={styles['btn-float-checkout']}
+                      >
+                        <div className={styles['checkout-btn__checkout___2DoYD']}>
                           <div
                             className={
                               styles['checkout-btn__actions___3qxu8'] + ' ' + styles['text-center']
@@ -650,9 +463,7 @@ class Checkout extends PureComponent {
                               className={
                                 styles['checkout-btn__btn___1DYTV'] +
                                 ' ' +
-                                styles['checkout-btn__btn-primary___1RlmT'] +
-                                ' ' +
-                                styles['checkout-btn__btn-checkout___2E7IJ']
+                                styles['checkout-btn__btn-primary___1RlmT']
                               }
                             >
                               <i
@@ -662,57 +473,10 @@ class Checkout extends PureComponent {
                               />
                               Hoàn tất đặt hàng
                             </button>
-                            <div className={styles['checkout-btn__policy___1EXJa']}>
-                              <span>Bằng việc tiếp tục, bạn đồng ý với</span>
-                              <a
-                                href="https://support.leflair.vn/hc/vi/articles/214857097-%C4%90i%E1%BB%81u-kho%E1%BA%A3n-v%C3%A0-quy-%C4%91%E1%BB%8Bnh-chung"
-                                target="blank"
-                              >
-                                {' '}
-                                điều khoản sử dụng{' '}
-                              </a>
-                              của Leflair Vietnam
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className={
-                            styles['checkout-btn__btn-float-checkout___1K6H3'] +
-                            ' ' +
-                            styles['checkout-btn__hide___20YA0']
-                          }
-                          id={styles['btn-float-checkout']}
-                        >
-                          <div className={styles['checkout-btn__checkout___2DoYD']}>
-                            <div
-                              className={
-                                styles['checkout-btn__actions___3qxu8'] +
-                                ' ' +
-                                styles['text-center']
-                              }
-                            >
-                              <button
-                                type="submit"
-                                className={
-                                  styles['checkout-btn__btn___1DYTV'] +
-                                  ' ' +
-                                  styles['checkout-btn__btn-primary___1RlmT']
-                                }
-                              >
-                                <i
-                                  className={
-                                    styles['checkout-btn__icon___3Vplk'] +
-                                    ' ' +
-                                    styles['ic-ic-lock']
-                                  }
-                                />
-                                Hoàn tất đặt hàng
-                              </button>
-                            </div>
                           </div>
                         </div>
                       </div>
-                    </form>
+                    </div>
                   </div>
                 </div>
                 <div className={styles['payment__secured-label___1cNZZ']} />

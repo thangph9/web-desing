@@ -19,6 +19,8 @@ import {
   getDealSock,
   getDealSockDetail,
   checkPermission,
+  changePermission,
+  payCompelete,
 } from '@/services/api';
 
 export default {
@@ -43,6 +45,8 @@ export default {
     dealSock: {},
     getdealSockdetail: {},
     checkpermission: {},
+    changepermission: {},
+    paycompelete: {},
   },
   effects: {
     *fetch(_, { call, put }) {
@@ -63,6 +67,13 @@ export default {
       const response = yield call(Register, payload);
       yield put({
         type: 'registration',
+        payload: response || {},
+      });
+    },
+    *paycompelete({ payload }, { call, put }) {
+      const response = yield call(payCompelete, payload);
+      yield put({
+        type: 'paycompeleteauthentication',
         payload: response || {},
       });
     },
@@ -107,6 +118,13 @@ export default {
       const response = yield call(ForgotPassword, payload);
       yield put({
         type: 'forgotAuthentication',
+        payload: response || {},
+      });
+    },
+    *changepermission({ payload }, { call, put }) {
+      const response = yield call(changePermission, payload);
+      yield put({
+        type: 'changePermissionAuthentication',
         payload: response || {},
       });
     },
@@ -269,6 +287,12 @@ export default {
         changepass: {},
       };
     },
+    changePermissionAuthentication(state, action) {
+      return {
+        ...state,
+        changepermission: action.payload,
+      };
+    },
     saveCurrentUser(state, action) {
       return {
         ...state,
@@ -391,6 +415,12 @@ export default {
       return {
         ...state,
         confirm: action.payload,
+      };
+    },
+    paycompeleteauthentication(state, action) {
+      return {
+        ...state,
+        paycompelete: action.payload,
       };
     },
     getotpAuthentication(state, action) {

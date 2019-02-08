@@ -94,7 +94,6 @@ var currencyFormatter = require('currency-formatter');
 class ProductItem extends PureComponent {
   render() {
     var { data, currency } = this.props;
-    console.log(data);
     let productid = data.productid ? data.productid.replace(/\-/g, '') : 'null';
     let seoTitle = data.seo_link + '/' + productid;
     var currencyByProduct = currency.filter((v, i) => {
@@ -336,7 +335,7 @@ class ListCategoryTest extends PureComponent {
 
     // window.addEventListener('scroll', this.handleScroll.bind(this));
     var btnSoft = document.getElementsByClassName(
-      'order-pages-list-category-test-index-sort__btn-text___1mPct'
+      'order\\pages\\-list-category-test\\index-sort__btn-text___1mPct'
     )[0];
     btnSoft.textContent =
       this.props.location.query.sort && this.state[`${this.props.location.query.sort}`]
@@ -364,12 +363,14 @@ class ListCategoryTest extends PureComponent {
       return;
     }
     var activeSoft = document.getElementsByClassName(
-      'order-pages-list-category-test-index-sort__dropdown-item___XkHiS'
+      'order\\pages\\-list-category-test\\index-sort__dropdown-item___XkHiS'
     );
     for (var i = 0; i < activeSoft.length; i++) {
-      activeSoft[i].classList.remove('order-pages-list-category-test-index-sort__active___3DNgx');
+      activeSoft[i].classList.remove(
+        'order\\pages\\-list-category-test\\index-sort__active___3DNgx'
+      );
     }
-    liSort.classList.add('order-pages-list-category-test-index-sort__active___3DNgx');
+    liSort.classList.add('order\\pages\\-list-category-test\\index-sort__active___3DNgx');
   }
 
   handleClickButtonFilter() {
@@ -386,16 +387,18 @@ class ListCategoryTest extends PureComponent {
     var ulSort = document.getElementById('sort-items');
     ulSort.style.display = 'none';
     var btnSoft = document.getElementsByClassName(
-      'order-pages-list-category-test-index-sort__btn-text___1mPct'
+      'order\\pages\\-list-category-test\\index-sort__btn-text___1mPct'
     )[0];
     btnSoft.textContent = 'Sắp xếp: ' + liSort.textContent;
     var activeSoft = document.getElementsByClassName(
-      'order-pages-list-category-test-index-sort__dropdown-item___XkHiS'
+      'order\\pages\\-list-category-test\\index-sort__dropdown-item___XkHiS'
     );
     for (var i = 0; i < activeSoft.length; i++) {
-      activeSoft[i].classList.remove('order-pages-list-category-test-index-sort__active___3DNgx');
+      activeSoft[i].classList.remove(
+        'order\\pages\\-list-category-test\\index-sort__active___3DNgx'
+      );
     }
-    liSort.classList.add('order-pages-list-category-test-index-sort__active___3DNgx');
+    liSort.classList.add('order\\pages\\-list-category-test\\index-sort__active___3DNgx');
     let pathname = this.props.location.pathname;
     let search = this.props.location.search;
     let query = this.props.location.query;
@@ -706,7 +709,7 @@ class ListCategoryTest extends PureComponent {
     var { search } = this.props.category;
     var {
       category: {
-        search: { filterMap },
+        searchtest: { filterMap },
       },
     } = this.props;
     filterMap ? (filterMap = filterMap) : (filterMap = {});
