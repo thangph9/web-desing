@@ -1,0 +1,35 @@
+
+TypeError: Cannot read property 'find' of undefined
+    at C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:1927:27
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:718:13
+    at iterate (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:262:13)
+    at async.forEachOfSeries.async.eachOfSeries (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:281:9)
+    at _parallel (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:717:9)
+    at Object.async.series (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:739:9)
+    at exceptionError (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:1924:11)
+    at sendData (C:\Users\Admin\Desktop\123order\web-desing\node_modules\umi-build-dev\lib\plugins\mock\createMockMiddleware.js:132:11)
+    at _bodyParser.default.urlencoded (C:\Users\Admin\Desktop\123order\web-desing\node_modules\umi-build-dev\lib\plugins\mock\createMockMiddleware.js:123:13)
+    at urlencodedParser (C:\Users\Admin\Desktop\123order\web-desing\node_modules\body-parser\lib\types\urlencoded.js:82:7)
+    at _bodyParser.default.json (C:\Users\Admin\Desktop\123order\web-desing\node_modules\umi-build-dev\lib\plugins\mock\createMockMiddleware.js:122:13)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\body-parser\lib\read.js:130:5
+    at invokeCallback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\raw-body\index.js:224:16)
+    at done (C:\Users\Admin\Desktop\123order\web-desing\node_modules\raw-body\index.js:213:7)
+    at IncomingMessage.onEnd (C:\Users\Admin\Desktop\123order\web-desing\node_modules\raw-body\index.js:273:7)
+    at IncomingMessage.emit (events.js:182:13) - 1549862982316
+TypeError: Cannot read property 'find' of undefined
+    at C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:1927:27
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:718:13
+    at iterate (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:262:13)
+    at async.forEachOfSeries.async.eachOfSeries (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:281:9)
+    at _parallel (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:717:9)
+    at Object.async.series (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:739:9)
+    at exceptionError (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:1924:11)
+    at sendData (C:\Users\Admin\Desktop\123order\web-desing\node_modules\umi-build-dev\lib\plugins\mock\createMockMiddleware.js:132:11)
+    at _bodyParser.default.urlencoded (C:\Users\Admin\Desktop\123order\web-desing\node_modules\umi-build-dev\lib\plugins\mock\createMockMiddleware.js:123:13)
+    at urlencodedParser (C:\Users\Admin\Desktop\123order\web-desing\node_modules\body-parser\lib\types\urlencoded.js:82:7)
+    at _bodyParser.default.json (C:\Users\Admin\Desktop\123order\web-desing\node_modules\umi-build-dev\lib\plugins\mock\createMockMiddleware.js:122:13)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\body-parser\lib\read.js:130:5
+    at invokeCallback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\raw-body\index.js:224:16)
+    at done (C:\Users\Admin\Desktop\123order\web-desing\node_modules\raw-body\index.js:213:7)
+    at IncomingMessage.onEnd (C:\Users\Admin\Desktop\123order\web-desing\node_modules\raw-body\index.js:273:7)
+    at IncomingMessage.emit (events.js:182:13) - 1549863102588

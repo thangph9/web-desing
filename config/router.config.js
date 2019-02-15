@@ -61,6 +61,11 @@ export default [
         component: './Home/',
       },
       {
+        path: '/homebytri',
+        name: 'homebytri',
+        component: './HomeByTri/',
+      },
+      {
         path: '/exception',
         name: 'exception',
         routes: [
@@ -102,6 +107,11 @@ export default [
         component: './DetailTest/',
       },
       {
+        path: '/productbytri/:productid',
+        name: 'productbytri',
+        component: './DetailByTri/',
+      },
+      {
         path: '/ebay',
         name: 'ebay',
         component: './Ebay/',
@@ -135,6 +145,11 @@ export default [
         path: '/categorytest/:catid',
         name: 'listcategorytest',
         component: './ListCategoryTest/',
+      },
+      {
+        path: '/categorybytri/:categoryid',
+        name: 'categorybytri',
+        component: './CategoryByTri/',
       },
       {
         path: '/register',

@@ -9,4 +9,6 @@ router.use('/product', require('./product'));
 router.use('/global', require('./global'));
 router.use('/category', require('./category'));
 router.use('/authentication', require('./authentication'));
+router.use('/images', require('./images'));
+router.use('/upload', require('./upload'));
 module.exports = router;

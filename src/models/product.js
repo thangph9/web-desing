@@ -9,6 +9,12 @@ import {
   getDEVDETAIL,
   getProductFilter,
   getProductDetailTest,
+  saveProduct,
+  saveCategory,
+  getCategory,
+  getCategoryHomeByTri,
+  getProductInCategory,
+  getProductDetailByTri,
 } from '@/services/api';
 
 export default {
@@ -21,6 +27,11 @@ export default {
     adidas: {},
     nike: [],
     ebay: [],
+    saveproduct: {},
+    getcategory: {},
+    getcategoryhomebytri: {},
+    getproductincategory: {},
+    getproductdetailbytri: {},
   },
 
   effects: {
@@ -43,6 +54,39 @@ export default {
           type: 'queryList',
           payload: [],
         });
+      }
+    },
+    *homebytri({ payload }, { call, put }) {
+      const response = yield call(getCategoryHomeByTri, payload);
+      try {
+        yield put({
+          type: 'homeByTri',
+          payload: response,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    *getproductincategory({ payload }, { call, put }) {
+      const response = yield call(getProductInCategory, payload);
+      try {
+        yield put({
+          type: 'getProductInCategory',
+          payload: response,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    *getproductdetailbytri({ payload }, { call, put }) {
+      const response = yield call(getProductDetailByTri, payload);
+      try {
+        yield put({
+          type: 'getProductDetailByTri',
+          payload: response,
+        });
+      } catch (e) {
+        console.log(e);
       }
     },
     *amazon({ payload }, { call, put }) {
@@ -149,6 +193,27 @@ export default {
         });
       }
     },
+    *saveproduct({ payload }, { call, put }) {
+      const response = yield call(saveProduct, payload);
+      yield put({
+        type: 'saveProduct',
+        payload: response,
+      });
+    },
+    *savecategory({ payload }, { call, put }) {
+      const response = yield call(saveCategory, payload);
+      yield put({
+        type: 'saveCategory',
+        payload: response,
+      });
+    },
+    *getcategory({ payload }, { call, put }) {
+      const response = yield call(getCategory, payload);
+      yield put({
+        type: 'getCategory',
+        payload: response,
+      });
+    },
     *filter({ payload }, { call, put }) {
       const response = yield call(getProductFilter, payload);
       if (response && response.status === 'ok') {
@@ -165,6 +230,24 @@ export default {
       return {
         ...state,
         list: action.payload,
+      };
+    },
+    homeByTri(state, action) {
+      return {
+        ...state,
+        homebytri: action.payload,
+      };
+    },
+    getProductInCategory(state, action) {
+      return {
+        ...state,
+        getproductincategory: action.payload,
+      };
+    },
+    getProductDetailByTri(state, action) {
+      return {
+        ...state,
+        getproductdetailbytri: action.payload,
       };
     },
     productDetail(state, action) {
@@ -207,6 +290,24 @@ export default {
       return {
         ...state,
         filter: action.payload,
+      };
+    },
+    saveProduct(state, action) {
+      return {
+        ...state,
+        saveproduct: action.payload,
+      };
+    },
+    saveCategory(state, action) {
+      return {
+        ...state,
+        savecategory: action.payload,
+      };
+    },
+    getCategory(state, action) {
+      return {
+        ...state,
+        getcategory: action.payload,
       };
     },
   },

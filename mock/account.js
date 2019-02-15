@@ -58,8 +58,6 @@ function register(req, res) {
   var params = req.body;
   let user_id = Uuid.random();
   let saltRounds = 10;
-  var mailOptions = {};
-  var transporter = {};
   var _salt = '';
   var _hash = '';
   var queries = [];
@@ -83,7 +81,6 @@ function register(req, res) {
         callback(null, null);
       },
       function(callback) {
-        console.log(PARAM_IS_VALID);
         models.instance.account_login.find({ username: PARAM_IS_VALID['username'] }, function(
           err,
           _user
@@ -187,6 +184,7 @@ function register(req, res) {
           name: PARAM_IS_VALID['fullname'],
           phone: PARAM_IS_VALID['phone'],
           username: PARAM_IS_VALID['username'],
+          permissionid: 2,
         };
         let account_login_object = {
           username: PARAM_IS_VALID['username'],
@@ -329,8 +327,6 @@ function login(req, res) {
   var token = '';
   var msg = '';
   var userInfo = [];
-  var successBody = false;
-  var verificationUrl = '';
   async.series(
     [
       function(callback) {
@@ -367,8 +363,6 @@ function login(req, res) {
       function(callback) {
         if (hashPassword != '') {
           bcrypt.compare(PARAM_IS_VALID['password'], hashPassword, function(err, result) {
-            // res == true
-
             result ? (isLogin = result) : (msg = MESSAGE.USER_NOT_MATCH);
             callback(err, null);
           });
@@ -384,6 +378,7 @@ function login(req, res) {
                 name: userInfo[0].name,
                 phone: userInfo[0].phone,
                 address: userInfo[0].address,
+                permissionid: userInfo[0].permissionid,
               },
               jwtprivate,
               {
@@ -473,6 +468,20 @@ function changePass(req, res) {
   var _hash = '';
   var saltRounds = 10;
   var queries = [];
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+  } catch (e) {
+    return res.send({
+      status: 'error',
+      message: 'Có lỗi xảy ra! vui lòng đăng nhập lại trước khi đổi mật khẩu',
+    });
+  }
   async.series(
     [
       function(callback) {
@@ -773,6 +782,7 @@ function changeInfo(req, res) {
 
         var update_info = () => {
           let object = update_info_object;
+
           uuid = models.uuidFromString(PARAM_IS_VALID.userid);
           let update = models.instance.account.update({ user_id: uuid }, object, {
             if_exist: true,
@@ -1113,7 +1123,6 @@ function verifyEmail(req, res) {
         };
         try {
           legit = jwt.verify(PARAM_IS_VALID['tokenverify'], jwtpublic, verifyOptions);
-          console.log(legit);
         } catch (e) {
           return res.send({ status: 'error', message: 'Sai token' });
         }
@@ -1279,6 +1288,159 @@ function getDealSock(req, res) {
     }
   );
 }
+function getDealDetail(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var results = {};
+  var uuid = undefined;
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.artid = params.artid;
+        callback(null, null);
+      },
+      function(callback) {
+        uuid = models.uuidFromString(PARAM_IS_VALID.artid);
+        models.instance.articles.find({ artid: uuid }, function(err, art) {
+          if (art && art.length > 0) results = art[0];
+          else return res.json({ status: 'erorr', message: 'không có bài viết này!' });
+          callback(err, null);
+        });
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error', message: err.toString() });
+      return res.json({ status: 'ok', data: results });
+    }
+  );
+}
+function checkPermission(req, res) {
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+  } catch (e) {
+    return res.send({ status: 'error' });
+  }
+  if (legit.permissionid === 1) {
+    return res.json({ status: 'ok' });
+  }
+  return res.json({ status: 'error' });
+}
+function changePermission(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var queries = [];
+  var userInfo = [];
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID['username'] = params.username;
+        callback(null, null);
+      },
+      function(callback) {
+        models.instance.account.find(
+          { username: PARAM_IS_VALID['username'] },
+          { allow_filtering: true },
+          function(err, _user) {
+            if (_user != undefined && _user.length > 0) {
+              userInfo = _user;
+            } else return res.json({ status: 'error', message: 'Tài khoản không tồn tại' });
+            callback(err, null);
+          }
+        );
+      },
+      function(callback) {
+        let update_permission_object = {
+          permissionid: 1,
+        };
+        var update_permission = () => {
+          let object = update_permission_object;
+          let update = models.instance.account.update({ user_id: userInfo[0].user_id }, object, {
+            if_exist: true,
+            return_query: true,
+            allow_filtering: true,
+          });
+          return update;
+        };
+        queries.push(update_permission());
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error', message: 'Xảy ra lỗi khi cập nhật' });
+      models.doBatch(queries, function(err) {
+        if (err) {
+          console.log(err);
+          return res.json({ status: 'error' });
+        } else {
+          return res.json({
+            status: 'ok',
+            message: 'Cấp quyền thành công',
+          });
+        }
+      });
+    }
+  );
+}
+function payCompelete(req, res) {
+  var params = req.body;
+  var PARAM_IS_VALID = {};
+  var queries = [];
+  let orderid = Uuid.random();
+  async.series(
+    [
+      function(callback) {
+        PARAM_IS_VALID.orderid = orderid;
+        PARAM_IS_VALID.list_product = params.list_product;
+        PARAM_IS_VALID.phone = params.phone;
+        PARAM_IS_VALID.order_by = params.order_by;
+        PARAM_IS_VALID.address = params.address;
+        PARAM_IS_VALID.total_price = params.total_price;
+        PARAM_IS_VALID.createat = new Date().getTime();
+        PARAM_IS_VALID.status = false;
+        callback(null, null);
+      },
+      function(callback) {
+        try {
+          let product_order_object = {
+            orderid: orderid,
+            createat: PARAM_IS_VALID.createat,
+            list_product: PARAM_IS_VALID.list_product,
+            order_by: PARAM_IS_VALID.order_by,
+            phone: PARAM_IS_VALID.phone,
+            status: false,
+            address: PARAM_IS_VALID.address,
+            total_price: PARAM_IS_VALID.total_price,
+          };
+          const product_order = () => {
+            let object = product_order_object;
+            let instance = new models.instance.product_order(object);
+            let save = instance.save({ if_exist: true, return_query: true });
+            return save;
+          };
+          queries.push(product_order());
+          callback(null, null);
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    ],
+    function(err, result) {
+      if (err) return res.json({ status: 'error', message1: err });
+      models.doBatch(queries, function(err) {
+        if (err) {
+          console.log(err);
+          return res.json({ status: 'error', message2: err });
+        } else return res.json({ status: 'ok' });
+      });
+    }
+  );
+}
 export default {
   'POST /api/authentication/register': register,
   'POST /api/authentication/registerfb': registerfb,
@@ -1296,4 +1458,8 @@ export default {
   'POST /api/authentication/deletehelpbuy': deleteHelpBuy,
   'POST /api/authentication/verifyemail': verifyEmail,
   'POST /api/authentication/dealsock': getDealSock,
+  'POST /api/authentication/dealsockdetail': getDealDetail,
+  'POST /api/authentication/checkpermission': checkPermission,
+  'POST /api/authentication/changepermission': changePermission,
+  'POST /api/authentication/paycompelete': payCompelete,
 };

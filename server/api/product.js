@@ -1,3 +1,6 @@
+/* eslint-disable new-cap */
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 /* eslint-disable no-continue */
 /* eslint-disable no-useless-escape */
 /* eslint-disable spaced-comment */
@@ -32,7 +35,8 @@ const async = require('async');
 const bcrypt = require('bcryptjs');
 const Uuid = require('cassandra-driver').types.Uuid;
 const models = require('../settings');
-var publicKEY = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
+var jwtpublic = fs.readFileSync('./ssl/jwtpublic.pem', 'utf8');
+var jwtprivate = fs.readFileSync('./ssl/jwtprivate.pem', 'utf8');
 var express = require('express');
 const sharp = require('sharp');
 var read = filename => {
@@ -1319,6 +1323,435 @@ function productSearchTest(req, res) {
     }
   );
 }
+function saveProduct(req, res) {
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+  } catch (e) {
+    return res.send({ status: 'expired' });
+  }
+  var PARAM_IS_VALID = {};
+  let queries = [];
+  let params = req.body;
+  async.series(
+    [
+      function(callback) {
+        //models.instance.
+        try {
+          PARAM_IS_VALID['productid'] = Uuid.random();
+          PARAM_IS_VALID['price'] = params.price ? Number(params.price) : 0;
+          PARAM_IS_VALID['sale'] = params.sale ? Number(params.sale) : 0;
+          PARAM_IS_VALID['sale_price'] = params.sale_price ? Number(params.sale_price) : 0;
+          PARAM_IS_VALID['start_sale'] = params['range-picker'][0];
+          PARAM_IS_VALID['end_sale'] = params['range-picker'][1];
+          PARAM_IS_VALID['image_huge'] = params.images;
+          PARAM_IS_VALID['avatar'] = params.avatar;
+          PARAM_IS_VALID['image_large'] = [];
+          PARAM_IS_VALID['image_small'] = [];
+          PARAM_IS_VALID['desc_infomation'] = params.information;
+          PARAM_IS_VALID['desc_brand'] = params.descbrand;
+          PARAM_IS_VALID['desc_size'] = params.descsize;
+          PARAM_IS_VALID['desc_materials_use'] = params.use;
+          PARAM_IS_VALID['color'] = params.color;
+          PARAM_IS_VALID['total'] = Number(params.total);
+          PARAM_IS_VALID['size'] = params.size;
+          PARAM_IS_VALID['brand'] = params.brand;
+          PARAM_IS_VALID['name_product'] = params.name_product;
+          PARAM_IS_VALID['categoryid'] = models.uuidFromString(params.categoryid);
+        } catch (e) {
+          console.log(e);
+          return res.send({ status: 'error_01' });
+        }
+        callback(null, null);
+      },
+      function(callback) {
+        console.log(PARAM_IS_VALID['avatar']);
+        try {
+          const product = () => {
+            var product_object = {
+              productid: PARAM_IS_VALID['productid'],
+              amount: PARAM_IS_VALID['total'],
+              brand: PARAM_IS_VALID['brand'],
+              color: PARAM_IS_VALID['color'],
+              createat: new Date().getTime(),
+              createby: legit.username,
+              desc_brand: PARAM_IS_VALID['desc_brand'],
+              desc_infomation: PARAM_IS_VALID['desc_infomation'],
+              desc_materials_use: PARAM_IS_VALID['desc_materials_use'],
+              desc_size: PARAM_IS_VALID['desc_size'],
+              end_sale: PARAM_IS_VALID['end_sale'],
+              image_huge: PARAM_IS_VALID['image_huge'],
+              name_product: PARAM_IS_VALID['name_product'],
+              price: PARAM_IS_VALID['price'],
+              sale: PARAM_IS_VALID['sale'],
+              sale_price: PARAM_IS_VALID['sale_price'],
+              size: PARAM_IS_VALID['size'],
+              start_sale: PARAM_IS_VALID['start_sale'],
+              categoryid: PARAM_IS_VALID['categoryid'],
+              avatar: PARAM_IS_VALID['avatar'],
+            };
+            var object = product_object;
+            let instance = new models.instance.product_detail_by_tri(object);
+            let save = instance.save({ return_query: true });
+            return save;
+          };
+          queries.push(product());
+        } catch (e) {
+          console.log(e);
+          return res.send({ status: 'error_02' });
+        }
+
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.send({ status: 'error_03' });
+      try {
+        models.doBatch(queries, function(err) {
+          if (err) {
+            console.log(err);
+            return res.send({ status: 'error_04' });
+          }
+          return res.send({ status: 'ok' });
+        });
+      } catch (e) {
+        return res.send({ status: 'error_05' });
+      }
+    }
+  );
+}
+function saveCategory(req, res) {
+  var token = req.headers['x-access-token'];
+  var verifyOptions = {
+    expiresIn: '30d',
+    algorithm: ['RS256'],
+  };
+  var legit = {};
+  try {
+    legit = jwt.verify(token, jwtpublic, verifyOptions);
+  } catch (e) {
+    return res.send({ status: 'expired' });
+  }
+  var PARAM_IS_VALID = {};
+  let queries = [];
+  let params = req.body;
+  console.log(params);
+  async.series(
+    [
+      function(callback) {
+        //models.instance.
+        try {
+          PARAM_IS_VALID['categoryid'] = Uuid.random();
+          PARAM_IS_VALID['start_sale'] = params['range-picker'][0];
+          PARAM_IS_VALID['end_sale'] = params['range-picker'][1];
+          PARAM_IS_VALID['thumbnail'] = params.images;
+          PARAM_IS_VALID['title'] = params.title;
+          PARAM_IS_VALID['menu'] = params.menu;
+        } catch (e) {
+          console.log(e);
+          return res.send({ status: 'error_01' });
+        }
+        callback(null, null);
+      },
+      function(callback) {
+        try {
+          const product = () => {
+            var product_object = {
+              categoryid: PARAM_IS_VALID['categoryid'],
+              createat: new Date().getTime(),
+              createby: legit.username,
+              end_sale: PARAM_IS_VALID['end_sale'],
+              title: PARAM_IS_VALID['title'],
+              menu: PARAM_IS_VALID['menu'],
+              start_sale: PARAM_IS_VALID['start_sale'],
+              thumbnail: PARAM_IS_VALID['thumbnail'],
+            };
+            var object = product_object;
+            let instance = new models.instance.category_by_tri(object);
+            let save = instance.save({ return_query: true });
+            return save;
+          };
+          queries.push(product());
+        } catch (e) {
+          console.log(e);
+          return res.send({ status: 'error_02' });
+        }
+
+        callback(null, null);
+      },
+    ],
+    function(err, result) {
+      if (err) return res.send({ status: 'error_03' });
+      try {
+        models.doBatch(queries, function(err) {
+          if (err) return res.send({ status: 'error_04' });
+          return res.send({ status: 'ok' });
+        });
+      } catch (e) {
+        return res.send({ status: 'error_05' });
+      }
+    }
+  );
+}
+function getCategory(req, res) {
+  let results = [];
+  async.series(
+    [
+      function(callback) {
+        try {
+          models.instance.category_by_tri.find({}, function(err, result) {
+            if (result && result.length > 0) {
+              result.forEach(element => {
+                let obj = {};
+                obj.categoryid = element.categoryid;
+                obj.title = element.title;
+                results.push(obj);
+              });
+            }
+            callback(err, null);
+          });
+        } catch (error) {
+          exceptionError(error);
+        }
+      },
+    ],
+    function(err, result) {
+      try {
+        if (err) return res.send({ status: 'error' });
+        res.send({ status: 'ok', data: results });
+      } catch (error) {
+        exceptionError(error);
+      }
+    }
+  );
+}
+function getProductByTri(req, res) {
+  let results = [];
+  let PARAM_IS_VALID = {};
+  let params = req.body;
+  let pid;
+  async.series(
+    [
+      function(callback) {
+        //models.instance.
+        try {
+          let productid = params.productid;
+          let uuid =
+            productid.substring(0, 7) +
+            '-' +
+            productid.substring(7, 11) +
+            '-' +
+            productid.substring(11, 15) +
+            '-' +
+            productid.substring(15, 20) +
+            '-' +
+            productid.substring(20, 32);
+          pid = models.uuidFromString(uuid);
+        } catch (e) {
+          console.log(e);
+          return res.send({ status: 'error_01' });
+        }
+        callback(null, null);
+      },
+      function(callback) {
+        try {
+          models.instance.product_detail_by_tri.find({ productid: pid }, function(err, result) {
+            if (result && result.length > 0) {
+              results = result[0];
+            }
+            callback(err, null);
+          });
+        } catch (error) {
+          exceptionError(error);
+        }
+      },
+    ],
+    function(err, result) {
+      try {
+        if (err) return res.send({ status: 'error' });
+        res.send({ status: 'ok', data: results });
+      } catch (error) {
+        exceptionError(error);
+      }
+    }
+  );
+}
+function productHomeByTri(req, res) {
+  let results = {};
+  async.series(
+    [
+      function(callback) {
+        try {
+          models.instance.category_by_tri.find(
+            { menu: 'hotnews' },
+            { allow_filtering: true },
+            function(err, result) {
+              if (result && result.length > 0) {
+                results.hotnews = result;
+              } else {
+                results.hotnews = [];
+              }
+              callback(err, null);
+            }
+          );
+        } catch (error) {
+          exceptionError(error);
+        }
+      },
+      function(callback) {
+        try {
+          models.instance.category_by_tri.find(
+            { menu: 'special' },
+            { allow_filtering: true },
+            function(err, result) {
+              if (result && result.length > 0) {
+                results.special = result;
+              } else {
+                results.special = [];
+              }
+              callback(err, null);
+            }
+          );
+        } catch (error) {
+          exceptionError(error);
+        }
+      },
+      function(callback) {
+        try {
+          models.instance.category_by_tri.find(
+            { menu: 'bestseller' },
+            { allow_filtering: true },
+            function(err, result) {
+              if (result && result.length > 0) {
+                results.bestseller = result;
+              } else {
+                results.bestseller = [];
+              }
+              callback(err, null);
+            }
+          );
+        } catch (error) {
+          exceptionError(error);
+        }
+      },
+      function(callback) {
+        try {
+          models.instance.category_by_tri.find(
+            { menu: 'news' },
+            { allow_filtering: true },
+            function(err, result) {
+              if (result && result.length > 0) {
+                results.news = result;
+              } else {
+                results.news = [];
+              }
+              callback(err, null);
+            }
+          );
+        } catch (error) {
+          exceptionError(error);
+        }
+      },
+      function(callback) {
+        try {
+          models.instance.category_by_tri.find(
+            { menu: 'more' },
+            { allow_filtering: true },
+            function(err, result) {
+              if (result && result.length > 0) {
+                results.more = result;
+              } else {
+                results.more = [];
+              }
+              callback(err, null);
+            }
+          );
+        } catch (error) {
+          exceptionError(error);
+        }
+      },
+    ],
+    function(err, result) {
+      try {
+        if (err) {
+          console.log(err);
+          return res.send({ status: 'error' });
+        }
+        res.send({ status: 'ok', data: results });
+      } catch (error) {
+        exceptionError(error);
+      }
+    }
+  );
+}
+function getProductInCategory(req, res) {
+  var catid = '';
+  var data = [];
+  var results = [];
+  var dataResult = [];
+  var dataFile = '';
+  async.series(
+    [
+      function(callback) {
+        console.log(dataFile);
+        callback(null, null);
+      },
+      function(callback) {
+        try {
+          let categoryid = req.body.categoryid;
+          let uuid =
+            categoryid.substring(0, 7) +
+            '-' +
+            categoryid.substring(7, 11) +
+            '-' +
+            categoryid.substring(11, 15) +
+            '-' +
+            categoryid.substring(15, 20) +
+            '-' +
+            categoryid.substring(20, 32);
+          catid = models.uuidFromString(uuid);
+          console.log(catid);
+        } catch (e) {
+          return res.send({ status: 'error_invalid' });
+        }
+        callback(null, null);
+      },
+      function(callback) {
+        try {
+          let sort = req.body.sort;
+          models.instance.product_detail_by_tri.find(
+            { categoryid: catid },
+            { allow_filtering: true },
+            function(err, result) {
+              if (result && result.length > 0) {
+                results = result;
+              }
+              callback(err, null);
+            }
+          );
+        } catch (error) {
+          exceptionError(error);
+        }
+      },
+    ],
+    function(err, result) {
+      try {
+        if (err) {
+          console.log(err);
+          return res.json({ status: 'error' });
+        }
+        return res.json({ status: 'ok', data: results });
+      } catch (error) {
+        exceptionError(error);
+      }
+    }
+  );
+}
 var router = express.Router();
 router.get('/list', productList);
 router.post('/DT', productDetail);
@@ -1331,4 +1764,10 @@ router.get('/AM', productAmazon);
 router.get('/EB', productEbay);
 router.get('/NK', productNike);
 router.get('/AD', productAdidas);
+router.post('/saveproduct', saveProduct);
+router.post('/savecategory', saveCategory);
+router.post('/getcategory', getCategory);
+router.post('/detailbytri', getProductByTri);
+router.post('/homebytri', productHomeByTri);
+router.post('/categorybytri', getProductInCategory);
 module.exports = router;

@@ -128,6 +128,9 @@ export async function getFakeCaptcha(mobile) {
 export async function getProductByCategory(category) {
   return request('/api/product/list');
 }
+export async function getCategoryHomeByTri(category) {
+  return request('/api/product/homebytri');
+}
 export async function verifyEmailRegister(params) {
   return request(`/api/authentication/verifyemail`, {
     method: 'POST',
@@ -136,6 +139,26 @@ export async function verifyEmailRegister(params) {
 }
 export async function getProductDetail(params) {
   return request('/api/product/DT', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function saveProduct(params) {
+  return request('/api/product/saveproduct', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('account')) },
+  });
+}
+export async function saveCategory(params) {
+  return request('/api/product/savecategory', {
+    method: 'POST',
+    body: params,
+    headers: { 'X-Access-Token': JSON.parse(localStorage.getItem('account')) },
+  });
+}
+export async function getCategory(params) {
+  return request('/api/product/getcategory', {
     method: 'POST',
     body: params,
   });
@@ -290,6 +313,18 @@ export async function getCategoryProduct(nodeid) {
     body: {
       nodeid,
     },
+  });
+}
+export async function getProductInCategory(categoryid) {
+  return request('/api/product/categorybytri', {
+    method: 'POST',
+    body: categoryid,
+  });
+}
+export async function getProductDetailByTri(productid) {
+  return request('/api/product/detailbytri', {
+    method: 'POST',
+    body: productid,
   });
 }
 export async function getListProductAmazon(params) {

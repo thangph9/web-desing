@@ -208,8 +208,8 @@ class CMS extends React.PureComponent {
         </Sider>
         <Layout>
           <Header style={{ background: '#fff', padding: 0 }} />
-          <Content style={{ margin: '0 16px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
+          <Content>
+            <Breadcrumb style={{ padding: '16px 10px', background: '#fff' }}>
               <Breadcrumb.Item>
                 <Link to={`/home`}>Home</Link>
               </Breadcrumb.Item>
@@ -220,7 +220,7 @@ class CMS extends React.PureComponent {
                 <span>{this.state.title}</span>
               </Breadcrumb.Item>
             </Breadcrumb>
-            <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>{items}</div>
+            <div>{items}</div>
           </Content>
         </Layout>
       </Layout>
@@ -404,7 +404,7 @@ class HomeLayout extends React.PureComponent {
     const routerConfig = this.matchParamsPath(pathname);
     const layout = (
       <div>
-        <CMS items={children} />
+        <CMS items={children} {...this.props} />
       </div>
     );
     return (
