@@ -15,6 +15,15 @@ import {
   getCategoryHomeByTri,
   getProductInCategory,
   getProductDetailByTri,
+  getListCategory,getOneCategory,
+  updateCategory,
+  getListProduct,
+  updateProduct,
+  deleteCategory,
+  deleteProduct,
+  getProductOrder,
+  changeOrderStatus,
+  deleteProductOrder
 } from '@/services/api';
 
 export default {
@@ -28,10 +37,21 @@ export default {
     nike: [],
     ebay: [],
     saveproduct: {},
+    savecategory: {},
     getcategory: {},
     getcategoryhomebytri: {},
     getproductincategory: {},
     getproductdetailbytri: {},
+    getlistcategory:[],
+    getonecategory:{},
+    updatecategory:{},
+    getlistproduct:[],
+    updateproduct:{},
+    deleteproduct:{},
+    deletecategory:{},
+    getproductorder:{},
+    changeorderstatus:{},
+    deleteproductorder:{}
   },
 
   effects: {
@@ -61,6 +81,116 @@ export default {
       try {
         yield put({
           type: 'homeByTri',
+          payload: response,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    *getlistcategory({ payload }, { call, put }) {
+      const response = yield call(getListCategory, payload);
+      try {
+        yield put({
+          type: 'getListCategory',
+          payload: response,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    *getproductorder({ payload }, { call, put }) {
+      const response = yield call(getProductOrder, payload);
+      try {
+        yield put({
+          type: 'getProductOrder',
+          payload: response,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    *getlistproduct({ payload }, { call, put }) {
+      const response = yield call(getListProduct, payload);
+      try {
+        yield put({
+          type: 'getListProduct',
+          payload: response,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    *changeorderstatus({ payload }, { call, put }) {
+      const response = yield call(changeOrderStatus, payload);
+      try {
+        yield put({
+          type: 'changeOrderStatus',
+          payload: response,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    *deleteproductorder({ payload }, { call, put }) {
+      const response = yield call(deleteProductOrder, payload);
+      try {
+        yield put({
+          type: 'deleteProductOrder',
+          payload: response,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    *getonecategory({ payload }, { call, put }) {
+      const response = yield call(getOneCategory, payload);
+      try {
+        yield put({
+          type: 'getOneCategory',
+          payload: response,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    *updatecategory({ payload }, { call, put }) {
+      const response = yield call(updateCategory, payload);
+      try {
+        yield put({
+          type: 'updateCategory',
+          payload: response,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    *deletecategory({ payload }, { call, put }) {
+      const response = yield call(deleteCategory, payload);
+      try {
+        yield put({
+          type: 'deleteCategory',
+          payload: response,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    *deleteproduct({ payload }, { call, put }) {
+      const response = yield call(deleteProduct, payload);
+      try {
+        yield put({
+          type: 'deleteProduct',
+          payload: response,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    *updateproduct({ payload }, { call, put }) {
+      const response = yield call(updateProduct, payload);
+      try {
+        yield put({
+          type: 'updateProduct',
           payload: response,
         });
       } catch (e) {
@@ -256,6 +386,12 @@ export default {
         detail: action.payload,
       };
     },
+    getProductOrder(state, action) {
+      return {
+        ...state,
+        getproductorder: action.payload,
+      };
+    },
     productDetailTest(state, action) {
       return {
         ...state,
@@ -308,6 +444,60 @@ export default {
       return {
         ...state,
         getcategory: action.payload,
+      };
+    },
+    getListCategory(state, action) {
+      return {
+        ...state,
+        getlistcategory: action.payload,
+      };
+    },
+    getOneCategory(state, action) {
+      return {
+        ...state,
+        getonecategory: action.payload,
+      };
+    },
+    updateCategory(state, action) {
+      return {
+        ...state,
+        updatecategory: action.payload,
+      };
+    },
+    getListProduct(state, action) {
+      return {
+        ...state,
+        getlistproduct: action.payload,
+      };
+    },
+    updateProduct(state, action) {
+      return {
+        ...state,
+        updateproduct: action.payload,
+      };
+    },
+    changeOrderStatus(state, action) {
+      return {
+        ...state,
+        changeorderstatus: action.payload,
+      };
+    },
+    deleteProductOrder(state, action) {
+      return {
+        ...state,
+        deleteproductorder: action.payload,
+      };
+    },
+    deleteProduct(state, action) {
+      return {
+        ...state,
+        deleteproduct: action.payload,
+      };
+    },
+    deleteCategory(state, action) {
+      return {
+        ...state,
+        deletecategory: action.payload,
       };
     },
   },

@@ -62,9 +62,7 @@ const { TextArea } = Input;
 class ProductItem extends PureComponent {
   state = {};
 
-  render() {
-    const { data } = this.props;
-    let thumbnail = data.thumbnail ? data.thumbnail.replace(/\-/g, '') : 'false';
+  renderTime(){
     let timeline = 0;
     var endHour = 0;
     let start;
@@ -75,56 +73,57 @@ class ProductItem extends PureComponent {
       timeline = Math.floor(endTime);
       endHour = Math.floor((endTime - timeline) * 24);
     }
+    {timeline > 0 ? (
+      <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
+        <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
+          <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
+          <span className={`${styles['end-time__text___1A-sx']}`}> </span>
+          <span className={`${styles['end-time__timer___LMsIT']}`}>
+            {timeline + ' Ngày '}
+          </span>
+          {endHour > 0 && (
+            <span className={`${styles['end-time__timer___LMsIT']}`}>
+              {endHour + ' Giờ'}
+            </span>
+          )}
+        </span>
+      </div>
+    ) : (
+      timeline == 0 &&
+      endHour > 0 && (
+        <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
+          <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
+            <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
+            <span className={`${styles['end-time__text___1A-sx']}`}> </span>
+            {endHour > 0 && (
+              <span className={`${styles['end-time__timer___LMsIT']}`}>
+                {endHour + ' Giờ'}
+              </span>
+            )}
+          </span>
+        </div>
+      )
+    )}
+  }
 
+  render() {
+    const { data } = this.props;
+    let thumbnail = data.thumbnail ? data.thumbnail.replace(/\-/g, '') : 'false';
     return (
       <Link
-        className={`${styles['home__col-md-6___2zJjj']} ${styles['home__paddingRemove___3EmRr']}`}
+        className={`${styles['cart-item']} ${styles['home__paddingRemove___3EmRr']}`}
         to={`/categorybytri/${data.categoryid.replace(/\-/g, '')}`}
         data={data}
       >
         <div className={`${styles['sale-card__currentSale___cC1H3']}`}>
-          <div className={`${styles['sale-card__image-wrapper___EfOla']}`}>
-            <img
-              className={`${styles['sale-card__currentSaleImg___3wFRM']}`}
-              src={`/images/ft/${thumbnail}`}
-              alt={`${data.title} `}
-            />
+          <div style={{backgroundImage:`url(/images/ft/${thumbnail}`}} className={`${styles['sale-card__image-wrapper___EfOla']} ${styles['background-item']} ${styles['border-style']}`}>
+
           </div>
           <div className={`${styles['sale-card__currentSaleInfo___2LkMa']}`}>
             <div className={`${styles['sale-card__currentSaleTitle___1eVtM']}`}>
               {`${data.title}`}
             </div>
-            {timeline > 0 ? (
-              <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
-                <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
-                  <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
-                  <span className={`${styles['end-time__text___1A-sx']}`}> Còn </span>
-                  <span className={`${styles['end-time__timer___LMsIT']}`}>
-                    {timeline + ' Ngày '}
-                  </span>
-                  {endHour > 0 && (
-                    <span className={`${styles['end-time__timer___LMsIT']}`}>
-                      {endHour + ' Giờ'}
-                    </span>
-                  )}
-                </span>
-              </div>
-            ) : (
-              timeline == 0 &&
-              endHour > 0 && (
-                <div className={`${styles['sale-card__endTimeWrap___3q0l3']}`}>
-                  <span className={`${styles['sale-card__endTimeContent___3z5se']}`}>
-                    <i className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`} />
-                    <span className={`${styles['end-time__text___1A-sx']}`}> Còn </span>
-                    {endHour > 0 && (
-                      <span className={`${styles['end-time__timer___LMsIT']}`}>
-                        {endHour + ' Giờ'}
-                      </span>
-                    )}
-                  </span>
-                </div>
-              )
-            )}
+
           </div>
         </div>
       </Link>
@@ -145,14 +144,21 @@ class Home extends PureComponent {
       slideObj: [
         {
           productid: 1,
-          title: 'Geox Giày Thời Trang Nam & Nữ',
-          image: 'https://images.leflair.vn/w2560/q85/5c50331eae2d5e0558a86772.jpg',
+          title: 'Sản phẩm từ Acer',
+          image: '/images/ft/8f4415beafd24936800a3352f13a7889',
           link: '/category/giam-den-74-zeca-dong-ho-nam-nu/79998a705cad4f538f6f65b4219edd5b',
         },
         {
           productid: 2,
-          title: 'Giảm Đến 80% - Amelia Thời Trang Nữ',
-          image: 'https://images.leflair.vn/w2560/q85/5c4e77f492a3253a8582e9ac.jpg',
+          title: 'Sản phẩm từ Lenovo',
+          image: '/images/ft/9165d86c861040e496f4e34ac2f20e77',
+          link:
+            '/category/giam-den-66-asics-tiger-giay-the-thao-nam-nu/a78b30574e0c4d858d42635d569764e5',
+        },
+        {
+          productid: 3,
+          title: 'Sản phẩm từ Hp',
+          image: '/images/ft/e30d51bbf1fc49c4a13a65315760047d',
           link:
             '/category/giam-den-66-asics-tiger-giay-the-thao-nam-nu/a78b30574e0c4d858d42635d569764e5',
         },
@@ -192,7 +198,7 @@ class Home extends PureComponent {
             styles['home__currentSaleSectionTitle___XcRpN']
           }`}
         >
-          <h2 className={`${styles['section-title__title___2Dw2G']}`}>Ưu đãi mới Nhất</h2>
+          <h2 className={`${styles['section-title__title___2Dw2G']}`}>Máy tính để bàn</h2>
         </div>
         <div className={`${styles['row__row___2roCA']}`}>
           {hotnews.map((e, i) => {
@@ -216,7 +222,7 @@ class Home extends PureComponent {
               styles['potd-new__title-container___1o6iD']
             }`}
           >
-            <h2 className={`${styles['section-title__title___2Dw2G']}`}>Vẫn đang diễn ra</h2>
+            <h2 className={`${styles['section-title__title___2Dw2G']}`}>Phụ kiện máy tính</h2>
           </div>
           <div className={`${styles['row__row___2roCA']}`}>
             {news.map((e, i) => {
@@ -240,7 +246,7 @@ class Home extends PureComponent {
               styles['home__stillOnSaleWrap____52sJ']
             }`}
           >
-            <h2 className={`${styles['section-title__title___2Dw2G']}`}>Đặc biệt nhất</h2>
+            <h2 className={`${styles['section-title__title___2Dw2G']}`}>Máy tính xách tay</h2>
           </div>
           <div className={`${styles['row__row___2roCA']}`}>
             {special.map((e, i) => {
@@ -263,7 +269,7 @@ class Home extends PureComponent {
               styles['best-sellers__title-container___3YMp3']
             }`}
           >
-            <h2 className={`${styles['section-title__title___2Dw2G']}`}>Bán chạy nhất</h2>
+            <h2 className={`${styles['section-title__title___2Dw2G']}`}>Thiết bị văn phòng</h2>
           </div>
           <div className={`${styles['row__row___2roCA']}`}>
             {bestseller.map((e, i) => {
@@ -344,7 +350,7 @@ class Home extends PureComponent {
           <Slider {...settings}>
             {this.state.slideObj.map((v, i) => {
               return (
-                <Link to={v.link}>
+                <span>
                   <img key={i} src={v.image} alt={v.title} />
                   <div
                     className={`${styles['hidden-md-up']} ${styles['home__badge___2w2Lc']} ${
@@ -364,21 +370,21 @@ class Home extends PureComponent {
                         <i
                           className={`${styles['ic-ic-time']} ${styles['end-time__icon___REEKA']}`}
                         />
-                        <span className={`${styles['end-time__text___1A-sx']}`}>Còn </span>{' '}
+                        <span className={`${styles['end-time__text___1A-sx']}`}></span>{' '}
                         <span className={`${styles['end-time__timer___LMsIT']}`}>7 ngày</span>
                       </span>
                     </div>
                   </div>
-                </Link>
+                </span>
               );
             })}
           </Slider>
           <Slider {...settings1}>
             {this.state.slideObj.map((v, i) => {
               return (
-                <Link to={v.link}>
+                <span>
                   <img key={i} src={v.image} alt={v.title} />
-                </Link>
+                </span>
               );
             })}
           </Slider>
@@ -422,9 +428,10 @@ class Home extends PureComponent {
               <div className={`${styles['banner__navigation___1KLgF']}`} />
             </div>
           </div>
-          {this.renderNews()}
           {this.renderSpecial()}
           {this.renderBestSeller()}
+          {this.renderNews()}
+          {this.renderMore()}
         </div>
       </div>
     );

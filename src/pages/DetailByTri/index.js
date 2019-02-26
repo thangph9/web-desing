@@ -66,7 +66,6 @@ import {
   Icon,
   Carousel,
   Tooltip,
-  Tabs,
 } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
@@ -80,8 +79,6 @@ import styles from './index.less';
 import styles1 from './test.less';
 
 var currencyFormatter = require('currency-formatter');
-
-const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -102,7 +99,6 @@ class Detail extends PureComponent {
     indexColor: 0,
     toggle: false,
     size: undefined,
-    ['info-product']: true,
     detail_product: {},
   };
 
@@ -211,7 +207,7 @@ class Detail extends PureComponent {
       imageChoose: e.replace(/\-/g, ''),
     });
   };
-  onHover = e => {};
+  onHover = e => { };
   onMouseMove = e => {
     var root = document.getElementById('screen');
     if (root && root.clientWidth > 991) {
@@ -246,7 +242,7 @@ class Detail extends PureComponent {
       <div
         className={`${styles['row__row___2roCA']} ${styles['sale-timer__timer-row___1JwVa']} ${
           styles['product__flex-center___1bEVZ']
-        }`}
+          }`}
       >
         <div>
           <div>{fixedZero(d)}</div>
@@ -267,8 +263,8 @@ class Detail extends PureComponent {
       </div>
     );
   };
-  handleChangeSelectSize(event) {}
-  handleChangeSelectColor(event) {}
+  handleChangeSelectSize(event) { }
+  handleChangeSelectColor(event) { }
   renderBreadcrumb() {
     const {
       product: { detail },
@@ -329,32 +325,20 @@ class Detail extends PureComponent {
         var image = e.replace(/\-/g, '');
         SmallImageUI.push(
           // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-
-          <TabPane
-            key={i}
-            tab={
-              <li
-                style={{ marginBottom: 0 }}
-                onClick={() => {
-                  this.handleChangeImage(e, i);
-                }}
-                onMouseOver={this.onHover(e)}
-                className={
-                  this.state.index != i
-                    ? styles['images-slider__image-border___2hkRy']
-                    : styles['images-slider__image-border___2hkRy'] +
-                      ' ' +
-                      styles['images-slider__image-selected___3ftth']
-                }
-              >
-                <img
-                  className={styles['images-slider__image___wW9Yw']}
-                  src={`/images/ft/${image}`}
-                  sizes="80px"
-                />
-              </li>
+          <li key={i}
+            style={{ marginBottom: 10,backgroundImage:`url(/images/ft/${image})`, height:'100px'}}
+            onClick={() => {
+              this.handleChangeImage(e, i);
+            }}
+            className={
+              this.state.index != i
+                ? styles['images-slider__image-border___2hkRy']+' '+styles['background-item-li']
+                : styles['images-slider__image-border___2hkRy'] +
+                ' ' +
+                styles['images-slider__image-selected___3ftth'] +' '+styles['background-item-li']
             }
-          />
+          >
+          </li>
         );
         HugeImageUI.push(
           <img
@@ -392,51 +376,47 @@ class Detail extends PureComponent {
         <div
           className={`${styles['images-slider__col-lg-2___1yd0l']} ${
             styles['images-slider__slider-container___2AcvT']
-          }`}
+            }`}
         >
           <div className={`${styles['hidden-md-down']} ${styles['images-slider__slider___2EiI8']}`}>
             <div
               className={`${styles['ic-ic-arrow-up']} ${
                 styles['images-slider__images-navigation___KCIEC']
-              } ${styles['images-slider__navigation-up___yqRaw']}`}
+                } ${styles['images-slider__navigation-up___yqRaw']}`}
             />
             <ul
               className={`${styles['list-unstyled']} ${
                 styles['images-slider__list-thumbnail-inner___2vzS2']
-              }`}
+                }`}
               id="images-container"
             >
-              {SmallImageUI.length > 0 && (
-                <Tabs defaultActiveKey="0" tabPosition="left" style={{ height: 650 }}>
-                  {SmallImageUI}
-                </Tabs>
-              )}
+              {SmallImageUI}
             </ul>
             <div
               className={`${styles['ic-ic-arrow-down']} ${
                 styles['images-slider__images-navigation___KCIEC']
-              } ${styles['images-slider__navigation-down___2GHVX']}`}
+                } ${styles['images-slider__navigation-down___2GHVX']}`}
             />
           </div>
           <div
             className={`${styles['hidden-lg-up']} ${
               styles['images-slider__slider-wrapper___1hmGf']
-            }`}
+              }`}
           >
             <Slider>{HugeImageUI}</Slider>
             <div className={`${styles['images-slider__sold-out-overlay___2Avrv']}`}>Hết hàng</div>
           </div>
         </div>
-        <div
-          className={`${styles['hidden-md-down']} ${styles['images-slider__col-lg-10___3uZXv']}`}
+        <div style={image_huge&&{ backgroundImage: `url(/images/ft/${image_huge[this.state.index].replace(/\-/g, '')}`}}
+          className={`${styles['hidden-md-down']} ${styles['images-slider__col-lg-10___3uZXv']} ${styles['background-item']}`}
         >
           <div
             onMouseMove={this.onMouseMove.bind(this)}
             className={`${styles['images-slider__main-image___1MFAY']}`}
           >
-            {huge_image}
+
             <div className={`${styles['images-slider__sold-out-overlay___2Avrv']}`}>Hết hàng</div>
-            {zoom_image}
+
             <div
               id="pointer_div"
               className={`${styles['images-slider__overlay___CJo-l']}`}
@@ -452,7 +432,7 @@ class Detail extends PureComponent {
     let productid = '';
     try {
       productid = match.params.productid;
-    } catch (e) {}
+    } catch (e) { }
     dispatch({
       type: 'product/getproductdetailbytri',
       payload: { productid },
@@ -517,9 +497,9 @@ class Detail extends PureComponent {
     if (detail_product) {
       detailCookie.productid = detail_product.productid;
       detailCookie.image = detail_product.image_huge ? detail_product.image_huge[0] : '';
-      detailCookie.price = price;
-      detailCookie.sale_price = sale_price;
-      detailCookie.title = detail_product.title;
+      detailCookie.price = detail_product.price;
+      detailCookie.sale_price = detail_product.sale_price;
+      detailCookie.title = detail_product.name_product;
     }
     return (
       <DocumentMeta {...meta}>
@@ -535,13 +515,13 @@ class Detail extends PureComponent {
                   <div
                     className={`${styles['product__col-md-7___kn-eV']} ${
                       styles['product__slider-section___2raV3']
-                    }`}
+                      }`}
                   >
                     {this.renderSlider()}
                     <div
                       className={`${styles['hidden-sm-down']} ${
                         styles['product__brand-info___1s9-O']
-                      }`}
+                        }`}
                     >
                       {desc_brand.map((v, i) => {
                         return (
@@ -564,12 +544,12 @@ class Detail extends PureComponent {
                   <div
                     className={`${styles['product__right-pane___rYPsq']} ${
                       styles['product__col-md-5___21J8E']
-                    }`}
+                      }`}
                   >
                     <div
                       className={`${styles['product-info__product-info___10ne-']} ${
                         styles['product__product-info___3onGQ']
-                      }`}
+                        }`}
                     >
                       <h4
                         style={{ fontSize: '18px' }}
@@ -595,8 +575,8 @@ class Detail extends PureComponent {
                           Màu sắc: {detail_product.color}
                         </h5>
                       ) : (
-                        ''
-                      )}
+                          ''
+                        )}
                     </div>
 
                     {detail_product && detail_product.size ? (
@@ -655,22 +635,22 @@ class Detail extends PureComponent {
                                   {!this.state.toggle ? (
                                     <Icon style={{ fontSize: '18px' }} type="caret-up" />
                                   ) : (
-                                    <Icon style={{ fontSize: '18px' }} type="caret-down" />
-                                  )}
+                                      <Icon style={{ fontSize: '18px' }} type="caret-down" />
+                                    )}
                                 </div>
                                 <div
                                   className={
                                     !this.state.toggle
                                       ? styles1['gl-dropdown__options'] +
-                                        ' ' +
-                                        styles1['gl-dropdown__options--squared'] +
-                                        ' ' +
-                                        styles1['gl-dropdown__options--with-after']
+                                      ' ' +
+                                      styles1['gl-dropdown__options--squared'] +
+                                      ' ' +
+                                      styles1['gl-dropdown__options--with-after']
                                       : styles1['gl-dropdown__options-open'] +
-                                        ' ' +
-                                        styles1['gl-dropdown__options--squared'] +
-                                        ' ' +
-                                        styles1['gl-dropdown__options--with-after']
+                                      ' ' +
+                                      styles1['gl-dropdown__options--squared'] +
+                                      ' ' +
+                                      styles1['gl-dropdown__options--with-after']
                                   }
                                   data-auto-id="item-wrapper"
                                 >
@@ -707,8 +687,8 @@ class Detail extends PureComponent {
                         </div>
                       </div>
                     ) : (
-                      ''
-                    )}
+                        ''
+                      )}
 
                     <p className={`${styles['product__few-items-notify___1Q8z3']}`}>
                       {detail_product.amount
@@ -721,7 +701,7 @@ class Detail extends PureComponent {
                         type="button"
                         className={`${styles['add-to-bag__btn___2i-kl']} ${
                           styles['add-to-bag__btn-primary___HSF2G']
-                        } ${styles['add-to-bag__btn-block___3NXJe']}`}
+                          } ${styles['add-to-bag__btn-block___3NXJe']}`}
                         style={{ color: '#fff' }}
                       >
                         Thêm vào giỏ hàng
@@ -744,26 +724,15 @@ class Detail extends PureComponent {
                           <i
                             className={`${styles['additional-info__icon___2Ujcw']} ${
                               styles['ic-ic-guarantee']
-                            }`}
+                              }`}
                           />{' '}
                           Cam kết 100% chính hãng
                         </div>
                         <div className={`${styles['additional-info__item___38NHG']}`}>
                           <i
                             className={`${styles['additional-info__icon___2Ujcw']} ${
-                              styles['ic-ic-ship']
-                            }`}
-                          />
-                          Giao hàng dự kiến:{' '}
-                          <span className={`${styles['additional-info__date-delivery___rKzWW']}`}>
-                            Thứ 3 6/11 - Thứ 2 12/11
-                          </span>
-                        </div>
-                        <div className={`${styles['additional-info__item___38NHG']}`}>
-                          <i
-                            className={`${styles['additional-info__icon___2Ujcw']} ${
                               styles['additional-info__rotate___3gDnQ']
-                            } ${styles['ic-ic-return']}`}
+                              } ${styles['ic-ic-return']}`}
                           />{' '}
                           Đổi trả trong 7 ngày
                           <a
@@ -775,7 +744,7 @@ class Detail extends PureComponent {
                             <span
                               className={`${styles['additional-info__open-tab-icon___1aJYK']} ${
                                 styles['ic-ic-open-new-tab']
-                              }`}
+                                }`}
                             />
                           </a>
                         </div>
@@ -791,38 +760,38 @@ class Detail extends PureComponent {
                                 onClick={() => this.handleClickDesciption('info-product')}
                                 className={`${
                                   styles['product-description__accordion-toggle___1kmrM']
-                                }`}
+                                  }`}
                               >
                                 <div className={`${styles['product-description__title___Xh_fg']}`}>
                                   Thông tin sản phẩm
                                   <span
                                     className={`${
                                       styles['product-description__btn-collapse___3Pk93']
-                                    }`}
+                                      }`}
                                   >
                                     {!this.state['info-product'] ? (
                                       <i
                                         className={`${styles['ic-ic-plus']} ${
                                           styles['product-description__collapsed___ahwQq']
-                                        }`}
+                                          }`}
                                       />
                                     ) : (
-                                      <i
-                                        className={`${styles['ic-ic-minus']} ${
-                                          styles['product-description__collapsed___ahwQq']
-                                        }`}
-                                      />
-                                    )}
+                                        <i
+                                          className={`${styles['ic-ic-minus']} ${
+                                            styles['product-description__collapsed___ahwQq']
+                                            }`}
+                                        />
+                                      )}
                                   </span>
                                 </div>
                               </span>
                             </h4>
                             <div
                               id="info-product"
-                              style={{ display: 'block' }}
+                              style={{ display: 'none' }}
                               className={`${styles['collapse']} ${
                                 styles['product-description__panel-collapse___3G-5Q']
-                              } collapselow`}
+                                } collapselow`}
                             >
                               <div
                                 className={`${styles['product-description__product-info___nWbK5']}`}
@@ -859,28 +828,28 @@ class Detail extends PureComponent {
                                 onClick={() => this.handleClickDesciption('material')}
                                 className={`${
                                   styles['product-description__accordion-toggle___1kmrM']
-                                }`}
+                                  }`}
                               >
                                 <div className={`${styles['product-description__title___Xh_fg']}`}>
                                   Chất liệu &amp; Cách sử dụng
                                   <span
                                     className={`${
                                       styles['product-description__btn-collapse___3Pk93']
-                                    }`}
+                                      }`}
                                   >
                                     {!this.state['material'] ? (
                                       <i
                                         className={`${styles['ic-ic-plus']} ${
                                           styles['product-description__collapsed___ahwQq']
-                                        }`}
+                                          }`}
                                       />
                                     ) : (
-                                      <i
-                                        className={`${styles['ic-ic-minus']} ${
-                                          styles['product-description__collapsed___ahwQq']
-                                        }`}
-                                      />
-                                    )}
+                                        <i
+                                          className={`${styles['ic-ic-minus']} ${
+                                            styles['product-description__collapsed___ahwQq']
+                                            }`}
+                                        />
+                                      )}
                                   </span>
                                 </div>
                               </span>
@@ -889,12 +858,12 @@ class Detail extends PureComponent {
                               id="material"
                               className={`${styles['collapse']} ${
                                 styles['product-description__panel-collapse___3G-5Q']
-                              } collapselow`}
+                                } collapselow`}
                             >
                               <div
                                 className={`${
                                   styles['product-description__material-care___1szER']
-                                }`}
+                                  }`}
                               >
                                 <ul
                                   className={`${styles['product-description__desc-list___3qcUM']}`}
@@ -932,28 +901,28 @@ class Detail extends PureComponent {
                                 id="size-table-click"
                                 className={`${
                                   styles['product-description__accordion-toggle___1kmrM']
-                                }`}
+                                  }`}
                               >
                                 <div className={`${styles['product-description__title___Xh_fg']}`}>
                                   Chi tiết kích cỡ
                                   <span
                                     className={`${
                                       styles['product-description__btn-collapse___3Pk93']
-                                    }`}
+                                      }`}
                                   >
                                     {!this.state['size-table'] ? (
                                       <i
                                         className={`${styles['ic-ic-plus']} ${
                                           styles['product-description__collapsed___ahwQq']
-                                        }`}
+                                          }`}
                                       />
                                     ) : (
-                                      <i
-                                        className={`${styles['ic-ic-minus']} ${
-                                          styles['product-description__collapsed___ahwQq']
-                                        }`}
-                                      />
-                                    )}
+                                        <i
+                                          className={`${styles['ic-ic-minus']} ${
+                                            styles['product-description__collapsed___ahwQq']
+                                            }`}
+                                        />
+                                      )}
                                   </span>
                                 </div>
                               </span>
@@ -962,7 +931,7 @@ class Detail extends PureComponent {
                               id="size-table"
                               className={`${styles['collapse']} ${
                                 styles['product-description__panel-collapse___3G-5Q']
-                              } collapselow`}
+                                } collapselow`}
                             >
                               <div>
                                 <div
@@ -971,7 +940,7 @@ class Detail extends PureComponent {
                                   <ul
                                     className={`${
                                       styles['product-description__desc-list___3qcUM']
-                                    }`}
+                                      }`}
                                   >
                                     <ul>
                                       {desc_size.map((v, i) => {
@@ -1003,7 +972,7 @@ class Detail extends PureComponent {
                           <div
                             className={`${styles['product-description__group___3Z2qF']} ${
                               styles['hidden-md-up']
-                            }`}
+                              }`}
                           >
                             <h4 className={`${styles['product-description__panel-title___1aoFo']}`}>
                               <span
@@ -1011,22 +980,22 @@ class Detail extends PureComponent {
                                 onClick={() => this.handleClickDesciption('info-brand')}
                                 className={`${
                                   styles['product-description__accordion-toggle___1kmrM']
-                                }`}
+                                  }`}
                               >
                                 <div className={`${styles['product-description__title___Xh_fg']}`}>
                                   <span>
                                     <img
                                       className={`${
                                         styles['product-description__about-the-brand-logo___h7FTg']
-                                      }`}
+                                        }`}
                                       src="https://leflair-assets.storage.googleapis.com/59ca0a3be1b357001a65d626.jpg"
                                     />
                                     <span
                                       className={`${
                                         styles[
-                                          'product-description__about-the-brand-heading___20E5W'
+                                        'product-description__about-the-brand-heading___20E5W'
                                         ]
-                                      }`}
+                                        }`}
                                     >
                                       Thông tin thương hiệu
                                     </span>
@@ -1034,21 +1003,21 @@ class Detail extends PureComponent {
                                   <span
                                     className={`${
                                       styles['product-description__btn-collapse___3Pk93']
-                                    }`}
+                                      }`}
                                   >
                                     {!this.state['info-brand'] ? (
                                       <i
                                         className={`${styles['ic-ic-plus']} ${
                                           styles['product-description__collapsed___ahwQq']
-                                        }`}
+                                          }`}
                                       />
                                     ) : (
-                                      <i
-                                        className={`${styles['ic-ic-minus']} ${
-                                          styles['product-description__collapsed___ahwQq']
-                                        }`}
-                                      />
-                                    )}
+                                        <i
+                                          className={`${styles['ic-ic-minus']} ${
+                                            styles['product-description__collapsed___ahwQq']
+                                            }`}
+                                        />
+                                      )}
                                   </span>
                                 </div>
                               </span>
@@ -1057,12 +1026,12 @@ class Detail extends PureComponent {
                               id="info-brand"
                               className={`${styles['collapse']} ${
                                 styles['product-description__panel-collapse___3G-5Q']
-                              } collapselow`}
+                                } collapselow`}
                             >
                               <div
                                 className={`${
                                   styles['product-description__about-the-brand___3lT4W']
-                                }`}
+                                  }`}
                               >
                                 {desc_brand.map((v, i) => {
                                   return (
@@ -1092,12 +1061,12 @@ class Detail extends PureComponent {
                   id="product-info"
                   className={`${styles['row__row___2roCA']} ${
                     styles['product__extra-info___1r8vd']
-                  } ${styles['extra-info__extra-info-section___378qZ']}`}
+                    } ${styles['extra-info__extra-info-section___378qZ']}`}
                 >
                   <div
                     className={`${styles['extra-info__extra-info___HmKpD']} ${
                       styles['extra-info__col-md-6___3ZC3K']
-                    } ${styles['extra-info__col-sm-12___2y7dc']}`}
+                      } ${styles['extra-info__col-sm-12___2y7dc']}`}
                   >
                     <div className={`${styles['extra-info__info-image___1Kd9E']}`}>
                       <img src="/image/product-extra-guarantee.jpg" alt="Product extra guarantee" />
@@ -1125,7 +1094,7 @@ class Detail extends PureComponent {
                   <div
                     className={`${styles['extra-info__extra-info___HmKpD']} ${
                       styles['extra-info__col-md-6___3ZC3K']
-                    } ${styles['extra-info__col-sm-12___2y7dc']}`}
+                      } ${styles['extra-info__col-sm-12___2y7dc']}`}
                   >
                     <div className={`${styles['extra-info__info-image___1Kd9E']}`}>
                       <img src="/image/product-extra-return.jpg" alt="Product extra guarantee" />

@@ -107,7 +107,7 @@ class GlobalHeader extends PureComponent {
                     to={`/Amazon`}
                     className={`${styles['header__nav-link___3W4sc']}`}
                   >
-                    Amazon
+
                   </Link>
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
@@ -116,7 +116,7 @@ class GlobalHeader extends PureComponent {
                     to={`/ebay`}
                     className={`${styles['header__nav-link___3W4sc']}`}
                   >
-                    Ebay
+
                   </Link>
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
@@ -125,7 +125,7 @@ class GlobalHeader extends PureComponent {
                     to={`/adidas`}
                     className={`${styles['header__nav-link___3W4sc']}`}
                   >
-                    Adidas
+
                   </Link>
                 </li>
                 <li className={`${styles['header__nav-item___MQLXP']}`}>
@@ -134,7 +134,7 @@ class GlobalHeader extends PureComponent {
                     to={`/nike`}
                     className={`${styles['header__nav-link___3W4sc']}`}
                   >
-                    Nike
+
                   </Link>
                 </li>
               </ul>
@@ -149,15 +149,7 @@ class GlobalHeader extends PureComponent {
                       styles['language-dropdown__dropdown-section___2Exp9']
                     } undefined`}
                   >
-                    <a
-                      style={{ color: 'inherit' }}
-                      className={`${styles['text-uppercase']} ${
-                        styles['language-dropdown__nav-link___2sOBe']
-                      } ${styles['language-dropdown__dropdown-toggle___3DM4H']}`}
-                      href="#"
-                    >
-                      vn
-                    </a>
+
                     <ul className={`${styles['language-dropdown__dropdown-menu___2iFhf']}`}>
                       <li className={`${styles['language-dropdown__active___23oVE']}`}>
                         <a
@@ -343,7 +335,7 @@ class GlobalHeader extends PureComponent {
             </button>
           </div>
         </nav>
-        <nav
+        <nav style={{display:'none'}}
           className={`${styles['hidden-lg-up']} ${
             styles['header__mobile-nav-cat-container___2JTtk']
           } ${styles['cate-show']}`}
@@ -354,28 +346,7 @@ class GlobalHeader extends PureComponent {
               styles['header__padding-remove___uM9bo']
             }`}
           >
-            <ul className={`${styles['header__mobile-nav-cat___1wJ9O']}`}>
-              <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Link to={`/amazon`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Amazon
-                </Link>
-              </li>
-              <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Link to={`/ebay`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Ebay
-                </Link>
-              </li>
-              <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Link to={`/adidas`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Adidas
-                </Link>
-              </li>
-              <li className={`${styles['header__nav-item___MQLXP']}`}>
-                <Link to={`/nike`} className={`${styles['header__nav-link___3W4sc']}`}>
-                  Nike
-                </Link>
-              </li>
-            </ul>
+
           </div>
         </nav>
         <div />

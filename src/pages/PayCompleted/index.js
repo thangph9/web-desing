@@ -116,7 +116,9 @@ class Checkout extends PureComponent {
       var productOrder = {};
       productOrder.productid = v[0].productid;
       if (v[0].size) productOrder.size = v[0].size;
+      if (v[0].image) productOrder.image = v[0].image;
       if (v[0].color) productOrder.color = v[0].color;
+      if (v[0].title) productOrder.title = v[0].title;
       if (v[0].sale_price) {
         productOrder.price = v[0].sale_price + '';
       } else {
@@ -128,14 +130,11 @@ class Checkout extends PureComponent {
     obj.order_by = info.name;
     obj.phone = info.phone;
     obj.address = info.address;
-
+    console.log(obj)
     this.props.dispatch({
       type: 'user/paycompelete',
       payload: obj,
     });
-    /*
-
-     */
   }
   render() {
     const Information = JSON.parse(localStorage.getItem('Information'));
@@ -313,13 +312,13 @@ class Checkout extends PureComponent {
                     {listArr.map((v, i) => {
                       return (
                         <div key={i}>
-                          <div
+                          <div style={{display:'flex'}}
                             className={
                               styles['order-details__product___3Ul2e'] + ' ' + styles['clearfix']
                             }
                           >
-                            <div className={styles['order-details__image___2nFML']}>
-                              <img src={`/images/f/${v[0].image.replace(/\-/g, '')}`} />
+                            <div style={{backgroundImage:`url(/images/ft/${v[0].image.replace(/\-/g, '')})`}} className={styles['order-details__image___2nFML']+' '+styles['background-item']}>
+
                             </div>
                             <div className={styles['order-details__info___3ESiE']}>
                               <div className={styles['order-details__title___rODtC']}>

@@ -12,11 +12,13 @@ var api = require('./api');
 var images=require('./api/images');
 var router = express.Router()
 
+/*
 
 var privateKey = fs.readFileSync('./ssl_cert/123order.key', 'utf8');
 var certificate = fs.readFileSync('./ssl_cert/123order.crt', 'utf8');
 var credentials = { key: privateKey, cert: certificate };
 
+*/
 
 // Use the default path '/' (Not recommended)
 // app.use(mockjs(path.join(__dirname, 'mocks')))
@@ -48,23 +50,23 @@ app.get('/*', function (req, res) {
 });
 
 // Here you can add any code.
-var server = https.createServer(credentials, app);
+// var server = https.createServer(credentials, app);
 
 if (!module.parent) {
- 
-  server.listen(443, function () {
+
+ /*
+   server.listen(443, function () {
     console.log("server running at https://123order.vn/")
   });
-
-
-  http.createServer(function (req, res) {
+ */
+/*
+    http.createServer(function (req, res) {
     res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
     res.end();
   }).listen(8000);
- 
-  /*  
-  app.listen(80,function(){
-      console.log("server dev running port 8000")
-  })
-  */
+*/
+
+app.listen(8080,function(){
+  console.log("server dev running port 8000")
+})
 }

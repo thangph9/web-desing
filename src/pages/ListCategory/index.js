@@ -71,7 +71,6 @@ import {
   Button,
   Card,
   InputNumber,
-  Radio,
   Icon,
   Tooltip,
   Skeleton,
@@ -112,21 +111,16 @@ class ProductItem extends PureComponent {
       >
         <Link className={styles['product-card__productCard___2lSYu']} to={`/product/${seoTitle}`}>
           <div>
-            <div
-              style={!data.thumbnail ? { background: 'gainsboro', height: 'auto' } : {}}
-              className={
-                styles['product-card__imageContainer___1apY_'] +
+            <div style={(!data.thumbnail) ? { background: "gainsboro", height: 'auto' } : {}}
+              className={styles['product-card__imageContainer___1apY_'] +
                 ' ' +
                 styles['product-card__sale-product-card____fjbZ']
+
               }
             >
               <img
                 className={styles['product-card__image___QEKAk']}
-                src={
-                  data.thumbnail
-                    ? `/images/f/${data.thumbnail.replace(/\-/g, '')}`
-                    : '/image/photofacefun_com_1545815130.jpg'
-                }
+                src={(data.thumbnail) ? `/images/f/${data.thumbnail.replace(/\-/g, '')}` : '/image/photofacefun_com_1545815130.jpg'}
                 alt="image"
               />
               <div className={styles['product-card__discount___2R4sK']}>{data.sale}% Off</div>
@@ -149,7 +143,7 @@ class ProductItem extends PureComponent {
   submitting: loading.effects['form/submitRegularForm'],
   loading,
   category,
-  list,
+  list
 }))
 @Form.create()
 class ListCategory extends PureComponent {
@@ -186,7 +180,7 @@ class ListCategory extends PureComponent {
       globalProduct: [],
       filterString: [],
       filterStringSize: [],
-      totalSize: [],
+      totalSize: []
     };
   }
   handleClickSort() {
@@ -197,100 +191,109 @@ class ListCategory extends PureComponent {
   }
   componentWillMount() {
     if (this.props.category.filterUrl != '') {
-      let arrFilterString = this.props.category.filterUrl.split('-').filter((v, i) => {
+      let arrFilterString = this.props.category.filterUrl.split("-").filter((v, i) => {
         return v != '';
-      });
+      })
       if (arrFilterString.length > 0) {
-        var filterString = arrFilterString.toString().split(',');
+        var filterString = arrFilterString.toString().split(",")
         this.setState({
-          filterString,
-        });
+          filterString
+        })
       }
     }
     this.props.dispatch({
       type: 'list/filter',
-      payload: false,
-    });
+      payload: false
+    })
     this.props.dispatch({
       type: 'category/filter',
-      payload: '',
-    });
+      payload: ''
+    })
   }
   componentDidMount() {
     var { dispatch, match } = this.props;
     var sort = this.props.location.query.sort;
-    var filterUrl = '';
-    var stringBrand = '';
-    var stringStyle = '';
-    var stringType = '';
-    var stringColor = '';
+    var filterUrl = ''
+    var stringBrand = ''
+    var stringStyle = ''
+    var stringType = ''
+    var stringColor = ''
     if (this.props.location.query.brand) {
+
       this.setState({
         brand: this.props.location.query.brand.split(','),
       });
-      var arrProp = this.props.location.query.brand.split(',');
+      var arrProp = this.props.location.query.brand.split(",")
       arrProp.forEach((element, index) => {
-        if (index == 0) stringBrand = `v['brand']==="${element.replace(/-/g, ' ')}"`;
+        if (index == 0)
+          stringBrand = `v['brand']==="${element.replace(/-/g, ' ')}"`;
         else {
           stringBrand = stringBrand + `,v['brand']==="${element.replace(/-/g, ' ')}"`;
         }
       });
     }
     if (this.props.location.query.style) {
+
       this.setState({
-        style: this.props.location.query.style.split(','),
+        style: this.props.location.query.style.split(',')
       });
-      var arrProp = this.props.location.query.style.split(',');
+      var arrProp = this.props.location.query.style.split(",")
       arrProp.forEach((element, index) => {
-        if (index == 0) stringStyle = `v['style']==="${element.replace(/-/g, ' ')}"`;
+        if (index == 0)
+          stringStyle = `v['style']==="${element.replace(/-/g, ' ')}"`;
         else {
           stringStyle = stringStyle + `,v['style']==="${element.replace(/-/g, ' ')}"`;
         }
       });
     }
     if (this.props.location.query.type) {
+
       this.setState({
-        type: this.props.location.query.type.split(','),
+        type: this.props.location.query.type.split(',')
       });
-      var arrProp = this.props.location.query.type.split(',');
+      var arrProp = this.props.location.query.type.split(",")
       arrProp.forEach((element, index) => {
-        if (index == 0) stringType = `v['type']==="${element.replace(/-/g, ' ')}"`;
+        if (index == 0)
+          stringType = `v['type']==="${element.replace(/-/g, ' ')}"`;
         else {
           stringType = stringType + `,v['type']==="${element.replace(/-/g, ' ')}"`;
         }
       });
     }
     if (this.props.location.query.size) {
+
       this.setState({
-        size: this.props.location.query.size.split(','),
+        size: this.props.location.query.size.split(',')
       });
-      var arrSize = this.props.location.query.size.split(',');
+      var arrSize = this.props.location.query.size.split(',')
       this.setState({
-        filterStringSize: arrSize,
-      });
+        filterStringSize: arrSize
+      })
     }
     if (this.props.location.query.color) {
+
       this.setState({
-        color: this.props.location.query.color.split(','),
+        color: this.props.location.query.color.split(',')
       });
-      var arrProp = this.props.location.query.color.split(',');
+      var arrProp = this.props.location.query.color.split(",")
       arrProp.forEach((element, index) => {
-        if (index == 0) stringColor = `v['color']==="${element.replace(/-/g, ' ')}"`;
+        if (index == 0)
+          stringColor = `v['color']==="${element.replace(/-/g, ' ')}"`;
         else {
           stringColor = stringColor + `,v['color']==="${element.replace(/-/g, ' ')}"`;
         }
       });
     }
-    filterUrl = stringBrand + '-' + stringColor + '-' + stringStyle + '-' + stringType;
+    filterUrl = stringBrand + '-' + stringColor + '-' + stringStyle + '-' + stringType
     var query = this.props.location.query;
-    query.nodeid = match.params.nodeid;
+    query.nodeid = match.params.nodeid
 
     dispatch({
       type: 'category/search',
       payload: {
         nodeid: match.params.nodeid,
         sort,
-      },
+      }
     });
     dispatch({
       type: 'category/detail',
@@ -301,20 +304,19 @@ class ListCategory extends PureComponent {
     if (filterUrl !== '---') {
       this.props.dispatch({
         type: 'list/filter',
-        payload: true,
-      });
+        payload: true
+      })
       dispatch({
         type: 'category/filter',
-        payload: filterUrl,
-      });
+        payload: filterUrl
+      })
     }
     var btnSoft = document.getElementsByClassName(
-      'order-pages-list-category-index-sort__btn-text___1mPct'
+      'order\\pages\\-list-category\\index-sort__btn-text___1mPct'
     )[0];
-    btnSoft.textContent =
-      this.props.location.query.sort && this.state[`${this.props.location.query.sort}`]
-        ? 'Sắp xếp: ' + this.state[`${this.props.location.query.sort}`].title
-        : 'Sắp xếp: Gợi ý';
+    btnSoft.textContent = this.props.location.query.sort && this.state[`${this.props.location.query.sort}`]
+      ? 'Sắp xếp: ' + this.state[`${this.props.location.query.sort}`].title
+      : 'Sắp xếp: Gợi ý';
     var liSort = document.getElementById(this.props.location.query.sort);
     if (!liSort) {
       let pathname = this.props.location.pathname;
@@ -328,21 +330,22 @@ class ListCategory extends PureComponent {
         brand: [],
         filterString: [],
         filterStringSize: [],
-      });
+      })
       dispatch({
         type: 'category/filter',
-        payload: '',
-      });
+        payload: ''
+      })
       this.props.history.push({ pathname });
-      return;
+      return
     }
     var activeSoft = document.getElementsByClassName(
-      'order-pages-list-category-index-sort__dropdown-item___XkHiS'
+      'order\\pages\\-list-category\\index-sort__dropdown-item___XkHiS'
     );
     for (var i = 0; i < activeSoft.length; i++) {
-      activeSoft[i].classList.remove('order-pages-list-category-index-sort__active___3DNgx');
+      activeSoft[i].classList.remove('order\\pages\\-list-category\\index-sort__active___3DNgx');
     }
-    liSort.classList.add('order-pages-list-category-index-sort__active___3DNgx');
+    liSort.classList.add('order\\pages\\-list-category\\index-sort__active___3DNgx');
+
   }
 
   handleClickButtonFilter() {
@@ -351,24 +354,24 @@ class ListCategory extends PureComponent {
     });
     this.props.dispatch({
       type: 'list/filter',
-      payload: !this.props.list.filter,
-    });
+      payload: !this.props.list.filter
+    })
   }
   handleClickSoft(sort1) {
     var liSort = document.getElementById(sort1);
     var ulSort = document.getElementById('sort-items');
     ulSort.style.display = 'none';
     var btnSoft = document.getElementsByClassName(
-      'order-pages-list-category-index-sort__btn-text___1mPct'
+      'order\\pages\\-list-category\\index-sort__btn-text___1mPct'
     )[0];
     btnSoft.textContent = 'Sắp xếp: ' + liSort.textContent;
     var activeSoft = document.getElementsByClassName(
-      'order-pages-list-category-index-sort__dropdown-item___XkHiS'
+      'order\\pages\\-list-category\\index-sort__dropdown-item___XkHiS'
     );
     for (var i = 0; i < activeSoft.length; i++) {
-      activeSoft[i].classList.remove('order-pages-list-category-index-sort__active___3DNgx');
+      activeSoft[i].classList.remove('order\\pages\\-list-category\\index-sort__active___3DNgx');
     }
-    liSort.classList.add('order-pages-list-category-index-sort__active___3DNgx');
+    liSort.classList.add('order\\pages\\-list-category\\index-sort__active___3DNgx');
     let pathname = this.props.location.pathname;
     let search = this.props.location.search;
     let query = this.props.location.query;
@@ -408,35 +411,38 @@ class ListCategory extends PureComponent {
     }
     if (filter != 'size') {
       var checkFilterString = this.state.filterString.filter((v, i) => {
-        return v === `v['${filter}']==="${element}"`;
-      });
+        return v === `v['${filter}']==="${element}"`
+      })
       if (checkFilterString.length == 0) {
         this.setState({
-          filterString: [...this.state.filterString, `v['${filter}']==="${element}"`],
-        });
-      } else {
-        var removeString = this.state.filterString.filter((v, i) => {
-          return v !== `v['${filter}']==="${element}"`;
-        });
-        this.setState({
-          filterString: removeString,
-        });
+          filterString: [...this.state.filterString, `v['${filter}']==="${element}"`]
+        })
       }
-    } else {
+      else {
+        var removeString = this.state.filterString.filter((v, i) => {
+          return v !== `v['${filter}']==="${element}"`
+        })
+        this.setState({
+          filterString: removeString
+        })
+      }
+    }
+    else {
       var checkFilterString = this.state.filterStringSize.filter((v, i) => {
-        return v === element;
-      });
+        return v === element
+      })
       if (checkFilterString.length == 0) {
         this.setState({
-          filterStringSize: [...this.state.filterStringSize, element],
-        });
-      } else {
+          filterStringSize: [...this.state.filterStringSize, element]
+        })
+      }
+      else {
         var removeString = this.state.filterStringSize.filter((v, i) => {
-          return v !== element;
-        });
+          return v !== element
+        })
         this.setState({
-          filterStringSize: removeString,
-        });
+          filterStringSize: removeString
+        })
       }
     }
     let pathname = this.props.location.pathname;
@@ -446,6 +452,7 @@ class ListCategory extends PureComponent {
     });
 
     if (result.length == 0) {
+
       this.setState(
         {
           color: filter == 'color' ? [...this.state.color, title] : this.state.color,
@@ -454,9 +461,10 @@ class ListCategory extends PureComponent {
           brand: filter == 'brand' ? [...this.state.brand, title] : this.state.brand,
           style: filter == 'style' ? [...this.state.style, title] : this.state.style,
         },
-        () => {}
+        () => { }
       );
     } else {
+
       var arr = this.state[filter].filter(v => {
         return v != title;
       });
@@ -468,7 +476,7 @@ class ListCategory extends PureComponent {
           brand: filter == 'brand' ? arr : this.state.brand,
           style: filter == 'style' ? arr : this.state.style,
         },
-        () => {}
+        () => { }
       );
     }
     this.setState({}, () => {
@@ -509,47 +517,49 @@ class ListCategory extends PureComponent {
         type: 'category/search',
         payload: {
           nodeid: this.props.match.params.nodeid,
-          sort: nextProps.location.query.sort,
-        },
-      });
+          sort: nextProps.location.query.sort
+        }
+      })
+
     }
     if (nextProps.category.search.list !== this.props.category.search.list) {
       this.setState({
-        globalProduct: nextProps.category.search.list,
-      });
+        globalProduct: nextProps.category.search.list
+      })
     }
     if (nextProps.category.search.filterMap !== this.props.category.search.filterMap) {
       var stringSizeTotal = '';
       nextProps.category.search.filterMap.size.forEach(element => {
         if (stringSizeTotal.length == 0) {
-          stringSizeTotal += element;
-        } else {
-          stringSizeTotal = stringSizeTotal + ',' + element;
+          stringSizeTotal += element
         }
-        var arrSizeTotal = stringSizeTotal.split(',');
+        else {
+          stringSizeTotal = stringSizeTotal + ',' + element
+        }
+        var arrSizeTotal = stringSizeTotal.split(",");
         this.setState({
-          totalSize: Array.from(new Set(arrSizeTotal)).sort((a, b) => {
-            return a - b;
-          }),
-        });
+          totalSize: Array.from(new Set(arrSizeTotal)).sort((a,b)=>{
+            return a-b
+          })
+        })
       });
     }
     if (nextProps.category.filterUrl !== this.props.category.filterUrl) {
-      let arrFilterString = nextProps.category.filterUrl.split('-').filter((v, i) => {
+      let arrFilterString = nextProps.category.filterUrl.split("-").filter((v, i) => {
         return v != '';
-      });
+      })
       if (arrFilterString.length > 0) {
-        var filterString = arrFilterString.toString().split(',');
+        var filterString = arrFilterString.toString().split(",")
         this.setState({
-          filterString,
-        });
+          filterString
+        })
       }
     }
   }
   handleClickFilter(value) {
     this.setState({
-      [value]: !this.state[value],
-    });
+      [value]: !this.state[value]
+    })
   }
   renderBreadcrumb() {
     var {
@@ -648,36 +658,34 @@ class ListCategory extends PureComponent {
   handleClickButtonFilterClear() {
     this.props.dispatch({
       type: 'list/filter',
-      payload: !this.props.list.filter,
-    });
+      payload: !this.props.list.filter
+    })
     this.setState({
       color: [],
       size: [],
       type: [],
       brand: [],
       style: [],
-      filterStringSize: [],
-      filterString: [],
-    });
+      filterStringSize:[],
+      filterString:[]
+    })
     let pathname = this.props.location.pathname;
     this.props.history.push({ pathname });
   }
   checkStateUrl(arr, value) {
     var check = arr.filter((v, i) => {
-      return v == value;
-    });
-    if (check.length > 0) return true;
-    return false;
+      return v == value
+    })
+    if (check.length > 0) return true
+    return false
   }
   renderFilterList(value) {
     var { filter } = this.props.list;
     var { search } = this.props.category;
     var {
-      category: {
-        search: { filterMap },
-      },
+      category: { search: { filterMap } },
     } = this.props;
-    filterMap ? (filterMap = filterMap) : (filterMap = {});
+    (filterMap) ? filterMap = filterMap : filterMap = {}
     if (filter == true) {
       return (
         <div
@@ -697,10 +705,7 @@ class ListCategory extends PureComponent {
             >
               Xóa bộ lọc
             </a>
-            <a
-              onClick={() => this.handleClickButtonFilter()}
-              className={styles['sale__btn-done___2Y14U']}
-            >
+            <a onClick={() => this.handleClickButtonFilter()} className={styles['sale__btn-done___2Y14U']}>
               <i className={styles['fa'] + ' ' + styles['fa-caret-left'] + ' ' + styles['fa-fw']} />
               Xong
             </a>
@@ -713,425 +718,359 @@ class ListCategory extends PureComponent {
             </div>
           </div>
           <div id="transform-fixed" className={styles['sale__fitlers-content-wrap___pU5ed']}>
-            {filterMap.style &&
-              filterMap.style.length > 0 && (
-                <div className={styles['filter__filter-container___1hLIM']}>
-                  <div className={styles['filter__filter-header___3I6RP']}>
-                    <h5
-                      id="style"
-                      onClick={() => this.handleClickFilter('style-row')}
-                      className={styles['clearfix']}
-                    >
-                      <a
-                        className={styles['clearfix'] + ' ' + styles['d-block']}
-                        href="javascript:void(0)"
-                        id="style"
-                      >
-                        <span className={styles['float-left']}>Style</span>
-                        <i
-                          className={
-                            !this.state['style-row']
-                              ? styles['fa'] +
-                                ' ' +
-                                styles['float-right'] +
-                                ' ' +
-                                styles['ic-ic-minus']
-                              : styles['fa'] +
-                                ' ' +
-                                styles['float-right'] +
-                                ' ' +
-                                styles['ic-ic-plus']
-                          }
-                        />
-                      </a>
-                    </h5>
-                  </div>
-                  {!this.state['style-row'] ? (
-                    <div id="style-row">
-                      <div className={styles['row__row___2roCA']}>
-                        {filterMap.style && filterMap.style.length > 0
-                          ? filterMap.style.map((e, i) => {
-                              var v = e.replace(/ /g, '-');
-                              return (
-                                <div key={i} className={styles['grid__col-12___39hfZ']}>
-                                  <div className={styles['filter-option__filter-option___3Xmf0']}>
-                                    <button
-                                      onClick={() => this.handleCheckFilter('style', v, e)}
-                                      type="button"
-                                      className={
-                                        this.checkStateUrl(this.state.style, v) == false
-                                          ? styles['filter-option__btn___2u45i'] +
-                                            ' ' +
-                                            styles['filter-option__btn-secondary___1DPfK'] +
-                                            ' ' +
-                                            styles['filter-option__btn-block___1tZOy']
-                                          : styles['filter-option__btn___2u45i'] +
-                                            ' ' +
-                                            styles['filter-option__btn-secondary___1DPfK'] +
-                                            ' ' +
-                                            styles['filter-option__btn-block___1tZOy'] +
-                                            ' ' +
-                                            styles['filter-option__active___1HV6C']
-                                      }
-                                    >
-                                      {this.checkStateUrl(this.state.style, v) == true && (
-                                        <span
-                                          className={
-                                            styles['filter-option__icon___1wxyY'] +
-                                            ' ' +
-                                            styles['ic-ic-close']
-                                          }
-                                        />
-                                      )}
-                                      {e}
-                                    </button>
-                                  </div>
-                                </div>
-                              );
-                            })
-                          : ''}
-                      </div>
-                    </div>
-                  ) : (
-                    ''
-                  )}
-                </div>
-              )}
-            {this.state.totalSize.length > 0 && (
+            {(filterMap.style && filterMap.style.length > 0)&&(
               <div className={styles['filter__filter-container___1hLIM']}>
-                <div className={styles['filter__filter-header___3I6RP']}>
-                  <h5
-                    id="kich-co"
-                    onClick={() => this.handleClickFilter('kich-co-row')}
-                    className={styles['clearfix']}
+              <div className={styles['filter__filter-header___3I6RP']}>
+                <h5
+                  id="style"
+                  onClick={() => this.handleClickFilter('style-row')}
+                  className={styles['clearfix']}
+                >
+                  <a
+                    className={styles['clearfix'] + ' ' + styles['d-block']}
+                    href="javascript:void(0)"
+                    id="style"
                   >
-                    <a
-                      className={styles['clearfix'] + ' ' + styles['d-block']}
-                      href="javascript:void(0)"
-                      id="size"
-                    >
-                      <span className={styles['float-left']}>Kích cỡ</span>
-                      <i
-                        className={
-                          !this.state['kich-co-row']
-                            ? styles['fa'] +
-                              ' ' +
-                              styles['float-right'] +
-                              ' ' +
-                              styles['ic-ic-minus']
-                            : styles['fa'] +
-                              ' ' +
-                              styles['float-right'] +
-                              ' ' +
-                              styles['ic-ic-plus']
-                        }
-                      />
-                    </a>
-                  </h5>
-                </div>
-                {!this.state['kich-co-row'] ? (
-                  <div id="kich-co-row" style={{ display: 'block' }}>
-                    <div className={styles['row__row___2roCA']}>
-                      {this.state.totalSize.length > 0
-                        ? this.state.totalSize.map((e, i) => {
-                            var v = e.replace(/ /g, '-');
-                            return (
-                              <div key={i} className={styles['grid__col-12___39hfZ']}>
-                                <div className={styles['filter-option__filter-option___3Xmf0']}>
-                                  <button
-                                    onClick={() => this.handleCheckFilter('size', v, e)}
-                                    type="button"
-                                    className={
-                                      this.checkStateUrl(this.state.size, v) == false
-                                        ? styles['filter-option__btn___2u45i'] +
-                                          ' ' +
-                                          styles['filter-option__btn-secondary___1DPfK'] +
-                                          ' ' +
-                                          styles['filter-option__btn-block___1tZOy']
-                                        : styles['filter-option__btn___2u45i'] +
-                                          ' ' +
-                                          styles['filter-option__btn-secondary___1DPfK'] +
-                                          ' ' +
-                                          styles['filter-option__btn-block___1tZOy'] +
-                                          ' ' +
-                                          styles['filter-option__active___1HV6C']
-                                    }
-                                  >
-                                    {this.checkStateUrl(this.state.size, v) == true && (
-                                      <span
-                                        className={
-                                          styles['filter-option__icon___1wxyY'] +
-                                          ' ' +
-                                          styles['ic-ic-close']
-                                        }
-                                      />
-                                    )}
-                                    {e}
-                                  </button>
-                                </div>
-                              </div>
-                            );
-                          })
-                        : ''}
-                    </div>
-                  </div>
-                ) : (
-                  ''
-                )}
+                    <span className={styles['float-left']}>Style</span>
+                    <i
+                      className={(!this.state['style-row']) ?
+                        (styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus'])
+                        : (styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus'])}
+                    />
+                  </a>
+                </h5>
               </div>
+              {(!this.state['style-row']) ? (
+                <div id="style-row">
+                  <div className={styles['row__row___2roCA']}>
+                    {filterMap.style && filterMap.style.length > 0
+                      ? filterMap.style.map((e, i) => {
+                        var v = e.replace(/ /g, '-');
+                        return (
+                          <div key={i} className={styles['grid__col-12___39hfZ']}>
+                            <div className={styles['filter-option__filter-option___3Xmf0']}>
+                              <button
+                                onClick={() => this.handleCheckFilter('style', v, e)}
+                                type="button"
+                                className={
+                                  this.checkStateUrl(this.state.style, v) == false
+                                    ? styles['filter-option__btn___2u45i'] +
+                                    ' ' +
+                                    styles['filter-option__btn-secondary___1DPfK'] +
+                                    ' ' +
+                                    styles['filter-option__btn-block___1tZOy']
+                                    : styles['filter-option__btn___2u45i'] +
+                                    ' ' +
+                                    styles['filter-option__btn-secondary___1DPfK'] +
+                                    ' ' +
+                                    styles['filter-option__btn-block___1tZOy'] +
+                                    ' ' +
+                                    styles['filter-option__active___1HV6C']
+                                }
+                              >
+                                {this.checkStateUrl(this.state.style, v) == true && (
+                                  <span
+                                    className={
+                                      styles['filter-option__icon___1wxyY'] +
+                                      ' ' +
+                                      styles['ic-ic-close']
+                                    }
+                                  />
+                                )}
+                                {e}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                      : ''}
+                  </div>
+                </div>
+              ) : ''}
+            </div>
             )}
-            {filterMap.brand &&
-              filterMap.brand.length > 0 && (
-                <div className={styles['filter__filter-container___1hLIM']}>
-                  <div className={styles['filter__filter-header___3I6RP']}>
-                    <h5
-                      id="thuong-hieu"
-                      onClick={() => this.handleClickFilter('thuong-hieu-row')}
-                      className={styles['clearfix']}
-                    >
-                      <a
-                        className={styles['clearfix'] + ' ' + styles['d-block']}
-                        href="javascript:void(0)"
-                        id="brand"
-                      >
-                        <span className={styles['float-left']}>Thương hiệu</span>
-                        <i
-                          className={
-                            !this.state['thuong-hieu-row']
-                              ? styles['fa'] +
-                                ' ' +
-                                styles['float-right'] +
-                                ' ' +
-                                styles['ic-ic-minus']
-                              : styles['fa'] +
-                                ' ' +
-                                styles['float-right'] +
-                                ' ' +
-                                styles['ic-ic-plus']
-                          }
-                        />
-                      </a>
-                    </h5>
-                  </div>
-                  {!this.state['thuong-hieu-row'] ? (
-                    <div id="thuong-hieu-row" style={{ display: 'block' }}>
-                      <div className={styles['row__row___2roCA']}>
-                        {filterMap.brand && filterMap.brand.length > 0
-                          ? filterMap.brand.map((e, i) => {
-                              var v = e.replace(/ /g, '-');
-                              return (
-                                <div key={i} className={styles['grid__col-12___39hfZ']}>
-                                  <div className={styles['filter-option__filter-option___3Xmf0']}>
-                                    <button
-                                      onClick={() => this.handleCheckFilter('brand', v, e)}
-                                      type="button"
-                                      className={
-                                        this.checkStateUrl(this.state.brand, v) == false
-                                          ? styles['filter-option__btn___2u45i'] +
-                                            ' ' +
-                                            styles['filter-option__btn-secondary___1DPfK'] +
-                                            ' ' +
-                                            styles['filter-option__btn-block___1tZOy']
-                                          : styles['filter-option__btn___2u45i'] +
-                                            ' ' +
-                                            styles['filter-option__btn-secondary___1DPfK'] +
-                                            ' ' +
-                                            styles['filter-option__btn-block___1tZOy'] +
-                                            ' ' +
-                                            styles['filter-option__active___1HV6C']
-                                      }
-                                    >
-                                      {this.checkStateUrl(this.state.brand, v) == true && (
-                                        <span
-                                          className={
-                                            styles['filter-option__icon___1wxyY'] +
-                                            ' ' +
-                                            styles['ic-ic-close']
-                                          }
-                                        />
-                                      )}
-                                      {e}
-                                    </button>
-                                  </div>
-                                </div>
-                              );
-                            })
-                          : ''}
-                      </div>
-                    </div>
-                  ) : (
-                    ''
-                  )}
+            {(this.state.totalSize.length > 0)&&(
+              <div className={styles['filter__filter-container___1hLIM']}>
+              <div className={styles['filter__filter-header___3I6RP']}>
+                <h5
+                  id="kich-co"
+                  onClick={() => this.handleClickFilter('kich-co-row')}
+                  className={styles['clearfix']}
+                >
+                  <a
+                    className={styles['clearfix'] + ' ' + styles['d-block']}
+                    href="javascript:void(0)"
+                    id="size"
+                  >
+                    <span className={styles['float-left']}>Kích cỡ</span>
+                    <i
+                      className={(!this.state['kich-co-row']) ?
+                        (styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus'])
+                        : (styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus'])}
+                    />
+                  </a>
+                </h5>
+              </div>
+              {(!this.state['kich-co-row']) ? (<div id="kich-co-row" style={{ display: 'block' }}>
+                <div className={styles['row__row___2roCA']}>
+                  {this.state.totalSize.length > 0
+                    ? this.state.totalSize.map((e, i) => {
+                      var v = e.replace(/ /g, '-');
+                      return (
+                        <div key={i} className={styles['grid__col-12___39hfZ']}>
+                          <div className={styles['filter-option__filter-option___3Xmf0']}>
+                            <button
+                              onClick={() => this.handleCheckFilter('size', v, e)}
+                              type="button"
+                              className={
+                                this.checkStateUrl(this.state.size, v) == false
+                                  ? styles['filter-option__btn___2u45i'] +
+                                  ' ' +
+                                  styles['filter-option__btn-secondary___1DPfK'] +
+                                  ' ' +
+                                  styles['filter-option__btn-block___1tZOy']
+                                  : styles['filter-option__btn___2u45i'] +
+                                  ' ' +
+                                  styles['filter-option__btn-secondary___1DPfK'] +
+                                  ' ' +
+                                  styles['filter-option__btn-block___1tZOy'] +
+                                  ' ' +
+                                  styles['filter-option__active___1HV6C']
+                              }
+                            >
+                              {this.checkStateUrl(this.state.size, v) == true && (
+                                <span
+                                  className={
+                                    styles['filter-option__icon___1wxyY'] +
+                                    ' ' +
+                                    styles['ic-ic-close']
+                                  }
+                                />
+                              )}
+                              {e}
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })
+                    : ''}
                 </div>
-              )}
-            {filterMap.type &&
-              filterMap.type.length > 0 && (
-                <div className={styles['filter__filter-container___1hLIM']}>
-                  <div className={styles['filter__filter-header___3I6RP']}>
-                    <h5
-                      id="type"
-                      onClick={() => this.handleClickFilter('type-row')}
-                      className={styles['clearfix']}
-                    >
-                      <a
-                        className={styles['clearfix'] + ' ' + styles['d-block']}
-                        href="javascript:void(0)"
-                        id="type"
-                      >
-                        <span className={styles['float-left']}>TYPE</span>
-                        <i
-                          className={
-                            !this.state['type-row']
-                              ? styles['fa'] +
-                                ' ' +
-                                styles['float-right'] +
-                                ' ' +
-                                styles['ic-ic-minus']
-                              : styles['fa'] +
-                                ' ' +
-                                styles['float-right'] +
-                                ' ' +
-                                styles['ic-ic-plus']
-                          }
-                        />
-                      </a>
-                    </h5>
+              </div>) : ''}
+            </div>
+            )}
+            {(filterMap.brand && filterMap.brand.length > 0)&&(
+              <div className={styles['filter__filter-container___1hLIM']}>
+              <div className={styles['filter__filter-header___3I6RP']}>
+                <h5
+                  id="thuong-hieu"
+                  onClick={() => this.handleClickFilter('thuong-hieu-row')}
+                  className={styles['clearfix']}
+                >
+                  <a
+                    className={styles['clearfix'] + ' ' + styles['d-block']}
+                    href="javascript:void(0)"
+                    id="brand"
+                  >
+                    <span className={styles['float-left']}>Thương hiệu</span>
+                    <i
+                      className={(!this.state['thuong-hieu-row']) ?
+                        (styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus'])
+                        : (styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus'])}
+                    />
+                  </a>
+                </h5>
+              </div>
+              {(!this.state['thuong-hieu-row']) ? (
+                <div id="thuong-hieu-row" style={{ display: 'block' }}>
+                  <div className={styles['row__row___2roCA']}>
+                    {filterMap.brand && filterMap.brand.length > 0
+                      ? filterMap.brand.map((e, i) => {
+                        var v = e.replace(/ /g, '-');
+                        return (
+                          <div key={i} className={styles['grid__col-12___39hfZ']}>
+                            <div className={styles['filter-option__filter-option___3Xmf0']}>
+                              <button
+                                onClick={() => this.handleCheckFilter('brand', v, e)}
+                                type="button"
+                                className={
+                                  this.checkStateUrl(this.state.brand, v) == false
+                                    ? styles['filter-option__btn___2u45i'] +
+                                    ' ' +
+                                    styles['filter-option__btn-secondary___1DPfK'] +
+                                    ' ' +
+                                    styles['filter-option__btn-block___1tZOy']
+                                    : styles['filter-option__btn___2u45i'] +
+                                    ' ' +
+                                    styles['filter-option__btn-secondary___1DPfK'] +
+                                    ' ' +
+                                    styles['filter-option__btn-block___1tZOy'] +
+                                    ' ' +
+                                    styles['filter-option__active___1HV6C']
+                                }
+                              >
+                                {this.checkStateUrl(this.state.brand, v) == true && (
+                                  <span
+                                    className={
+                                      styles['filter-option__icon___1wxyY'] +
+                                      ' ' +
+                                      styles['ic-ic-close']
+                                    }
+                                  />
+                                )}
+                                {e}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                      : ''}
                   </div>
-                  {!this.state['type-row'] ? (
-                    <div id="type-row" style={{ display: 'block' }}>
-                      <div className={styles['row__row___2roCA']}>
-                        {filterMap.type && filterMap.type.length > 0
-                          ? filterMap.type.map((e, i) => {
-                              var v = e.replace(/ /g, '-');
-                              return (
-                                <div key={i} className={styles['grid__col-12___39hfZ']}>
-                                  <div className={styles['filter-option__filter-option___3Xmf0']}>
-                                    <button
-                                      onClick={() => this.handleCheckFilter('type', v, e)}
-                                      type="button"
-                                      className={
-                                        this.checkStateUrl(this.state.type, v) == false
-                                          ? styles['filter-option__btn___2u45i'] +
-                                            ' ' +
-                                            styles['filter-option__btn-secondary___1DPfK'] +
-                                            ' ' +
-                                            styles['filter-option__btn-block___1tZOy']
-                                          : styles['filter-option__btn___2u45i'] +
-                                            ' ' +
-                                            styles['filter-option__btn-secondary___1DPfK'] +
-                                            ' ' +
-                                            styles['filter-option__btn-block___1tZOy'] +
-                                            ' ' +
-                                            styles['filter-option__active___1HV6C']
-                                      }
-                                    >
-                                      {this.checkStateUrl(this.state.type, v) == true && (
-                                        <span
-                                          className={
-                                            styles['filter-option__icon___1wxyY'] +
-                                            ' ' +
-                                            styles['ic-ic-close']
-                                          }
-                                        />
-                                      )}
-                                      {e}
-                                    </button>
-                                  </div>
-                                </div>
-                              );
-                            })
-                          : ''}
-                      </div>
-                    </div>
-                  ) : (
-                    ''
-                  )}
                 </div>
-              )}
-            {filterMap.color &&
-              filterMap.color.length > 0 && (
-                <div className={styles['filter__filter-container___1hLIM']}>
-                  <div className={styles['filter__filter-header___3I6RP']}>
-                    <h5
-                      id="color"
-                      onClick={() => this.handleClickFilter('color-row')}
-                      className={styles['clearfix']}
-                    >
-                      <a
-                        className={styles['clearfix'] + ' ' + styles['d-block']}
-                        href="javascript:void(0)"
-                        id="type"
-                      >
-                        <span className={styles['float-left']}>Màu sắc</span>
-                        <i
-                          className={
-                            !this.state['color-row']
-                              ? styles['fa'] +
-                                ' ' +
-                                styles['float-right'] +
-                                ' ' +
-                                styles['ic-ic-minus']
-                              : styles['fa'] +
-                                ' ' +
-                                styles['float-right'] +
-                                ' ' +
-                                styles['ic-ic-plus']
-                          }
-                        />
-                      </a>
-                    </h5>
+              ) : ''}
+            </div>
+            )}
+            {(filterMap.type && filterMap.type.length > 0)&&(
+              <div className={styles['filter__filter-container___1hLIM']}>
+              <div className={styles['filter__filter-header___3I6RP']}>
+                <h5
+                  id="type"
+                  onClick={() => this.handleClickFilter('type-row')}
+                  className={styles['clearfix']}
+                >
+                  <a
+                    className={styles['clearfix'] + ' ' + styles['d-block']}
+                    href="javascript:void(0)"
+                    id="type"
+                  >
+                    <span className={styles['float-left']}>TYPE</span>
+                    <i
+                      className={(!this.state['type-row']) ?
+                        (styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus'])
+                        : (styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus'])}
+                    />
+                  </a>
+                </h5>
+              </div>
+              {(!this.state['type-row']) ? (
+                <div id="type-row" style={{ display: 'block' }}>
+                  <div className={styles['row__row___2roCA']}>
+                    {filterMap.type && filterMap.type.length > 0
+                      ? filterMap.type.map((e, i) => {
+                        var v = e.replace(/ /g, '-');
+                        return (
+                          <div key={i} className={styles['grid__col-12___39hfZ']}>
+                            <div className={styles['filter-option__filter-option___3Xmf0']}>
+                              <button
+                                onClick={() => this.handleCheckFilter('type', v, e)}
+                                type="button"
+                                className={
+                                  this.checkStateUrl(this.state.type, v) == false
+                                    ? styles['filter-option__btn___2u45i'] +
+                                    ' ' +
+                                    styles['filter-option__btn-secondary___1DPfK'] +
+                                    ' ' +
+                                    styles['filter-option__btn-block___1tZOy']
+                                    : styles['filter-option__btn___2u45i'] +
+                                    ' ' +
+                                    styles['filter-option__btn-secondary___1DPfK'] +
+                                    ' ' +
+                                    styles['filter-option__btn-block___1tZOy'] +
+                                    ' ' +
+                                    styles['filter-option__active___1HV6C']
+                                }
+                              >
+                                {this.checkStateUrl(this.state.type, v) == true && (
+                                  <span
+                                    className={
+                                      styles['filter-option__icon___1wxyY'] +
+                                      ' ' +
+                                      styles['ic-ic-close']
+                                    }
+                                  />
+                                )}
+                                {e}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                      : ''}
                   </div>
-                  {!this.state['color-row'] ? (
-                    <div id="color-row" style={{ display: 'block' }}>
-                      <div className={styles['row__row___2roCA']}>
-                        {filterMap.color && filterMap.color.length > 0
-                          ? filterMap.color.map((e, i) => {
-                              var v = e.replace(/ /g, '-');
-                              return (
-                                <div key={i} className={styles['grid__col-12___39hfZ']}>
-                                  <div className={styles['filter-option__filter-option___3Xmf0']}>
-                                    <button
-                                      onClick={() => this.handleCheckFilter('color', v, e)}
-                                      type="button"
-                                      className={
-                                        this.checkStateUrl(this.state.color, v) == false
-                                          ? styles['filter-option__btn___2u45i'] +
-                                            ' ' +
-                                            styles['filter-option__btn-secondary___1DPfK'] +
-                                            ' ' +
-                                            styles['filter-option__btn-block___1tZOy']
-                                          : styles['filter-option__btn___2u45i'] +
-                                            ' ' +
-                                            styles['filter-option__btn-secondary___1DPfK'] +
-                                            ' ' +
-                                            styles['filter-option__btn-block___1tZOy'] +
-                                            ' ' +
-                                            styles['filter-option__active___1HV6C']
-                                      }
-                                    >
-                                      {this.checkStateUrl(this.state.color, v) == true && (
-                                        <span
-                                          className={
-                                            styles['filter-option__icon___1wxyY'] +
-                                            ' ' +
-                                            styles['ic-ic-close']
-                                          }
-                                        />
-                                      )}
-                                      {e}
-                                    </button>
-                                  </div>
-                                </div>
-                              );
-                            })
-                          : ''}
-                      </div>
-                    </div>
-                  ) : (
-                    ''
-                  )}
                 </div>
-              )}
+              ) : ''}
+            </div>
+            )}
+            {(filterMap.color && filterMap.color.length > 0)&&(
+              <div className={styles['filter__filter-container___1hLIM']}>
+              <div className={styles['filter__filter-header___3I6RP']}>
+                <h5
+                  id="color"
+                  onClick={() => this.handleClickFilter('color-row')}
+                  className={styles['clearfix']}
+                >
+                  <a
+                    className={styles['clearfix'] + ' ' + styles['d-block']}
+                    href="javascript:void(0)"
+                    id="type"
+                  >
+                    <span className={styles['float-left']}>Màu sắc</span>
+                    <i
+                      className={(!this.state['color-row']) ?
+                        (styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-minus'])
+                        : (styles['fa'] + ' ' + styles['float-right'] + ' ' + styles['ic-ic-plus'])}
+                    />
+                  </a>
+                </h5>
+              </div>
+              {(!this.state['color-row']) ? (
+                <div id="color-row" style={{ display: 'block' }}>
+                  <div className={styles['row__row___2roCA']}>
+                    {filterMap.color && filterMap.color.length > 0
+                      ? filterMap.color.map((e, i) => {
+                        var v = e.replace(/ /g, '-');
+                        return (
+                          <div key={i} className={styles['grid__col-12___39hfZ']}>
+                            <div className={styles['filter-option__filter-option___3Xmf0']}>
+                              <button
+                                onClick={() => this.handleCheckFilter('color', v, e)}
+                                type="button"
+                                className={
+                                  this.checkStateUrl(this.state.color, v) == false
+                                    ? styles['filter-option__btn___2u45i'] +
+                                    ' ' +
+                                    styles['filter-option__btn-secondary___1DPfK'] +
+                                    ' ' +
+                                    styles['filter-option__btn-block___1tZOy']
+                                    : styles['filter-option__btn___2u45i'] +
+                                    ' ' +
+                                    styles['filter-option__btn-secondary___1DPfK'] +
+                                    ' ' +
+                                    styles['filter-option__btn-block___1tZOy'] +
+                                    ' ' +
+                                    styles['filter-option__active___1HV6C']
+                                }
+                              >
+                                {this.checkStateUrl(this.state.color, v) == true && (
+                                  <span
+                                    className={
+                                      styles['filter-option__icon___1wxyY'] +
+                                      ' ' +
+                                      styles['ic-ic-close']
+                                    }
+                                  />
+                                )}
+                                {e}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
+                      : ''}
+                  </div>
+                </div>
+              ) : ''}
+            </div>
+            )}
           </div>
         </div>
       );
@@ -1161,49 +1100,50 @@ class ListCategory extends PureComponent {
   render() {
     var { test, globalProduct, filterString, filterStringSize, totalSize } = this.state;
     var {
-      category: {
-        search: { list },
-      },
+      category: { search: { list } },
     } = this.props;
     var {
       category: { detail },
     } = this.props;
-    var { filter } = this.props.list;
+    var { filter } = this.props.list
     var filterRender = [];
     var dataDetail = [];
     var globalProductNew = [];
     var filterToString = '';
     if (filterString.length > 0) {
-      filterToString = filterString.toString().replace(/\,/g, '&&');
+      filterToString = filterString.toString().replace(/\,/g, '&&')
     }
     if (filterToString == '') {
       globalProductNew = globalProduct;
-    } else {
+    }
+    else {
       globalProductNew = globalProduct.filter((v, i) => {
         return eval(filterToString);
-      });
+      })
     }
     if (filterStringSize.length > 0 && totalSize.length > 0) {
       var sizeReal = globalProductNew.filter((v, i) => {
-        return v.size;
-      });
+        return v.size
+      })
       globalProductNew = sizeReal.filter((v, index) => {
-        let arrSize = v.size.split(',');
+        let arrSize = v.size.split(",");
         var result = true;
         if (arrSize.length >= filterStringSize.length) {
+
           for (let i = 0; i < filterStringSize.length; i++) {
             for (let j = 0; j < arrSize.length; j++) {
               if (filterStringSize[i] === arrSize[j]) break;
               if (j == arrSize.length - 1) {
-                result = false;
+                result = false
               }
             }
+
           }
         } else {
-          result = false;
+          result = false
         }
         return result == true;
-      });
+      })
     }
     if (dataDetail) {
       dataDetail = Array.isArray(detail) ? detail : [];
@@ -1278,10 +1218,10 @@ class ListCategory extends PureComponent {
                         styles['active']
                       }
                     >
-                      {filter == false ? (
+                      {(filter == false) ? (
                         <span>
                           Hiện bộ lọc
-                          <i
+                        <i
                             id="icon-filter"
                             className={
                               styles['ic-ic-arrow-right'] + ' ' + styles['sale__icon-show___3nTgw']
@@ -1289,16 +1229,16 @@ class ListCategory extends PureComponent {
                           />
                         </span>
                       ) : (
-                        <span>
-                          <i
-                            id="icon-filter"
-                            className={
-                              styles['ic-ic-arrow-left'] + ' ' + styles['sale__icon-show___3nTgwt']
-                            }
-                          />
-                          Đóng bộ lọc
-                        </span>
-                      )}
+                          <span>
+                            <i
+                              id="icon-filter"
+                              className={
+                                styles['ic-ic-arrow-left'] + ' ' + styles['sale__icon-show___3nTgwt']
+                              }
+                            />
+                            Đóng bộ lọc
+                      </span>
+                        )}
                     </button>
                   </div>
                   <div
@@ -1441,17 +1381,9 @@ class ListCategory extends PureComponent {
                   {this.renderFilterList(globalProductNew.length)}
                   <div
                     id="list-product"
-                    className={
-                      filter == false
-                        ? styles['sale__products-list___2pc3u'] +
-                          ' ' +
-                          styles['sale__col-12___82vEz']
-                        : styles['sale__products-list___2pc3u'] +
-                          ' ' +
-                          styles['sale__col-md-8___34B6S'] +
-                          ' ' +
-                          styles['sale__col-lg-9___2qXAs']
-                    }
+                    className={(filter == false) ?
+                      styles['sale__products-list___2pc3u'] + ' ' + styles['sale__col-12___82vEz']
+                      : (styles['sale__products-list___2pc3u'] + ' ' + styles['sale__col-md-8___34B6S'] + ' ' + styles['sale__col-lg-9___2qXAs'])}
                   >
                     <div id="row-product" className={styles['row__row___2roCA']}>
                       {globalProductNew.map((value, index) => {

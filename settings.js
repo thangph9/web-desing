@@ -3,7 +3,7 @@ const models= require("express-cassandra");
 models.setDirectory(__dirname+"/models").bind(
     {
         clientOptions:  {
-            contactPoints   :   ['125.212.239.83'],
+            contactPoints   :   ['localhost'],
             protocalOptions :   {  port: 9042  },
             keyspace        :   'd_123order',
             queryOptions: { consistency: models.consistencies.one   },
@@ -11,14 +11,14 @@ models.setDirectory(__dirname+"/models").bind(
 
         },
         ormOptions: {
-            defaultReplicationStrategy: { 
+            defaultReplicationStrategy: {
                     class: 'SimpleStrategy',
                     replication_factor: 1
             },
             migration: 'safe'
         }
     },
-    function(err){  
-        if(err) throw err;   
+    function(err){
+        if(err) throw err;
     });
-module.exports=models; 
+module.exports=models;

@@ -97,7 +97,7 @@ const formItemLayout = {
   product,
 }))
 @Form.create()
-class Categorys extends React.PureComponent {
+class UpdateCategory extends React.PureComponent {
   state = {
     fileList: [],
     previewVisible: false,
@@ -125,6 +125,40 @@ class Categorys extends React.PureComponent {
       })
     });
   };
+  componentDidMount(){
+    this.props.dispatch({
+      type:'product/getonecategory',
+      payload:{
+        categoryid:this.props.match.params.categoryid
+      }
+    })
+  }
+  componentWillReceiveProps(nextProps){
+    if(this.props.product.updatecategory!==nextProps.product.updatecategory){
+      console.log('vao day 1')
+      if(nextProps.product.updatecategory.status==='ok'&&nextProps.product.updatecategory.timeline!==this.props.product.updatecategory.timeline){
+        console.log('vao day')
+        message.success('Thay đổi thành công');
+      }
+    }
+    if(this.props.product.getonecategory!==nextProps.product.getonecategory){
+      if(nextProps.product.getonecategory.status==='ok'){
+        this.setState({
+          dataCategory:nextProps.product.getonecategory.data
+        },()=>{
+          this.props.form.setFields({
+            title: {
+              value: this.state.dataCategory.title
+            },
+            menu:{
+              value:this.state.dataCategory.menu
+            }
+          });
+        })
+      }
+    }
+
+  }
   handleRemove = file => {
     console.log(file);
   };
@@ -143,17 +177,7 @@ class Categorys extends React.PureComponent {
     }
     return isJPG && isLt2M;
   };
-  componentWillReceiveProps(nextProps){
-    if(this.props.product.savecategory!==nextProps.product.savecategory){
-      console.log(nextProps.product)
-      if(nextProps.product.savecategory.status==='ok' && nextProps.product.savecategory.timeline!==this.props.product.savecategory.timeline){
-        message.success('Thêm danh mục thành công',5);
-      }
-      if(nextProps.product.savecategory.status==='error'){
-        message.warning('Có lỗi xảy ra',5);
-      }
-    }
-  }
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -173,17 +197,21 @@ class Categorys extends React.PureComponent {
       }
       if(this.state.avatarImage){
         valuesTime.images=this.state.avatarImage
+
+      }
+      valuesTime.categoryid=this.props.match.params.categoryid
         this.props.dispatch({
-          type: 'product/savecategory',
+          type: 'product/updatecategory',
           payload: valuesTime,
         });
-      }
+
     });
   };
   handleChangeMenu(value) {
     console.log(value);
   }
   render() {
+    console.log(this.props.product)
     const { getFieldDecorator } = this.props.form;
     var { fileList } = this.state;
     return (
@@ -191,7 +219,7 @@ class Categorys extends React.PureComponent {
         <Affix offsetTop={20}>
           <FormItem style={{ left: '20px' }}>
             <Button type="primary" htmlType="submit">
-              Thêm mới
+              Chỉnh sửa
             </Button>
           </FormItem>
         </Affix>
@@ -211,7 +239,7 @@ class Categorys extends React.PureComponent {
           <Col {...topColResponsiveProps}>
             <Form.Item {...formItemLayout} label="RangePicker">
               {getFieldDecorator('range-picker', {
-                rules: [{ type: 'array'}],
+                rules: [{ type: 'array' }],
               })(<RangePicker />)}
             </Form.Item>
           </Col>
@@ -248,10 +276,14 @@ class Categorys extends React.PureComponent {
               </Modal>
             </FormItem>
           </Col>
+
         </Row>
       </Form>
     );
   }
 }
 
-export default Categorys;
+export default UpdateCategory;
+
+
+

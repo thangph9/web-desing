@@ -43,7 +43,7 @@ import { connect } from 'dva';
 import { Link, Redirect } from 'react-router-dom';
 import moment from 'moment';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import ReCAPTCHA from 'react-google-recaptcha';
+
 import FacebookLogin from 'react-facebook-login';
 import {
   Form,
@@ -68,7 +68,7 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
-let recaptchaInstance;
+
 let rerenders = 0;
 @connect(({ list, user }) => ({
   list,
@@ -92,11 +92,9 @@ class LoginItem extends PureComponent {
       validateStt: '',
       loginEmai: false,
     };
-    this._reCaptchaRef = React.createRef();
+
   }
-  resetRecaptcha = () => {
-    recaptchaInstance.reset();
-  };
+
   handleChange = value => {
     this.setState({ value });
   };
@@ -108,8 +106,7 @@ class LoginItem extends PureComponent {
   handleSubmitEmail = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      if (!err && this.state.value.length > 0) {
-        values['captcha'] = this.state.value;
+      if (!err) {
         this.props.dispatch({
           type: 'user/login',
           payload: values,
@@ -120,7 +117,7 @@ class LoginItem extends PureComponent {
       loadpage: !this.state.load,
       click: false,
     });
-    this.resetRecaptcha();
+
   };
   handleChangeEmail() {
     this.setState({
@@ -180,13 +177,6 @@ class LoginItem extends PureComponent {
             ],
           })(<Input type="password" size="large" placeholder="Mật khẩu" />)}
         </FormItem>
-        <FormItem>
-          <ReCAPTCHA
-            ref={e => (recaptchaInstance = e)}
-            sitekey="6Ld1534UAAAAAPy1pvn0YcCH3WUiKqpbM1tHrmRO"
-            onChange={this.handleChange}
-          />
-        </FormItem>
         <Link to={`/forgotpassword`} style={{ position: 'absolute', right: '45px' }}>
           Quên mật khẩu?
         </Link>
@@ -225,7 +215,6 @@ class Checkout extends PureComponent {
       validateStt: '',
       loginEmai: false,
     };
-    this._reCaptchaRef = React.createRef();
     this.responseFacebook = this.responseFacebook.bind(this);
   }
 

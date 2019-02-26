@@ -33,3 +33,211 @@ TypeError: Cannot read property 'find' of undefined
     at done (C:\Users\Admin\Desktop\123order\web-desing\node_modules\raw-body\index.js:213:7)
     at IncomingMessage.onEnd (C:\Users\Admin\Desktop\123order\web-desing\node_modules\raw-body\index.js:273:7)
     at IncomingMessage.emit (events.js:182:13) - 1549863102588
+TypeError: Cannot read property 'find' of undefined
+    at find (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:592:41)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:718:13
+    at Immediate.iterate (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:262:13)
+    at runCallback (timers.js:705:18)
+    at tryOnImmediate (timers.js:676:5)
+    at processImmediate (timers.js:658:5) - 1550628768972
+TypeError: Cannot read property 'find' of undefined
+    at find (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2012:43)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:718:13
+    at iterate (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:262:13)
+    at async.forEachOfSeries.async.eachOfSeries (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:281:9)
+    at _parallel (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:717:9)
+    at Object.async.series (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:739:9)
+    at series (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2008:9)
+    at sendData (C:\Users\Admin\Desktop\123order\web-desing\node_modules\umi-build-dev\lib\plugins\mock\createMockMiddleware.js:132:11)
+    at Object.handler (C:\Users\Admin\Desktop\123order\web-desing\node_modules\umi-build-dev\lib\plugins\mock\createMockMiddleware.js:127:9)
+    at UMI_MOCK (C:\Users\Admin\Desktop\123order\web-desing\node_modules\umi-build-dev\lib\plugins\mock\createMockMiddleware.js:251:20)
+    at Layer.handle [as handle_request] (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express\lib\router\index.js:317:13)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\express\lib\router\index.js:284:7
+    at Function.process_params (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express\lib\router\index.js:335:12)
+    at next (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express\lib\router\index.js:275:10)
+    at compression (C:\Users\Admin\Desktop\123order\web-desing\node_modules\compression\index.js:220:5) - 1550628769251
+TypeError: Cannot read property 'find' of undefined
+    at find (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:592:41)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:718:13
+    at Immediate.iterate (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:262:13)
+    at runCallback (timers.js:705:18)
+    at tryOnImmediate (timers.js:676:5)
+    at processImmediate (timers.js:658:5) - 1550628769278
+TypeError: Cannot read property 'find' of undefined
+    at find (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:592:41)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:718:13
+    at Immediate.iterate (C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:262:13)
+    at runCallback (timers.js:705:18)
+    at tryOnImmediate (timers.js:676:5)
+    at processImmediate (timers.js:658:5) - 1550628769580
+ReferenceError: res is not defined
+    at res (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2596:7)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:726:13
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:52:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:269:32
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:44:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:723:17
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:167:37
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2585:15)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\orm\base_model.js:779:7)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\helpers\driver.js:53:11)
+    at RequestHandler.next [as _callback] (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\utils.js:704:14)
+    at RequestHandler.setCompleted (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-handler.js:246:10)
+    at responseCb (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-execution.js:84:22)
+    at OperationState._swapCallbackAndInvoke (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:145:5)
+    at OperationState.setResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:139:10)
+    at Connection.handleResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\connection.js:573:13) - 1551185861654
+ReferenceError: res is not defined
+    at res (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2596:7)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:726:13
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:52:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:269:32
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:44:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:723:17
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:167:37
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2585:15)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\orm\base_model.js:779:7)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\helpers\driver.js:53:11)
+    at RequestHandler.next [as _callback] (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\utils.js:704:14)
+    at RequestHandler.setCompleted (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-handler.js:246:10)
+    at responseCb (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-execution.js:84:22)
+    at OperationState._swapCallbackAndInvoke (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:145:5)
+    at OperationState.setResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:139:10)
+    at Connection.handleResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\connection.js:573:13) - 1551185982741
+ReferenceError: res is not defined
+    at res (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2596:7)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:726:13
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:52:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:269:32
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:44:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:723:17
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:167:37
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2585:15)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\orm\base_model.js:779:7)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\helpers\driver.js:53:11)
+    at RequestHandler.next [as _callback] (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\utils.js:704:14)
+    at RequestHandler.setCompleted (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-handler.js:246:10)
+    at responseCb (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-execution.js:84:22)
+    at OperationState._swapCallbackAndInvoke (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:145:5)
+    at OperationState.setResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:139:10)
+    at Connection.handleResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\connection.js:573:13) - 1551185990142
+ReferenceError: res is not defined
+    at res (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2596:7)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:726:13
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:52:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:269:32
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:44:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:723:17
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:167:37
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2585:15)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\orm\base_model.js:779:7)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\helpers\driver.js:53:11)
+    at RequestHandler.next [as _callback] (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\utils.js:704:14)
+    at RequestHandler.setCompleted (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-handler.js:246:10)
+    at responseCb (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-execution.js:84:22)
+    at OperationState._swapCallbackAndInvoke (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:145:5)
+    at OperationState.setResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:139:10)
+    at Connection.handleResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\connection.js:573:13) - 1551186012699
+ReferenceError: res is not defined
+    at res (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2596:7)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:726:13
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:52:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:269:32
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:44:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:723:17
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:167:37
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2585:15)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\orm\base_model.js:779:7)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\helpers\driver.js:53:11)
+    at RequestHandler.next [as _callback] (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\utils.js:704:14)
+    at RequestHandler.setCompleted (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-handler.js:246:10)
+    at responseCb (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-execution.js:84:22)
+    at OperationState._swapCallbackAndInvoke (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:145:5)
+    at OperationState.setResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:139:10)
+    at Connection.handleResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\connection.js:573:13) - 1551186105675
+ReferenceError: res is not defined
+    at res (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2596:7)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:726:13
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:52:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:269:32
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:44:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:723:17
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:167:37
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2585:15)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\orm\base_model.js:779:7)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\helpers\driver.js:53:11)
+    at RequestHandler.next [as _callback] (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\utils.js:704:14)
+    at RequestHandler.setCompleted (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-handler.js:246:10)
+    at responseCb (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-execution.js:84:22)
+    at OperationState._swapCallbackAndInvoke (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:145:5)
+    at OperationState.setResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:139:10)
+    at Connection.handleResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\connection.js:573:13) - 1551186138516
+ReferenceError: res is not defined
+    at status (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2596:18)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:726:13
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:52:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:269:32
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:44:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:723:17
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:167:37
+    at C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2580:11
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\orm\base_model.js:779:7)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\helpers\driver.js:53:11)
+    at RequestHandler.next [as _callback] (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\utils.js:704:14)
+    at RequestHandler.setCompleted (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-handler.js:246:10)
+    at responseCb (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-execution.js:84:22)
+    at OperationState._swapCallbackAndInvoke (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:145:5)
+    at OperationState.setResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:139:10)
+    at Connection.handleResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\connection.js:573:13) - 1551186194281
+ReferenceError: res is not defined
+    at data (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2596:32)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:726:13
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:52:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:269:32
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:44:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:723:17
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:167:37
+    at C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2580:11
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\orm\base_model.js:779:7)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\helpers\driver.js:53:11)
+    at RequestHandler.next [as _callback] (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\utils.js:704:14)
+    at RequestHandler.setCompleted (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-handler.js:246:10)
+    at responseCb (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-execution.js:84:22)
+    at OperationState._swapCallbackAndInvoke (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:145:5)
+    at OperationState.setResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:139:10)
+    at Connection.handleResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\connection.js:573:13) - 1551186217600
+ReferenceError: res is not defined
+    at data (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2596:32)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:726:13
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:52:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:269:32
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:44:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:723:17
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:167:37
+    at C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2580:11
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\orm\base_model.js:779:7)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\helpers\driver.js:53:11)
+    at RequestHandler.next [as _callback] (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\utils.js:704:14)
+    at RequestHandler.setCompleted (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-handler.js:246:10)
+    at responseCb (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-execution.js:84:22)
+    at OperationState._swapCallbackAndInvoke (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:145:5)
+    at OperationState.setResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:139:10)
+    at Connection.handleResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\connection.js:573:13) - 1551186242178
+ReferenceError: res is not defined
+    at data (C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2596:32)
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:726:13
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:52:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:269:32
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:44:16
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:723:17
+    at C:\Users\Admin\Desktop\123order\web-desing\node_modules\async\lib\async.js:167:37
+    at C:\Users\Admin\Desktop\123order\web-desing\mock/product.js:2580:11
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\orm\base_model.js:779:7)
+    at callback (C:\Users\Admin\Desktop\123order\web-desing\node_modules\express-cassandra\src\helpers\driver.js:53:11)
+    at RequestHandler.next [as _callback] (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\utils.js:704:14)
+    at RequestHandler.setCompleted (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-handler.js:246:10)
+    at responseCb (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\request-execution.js:84:22)
+    at OperationState._swapCallbackAndInvoke (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:145:5)
+    at OperationState.setResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\operation-state.js:139:10)
+    at Connection.handleResult (C:\Users\Admin\Desktop\123order\web-desing\node_modules\cassandra-driver\lib\connection.js:573:13) - 1551186298653

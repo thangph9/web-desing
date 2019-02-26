@@ -80,9 +80,9 @@ class CartItem extends PureComponent {
     data && Array.isArray(data) ? (dataCart = data[0]) : {};
     return (
       <div className={styles['clearfix'] + ' ' + styles['cart__product___2fY_V']}>
-        <a className={styles['cart__image___1z2eh']} href="javascript:void(0)">
-          <img src={`/images/f/${dataCart.image.replace(/\-/g, '')}`} />
-        </a>
+        <div style={{backgroundImage:`url(/images/ft/${dataCart.image.replace(/\-/g, '')})`}} className={styles['cart__image___1z2eh']+' '+styles['background-item']} href="javascript:void(0)">
+
+        </div>
         <div className={styles['cart__info___3nGrF']}>
           <div className={styles['cart__name___5n2d7']}>
             <a href="javascript:void(0)">{dataCart.title}</a>
@@ -321,7 +321,7 @@ class GlobalCart extends PureComponent {
                   </div>
                   <div>Giỏ hàng của bạn còn trống</div>
                   <div>
-                    <button
+                    <button onClick={()=>this.handleClickButtonOut()}
                       className={
                         styles['cart__btn___1bOR1'] +
                         ' ' +

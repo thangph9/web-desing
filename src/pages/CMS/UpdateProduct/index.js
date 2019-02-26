@@ -102,7 +102,7 @@ const uploadButton = (
   product,
 }))
 @Form.create()
-class Products extends React.PureComponent {
+class UpdateProduct extends React.PureComponent {
   state = {
     previewVisible: false,
     previewImage: '',
@@ -123,13 +123,28 @@ class Products extends React.PureComponent {
     fileList: [],
     fileListAvatar: [],
     categoryOption: [],
+    updateProduct:{}
   };
   componentDidMount() {
     this.props.dispatch({
       type: 'product/getcategory',
     });
+    const { dispatch, match } = this.props;
+    let productid = '';
+    try {
+      productid = match.params.productid;
+    } catch (e) { }
+    dispatch({
+      type: 'product/getproductdetailbytri',
+      payload: { productid },
+    });
   }
   componentWillReceiveProps(nextProps) {
+    if(this.props.product.updateproduct!==nextProps.product.updateproduct){
+      if(nextProps.product.updateproduct.status==='ok'&&nextProps.product.updateproduct.timeline!==this.props.product.updateproduct.timeline){
+        message.success('Chỉnh sửa thành công')
+      }
+    }
     if (this.props.product.getcategory !== nextProps.product.getcategory) {
       if (nextProps.product.getcategory.status === 'ok') {
         this.setState({
@@ -137,13 +152,92 @@ class Products extends React.PureComponent {
         });
       }
     }
-    if(this.props.product.saveproduct!==nextProps.product.saveproduct){
-      if(nextProps.product.saveproduct.status==='ok' && nextProps.product.saveproduct.timeline!==this.props.product.saveproduct.timeline){
-        message.success('Thêm sản phẩm thành công',5);
-      }
-      if(nextProps.product.saveproduct.status==='error'){
-        message.warning('Có lỗi xảy ra',5);
-      }
+    if(this.props.product.getproductdetailbytri!==nextProps.product.getproductdetailbytri){
+      this.setState({
+        updateProduct:nextProps.product.getproductdetailbytri.data
+      },()=>{
+        this.props.form.setFields({
+          name_product: {
+            value: this.state.updateProduct.name_product,
+          },
+          categoryid:{
+            value: this.state.updateProduct.categoryid,
+          },
+          total:{
+            value: this.state.updateProduct.amount+'',
+          },
+          brand:{
+            value: this.state.updateProduct.brand,
+          },
+          size:{
+            value: this.state.updateProduct.size,
+          },
+          color:{
+            value:this.state.updateProduct.color,
+          },
+          price:{
+            value:this.state.updateProduct.price,
+          },
+          sale:{
+            value:this.state.updateProduct.sale,
+          },
+          sale_price:{
+            value:this.state.updateProduct.sale_price,
+          },
+        });
+        this.setState({
+          desc_brand:this.state.updateProduct.desc_brand?this.state.updateProduct.desc_brand.length:1,
+          desc_information:this.state.updateProduct.desc_infomation?this.state.updateProduct.desc_infomation.length:1,
+          desc_size:this.state.updateProduct.desc_size?this.state.updateProduct.desc_size.length:1,
+          desc_user:this.state.updateProduct.desc_materials_use?this.state.updateProduct.desc_materials_use.length:1,
+        },()=>{
+          if(this.state.updateProduct.desc_infomation){
+            this.state.updateProduct.desc_infomation.forEach((v,i)=>{
+              this.props.form.setFields({
+                [`desc_information_${i}`]:{
+                  value:v
+                }
+              })
+            })
+
+          }
+          this.handleOkInformation();
+          if(this.state.updateProduct.desc_brand){
+            this.state.updateProduct.desc_brand.forEach((v,i)=>{
+              this.props.form.setFields({
+                [`desc_brand_${i}`]:{
+                  value:v
+                }
+              })
+            })
+
+          }
+          this.handleOkBrand();
+          if(this.state.updateProduct.desc_size){
+            this.state.updateProduct.desc_size.forEach((v,i)=>{
+              this.props.form.setFields({
+                [`desc_size_${i}`]:{
+                  value:v
+                }
+              })
+            })
+
+          }
+          this.handleOkSize();
+          if(this.state.updateProduct.desc_size){
+            this.state.updateProduct.desc_size.forEach((v,i)=>{
+              this.props.form.setFields({
+                [`desc_use_${i}`]:{
+                  value:v
+                }
+              })
+            })
+
+          }
+          this.handleOkUse()
+        })
+
+      })
     }
   }
   handleSubmit = e => {
@@ -164,14 +258,14 @@ class Products extends React.PureComponent {
       else {
         valuesTime = values
       }
-      if(this.state.avatarImage&&this.state.arrImage){
-        valuesTime.avatar=this.state.avatarImage
-        valuesTime.images=this.state.arrImage
+        valuesTime.avatar=this.state.avatarImage?this.state.avatarImage:this.state.updateProduct.avatar
+        valuesTime.images=this.state.arrImage?this.state.arrImage:this.state.updateProduct.image_huge
+      console.log('vao day')
+      valuesTime.productid=this.props.match.params.productid
         this.props.dispatch({
-          type: 'product/saveproduct',
+          type: 'product/updateproduct',
           payload: valuesTime,
         });
-      }
     });
   };
   handleCancel = () => this.setState({ previewVisible: false });
@@ -200,8 +294,9 @@ class Products extends React.PureComponent {
     const { desc_information } = this.state;
     var arr = [];
     for (let i = 0; i < desc_information; i++) {
-      var result = form.getFieldValue(`desc_information_${i}`);
-      arr.push(result);
+      var result = form.getFieldValue(`desc_information_${i}`)
+      if(result) arr.push(result)
+
     }
     this.setState(
       {
@@ -251,8 +346,8 @@ class Products extends React.PureComponent {
     const { desc_brand } = this.state;
     var arr = [];
     for (let i = 0; i < desc_brand; i++) {
-      var result = form.getFieldValue(`desc_brand_${i}`);
-      arr.push(result);
+      var result = form.getFieldValue(`desc_brand_${i}`)
+      if(result) arr.push(result)
     }
     this.setState(
       {
@@ -302,8 +397,8 @@ class Products extends React.PureComponent {
     const { desc_size } = this.state;
     var arr = [];
     for (let i = 0; i < desc_size; i++) {
-      var result = form.getFieldValue(`desc_size_${i}`);
-      arr.push(result);
+      var result = form.getFieldValue(`desc_size_${i}`)
+      if(result) arr.push(result)
     }
     this.setState(
       {
@@ -352,8 +447,8 @@ class Products extends React.PureComponent {
     const { desc_use } = this.state;
     var arr = [];
     for (let i = 0; i < desc_use; i++) {
-      var result = form.getFieldValue(`desc_use_${i}`);
-      arr.push(result);
+      var result = form.getFieldValue(`desc_use_${i}`)
+      if(result) arr.push(result)
     }
     this.setState(
       {
@@ -492,17 +587,13 @@ class Products extends React.PureComponent {
               },
             ],
           })(
-            <div>
-              Mô tả {i + 1}: <Input style={{ width: '70%', marginBottom: '20px' }} />
-              {i != 0 && (
-                <Icon
-                  onClick={() => this.handleClickRemoveInformation()}
-                  className="dynamic-delete-button"
-                  type="minus-circle-o"
-                  style={{ marginLeft: '5px', fontSize: '14px', cursor: 'pointer' }}
-                />
-              )}
-            </div>
+            <Input placeholder={`Mô tả thứ ${i+1}`} suffix={(<Icon
+              onClick={() => this.handleClickRemoveInformation()}
+              className="dynamic-delete-button"
+              type="minus-circle-o"
+              style={{ marginLeft: '5px', fontSize: '14px', cursor: 'pointer' }}
+            />)} style={{ width: '100%', marginBottom: '20px' }} />
+
           )}
         </div>
       );
@@ -518,17 +609,12 @@ class Products extends React.PureComponent {
               },
             ],
           })(
-            <div>
-              Mô tả {i + 1}: <Input style={{ width: '70%', marginBottom: '20px' }} />
-              {i != 0 && (
-                <Icon
-                  onClick={() => this.handleClickRemoveBrand()}
-                  className="dynamic-delete-button"
-                  type="minus-circle-o"
-                  style={{ marginLeft: '5px', fontSize: '14px', cursor: 'pointer' }}
-                />
-              )}
-            </div>
+            <Input placeholder={`Mô tả thứ ${i+1}`} suffix={(<Icon
+              onClick={() => this.handleClickRemoveBrand()}
+              className="dynamic-delete-button"
+              type="minus-circle-o"
+              style={{ marginLeft: '5px', fontSize: '14px', cursor: 'pointer' }}
+            />)} style={{ width: '100%', marginBottom: '20px' }} />
           )}
         </div>
       );
@@ -544,17 +630,12 @@ class Products extends React.PureComponent {
               },
             ],
           })(
-            <div>
-              Mô tả {i + 1}: <Input style={{ width: '70%', marginBottom: '20px' }} />
-              {i != 0 && (
-                <Icon
-                  onClick={() => this.handleClickRemoveSize()}
-                  className="dynamic-delete-button"
-                  type="minus-circle-o"
-                  style={{ marginLeft: '5px', fontSize: '14px', cursor: 'pointer' }}
-                />
-              )}
-            </div>
+            <Input placeholder={`Mô tả thứ ${i+1}`} suffix={(<Icon
+              onClick={() => this.handleClickRemoveSize()}
+              className="dynamic-delete-button"
+              type="minus-circle-o"
+              style={{ marginLeft: '5px', fontSize: '14px', cursor: 'pointer' }}
+            />)} style={{ width: '100%', marginBottom: '20px' }} />
           )}
         </div>
       );
@@ -570,17 +651,12 @@ class Products extends React.PureComponent {
               },
             ],
           })(
-            <div>
-              Mô tả {i + 1}: <Input style={{ width: '70%', marginBottom: '20px' }} />
-              {i != 0 && (
-                <Icon
-                  onClick={() => this.handleClickRemoveUse()}
-                  className="dynamic-delete-button"
-                  type="minus-circle-o"
-                  style={{ marginLeft: '5px', fontSize: '14px', cursor: 'pointer' }}
-                />
-              )}
-            </div>
+            <Input placeholder={`Mô tả thứ ${i+1}`} suffix={(<Icon
+              onClick={() => this.handleClickRemoveUse()}
+              className="dynamic-delete-button"
+              type="minus-circle-o"
+              style={{ marginLeft: '5px', fontSize: '14px', cursor: 'pointer' }}
+            />)} style={{ width: '100%', marginBottom: '20px' }} />
           )}
         </div>
       );
@@ -591,7 +667,7 @@ class Products extends React.PureComponent {
         <Affix offsetTop={20}>
           <FormItem style={{ left: '20px' }}>
             <Button type="primary" htmlType="submit">
-              Thêm mới
+              Chỉnh sửa
             </Button>
           </FormItem>
         </Affix>
@@ -841,7 +917,7 @@ class Products extends React.PureComponent {
                 beforeUpload={this.beforeUpload}
                 multiple
               >
-                {fileList.length > 15 ? null : uploadButton}
+                {fileList.length > 5 ? null : uploadButton}
               </Upload>
 
               <Modal visible={this.state.previewVisible} footer={null} onCancel={this.handleCancel}>
@@ -878,4 +954,4 @@ class Products extends React.PureComponent {
   }
 }
 
-export default Products;
+export default UpdateProduct;

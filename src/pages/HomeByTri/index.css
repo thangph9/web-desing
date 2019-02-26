@@ -259,6 +259,21 @@ input.subscription-form__form-control___hdjaw::-webkit-input-placeholder {
   opacity: 1;
   cursor: not-allowed;
 }
+.background-item {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 242px;
+}
+.border-style {
+  padding: 5px;
+  border: solid 1px #EFEFEF;
+}
+.border-style:hover {
+  border: solid 1px #CCC;
+  -moz-box-shadow: 1px 1px 5px #999;
+  -webkit-box-shadow: 1px 1px 5px #999;
+  box-shadow: 1px 1px 5px #999;
+}
 .subscription-form__form-control___hdjaw[readonly] {
   background-color: #fff;
   opacity: 1;
@@ -424,19 +439,17 @@ select.subscription-form__form-control___hdjaw:focus::-ms-value {
 .potd-new__title-container___1o6iD {
   margin-bottom: 16px !important;
 }
-.grid__col-6___211BX {
+.cart-item {
   position: relative;
   width: 100%;
   min-height: 1px;
-  padding-right: 12px;
-  padding-left: 12px;
-  flex: 0 0 50%;
-  max-width: 50%;
+  padding-right: 6px;
+  padding-left: 6px;
 }
 .sale-card__currentSale___cC1H3 {
   display: block;
   float: none;
-  margin-bottom: 32px;
+  margin-bottom: 15px;
   transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .sale-card__currentSale___cC1H3:active {
@@ -451,9 +464,6 @@ select.subscription-form__form-control___hdjaw:focus::-ms-value {
 .sale-card__currentSale___cC1H3:hover {
   text-decoration: none;
 }
-.cate-first-sale .sale-card__image-wrapper___EfOla {
-  height: 44.3vw;
-}
 .best-sellers__title-container___3YMp3 {
   margin-bottom: 20px;
   margin-top: 24px;
@@ -464,7 +474,7 @@ select.subscription-form__form-control___hdjaw:focus::-ms-value {
 }
 .sale-card__currentSaleInfo___2LkMa {
   position: relative;
-  margin-top: 15px;
+  margin-top: 8px;
 }
 .sale-card__currentSaleInfo___2LkMa:after {
   display: block;
@@ -518,8 +528,8 @@ select.subscription-form__form-control___hdjaw:focus::-ms-value {
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  margin-right: -12px;
-  margin-left: -12px;
+  margin-right: -6px;
+  margin-left: -6px;
 }
 .subscription-form__subscription-box___3q4Dq {
   margin-top: 12px;
@@ -640,6 +650,9 @@ select.subscription-form__form-control___hdjaw:focus::-ms-value {
 }
 .subscription-form__btn___2kh7f:active {
   background-image: none;
+}
+.sale-card__image-wrapper___EfOla {
+  height: 242px;
 }
 .subscription-form__btn___2kh7f.subscription-form__btn-primary___34C5C:focus {
   background-color: #16accf;
@@ -1245,9 +1258,6 @@ fieldset[disabled] a.cart__btn___1bOR1 {
   .banner__csslider___3IuXB > .banner__arrows___iX3cf label {
     padding: 57% 20px 57% 18px;
   }
-  .sale-card__image-wrapper___EfOla {
-    height: 149px;
-  }
   .subscription-form__btn___2kh7f.subscription-form__btn-primary___34C5C.subscription-form__active___1AX-v:hover {
     background-color: #16accf;
     border-color: #16accf;
@@ -1476,9 +1486,6 @@ fieldset[disabled] a.cart__btn___1bOR1 {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
-  .sale-card__image-wrapper___EfOla {
-    height: 240px;
-  }
   .sale-card__endTimeWrap___3q0l3 {
     font-size: 14.5px;
   }
@@ -1499,10 +1506,6 @@ fieldset[disabled] a.cart__btn___1bOR1 {
     width: 540px;
     max-width: 100%;
   }
-  .row__row___2roCA {
-    margin-right: -12px;
-    margin-left: -12px;
-  }
   .home__col-md-6___2zJjj {
     padding-right: 12px;
     padding-left: 12px;
@@ -1511,18 +1514,15 @@ fieldset[disabled] a.cart__btn___1bOR1 {
     padding-right: 12px;
     padding-left: 12px;
   }
-  .cate-first-sale .sale-card__image-wrapper___EfOla {
-    height: 240px;
-  }
   .grid__col-sm-4___oKyg5 {
     padding-right: 12px;
     padding-left: 12px;
     flex: 0 0 33.33333%;
     max-width: 33.33333%;
   }
-  .grid__col-6___211BX {
-    padding-right: 12px;
-    padding-left: 12px;
+  .cart-item {
+    flex: 0 0 100%;
+    max-width: 100%;
   }
   .home__subscription-container___17uZO {
     margin-bottom: -26px;
@@ -1626,10 +1626,6 @@ fieldset[disabled] a.cart__btn___1bOR1 {
   .hidden-md-up {
     display: none !important;
   }
-  .row__row___2roCA {
-    margin-right: -12px;
-    margin-left: -12px;
-  }
   .home__col-md-6___2zJjj {
     padding-right: 12px;
     padding-left: 12px;
@@ -1645,16 +1641,13 @@ fieldset[disabled] a.cart__btn___1bOR1 {
     flex: 0 0 50%;
     max-width: 50%;
   }
-  .cate-first-sale .sale-card__image-wrapper___EfOla {
-    height: 309px;
-  }
   .grid__col-sm-4___oKyg5 {
     padding-right: 12px;
     padding-left: 12px;
   }
-  .grid__col-6___211BX {
-    padding-right: 12px;
-    padding-left: 12px;
+  .cart-item {
+    flex: 0 0 50%;
+    max-width: 50%;
   }
   .home__subscription-container___17uZO {
     margin-bottom: -20px;
@@ -1694,16 +1687,9 @@ fieldset[disabled] a.cart__btn___1bOR1 {
   .end-time__timer___LMsIT {
     font-weight: 400;
   }
-  .row__row___2roCA {
-    margin-right: -12px;
-    margin-left: -12px;
-  }
   .home__col-md-6___2zJjj {
     padding-right: 12px;
     padding-left: 12px;
-  }
-  .sale-card__image-wrapper___EfOla {
-    height: 202px;
   }
   .potd-new__col-md-6___13LY0 {
     padding-right: 12px;
@@ -1713,9 +1699,9 @@ fieldset[disabled] a.cart__btn___1bOR1 {
     padding-right: 12px;
     padding-left: 12px;
   }
-  .grid__col-6___211BX {
-    padding-right: 12px;
-    padding-left: 12px;
+  .cart-item {
+    flex: 0 0 33.333333333%;
+    max-width: 33.333333333%;
   }
   .home__subscription-container___17uZO {
     margin-bottom: -72px;
@@ -1742,16 +1728,9 @@ fieldset[disabled] a.cart__btn___1bOR1 {
     width: 1140px;
     max-width: 100%;
   }
-  .row__row___2roCA {
-    margin-right: -12px;
-    margin-left: -12px;
-  }
   .home__col-md-6___2zJjj {
     padding-right: 12px;
     padding-left: 12px;
-  }
-  .sale-card__image-wrapper___EfOla {
-    height: 242px;
   }
   .potd-new__col-md-6___13LY0 {
     padding-right: 12px;
@@ -1761,9 +1740,9 @@ fieldset[disabled] a.cart__btn___1bOR1 {
     padding-right: 12px;
     padding-left: 12px;
   }
-  .grid__col-6___211BX {
-    padding-right: 12px;
-    padding-left: 12px;
+  .cart-item {
+    flex: 0 0 25%;
+    max-width: 25%;
   }
   .subscription-form__col-md-8___2XbMH {
     padding-right: 12px;
@@ -1791,9 +1770,6 @@ fieldset[disabled] a.cart__btn___1bOR1 {
   }
   .end-time__icon___REEKA {
     display: none;
-  }
-  .sale-card__image-wrapper___EfOla {
-    height: 44.3vw;
   }
 }
 @media only screen and (max-width: 480px) {

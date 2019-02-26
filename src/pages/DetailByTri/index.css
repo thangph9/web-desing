@@ -1124,6 +1124,16 @@ a.add-to-bag__btn___2i-kl.add-to-bag__disabled___3SoRf {
   background-color: #000;
   border-color: #000;
 }
+.background-item {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 550px;
+}
+.background-item-li {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100px;
+}
 .slick-slide {
   display: none;
   float: left;

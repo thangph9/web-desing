@@ -300,6 +300,18 @@ export async function getProductFilter(params) {
     body: params,
   });
 }
+export async function changeOrderStatus(params) {
+  return request('/api/product/changeorderstatus', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function deleteProductOrder(params) {
+  return request('/api/product/deleteproductorder', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function changeInfo(params) {
   return request('/api/authentication/changeInfo', {
     method: 'POST',
@@ -317,6 +329,52 @@ export async function getCategoryProduct(nodeid) {
 }
 export async function getProductInCategory(categoryid) {
   return request('/api/product/categorybytri', {
+    method: 'POST',
+    body: categoryid,
+  });
+}
+export async function getProductOrder(categoryid) {
+  return request('/api/product/getproductorder', {
+    method: 'POST',
+    body: categoryid,
+  });
+}
+export async function getListCategory() {
+  return request('/api/product/getlistcategory', {
+    method: 'POST',
+  });
+}
+export async function getListProduct() {
+  return request('/api/product/getlistproduct', {
+    method: 'POST',
+  });
+}
+export async function getOneCategory(categoryid) {
+  return request('/api/product/getone', {
+    method: 'POST',
+    body: categoryid,
+  });
+}
+export async function updateCategory(categoryid) {
+  return request('/api/product/updatecategory', {
+    method: 'POST',
+    body: categoryid,
+  });
+}
+export async function updateProduct(categoryid) {
+  return request('/api/product/updateproduct', {
+    method: 'POST',
+    body: categoryid,
+  });
+}
+export async function deleteProduct(categoryid) {
+  return request('/api/product/deleteproduct', {
+    method: 'POST',
+    body: categoryid,
+  });
+}
+export async function deleteCategory(categoryid) {
+  return request('/api/product/deletecategory', {
     method: 'POST',
     body: categoryid,
   });

@@ -158,20 +158,42 @@ class CMS extends React.PureComponent {
                 </Link>
               </span>
             </Menu.Item>
-            <Menu.Item key="2">
-              <Icon type="schedule" />
-              <span>
-                <Link
-                  onClick={() => this.handleClickBreadcrumb('Order List')}
-                  style={{ color: '#fff', textDecoration: 'none' }}
-                  to={`/cms123order/orderlist`}
-                >
-                  Order List
-                </Link>
-              </span>
-            </Menu.Item>
             <SubMenu
               key="sub1"
+              title={
+                <span>
+                  <Icon type="schedule" />
+                  <span>Order List</span>
+                </span>
+              }
+            >
+              <Menu.Item key="2">
+                <Link
+                  onClick={() => this.handleClickBreadcrumb('List-Category')}
+                  to={`/cms123order/cmscategory`}
+                >
+                  List Category
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="3">
+                <Link
+                  onClick={() => this.handleClickBreadcrumb('List-Product')}
+                  to={`/cms123order/cmsproduct`}
+                >
+                  List Product
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="4">
+                <Link
+                  onClick={() => this.handleClickBreadcrumb('List-Order')}
+                  to={`/cms123order/cmsorder`}
+                >
+                  List Order
+                </Link>
+              </Menu.Item>
+            </SubMenu>
+            <SubMenu
+              key="sub2"
               title={
                 <span>
                   <Icon type="shopping" />
@@ -179,7 +201,7 @@ class CMS extends React.PureComponent {
                 </span>
               }
             >
-              <Menu.Item key="3">
+              <Menu.Item key="4">
                 <Link
                   onClick={() => this.handleClickBreadcrumb('Product')}
                   to={`/cms123order/products`}
@@ -187,20 +209,12 @@ class CMS extends React.PureComponent {
                   Product
                 </Link>
               </Menu.Item>
-              <Menu.Item key="4">
+              <Menu.Item key="5">
                 <Link
                   onClick={() => this.handleClickBreadcrumb('Category')}
                   to={`/cms123order/categorys`}
                 >
                   Category
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="5">
-                <Link
-                  onClick={() => this.handleClickBreadcrumb('Options')}
-                  to={`/cms123order/options`}
-                >
-                  Options
                 </Link>
               </Menu.Item>
             </SubMenu>
