@@ -23,7 +23,8 @@ import {
   deleteProduct,
   getProductOrder,
   changeOrderStatus,
-  deleteProductOrder
+  deleteProductOrder,
+  getProductByPhone
 } from '@/services/api';
 
 export default {
@@ -51,7 +52,8 @@ export default {
     deletecategory:{},
     getproductorder:{},
     changeorderstatus:{},
-    deleteproductorder:{}
+    deleteproductorder:{},
+    getproductbyphone:{}
   },
 
   effects: {
@@ -103,6 +105,17 @@ export default {
       try {
         yield put({
           type: 'getProductOrder',
+          payload: response,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    *getproductbyphone({ payload }, { call, put }) {
+      const response = yield call(getProductByPhone, payload);
+      try {
+        yield put({
+          type: 'getProductByPhone',
           payload: response,
         });
       } catch (e) {
@@ -486,6 +499,12 @@ export default {
       return {
         ...state,
         deleteproductorder: action.payload,
+      };
+    },
+    getProductByPhone(state, action) {
+      return {
+        ...state,
+        getproductbyphone: action.payload,
       };
     },
     deleteProduct(state, action) {

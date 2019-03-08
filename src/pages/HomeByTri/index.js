@@ -292,7 +292,7 @@ class Home extends PureComponent {
               styles['best-sellers__title-container___3YMp3']
             }`}
           >
-            <h2 className={`${styles['section-title__title___2Dw2G']}`}>Bán chạy nhất</h2>
+            <h2 className={`${styles['section-title__title___2Dw2G']}`}>Xây dựng PC</h2>
           </div>
           <div className={`${styles['row__row___2roCA']}`}>
             {more.map((e, i) => {
@@ -350,8 +350,8 @@ class Home extends PureComponent {
           <Slider {...settings}>
             {this.state.slideObj.map((v, i) => {
               return (
-                <span>
-                  <img key={i} src={v.image} alt={v.title} />
+                <span key={i}>
+                  <img src={v.image} alt={v.title} />
                   <div
                     className={`${styles['hidden-md-up']} ${styles['home__badge___2w2Lc']} ${
                       styles['home__featured-badge___2hhaD']
@@ -382,8 +382,8 @@ class Home extends PureComponent {
           <Slider {...settings1}>
             {this.state.slideObj.map((v, i) => {
               return (
-                <span>
-                  <img key={i} src={v.image} alt={v.title} />
+                <span key={i}>
+                  <img src={v.image} alt={v.title} />
                 </span>
               );
             })}
@@ -428,10 +428,11 @@ class Home extends PureComponent {
               <div className={`${styles['banner__navigation___1KLgF']}`} />
             </div>
           </div>
+          {this.renderMore()}
           {this.renderSpecial()}
           {this.renderBestSeller()}
           {this.renderNews()}
-          {this.renderMore()}
+
         </div>
       </div>
     );

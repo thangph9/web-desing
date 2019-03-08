@@ -1,40 +1,4 @@
-/* eslint-disable radix */
-/* eslint-disable no-empty */
-/* eslint-disable no-continue */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-useless-escape */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-undef-init */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable new-cap */
-/* eslint-disable camelcase */
-/* eslint-disable no-else-return */
-/* eslint-disable array-callback-return */
-/* eslint-disable arrow-body-style */
-/* eslint-disable spaced-comment */
-/* eslint-disable no-plusplus */
-/* eslint-disable no-redeclare */
-/* eslint-disable eqeqeq */
-/* eslint-disable one-var */
-/* eslint-disable no-multi-assign */
-/* eslint-disable vars-on-top */
-/* eslint-disable no-var */
-/* eslint-disable no-undef */
-/* eslint-disable no-useless-return */
-/* eslint-disable no-use-before-define */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable object-shorthand */
-/* eslint-disable prefer-template */
-/* eslint-disable no-shadow */
-/* eslint-disable no-unused-vars */
-/* eslint-disable consistent-return */
-/* eslint-disable dot-notation */
-/* eslint-disable prefer-arrow-callback */
-/* eslint-disable func-names */
-/* eslint-disable prefer-const */
-/* eslint-disable import/order */
-/* eslint-disable import/newline-after-import */
-/* eslint-disable import/no-extraneous-dependencies */
+
 const async = require('async');
 const models = require('../settings');
 const fs = require('fs');
@@ -2697,6 +2661,38 @@ function deleteProductOrder(req,res){
     }
   );
 }
+function getProductByPhone(req,res){
+  let results = [];
+  let phone=req.body.phone
+  async.series(
+    [
+      function (callback) {
+        try {
+          models.instance.product_order.find({phone:phone},{allow_filtering:true},
+            function (err, result) {
+              if (result&&result.length>0) {
+                results=result
+              }
+              callback(err, null);
+            }
+          );
+        } catch (error) {
+          callback(error, null);
+          exceptionError(error)
+        }
+      },
+    ],
+    function (err, result) {
+      try {
+        if (err) return res.send({ status: 'error' });
+      res.send({ status: 'ok', data: results });
+      } catch (error) {
+        console.log(error)
+        exceptionError(error)
+      }
+    }
+  );
+}
 export default {
   'GET /api/product/list': productList,
   'POST /api/product/DT': productDetail,
@@ -2737,5 +2733,6 @@ export default {
   'GET /images/ft/:imageid': imageByTri,
   'POST /api/product/categorybytri': getProductInCategory,
   'POST /api/product/changeorderstatus':changeOrderStatus,
-  'POST /api/product/deleteproductorder':deleteProductOrder
+  'POST /api/product/deleteproductorder':deleteProductOrder,
+  'POST /api/product/getproductbyphone':getProductByPhone
 };

@@ -66,6 +66,7 @@ import {
   Checkbox,
   Skeleton,
   Cascader,
+  message,
 } from 'antd';
 import styles from './index.less';
 
@@ -106,6 +107,17 @@ class Checkout extends PureComponent {
         status_info: nextProps.user.info.status,
       });
     }
+    if(this.props.user.paycompelete!== nextProps.user.paycompelete){
+      if(nextProps.user.paycompelete.status==='ok'&&nextProps.user.paycompelete.timeline!==this.props.user.paycompelete.timeline){
+        nextProps.history.push({pathname:"/list-order"})
+        localStorage.cart=[]
+        this.props.dispatch({
+          type: 'list/local',
+          payload: [],
+        });
+        message.success('Đơn hàng được đăng ký thành công')
+      }
+    }
   }
   payCompelete(sale_price, arr, info) {
     var obj = {};
@@ -127,9 +139,17 @@ class Checkout extends PureComponent {
       productOrder.total = v[1] + '';
       obj.list_product.push(productOrder);
     });
-    obj.order_by = info.name;
+    const Information = JSON.parse(localStorage.getItem('Information'));
+    if(info){
+      obj.order_by = info.name;
     obj.phone = info.phone;
     obj.address = info.address;
+    }
+    else{
+      obj.order_by = Information.firstname+' '+Information.lastname;
+      obj.phone = Information.phone;
+      obj.address = Information.address;
+    }
     console.log(obj)
     this.props.dispatch({
       type: 'user/paycompelete',
@@ -275,9 +295,9 @@ class Checkout extends PureComponent {
                         !info && (
                           <div>
                             <div>
-                              <span>{Information.lastname + ' ' + Information.firstname}</span>
+                              <span>{Information.firstname + ' ' + Information.lastname}</span>
                               <span className={styles['an-address__dot-seperator___1_vim']}>•</span>
-                              <span>+{Information.prefix + '' + Information.phone}</span>
+                              <span>{Information.phone}</span>
                             </div>
                             <div>{Information.address}</div>
                           </div>

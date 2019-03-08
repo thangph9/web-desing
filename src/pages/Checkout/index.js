@@ -272,13 +272,6 @@ class Checkout extends PureComponent {
         sm: { span: 16 },
       },
     };
-    const prefixSelector = getFieldDecorator('prefix', {
-      initialValue: '84',
-    })(
-      <Select style={{ width: 70 }}>
-        <Option value="84">+84</Option>
-      </Select>
-    );
     if (Information || localStorage.account) {
       return <Redirect to="/checkout/paycomplete" />;
     } else {
@@ -374,7 +367,7 @@ class Checkout extends PureComponent {
               <FormItem {...formItemLayout} label="Số điện thoại">
                 {getFieldDecorator('phone', {
                   rules: [{ required: true, message: 'Vui lòng nhập số điện thoại!' }],
-                })(<Input addonBefore={prefixSelector} style={{ width: '100%' }} />)}
+                })(<Input style={{ width: '100%' }} />)}
               </FormItem>
               <FormItem>
                 <Button type="primary" htmlType="submit" size="large" block>

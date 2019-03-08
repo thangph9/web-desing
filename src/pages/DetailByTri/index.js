@@ -86,6 +86,19 @@ const { TextArea } = Input;
 function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
 }
+const dataBaoHanh=[
+  'Còn trong thời hạn bảo hành, thời hạn bảo hành được tính từ ngày bán hàng (căn cứ trên hóa đơn bán hàng).',
+  'Sản phẩm bị lỗi kỹ thuật do nhà sản xuất.',
+  'Đối với các sản phẩm được cấp phiếu bảo hành thì phiếu bảo hành phải còn nguyên vẹn, không chắp vá, cạo sửa, bôi xóa…',
+  'Tem bảo hành của 123order, tem bảo hành của nhà sản xuất phải còn nguyên vẹn (ngoại trừ những sản phẩm được đăng ký bảo hành điện tử).',
+  'Mã vạch, số serial, thông số kỹ thuật của nhà sản xuất đã được dán trên sản phẩm phải còn nguyên vẹn.',
+  'Riêng sản phẩm Apple được áp dụng theo chính sách đổi bảo hành riêng của nhà sản xuất.',
+  'Sản phẩm không thỏa mãn một trong những điều kiện bảo hành miễn phí ở mục 1.',
+  'Số series, model sản phẩm không khớp với phiếu bảo hành (nếu sản phẩm có phiếu bảo hành).',
+  'Sản phẩm bị hư hỏng do lỗi người sử dụng, không nằm trong phạm vi bảo hành của nhà sản xuất như: rơi, vỡ, va đập, móp méo, cong hoặc gãy, bị trầy xước, ẩm ướt, hoen rỉ, chảy nước, côn trùng xâm nhập, cháy nổ, thiên tai, hỏa hoạn.',
+  'Màn hình LCD có dưới 05 điểm chấm bị lỗi.',
+  'Dữ liệu trong các thiết bị lưu trữ (máy tính, HDD, USB, Thẻ nhớ…).',
+]
 @connect(({ loading, product, list }) => ({
   submitting: loading.effects['form/submitRegularForm'],
   product,
@@ -132,6 +145,7 @@ class Detail extends PureComponent {
             ['material']: false,
             ['size-table']: false,
             ['info-brand']: false,
+            ['bao-hanh']: false,
           },
           () => {
             this.setState({
@@ -326,16 +340,16 @@ class Detail extends PureComponent {
         SmallImageUI.push(
           // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
           <li key={i}
-            style={{ marginBottom: 10,backgroundImage:`url(/images/ft/${image})`, height:'100px'}}
+            style={{ marginBottom: 10, backgroundImage: `url(/images/ft/${image})`, height: '100px' }}
             onClick={() => {
               this.handleChangeImage(e, i);
             }}
             className={
               this.state.index != i
-                ? styles['images-slider__image-border___2hkRy']+' '+styles['background-item-li']
+                ? styles['images-slider__image-border___2hkRy'] + ' ' + styles['background-item-li']
                 : styles['images-slider__image-border___2hkRy'] +
                 ' ' +
-                styles['images-slider__image-selected___3ftth'] +' '+styles['background-item-li']
+                styles['images-slider__image-selected___3ftth'] + ' ' + styles['background-item-li']
             }
           >
           </li>
@@ -407,7 +421,7 @@ class Detail extends PureComponent {
             <div className={`${styles['images-slider__sold-out-overlay___2Avrv']}`}>Hết hàng</div>
           </div>
         </div>
-        <div style={image_huge&&{ backgroundImage: `url(/images/ft/${image_huge[this.state.index].replace(/\-/g, '')}`}}
+        <div style={image_huge && { backgroundImage: `url(/images/ft/${image_huge[this.state.index].replace(/\-/g, '')}` }}
           className={`${styles['hidden-md-down']} ${styles['images-slider__col-lg-10___3uZXv']} ${styles['background-item']}`}
         >
           <div
@@ -508,7 +522,7 @@ class Detail extends PureComponent {
             <div style={{ paddingTop: '5px' }} className={styles['product__product___2plEK']}>
               <div className={styles['product__product-header___2yYGL']} />
               <div>
-                <div
+                <div style={{ marginTop: '40px' }}
                   className={`${styles['row__row___2roCA']}
                   `}
                 >
@@ -967,6 +981,72 @@ class Detail extends PureComponent {
                           </div>
                         </div>
                       )}
+                      <div>
+                        <div className={`${styles['product-description__group___3Z2qF']}`}>
+                          <h4 className={`${styles['product-description__panel-title___1aoFo']}`}>
+                            <span
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => this.handleClickDesciption('bao-hanh')}
+                              className={`${
+                                styles['product-description__accordion-toggle___1kmrM']
+                                }`}
+                            >
+                              <div className={`${styles['product-description__title___Xh_fg']}`}>
+                                Chế độ bảo hành
+                                  <span
+                                  className={`${
+                                    styles['product-description__btn-collapse___3Pk93']
+                                    }`}
+                                >
+                                  {!this.state['bao-hanh'] ? (
+                                    <i
+                                      className={`${styles['ic-ic-plus']} ${
+                                        styles['product-description__collapsed___ahwQq']
+                                        }`}
+                                    />
+                                  ) : (
+                                      <i
+                                        className={`${styles['ic-ic-minus']} ${
+                                          styles['product-description__collapsed___ahwQq']
+                                          }`}
+                                      />
+                                    )}
+                                </span>
+                              </div>
+                            </span>
+                          </h4>
+                          <div
+                            id="bao-hanh"
+                            style={{ display: 'none' }}
+                            className={`${styles['collapse']} ${
+                              styles['product-description__panel-collapse___3G-5Q']
+                              } collapselow`}
+                          >
+                            <div
+                              className={`${styles['product-description__product-info___nWbK5']}`}
+                            >
+                              <ul>
+                                {dataBaoHanh.map((v, i) => {
+                                  return (
+                                    <li key={i}>
+                                      <span
+
+                                        style={{
+                                          color: 'rgb(78, 89, 93)',
+                                          backgroundColor: 'rgb(255, 255, 255)',
+                                          fontSize: '14px',
+                                        }}
+                                      >
+                                        {v}
+                                      </span>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                       {desc_brand.length > 0 && (
                         <div>
                           <div

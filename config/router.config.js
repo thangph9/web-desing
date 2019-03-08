@@ -74,6 +74,11 @@ export default [
         component: './HomeByTri/',
       },
       {
+        path: '/list-order',
+        name: 'list-order',
+        component: './ListOrder/',
+      },
+      {
         path: '/homebytri',
         name: 'homebytri',
         component: './Home/',

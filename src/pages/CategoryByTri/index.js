@@ -211,7 +211,7 @@ class ListCategory extends PureComponent {
               else if (nextState.arrFilter[i] === 7) return value.sale_price > 20000000
             }
             else if (nextState.arrFilter[i] === 0) return value
-            else return value.brand === nextState.arrFilter[i]
+            else return value.brand.toUpperCase() === nextState.arrFilter[i]
           })
         }
         this.setState({
@@ -228,7 +228,7 @@ class ListCategory extends PureComponent {
     if (nextProps.product.getproductincategory !== this.props.product.getproductincategory) {
       let arrBrand = []
       nextProps.product.getproductincategory.data.forEach((v, i) => {
-        arrBrand.push(v.brand)
+        arrBrand.push(v.brand.toUpperCase())
       })
       this.setState({
         globalProduct: nextProps.product.getproductincategory.data,

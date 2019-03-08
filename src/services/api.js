@@ -300,6 +300,12 @@ export async function getProductFilter(params) {
     body: params,
   });
 }
+export async function getProductByPhone(params) {
+  return request('/api/product/getproductbyphone', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function changeOrderStatus(params) {
   return request('/api/product/changeorderstatus', {
     method: 'POST',

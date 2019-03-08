@@ -1436,7 +1436,7 @@ function payCompelete(req, res) {
         if (err) {
           console.log(err);
           return res.json({ status: 'error', message2: err });
-        } else return res.json({ status: 'ok' });
+        } else return res.json({ status: 'ok',timeline:new Date().getTime() });
       });
     }
   );

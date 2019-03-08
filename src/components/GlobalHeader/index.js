@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import Debounce from 'lodash-decorators/debounce';
 import styles from './styles.less';
-
+import {Icon} from 'antd';
 // eslint-disable-next-line no-undef
 
 class GlobalHeader extends PureComponent {
@@ -332,7 +332,11 @@ class GlobalHeader extends PureComponent {
               <i className={`${styles['ic-ic-bag']} ${styles['cart-button__icon___3QHeM']}`}>
                 {total > 0 && <span className={styles['cart-button__badge___1tnYa']}>{total}</span>}
               </i>
+
             </button>
+            <Link style={{color:'#4e595d'}} to="/list-order">
+              <Icon style={{fontSize:'25px',top:'7px',marginLeft:'10px',position:'relative'}} type="schedule" />
+            </Link>
           </div>
         </nav>
         <nav style={{display:'none'}}

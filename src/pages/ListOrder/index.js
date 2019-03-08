@@ -137,7 +137,7 @@ class TableProduct extends PureComponent {
       title: 'STT',
       dataIndex: 'index',
       key: 'index',
-      width: '8%',
+      width: '5%',
       align: 'center',
     },
     {
@@ -152,7 +152,7 @@ class TableProduct extends PureComponent {
       title: 'Tên sản phẩm',
       dataIndex: 'title',
       key: 'title',
-      width: '32%',
+      width: '35%',
       align: 'center',
 
     },
@@ -220,6 +220,7 @@ class ListOrder extends PureComponent {
       list: [],
       categoryOption: [],
       changeCategory: '',
+      valueInput:0
     };
     this.columns = [
       {
@@ -230,14 +231,6 @@ class ListOrder extends PureComponent {
         align: 'center',
       },
       {
-        title: 'Mã đơn hàng',
-        dataIndex: 'orderid',
-        key: 'orderid',
-        width: '20%',
-        align: 'center',
-
-      },
-      {
         title: 'Số điện thoại',
         dataIndex: 'phone',
         key: 'phone',
@@ -245,10 +238,10 @@ class ListOrder extends PureComponent {
         align: 'center',
       },
       {
-        title: 'Ngày tạo',
+        title: 'Ngày đặt mua',
         dataIndex: 'createat',
         key: 'createat',
-        width: '10%',
+        width: '15%',
         align: 'center',
       },
       {
@@ -270,36 +263,25 @@ class ListOrder extends PureComponent {
         dataIndex: 'status',
         key: 'status',
         align: 'center',
-        width: '13%',
+        width: '20%',
       },
       {
         title: 'Xoá đơn hàng',
         dataIndex: 'delete',
         key: 'delete',
         align: 'center',
-        width: '7%',
+        width: '15%',
       },
     ]
 
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.product.getproductorder !== nextProps.product.getproductorder) {
-      if (nextProps.product.getproductorder.status === 'ok') {
+    if (this.props.product.getproductbyphone !== nextProps.product.getproductbyphone) {
+      if (nextProps.product.getproductbyphone.status === 'ok') {
         this.setState({
-          list: nextProps.product.getproductorder.data,
+          list: nextProps.product.getproductbyphone.data,
         })
-      }
-    }
-    if(this.props.product.changeorderstatus!==nextProps.product.changeorderstatus){
-      if(nextProps.product.changeorderstatus.status==='ok' && this.props.product.changeorderstatus.timeline!==nextProps.product.changeorderstatus.timeline){
-        message.success('Thay đổi trạng thái thành công')
-        this.props.dispatch({
-          type: 'product/getproductorder'
-        })
-      }
-      if(nextProps.product.changeorderstatus.status==='error'){
-        message.success('Thay đổi trạng thái thất bại')
       }
     }
     if(this.props.product.deleteproductorder!==nextProps.product.deleteproductorder){
@@ -313,6 +295,16 @@ class ListOrder extends PureComponent {
         message.success('Xóa đơn hàng thất bại')
       }
     }
+    if (this.props.user.info !== nextProps.user.info) {
+      if(nextProps.user.info.status==='ok'){
+        this.props.dispatch({
+          type:'product/getproductbyphone',
+          payload:{
+            phone:nextProps.user.info.info.phone
+          }
+        })
+      }
+    }
   }
   ConfirmStatus(value,value2){
     this.props.dispatch({
@@ -324,9 +316,6 @@ class ListOrder extends PureComponent {
     })
   }
   ConfirmDelete(value){
-    this.setState({
-      [value]:!this.state[value]
-    })
     this.props.dispatch({
       type:'product/deleteproductorder',
       payload:{
@@ -334,14 +323,24 @@ class ListOrder extends PureComponent {
       }
     })
   }
+
   cancelDelete(e) {
   }
   cancelStatus(e) {
   }
   componentDidMount() {
+    if(localStorage.Information){
+      const Information = JSON.parse(localStorage.getItem('Information'));
+      this.props.dispatch({
+        type:'product/getproductbyphone',
+        payload:{
+          phone:Information.phone
+        }
+      })
+    }
     this.props.dispatch({
-      type: 'product/getproductorder'
-    })
+      type: 'user/info',
+    });
   }
   showModal = (value) => {
     this.setState({
@@ -359,7 +358,19 @@ class ListOrder extends PureComponent {
       [value]: false,
     });
   }
-
+  handChangeInput(e){
+    this.setState({
+      valueInput:e.target.value
+    })
+  }
+  getProductByPhone(){
+    this.props.dispatch({
+      type:'product/getproductbyphone',
+      payload:{
+        phone:this.state.valueInput
+      }
+    })
+  }
   render() {
     const tailFormItemLayout = {};
     const { getFieldDecorator } = this.props.form;
@@ -389,7 +400,6 @@ class ListOrder extends PureComponent {
       productTable.key = i + '';
       productTable.index = i + 1;
       productTable.createat = stringTime;
-      productTable.orderid = v.order_by;
       productTable.productid = v.productid;
       productTable.detail = (
         <div>
@@ -414,11 +424,6 @@ class ListOrder extends PureComponent {
           ) : (
               <div>Chưa xác nhận</div>
             )}
-          <span style={{ color: 'red', textDecoration: 'underline' }}>
-            <Popconfirm title="Bạn có chắc muốn cập nhật trạng lại thái không" onConfirm={()=>this.ConfirmStatus(v.orderid,v.status)} onCancel={()=>this.cancelStatus()} okText="Đồng ý" cancelText="Hủy">
-              <a href="#">Thay đổi</a>
-            </Popconfirm>
-          </span>
         </div>
       )
       productTable.total_price = currencyFormatter.format(v.total_price, { locale: 'vi-VN' });
@@ -491,7 +496,10 @@ class ListOrder extends PureComponent {
               </div>
 
               <section id={styles['pastelink']}>
-
+                <div style={{display:'flex'}}>
+                  <Input onChange={(e)=>this.handChangeInput(e)} style={{width:'30%',marginRight:'20px'}} placeholder="Nhập số điện thoại để xem chi tiết đơn hàng đã đặt mua" />
+                  <Button onClick={()=>this.getProductByPhone()} type="primary">Kiểm Tra</Button>
+                </div>
                 <div style={{ margin: '0 auto' }} className={styles['container']}>
                   <div className={styles['row']}>
                     <div className={styles['col-xs-12']}>

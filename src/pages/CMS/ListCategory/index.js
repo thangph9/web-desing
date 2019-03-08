@@ -300,7 +300,6 @@ class ListCategory extends PureComponent {
       },
     };
     var dataTable = [];
-    console.log(list)
     list.forEach((v, i) => {
       var timeCreate = new Date(v.createat);
       var stringTime =

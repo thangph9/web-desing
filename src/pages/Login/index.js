@@ -128,6 +128,7 @@ class Login extends PureComponent {
 
       if (!err) {
         values['captcha'] = this.state.value;
+        localStorage.removeItem('Information')
         this.props.dispatch({
           type: 'user/login',
           payload: values,
