@@ -3,7 +3,7 @@ const models= require("express-cassandra");
 models.setDirectory(__dirname+"/models").bind(
     {
         clientOptions:  {
-            contactPoints   :   ['localhost'],
+            contactPoints: ['127.0.0.1'],
             protocalOptions :   {  port: 9042  },
             keyspace        :   'd_123order',
             queryOptions: { consistency: models.consistencies.one   },

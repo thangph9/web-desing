@@ -169,7 +169,7 @@ const GlobalFooter = () => (
                 >
                   <img
                     className={`${styles['footer__image___1wrDs']}`}
-                    src="https://www.leflair.vn/images/stamp-bo-cong-thuong.png"
+                    src=""
                   />
                 </a>
                 <span className={`${styles['footer__text___1Ta7d']}`}>
